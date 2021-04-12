@@ -1,0 +1,7 @@
+{
+  "name": "PlanetXApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
