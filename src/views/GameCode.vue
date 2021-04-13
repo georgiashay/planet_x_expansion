@@ -6,7 +6,7 @@
           <h3>Game Code</h3>
         </div>
         <div>
-          <p v-if="isGameCreator">Your game has been created. Please have the other players enter the following game code:</p>
+          <p v-if="gameCreator">Your game has been created. Please have the other players enter the following game code:</p>
           <p v-else>You have joined the game. Please double-check that the game code is the same as the one created for this game.</p>
         </div>
         <div id="game_code">
@@ -14,7 +14,7 @@
           <p>{{gameModeName}}</p>
         </div>
         <div>
-          <p v-if="isGameCreator">Verify that all player devices are using the game code, and then press the Continue button below to start.</p>
+          <p v-if="gameCreator">Verify that all player devices are using the game code, and then press the Continue button below to start.</p>
         </div>
         <ion-item-divider/>
         <ion-button
@@ -39,6 +39,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { GAME_TYPES } from '@/constants';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'GameCode',
@@ -50,14 +51,19 @@ export default defineComponent({
     IonNavLink,
     IonIcon
   },
+  props: {
+    gameCreator: {
+      required: true,
+      type: Boolean
+    }
+  },
   data() {
     const store = useStore();
-    const isGameCreator = true;
+    const route = useRoute();
     return {
       store,
-      isGameCreator,
       arrowForwardOutline,
-      gameTypes: GAME_TYPES
+      route
     }
   },
   computed: {

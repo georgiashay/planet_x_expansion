@@ -21,9 +21,20 @@ const routes: Array<RouteRecordRaw> = [
     component: CreateMultiplayer
   },
   {
-    path: '/multiplayer/gamecode',
+    path: '/multiplayer/gamecode/:isnew',
     name: 'Game Code',
-    component: GameCode
+    component: GameCode,
+    props: (route) => {
+      if (route.params.isnew == "new") {
+        return {
+          gameCreator: true
+        }
+      } else if (route.params.isnew == "join"){
+        return {
+          gameCreator: false
+        }
+      }
+    }
   },
   {
     path: '/multiplayer/chooseview',

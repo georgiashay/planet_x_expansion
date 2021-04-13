@@ -10,7 +10,7 @@
           <p>Select Game Mode:</p>
           <ion-button
             expand="block"
-            v-for="(name, sectors) in gameTypes"
+            v-for="(name, sectors) in GAME_TYPES"
             :key="sectors"
             :color="buttonColor(sectors)"
             @click="selectedGame = (selectedGame == sectors ? undefined : sectors)"
@@ -59,7 +59,7 @@ export default defineComponent({
     const router = useRouter();
     return {
       selectedGame: undefined,
-      gameTypes: GAME_TYPES,
+      GAME_TYPES,
       arrowForwardOutline,
       store,
       router
@@ -76,7 +76,7 @@ export default defineComponent({
     createGame: function() {
       this.store.dispatch("createGame", this.selectedGame);
       this.selectedGame = undefined;
-      this.router.push("/multiplayer/gamecode");
+      this.router.push("/multiplayer/gamecode/new");
     }
   },
 });
