@@ -3,25 +3,33 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Starting Information</h3>
-          <h4>{{ store.state.equinox }} Equinox</h4>
+          <h3>Research &amp; Conferences</h3>
         </div>
-        <div id="starting_info">
-          <ion-item-group>
-            <template
-              v-for="(info, index) in store.getters.myStartingInformation"
-              :key="index">
-              <ion-item>
-                {{info.text}}
-              </ion-item>
-            </template>
-          </ion-item-group>
+        <p>The following research items and conferences are available this game. We encourage players to record these titles on their note sheets.</p>
+        <ion-item-divider/>
+        <div id="research">
+          <b>Research</b>
+          <p
+            v-for="(research, index) in store.state.game.research"
+            :key="index">
+          {{String.fromCharCode(index+65)}}. {{research.categoryName}}
+          </p>
         </div>
+        <div id="conference">
+          <b>Conference</b>
+          <p
+            v-for="(conference, index) in store.state.game.conference"
+            :key="index">
+            X{{index + 1}}. {{conference.categoryName}}
+          </p>
+        </div>
+        <ion-item-divider/>
         <ion-button
           expand="block"
           color="medium"
-          router-link="/multiplayer/researchcategories">
-          Start Game
+          router-link="/multiplayer/gamemenu"
+          id="continue_button">
+          Continue
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
       </div>
@@ -37,15 +45,13 @@
 <script lang="ts">
 import { IonContent, IonPage,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonItem,
-        IonItemGroup } from '@ionic/vue';
+        IonToolbar, IonTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  name: 'StartingInformation',
+  name: 'ResearchCategories',
   components: {
     IonContent,
     IonPage,
@@ -53,9 +59,7 @@ export default defineComponent({
     IonIcon,
     IonFooter,
     IonToolbar,
-    IonTitle,
-    IonItem,
-    IonItemGroup
+    IonTitle
   },
   data() {
     const store = useStore();
@@ -84,7 +88,25 @@ export default defineComponent({
   line-height: 56px;
 }
 
-#starting_info {
-  margin-bottom: 10px;
+#research p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#research {
+  margin-top: 10px;
+}
+
+#conference p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#conference {
+  margin-top: 10px;
+}
+
+#continue_button {
+  margin-top: 10px;
 }
 </style>
