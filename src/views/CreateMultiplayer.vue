@@ -1,32 +1,34 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="title_container">
-        <h3>Multiplayer Game</h3>
-      </div>
-      <div id="create_game_buttons">
+      <div id="container">
+        <div id="title_container">
+          <h3>Multiplayer Game</h3>
+        </div>
+        <div id="create_game_buttons">
 
-        <p>Select Game Mode:</p>
-        <ion-button
-          expand="block"
-          v-for="gameType in gameTypes"
-          :key="gameType.sectors"
-          :color="buttonColor(gameType.sectors)"
-          @click="selectedGame = (selectedGame == gameType.sectors ? undefined : gameType.sectors)"
-          >
-          {{gameType.name}} ({{gameType.sectors}} sectors)
-        </ion-button>
-        <ion-item-divider/>
-        <ion-button
-          v-if="selectedGame !== undefined"
-          expand="block"
-          color="medium"
-          router-link="/multiplayer/gamecode">
-          Start Game
-            <ion-icon :icon="arrowForwardOutline"></ion-icon>
-        </ion-button>
-        <div id="cancel_container">
-          <ion-nav-link router-link="/home">Cancel</ion-nav-link>
+          <p>Select Game Mode:</p>
+          <ion-button
+            expand="block"
+            v-for="gameType in gameTypes"
+            :key="gameType.sectors"
+            :color="buttonColor(gameType.sectors)"
+            @click="selectedGame = (selectedGame == gameType.sectors ? undefined : gameType.sectors)"
+            >
+            {{gameType.name}} ({{gameType.sectors}} sectors)
+          </ion-button>
+          <ion-item-divider/>
+          <ion-button
+            v-if="selectedGame !== undefined"
+            expand="block"
+            color="medium"
+            @click="createGame()">
+            Start Game
+              <ion-icon :icon="arrowForwardOutline"></ion-icon>
+          </ion-button>
+          <div id="cancel_container">
+            <ion-nav-link router-link="/home">Cancel</ion-nav-link>
+          </div>
         </div>
       </div>
     </ion-content>
@@ -38,6 +40,8 @@ import { IonContent, IonPage, IonItemDivider,
         IonButton, IonNavLink, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'CreateMultiplayer',
@@ -50,6 +54,8 @@ export default defineComponent({
     IonIcon
   },
   data() {
+    const store = useStore();
+    const router = useRouter();
     return {
       selectedGame: undefined,
       gameTypes: [
@@ -66,25 +72,39 @@ export default defineComponent({
           sectors: 24
         }
       ],
-      arrowForwardOutline
+      arrowForwardOutline,
+      store,
+      router
     }
   },
   methods: {
-    log: function(text: string) {
-      console.log(text);
-    },
     buttonColor: function(boardType: number) {
       if (this.selectedGame == boardType) {
         return "light";
       } else {
         return "medium";
       }
+    },
+    createGame: function() {
+      const gameIndex = this.gameTypes.map((g) => g.sectors).indexOf(this.selectedGame!);
+      const gameType = this.gameTypes[gameIndex];
+      // Game should have more information and come from the server
+      const game = {
+        gameCode: "H7J2L9",
+        gameType: gameType
+      }
+      this.store.commit("setGame", game);
+      this.router.push("/multiplayer/gamecode");
     }
   },
 });
 </script>
 
 <style scoped>
+#container {
+  padding: 20px;
+}
+
 #title_container {
   font-family: sans-serif;
   text-transform: uppercase;
@@ -98,7 +118,7 @@ export default defineComponent({
 }
 
 #create_game_buttons {
-  width: 80%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10%;

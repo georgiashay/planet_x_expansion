@@ -1,16 +1,18 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="title_container">
-        <h2>The Search For</h2>
-        <h1><b>Planet X</b></h1>
-        <h5>Unofficial Expansion</h5>
-      </div>
-      <div id="start_game_buttons">
-        <ion-item-divider/>
-        <ion-button expand="block" color="medium" router-link = "/multiplayer/create">Start New Game</ion-button>
-        <ion-button expand="block" color="medium">Enter Game Code</ion-button>
-        <ion-item-divider/>
+      <div id="container">
+        <div id="title_container">
+          <h2>The Search For</h2>
+          <h1><b>Planet X</b></h1>
+          <h5>Unofficial Expansion</h5>
+        </div>
+        <div id="start_game_buttons">
+          <ion-item-divider/>
+          <ion-button expand="block" color="medium" router-link = "/multiplayer/create">Start New Game</ion-button>
+          <ion-button expand="block" color="medium">Enter Game Code</ion-button>
+          <ion-item-divider/>
+        </div>
       </div>
     </ion-content>
   </ion-page>
@@ -32,6 +34,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#container {
+  padding: 20px;
+}
+
 #title_container {
   font-family: sans-serif;
   text-transform: uppercase;
@@ -45,7 +51,7 @@ export default defineComponent({
 }
 
 #start_game_buttons {
-  width: 80%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10%;
