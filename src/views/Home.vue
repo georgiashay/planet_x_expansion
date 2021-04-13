@@ -7,22 +7,26 @@
         <h5>Unofficial Expansion</h5>
       </div>
       <div id="start_game_buttons">
-        <ion-button expand="block" color="medium">Start New Game</ion-button>
+        <ion-item-divider/>
+        <ion-button expand="block" color="medium" router-link = "/multiplayer/create">Start New Game</ion-button>
         <ion-button expand="block" color="medium">Enter Game Code</ion-button>
+        <ion-item-divider/>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage } from '@ionic/vue';
+import { IonContent, IonPage, IonButton, IonItemDivider } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
     IonContent,
-    IonPage
+    IonPage,
+    IonButton,
+    IonItemDivider
   }
 });
 </script>
