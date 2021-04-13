@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Home from '../views/Home.vue'
-import CreateMultiplayer from '@/views/CreateMultiplayer.vue'
-import GameCode from '@/views/GameCode.vue'
+import Home from '../views/Home.vue';
+import CreateMultiplayer from '@/views/CreateMultiplayer.vue';
+import GameCode from '@/views/GameCode.vue';
+import ChooseView from '@/views/ChooseView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -23,6 +24,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/gamecode',
     name: 'Game Code',
     component: GameCode
+  },
+  {
+    path: '/multiplayer/chooseview',
+    name: 'Choose View',
+    component: ChooseView
   }
 ]
 

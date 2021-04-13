@@ -8,7 +8,8 @@ import axios from 'axios';
 export default createStore({
   state: {
     game: undefined,
-    gameCode: undefined
+    gameCode: undefined,
+    equinox: undefined
   },
   // ACTIONS (asynchronous)
   actions: {
@@ -35,6 +36,9 @@ export default createStore({
     },
     setGameCode(state: any, gameCode: string) {
       state.gameCode = gameCode;
+    },
+    setEquinox(state: any, equinox: string) {
+      state.equinox = equinox;
     }
   }
 });

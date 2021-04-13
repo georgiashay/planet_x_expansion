@@ -99,19 +99,6 @@ export default defineComponent({
   line-height: 56px;
 }
 
-#create_game_buttons {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10%;
-}
-
-#create_game_buttons ion-button {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-transform: none;
-}
-
 #cancel_container {
   text-align: center;
   width: 100%;

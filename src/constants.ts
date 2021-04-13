@@ -4,3 +4,9 @@ export const GAME_TYPES: {[sector: number]: string} = {
   18: "Expert",
   24: "Ace"
 }
+export const Equinox: {[name: string]: string} = {
+  SPRING: "Spring",
+  SUMMER: "Summer",
+  AUTUMN: "Autumn",
+  WINTER: "Winter"
+};
