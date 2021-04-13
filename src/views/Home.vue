@@ -1,68 +1,55 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-    
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+      <div id="title_container">
+        <h2>The Search For</h2>
+        <h1><b>Planet X</b></h1>
+        <h5>Unofficial Expansion</h5>
+      </div>
+      <div id="start_game_buttons">
+        <ion-button expand="block" color="medium">Start New Game</ion-button>
+        <ion-button expand="block" color="medium">Enter Game Code</ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonPage } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
     IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar
+    IonPage
   }
 });
 </script>
 
 <style scoped>
-#container {
+#title_container {
+  font-family: sans-serif;
+  text-transform: uppercase;
   text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-top: 25%;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+#title_container h1 {
+  font-size: 50px;
+  line-height: 56px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
+#start_game_buttons {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
 }
 
-#container a {
-  text-decoration: none;
+#start_game_buttons ion-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-transform: none;
 }
 </style>
