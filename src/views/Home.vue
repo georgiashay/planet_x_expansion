@@ -10,7 +10,7 @@
         <div id="start_game_buttons">
           <ion-item-divider/>
           <ion-button expand="block" color="medium" router-link = "/multiplayer/create">Start New Game</ion-button>
-          <ion-button expand="block" color="medium">Enter Game Code</ion-button>
+          <ion-button expand="block" color="medium" router-link = "/multiplayer/join">Enter Game Code</ion-button>
           <ion-item-divider/>
         </div>
       </div>
@@ -21,6 +21,7 @@
 <script lang="ts">
 import { IonContent, IonPage, IonButton, IonItemDivider } from '@ionic/vue';
 import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   name: 'Home',
@@ -29,6 +30,14 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonItemDivider
+  },
+  data() {
+    return {
+      store: useStore()
+    }
+  },
+  ionViewDidEnter() {
+    this.store.commit('resetGame');
   }
 });
 </script>

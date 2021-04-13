@@ -13,19 +13,17 @@ export default createStore({
   },
   // ACTIONS (asynchronous)
   actions: {
-    createGame({ commit }, sectors: number) {
-      axios.get(SERVER_URL + "/creategame")
-        .then((response: any) => {
-          commit('setGame', response.data.game);
-          commit('setGameCode', response.data.gameCode);
-        });
+    async createGame({ commit }, sectors: number) {
+      const response: any = await axios.get(SERVER_URL + "/creategame");
+      commit('setGame', response.data.game);
+      commit('setGameCode', response.data.gameCode);
     },
-    joinGame({ commit }, gameCode: string) {
-      axios.get(SERVER_URL + "/joingame/" + gameCode)
-        .then((response: any) => {
-          commit('setGame', response.data.game);
-          commit('setGameCode', response.data.gameCode);
-        });
+    async joinGame({ commit }, gameCode: string) {
+      const response: any = await axios.get(SERVER_URL + "/joingame/" + gameCode);
+      if (response.data.game) {
+        commit('setGame', response.data.game);
+        commit('setGameCode', response.data.gameCode);
+      }
     }
   },
 
@@ -39,6 +37,11 @@ export default createStore({
     },
     setEquinox(state: any, equinox: string) {
       state.equinox = equinox;
+    },
+    resetGame(state: any) {
+      state.game = undefined;
+      state.gameCode = undefined;
+      state.equinox = undefined;
     }
   }
 });

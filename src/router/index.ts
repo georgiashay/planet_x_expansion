@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import CreateMultiplayer from '@/views/CreateMultiplayer.vue';
 import GameCode from '@/views/GameCode.vue';
 import ChooseView from '@/views/ChooseView.vue';
+import JoinMultiplayer from '@/views/JoinMultiplayer.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/create',
     name: 'Create Multiplayer',
     component: CreateMultiplayer
+  },
+  {
+    path: '/multiplayer/join',
+    name: 'Join Multiplayer',
+    component: JoinMultiplayer
   },
   {
     path: '/multiplayer/gamecode/:isnew',

@@ -41,7 +41,7 @@ import { useRouter } from 'vue-router';
 import { Equinox } from '@/constants';
 
 export default defineComponent({
-  name: 'GameCode',
+  name: 'ChooseView',
   components: {
     IonContent,
     IonPage,
