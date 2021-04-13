@@ -10,3 +10,22 @@ export const Equinox: {[name: string]: string} = {
   AUTUMN: "Autumn",
   WINTER: "Winter"
 };
+
+export const DIFFICULTY_LEVELS = [
+  {
+    facts: 18,
+    name: "Youth"
+  },
+  {
+    facts: 12,
+    name: "Beginner"
+  },
+  {
+    facts: 6,
+    name: "Experienced"
+  },
+  {
+    facts: 0,
+    name: "Genius"
+  }
+]

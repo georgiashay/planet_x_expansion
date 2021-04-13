@@ -3,28 +3,31 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Choose Your View</h3>
+          <h3>{{ store.state.equinox }} Equinox</h3>
         </div>
-        <p>Select the view that matches the side of the board you are facing and your score sheet:</p>
-        <div id="equinox_buttons">
+        <p>Select a difficulty level:</p>
+        <div id="difficulty_buttons">
           <ion-button
             expand="block"
-            v-for="equinox in Equinox"
-            :key="equinox"
-            :color="buttonColor(equinox)"
-            @click="selectedEquinox = (selectedEquinox == equinox ? undefined : equinox)"
+            v-for="difficulty in DIFFICULTY_LEVELS"
+            :key="difficulty.facts"
+            :color="buttonColor(difficulty.facts)"
+            @click="selectedFacts = (selectedFacts == difficulty.facts ? undefined : difficulty.facts)"
             >
-            {{equinox}} Equinox
+            {{difficulty.name}} ({{difficulty.facts}} facts)
           </ion-button>
           <ion-item-divider/>
           <ion-button
-            v-if="selectedEquinox !== undefined"
+            v-if="selectedFacts !== undefined"
             expand="block"
             color="medium"
             @click="continueGame()">
-            Continue
+            View Starting Information
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
           </ion-button>
+        </div>
+        <div id="cancel_container">
+          <ion-nav-link router-link="/multiplayer/chooseview">(Change View)</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -39,15 +42,15 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { Equinox } from '@/constants';
+import { DIFFICULTY_LEVELS } from '@/constants';
 
 export default defineComponent({
-  name: 'ChooseView',
+  name: 'ChooseDifficulty',
   components: {
     IonContent,
     IonPage,
@@ -56,29 +59,30 @@ export default defineComponent({
     IonIcon,
     IonFooter,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonNavLink
   },
   data() {
     const store = useStore();
     return {
       store,
       arrowForwardOutline,
-      Equinox,
-      selectedEquinox: undefined,
+      DIFFICULTY_LEVELS,
+      selectedFacts: undefined,
       router: useRouter()
     }
   },
   methods: {
-    buttonColor: function(equinox: string) {
-      if (this.selectedEquinox == equinox) {
+    buttonColor: function(facts: string) {
+      if (this.selectedFacts == facts) {
         return "light";
       } else {
         return "medium";
       }
     },
     continueGame: function() {
-      this.store.commit("setEquinox", this.selectedEquinox);
-      this.router.push("/multiplayer/choosedifficulty");
+      this.store.commit("setNumFacts", this.selectedFacts);
+      this.router.push("/multiplayer/startinginfo");
     }
   },
 });
@@ -101,17 +105,23 @@ export default defineComponent({
   line-height: 56px;
 }
 
-#equinox_buttons {
+#difficulty_buttons {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10%;
 }
 
-#equinox_buttons ion-button {
+#difficulty_buttons ion-button {
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;
 }
 
+#cancel_container {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  text-decoration: underline;
+}
 </style>

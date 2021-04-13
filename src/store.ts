@@ -9,7 +9,8 @@ export default createStore({
   state: {
     game: undefined,
     gameCode: undefined,
-    equinox: undefined
+    equinox: undefined,
+    startingFacts: undefined
   },
   // ACTIONS (asynchronous)
   actions: {
@@ -42,6 +43,10 @@ export default createStore({
       state.game = undefined;
       state.gameCode = undefined;
       state.equinox = undefined;
+      state.startingFacts = undefined;
+    },
+    setNumFacts(state: any, facts: number) {
+      state.startingFacts = facts;
     }
   }
 });
