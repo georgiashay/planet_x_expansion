@@ -10,12 +10,12 @@
           <p>Select Game Mode:</p>
           <ion-button
             expand="block"
-            v-for="gameType in gameTypes"
-            :key="gameType.sectors"
-            :color="buttonColor(gameType.sectors)"
-            @click="selectedGame = (selectedGame == gameType.sectors ? undefined : gameType.sectors)"
+            v-for="(name, sectors) in gameTypes"
+            :key="sectors"
+            :color="buttonColor(sectors)"
+            @click="selectedGame = (selectedGame == sectors ? undefined : sectors)"
             >
-            {{gameType.name}} ({{gameType.sectors}} sectors)
+            {{name}} Mode ({{sectors}} sectors)
           </ion-button>
           <ion-item-divider/>
           <ion-button
@@ -42,6 +42,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { GAME_TYPES } from '@/constants';
 
 export default defineComponent({
   name: 'CreateMultiplayer',
@@ -58,20 +59,7 @@ export default defineComponent({
     const router = useRouter();
     return {
       selectedGame: undefined,
-      gameTypes: [
-        {
-          name: "Standard Mode",
-          sectors: 12
-        },
-        {
-          name: "Expert Mode",
-          sectors: 18
-        },
-        {
-          name: "Ace Mode",
-          sectors: 24
-        }
-      ],
+      gameTypes: GAME_TYPES,
       arrowForwardOutline,
       store,
       router
@@ -86,14 +74,8 @@ export default defineComponent({
       }
     },
     createGame: function() {
-      const gameIndex = this.gameTypes.map((g) => g.sectors).indexOf(this.selectedGame!);
-      const gameType = this.gameTypes[gameIndex];
-      // Game should have more information and come from the server
-      const game = {
-        gameCode: "H7J2L9",
-        gameType: gameType
-      }
-      this.store.commit("setGame", game);
+      this.store.dispatch("createGame", this.selectedGame);
+      this.selectedGame = undefined;
       this.router.push("/multiplayer/gamecode");
     }
   },

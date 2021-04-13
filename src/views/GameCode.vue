@@ -10,8 +10,8 @@
           <p v-else>You have joined the game. Please double-check that the game code is the same as the one created for this game.</p>
         </div>
         <div id="game_code">
-          <h1>{{store.state.game.gameCode}}</h1>
-          <p>{{store.state.game.gameType.name}} ({{store.state.game.gameType.sectors}} sectors)</p>
+          <h1>{{store.state.gameCode || "Loading..."}}</h1>
+          <p>{{gameModeName}}</p>
         </div>
         <div>
           <p v-if="isGameCreator">Verify that all player devices are using the game code, and then press the Continue button below to start.</p>
@@ -38,6 +38,7 @@ import { IonContent, IonPage, IonItemDivider,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
+import { GAME_TYPES } from '@/constants';
 
 export default defineComponent({
   name: 'GameCode',
@@ -55,9 +56,20 @@ export default defineComponent({
     return {
       store,
       isGameCreator,
-      arrowForwardOutline
+      arrowForwardOutline,
+      gameTypes: GAME_TYPES
     }
   },
+  computed: {
+    gameModeName() {
+      if (this.store.state.game === undefined) {
+        return "";
+      } else {
+        const boardSize: number = this.store.state.game.board.size;
+        return GAME_TYPES[boardSize!] + " Mode (" + boardSize + " sectors)";
+      }
+    }
+  }
 });
 </script>
 
