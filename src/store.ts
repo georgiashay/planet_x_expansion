@@ -12,7 +12,7 @@ export default createStore({
     equinox: undefined,
     startingFacts: undefined
   },
-  // ACTIONS (asynchronous)
+
   actions: {
     async createGame({ commit }, sectors: number) {
       const response: any = await axios.get(SERVER_URL + "/creategame");
@@ -28,7 +28,6 @@ export default createStore({
     }
   },
 
-  // MUTATIONS ( set the state )
   mutations: {
     setGame(state: any, game: object) {
       state.game = game;
@@ -47,6 +46,17 @@ export default createStore({
     },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
+    }
+  },
+
+  getters: {
+    myStartingInformation(state: any, getters: any) {
+      if (state.game === undefined) {
+        return [];
+      }
+      return state.game.startingInformation[state.equinox.toUpperCase()]
+              .slice(0, state.startingFacts)
+              .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector);
     }
   }
 });

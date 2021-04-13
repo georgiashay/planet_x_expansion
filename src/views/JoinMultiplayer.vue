@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonNavLink, IonIcon,
         IonInput, IonItem, IonLabel,
         alertController } from '@ionic/vue';

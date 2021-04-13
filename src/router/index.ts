@@ -6,6 +6,7 @@ import GameCode from '@/views/GameCode.vue';
 import ChooseView from '@/views/ChooseView.vue';
 import JoinMultiplayer from '@/views/JoinMultiplayer.vue';
 import ChooseDifficulty from '@/views/ChooseDifficulty.vue';
+import StartingInformation from '@/views/StartingInformation.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -52,6 +53,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/choosedifficulty',
     name: 'Choose Difficulty',
     component: ChooseDifficulty
+  },
+  {
+    path: '/multiplayer/startinginfo',
+    name: 'Starting Information',
+    component: StartingInformation
   }
 ]
 
