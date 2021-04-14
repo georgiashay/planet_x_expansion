@@ -1,0 +1,132 @@
+<template>
+  <ion-page>
+    <ion-content :fullscreen="true">
+      <div id="container">
+        <div id="title_container">
+          <h3>Game Menu</h3>
+        </div>
+        <div id="action_buttons">
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/survey">
+            Survey (2-5
+            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            )
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/target">
+            Target (5
+            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            )
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/research">
+            Research (1
+            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            )
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/locateplanetx">
+            Locate Planet X (6
+            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            )
+          </ion-button>
+          <ion-item-divider/>
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/peerreview">
+            Peer Review
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/planetxconference">
+            Planet X Conference
+          </ion-button>
+          <ion-item-divider/>
+          <ion-button
+            expand="block"
+            color="medium"
+            router-link="/multiplayer/action/endgame">
+            End Game &amp; Reveal Objects
+          </ion-button>
+        </div>
+      </div>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-title>Game Code: {{ store.state.gameCode }}</ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-page>
+</template>
+
+<script lang="ts">
+import { IonContent, IonPage, IonItemDivider,
+        IonButton, IonIcon, IonFooter,
+        IonToolbar, IonTitle } from '@ionic/vue';
+import { defineComponent } from 'vue';
+import { timeOutline } from 'ionicons/icons';
+import { useStore } from 'vuex';
+
+export default defineComponent({
+  name: 'ResearchCategories',
+  components: {
+    IonContent,
+    IonPage,
+    IonButton,
+    IonIcon,
+    IonFooter,
+    IonToolbar,
+    IonTitle,
+    IonItemDivider
+  },
+  data() {
+    const store = useStore();
+    return {
+      store,
+      timeOutline
+    }
+  }
+});
+</script>
+
+<style scoped>
+#container {
+  padding: 20px;
+}
+
+#title_container {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 25%;
+}
+
+#title_container h1 {
+  font-size: 50px;
+  line-height: 56px;
+}
+
+#action_buttons {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+}
+
+#action_buttons ion-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-transform: none;
+}
+
+</style>

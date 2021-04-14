@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage,
+import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
         IonToolbar, IonTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -59,7 +59,8 @@ export default defineComponent({
     IonIcon,
     IonFooter,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonItemDivider
   },
   data() {
     const store = useStore();

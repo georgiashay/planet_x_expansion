@@ -8,6 +8,7 @@ import JoinMultiplayer from '@/views/JoinMultiplayer.vue';
 import ChooseDifficulty from '@/views/ChooseDifficulty.vue';
 import StartingInformation from '@/views/StartingInformation.vue';
 import ResearchCategories from '@/views/ResearchCategories.vue';
+import GameMenu from '@/views/GameMenu.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -64,6 +65,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/researchcategories',
     name: 'Research Categories',
     component: ResearchCategories
+  },
+  {
+    path: '/multiplayer/gamemenu',
+    name: 'Game Menu',
+    component: GameMenu
   }
 ]
 

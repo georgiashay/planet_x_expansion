@@ -10,7 +10,8 @@ export default createStore({
     game: undefined,
     gameCode: undefined,
     equinox: undefined,
-    startingFacts: undefined
+    startingFacts: undefined,
+    history: []
   },
 
   actions: {
