@@ -9,6 +9,7 @@ import ChooseDifficulty from '@/views/ChooseDifficulty.vue';
 import StartingInformation from '@/views/StartingInformation.vue';
 import ResearchCategories from '@/views/ResearchCategories.vue';
 import GameMenu from '@/views/GameMenu.vue';
+import SurveyReminder from '@/views/SurveyReminder.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -70,6 +71,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/gamemenu',
     name: 'Game Menu',
     component: GameMenu
+  },
+  {
+    path: '/multiplayer/action/survey/reminder',
+    name: 'Survey Reminder',
+    component: SurveyReminder
   }
 ]
 

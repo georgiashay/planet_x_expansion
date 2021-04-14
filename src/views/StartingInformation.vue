@@ -20,7 +20,8 @@
         <ion-button
           expand="block"
           color="medium"
-          router-link="/multiplayer/researchcategories">
+          router-link="/multiplayer/researchcategories"
+          id="start_button">
           Start Game
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
@@ -86,5 +87,9 @@ export default defineComponent({
 
 #starting_info {
   margin-bottom: 10px;
+}
+
+#start_button {
+  text-transform: none;
 }
 </style>

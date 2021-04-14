@@ -20,7 +20,8 @@
         <ion-button
           expand="block"
           color="medium"
-          router-link="/multiplayer/chooseview">
+          router-link="/multiplayer/chooseview"
+          id="continue_button">
           Continue
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
@@ -110,6 +111,10 @@ export default defineComponent({
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
+}
+
+#continue_button {
+  text-transform: none;
 }
 
 </style>

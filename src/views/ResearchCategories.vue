@@ -109,5 +109,6 @@ export default defineComponent({
 
 #continue_button {
   margin-top: 10px;
+  text-transform: none;
 }
 </style>

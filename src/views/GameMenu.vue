@@ -9,7 +9,7 @@
           <ion-button
             expand="block"
             color="medium"
-            router-link="/multiplayer/action/survey">
+            @click="clickSurvey()">
             Survey (2-5
             <ion-icon :icon="timeOutline" size="small"></ion-icon>
             )
@@ -76,6 +76,7 @@ import { IonContent, IonPage, IonItemDivider,
 import { defineComponent } from 'vue';
 import { timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ResearchCategories',
@@ -91,9 +92,20 @@ export default defineComponent({
   },
   data() {
     const store = useStore();
+    const router = useRouter();
     return {
       store,
-      timeOutline
+      timeOutline,
+      router
+    }
+  },
+  methods: {
+    clickSurvey: function() {
+      if (this.store.state.history.length > 0) {
+        this.router.push('/multiplayer/action/survey');
+      } else {
+        this.router.push('/multiplayer/action/survey/reminder');
+      }
     }
   }
 });
