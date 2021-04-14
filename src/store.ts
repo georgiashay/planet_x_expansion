@@ -100,6 +100,17 @@ export default createStore({
         text,
         timeCost: 4
       }
+
+      state.history.push(state.lastActionResult);
+    },
+    research(state: any, { index }) {
+      state.lastActionResult = {
+        actionType: "research",
+        text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
+        timeCost: 1
+      }
+
+      state.history.push(state.lastActionResult);
     }
   },
 

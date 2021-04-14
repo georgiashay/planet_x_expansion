@@ -14,6 +14,7 @@ import Survey from '@/views/Survey.vue';
 import ActionResult from '@/views/ActionResult.vue';
 import TargetReminder from '@/views/TargetReminder.vue';
 import Target from '@/views/Target.vue';
+import Research from '@/views/Research.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -100,6 +101,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/target',
     name: 'Target',
     component: Target
+  },
+  {
+    path: '/multiplayer/action/research',
+    name: 'Research',
+    component: Research
   }
 ]
 

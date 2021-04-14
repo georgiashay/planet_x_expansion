@@ -96,7 +96,7 @@ import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 
 export default defineComponent({
-  name: 'ResearchCategories',
+  name: 'Survey',
   components: {
     IonContent,
     IonPage,
