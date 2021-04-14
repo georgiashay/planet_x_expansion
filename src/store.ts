@@ -11,8 +11,7 @@ export default createStore({
     gameCode: undefined,
     equinox: undefined,
     startingFacts: undefined,
-    history: [],
-    lastActionResult: undefined
+    history: []
   },
 
   actions: {
@@ -46,7 +45,6 @@ export default createStore({
       state.equinox = undefined;
       state.startingFacts = undefined;
       state.history = [];
-      state.lastActionResult = undefined;
     },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
@@ -77,13 +75,13 @@ export default createStore({
 
       const timeCost = 5 - Math.ceil(sectors.length/4);
 
-      state.lastActionResult = {
+      const actionResult = {
         actionType: "survey",
         actionName: "Survey",
         text,
         timeCost
       }
-      state.history.push(state.lastActionResult);
+      state.history.push(actionResult);
     },
     target(state: any, { sectorNumber }) {
       let foundObject = state.game.board.objects[sectorNumber-1];
@@ -96,24 +94,24 @@ export default createStore({
       if (foundObject == SpaceObject.EMPTY) {
         text += "\nRemember, Planet X appears empty."
       }
-      state.lastActionResult = {
+      const actionResult = {
         actionType: "target",
         actionName: "Target",
         text,
         timeCost: 4
       }
 
-      state.history.push(state.lastActionResult);
+      state.history.push(actionResult);
     },
     research(state: any, { index }) {
-      state.lastActionResult = {
+      const actionResult = {
         actionType: "research",
         actionName: "Research",
         text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
         timeCost: 1
       }
 
-      state.history.push(state.lastActionResult);
+      state.history.push(actionResult);
     },
     locatePlanetX(state: any, { sector, leftObject, rightObject }) {
       const leftSector = (sector == 1) ? 24 : sector - 1;
@@ -133,7 +131,7 @@ export default createStore({
         upperText = "If no one has yet found Planet X,";
       }
 
-      state.lastActionResult = {
+      const actionResult = {
         actionType: "locateplanetx",
         actionName: "Locate Planet X",
         text,
@@ -141,7 +139,7 @@ export default createStore({
         timeCost: 5
       }
 
-      state.history.push(state.lastActionResult);
+      state.history.push(actionResult);
     }
   },
 
@@ -153,6 +151,13 @@ export default createStore({
       return state.game.startingInformation[state.equinox.toUpperCase()]
               .slice(0, state.startingFacts)
               .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector);
+    },
+    lastActionResult(state: any, getters: any) {
+      if (state.history.length) {
+        return state.history[state.history.length - 1];
+      } else {
+        return undefined;
+      }
     }
   }
 });

@@ -3,13 +3,13 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Current Action: {{store.state.lastActionResult.actionName}}</h3>
+          <h3>Current Action: {{store.getters.lastActionResult.actionName}}</h3>
         </div>
-        <p id="upper_text" v-if="store.state.lastActionResult.actionType == 'locateplanetx'">
-          {{store.state.lastActionResult.upperText}}
+        <p id="upper_text" v-if="store.getters.lastActionResult.actionType == 'locateplanetx'">
+          {{store.getters.lastActionResult.upperText}}
         </p>
-        <p id="advance_text">Advance Player Pawn: {{store.state.lastActionResult.timeCost}}<ion-icon :icon="timeOutline" size="small"/>  &gt;&gt;&gt;&gt;&gt;</p>
-        <p>{{store.state.lastActionResult.text}}</p>
+        <p id="advance_text">Advance Player Pawn: {{store.getters.lastActionResult.timeCost}}<ion-icon :icon="timeOutline" size="small"/>  &gt;&gt;&gt;&gt;&gt;</p>
+        <p>{{store.getters.lastActionResult.text}}</p>
         <ion-item-divider/>
         <ion-button
           expand="block"
