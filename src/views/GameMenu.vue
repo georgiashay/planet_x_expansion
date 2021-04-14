@@ -10,7 +10,7 @@
             expand="block"
             color="medium"
             @click="clickSurvey()">
-            Survey (2-5
+            Survey (2-4
             <ion-icon :icon="timeOutline" size="small"></ion-icon>
             )
           </ion-button>
@@ -18,7 +18,7 @@
             expand="block"
             color="medium"
             router-link="/multiplayer/action/target">
-            Target (5
+            Target (4
             <ion-icon :icon="timeOutline" size="small"></ion-icon>
             )
           </ion-button>
@@ -34,7 +34,7 @@
             expand="block"
             color="medium"
             router-link="/multiplayer/action/locateplanetx">
-            Locate Planet X (6
+            Locate Planet X (5
             <ion-icon :icon="timeOutline" size="small"></ion-icon>
             )
           </ion-button>

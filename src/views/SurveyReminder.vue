@@ -20,7 +20,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/home">Cancel</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
