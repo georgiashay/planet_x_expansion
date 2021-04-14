@@ -3,25 +3,21 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Current Action: Target</h3>
+          <h3>Current Action: Research</h3>
         </div>
         <div id="reminder">
-        <p>Reminder: you can only target a sector in the visible sky. (At the beginning of the game, the visible sky is 1-12.)</p>
-        <img src = "/assets/globe_mask.jpeg">
-        <p>You can only target in the visible half of the sky.</p>
+        <p>Reminder: You must choose a different action on your next turn; you cannot take the research action twice in a row.</p>
+        <img src = "/assets/socks.jpeg">
         </div>
+        <ion-item-divider/>
         <ion-button
           expand="block"
           color="medium"
-          router-link="/multiplayer/action/target"
+          router-link="/multiplayer/gamemenu"
           id="continue_button">
           Continue
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
-        <ion-item-divider/>
-        <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
-        </div>
       </div>
     </ion-content>
     <ion-footer>
@@ -35,13 +31,13 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
+        IonToolbar, IonTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 
 export default defineComponent({
-  name: 'TargetReminder',
+  name: 'ResearchReminder',
   components: {
     IonContent,
     IonPage,
@@ -50,8 +46,7 @@ export default defineComponent({
     IonFooter,
     IonToolbar,
     IonTitle,
-    IonItemDivider,
-    IonNavLink
+    IonItemDivider
   },
   data() {
     const store = useStore();
@@ -87,12 +82,5 @@ export default defineComponent({
 #continue_button {
   margin-top: 10px;
   text-transform: none;
-}
-
-#cancel_container {
-  text-align: center;
-  width: 100%;
-  margin-top: 10px;
-  text-decoration: underline;
 }
 </style>

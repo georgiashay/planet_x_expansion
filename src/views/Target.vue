@@ -76,7 +76,6 @@ export default defineComponent({
   data() {
     const store = useStore();
     const router = useRouter();
-    console.log(store.state.game.board.objects.map((obj: any) => obj.initial));
     return {
       store,
       arrowForwardOutline,

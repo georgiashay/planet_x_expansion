@@ -15,6 +15,7 @@ import ActionResult from '@/views/ActionResult.vue';
 import TargetReminder from '@/views/TargetReminder.vue';
 import Target from '@/views/Target.vue';
 import Research from '@/views/Research.vue';
+import ResearchReminder from '@/views/ResearchReminder.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -106,6 +107,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/research',
     name: 'Research',
     component: Research
+  },
+  {
+    path: '/multiplayer/action/research/reminder',
+    name: 'Research Reminder',
+    component: ResearchReminder
   }
 ]
 

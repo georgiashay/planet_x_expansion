@@ -11,7 +11,7 @@
         <ion-button
           expand="block"
           color="medium"
-          router-link="/multiplayer/gamemenu"
+          @click="continueGame()"
           id="continue_button">
           Continue <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
@@ -32,6 +32,7 @@ import { IonContent, IonPage, IonItemDivider,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 
 export default defineComponent({
@@ -48,16 +49,34 @@ export default defineComponent({
   },
   data() {
     const store = useStore();
+    const route = useRoute();
+    const router = useRouter();
     return {
       store,
       arrowForwardOutline,
-      timeOutline
+      timeOutline,
+      route,
+      router
     }
   },
   computed: {
     currentAction: function(): string {
       const actionName = this.store.state.lastActionResult.actionType || "None";
       return actionName[0].toUpperCase() + actionName.slice(1);
+    }
+  },
+  methods: {
+    continueGame: function() {
+      if (this.route.params.actionType == "research") {
+        const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "research").length > 1;
+        if (hasDoneResearch) {
+          this.router.push("/multiplayer/gamemenu")
+        } else {
+          this.router.push("/multiplayer/action/research/reminder");
+        }
+      } else {
+        this.router.push("/multiplayer/gamemenu");
+      }
     }
   }
 });
