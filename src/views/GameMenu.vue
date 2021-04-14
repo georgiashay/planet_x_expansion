@@ -17,7 +17,7 @@
           <ion-button
             expand="block"
             color="medium"
-            router-link="/multiplayer/action/target">
+            @click="clickTarget()">
             Target (4
             <ion-icon :icon="timeOutline" size="small"></ion-icon>
             )
@@ -106,6 +106,14 @@ export default defineComponent({
         this.router.push('/multiplayer/action/survey');
       } else {
         this.router.push('/multiplayer/action/survey/reminder');
+      }
+    },
+    clickTarget: function() {
+      const previousTargets = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "target");
+      if (previousTargets.length > 0) {
+        this.router.push('/multiplayer/action/target');
+      } else {
+        this.router.push('/multiplayer/action/target/reminder');
       }
     }
   }

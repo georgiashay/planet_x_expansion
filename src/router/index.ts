@@ -12,6 +12,7 @@ import GameMenu from '@/views/GameMenu.vue';
 import SurveyReminder from '@/views/SurveyReminder.vue';
 import Survey from '@/views/Survey.vue';
 import ActionResult from '@/views/ActionResult.vue';
+import TargetReminder from '@/views/TargetReminder.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -88,6 +89,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/:actionType/result',
     name: 'Action Result',
     component: ActionResult
+  },
+  {
+    path: '/multiplayer/action/target/reminder',
+    name: 'Target Reminder',
+    component: TargetReminder
   }
 ]
 
