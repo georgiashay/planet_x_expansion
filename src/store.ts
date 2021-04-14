@@ -83,6 +83,23 @@ export default createStore({
         timeCost
       }
       state.history.push(state.lastActionResult);
+    },
+    target(state: any, { sectorNumber }) {
+      let foundObject = state.game.board.objects[sectorNumber-1];
+      foundObject = SpaceObject[Object.keys(SpaceObject).filter((objCode: any) => SpaceObject[objCode].initial === foundObject.initial)[0]];
+      if (foundObject.initial === SpaceObject.PLANET_X.initial) {
+        foundObject = SpaceObject.EMPTY;
+      }
+
+      let text = "There is " + foundObject.one + " in sector " + sectorNumber + ".";
+      if (foundObject == SpaceObject.EMPTY) {
+        text += "\nRemember, Planet X appears empty."
+      }
+      state.lastActionResult = {
+        actionType: "target",
+        text,
+        timeCost: 4
+      }
     }
   },
 
