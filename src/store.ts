@@ -157,6 +157,15 @@ export default createStore({
       }
 
       state.history.push(actionResult);
+    },
+    conference(state: any, { index }) {
+      const actionResult = {
+        actionType: "conference",
+        actionName: "Planet X Conference",
+        text: "X" + (index + 1) + ". " + state.game.conference[index].text
+      }
+
+      state.history.push(actionResult);
     }
   },
 

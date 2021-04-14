@@ -18,6 +18,7 @@ import Research from '@/views/Research.vue';
 import ResearchReminder from '@/views/ResearchReminder.vue';
 import FindPlanetX from '@/views/FindPlanetX.vue';
 import PeerReview from '@/views/PeerReview.vue';
+import PlanetXConference from '@/views/PlanetXConference.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -124,6 +125,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/peerreview',
     name: 'Peer Review',
     component: PeerReview
+  },
+  {
+    path: '/multiplayer/action/planetxconference',
+    name: 'Planet X Conference',
+    component: PlanetXConference
   }
 ]
 
