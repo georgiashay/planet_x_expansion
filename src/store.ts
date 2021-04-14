@@ -140,11 +140,28 @@ export default createStore({
       }
 
       state.history.push(actionResult);
+    },
+    peerReview(state: any, { spaceObject, sector }) {
+      const realObject = state.game.board.objects[sector - 1];
+      let text;
+      if (realObject.initial === spaceObject.initial) {
+        text = "Correct. Sector " + sector + " has " + spaceObject.one + ".";
+      } else {
+        text = "Incorrect. Sector " + sector + " does not have " + spaceObject.one + ".";
+      }
+
+      const actionResult = {
+        actionType: "peerreview",
+        actionName: "Peer Review",
+        text
+      }
+
+      state.history.push(actionResult);
     }
   },
 
   getters: {
-    myStartingInformation(state: any, getters: any) {
+    myStartingInformation(state: any) {
       if (state.game === undefined) {
         return [];
       }
@@ -152,7 +169,7 @@ export default createStore({
               .slice(0, state.startingFacts)
               .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector);
     },
-    lastActionResult(state: any, getters: any) {
+    lastActionResult(state: any) {
       if (state.history.length) {
         return state.history[state.history.length - 1];
       } else {

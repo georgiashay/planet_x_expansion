@@ -1,0 +1,158 @@
+<template>
+  <ion-page>
+    <ion-content :fullscreen="true">
+      <div id="container">
+        <div id="title_container">
+          <h3>Current Action: Peer Review</h3>
+        </div>
+        <div id="peerreview_selections">
+          <ion-item>
+            <ion-label>Sector:</ion-label>
+            <ion-select
+              placeholder="(Select Sector)"
+              interface="popover"
+              v-model="selectedSector">
+              <ion-select-option
+                v-for="i in 24"
+                :key="i"
+                :value="i">
+                Sector {{i}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Object:</ion-label>
+            <ion-select
+              placeholder="(Select Object)"
+              interface="popover"
+              v-model="selectedObject">
+              <ion-select-option
+                v-for="(obj, objectCode) in selectableObjects"
+                :key="objectCode"
+                :value="objectCode">
+                {{obj.proper}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <ion-button
+          expand="block"
+          color="medium"
+          @click="peerreview()"
+          id="peerreview_button"
+          :disabled="selectedSector === undefined || selectedObject === undefined">
+          View Results
+          <template v-if="sectorsValid">({{timeCost}} <ion-icon :icon="timeOutline" size="small"/>)</template>
+            <ion-icon :icon="arrowForwardOutline"></ion-icon>
+        </ion-button>
+        <ion-item-divider/>
+        <div id="cancel_container">
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+        </div>
+      </div>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-title>Game Code: {{ store.state.gameCode }}</ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-page>
+</template>
+
+<script lang="ts">
+import { IonContent, IonPage, IonItemDivider,
+        IonButton, IonIcon, IonFooter,
+        IonToolbar, IonTitle, IonNavLink,
+        IonSelect, IonSelectOption, IonItem,
+        IonLabel } from '@ionic/vue';
+import { defineComponent } from 'vue';
+import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { SpaceObject } from '@/constants';
+
+export default defineComponent({
+  name: 'Survey',
+  components: {
+    IonContent,
+    IonPage,
+    IonButton,
+    IonIcon,
+    IonFooter,
+    IonToolbar,
+    IonTitle,
+    IonItemDivider,
+    IonNavLink,
+    IonSelect,
+    IonSelectOption,
+    IonItem,
+    IonLabel
+  },
+  data() {
+    const store = useStore();
+    const router = useRouter();
+    return {
+      store,
+      arrowForwardOutline,
+      timeOutline,
+      SpaceObject,
+      selectedObject: undefined,
+      selectedSector: undefined,
+      router,
+    }
+  },
+  computed: {
+    selectableObjects: function(): any {
+      const objects = Object.assign({}, SpaceObject);
+      delete objects.PLANET_X;
+      delete objects.EMPTY;
+      return objects;
+    }
+  },
+  methods: {
+    peerreview: function() {
+      this.store.commit('peerReview', {
+        spaceObject: SpaceObject[this.selectedObject],
+        sector: this.selectedSector
+      });
+      this.selectedObject = undefined;
+      this.selectedSector = undefined;
+      this.router.push('/multiplayer/action/peerreview/result');
+    }
+  }
+});
+</script>
+
+<style scoped>
+#container {
+  padding: 20px;
+}
+
+#title_container {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 25%;
+}
+
+#title_container h1 {
+  font-size: 50px;
+  line-height: 56px;
+}
+
+#peerreview_selections {
+    margin-top: 20px;
+}
+
+#peerreview_button {
+  margin-top: 10px;
+  text-transform: none;
+}
+
+#cancel_container {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+</style>

@@ -17,6 +17,7 @@ import Target from '@/views/Target.vue';
 import Research from '@/views/Research.vue';
 import ResearchReminder from '@/views/ResearchReminder.vue';
 import FindPlanetX from '@/views/FindPlanetX.vue';
+import PeerReview from '@/views/PeerReview.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -118,6 +119,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/locateplanetx',
     name: 'Find Planet X',
     component: FindPlanetX
+  },
+  {
+    path: '/multiplayer/action/peerreview',
+    name: 'Peer Review',
+    component: PeerReview
   }
 ]
 
