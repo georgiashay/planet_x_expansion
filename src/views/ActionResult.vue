@@ -5,7 +5,10 @@
         <div id="title_container">
           <h3>Current Action: {{store.state.lastActionResult.actionName}}</h3>
         </div>
-        <p>Advance Player Pawn: {{store.state.lastActionResult.timeCost}}<ion-icon :icon="timeOutline" size="small"/>  &gt;&gt;&gt;&gt;&gt;</p>
+        <p id="upper_text" v-if="store.state.lastActionResult.actionType == 'locateplanetx'">
+          {{store.state.lastActionResult.upperText}}
+        </p>
+        <p id="advance_text">Advance Player Pawn: {{store.state.lastActionResult.timeCost}}<ion-icon :icon="timeOutline" size="small"/>  &gt;&gt;&gt;&gt;&gt;</p>
         <p>{{store.state.lastActionResult.text}}</p>
         <ion-item-divider/>
         <ion-button
@@ -91,6 +94,14 @@ export default defineComponent({
 #title_container h1 {
   font-size: 50px;
   line-height: 56px;
+}
+
+#upper_text {
+  margin-bottom: 0px;
+}
+
+#advance_text {
+  margin-top: 0px;
 }
 
 #continue_button {

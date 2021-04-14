@@ -124,16 +124,20 @@ export default createStore({
                     state.game.board.objects[rightSector-1].initial === rightObject.initial;
 
       let text;
+      let upperText;
       if (found) {
         text = "Congratulations! You found Planet X!";
+        upperText = "If you are the first to find Planet X,";
       } else {
         text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
+        upperText = "If no one has yet found Planet X,";
       }
 
       state.lastActionResult = {
         actionType: "locateplanetx",
         actionName: "Locate Planet X",
         text,
+        upperText,
         timeCost: 5
       }
 
