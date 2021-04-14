@@ -1,0 +1,200 @@
+<template>
+  <ion-page>
+    <ion-content :fullscreen="true">
+      <div id="container">
+        <div id="title_container">
+          <h3>Current Action: Locate Planet X</h3>
+        </div>
+        <div id="planetx_selections">
+          <ion-item>
+            <ion-label>Sector:</ion-label>
+            <ion-select
+              placeholder="(Select Sector)"
+              interface="popover"
+              v-model="sector">
+              <ion-select-option
+                v-for="i in 24"
+                :key="i"
+                :value="i">
+                Sector {{i}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item v-if="sector">
+            <ion-label>Sector {{leftSector}}</ion-label>
+            <ion-select
+              placeholder="(Select Object)"
+              interface="popover"
+              v-model="leftObject">
+              <ion-select-option
+                v-for="(lObject, objectCode) in selectableObjects"
+                :key="objectCode"
+                :value="objectCode">
+                {{lObject.proper}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item v-if="sector">
+            <ion-label>Sector {{sector}}</ion-label>
+            Planet X
+          </ion-item>
+          <ion-item v-if="sector">
+            <ion-label>Sector {{rightSector}}</ion-label>
+            <ion-select
+              placeholder="(Select Object)"
+              interface="popover"
+              v-model="rightObject">
+              <ion-select-option
+                v-for="(rObject, objectCode) in selectableObjects"
+                :key="objectCode"
+                :value="objectCode">
+                {{rObject.proper}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <ion-button
+          expand="block"
+          color="medium"
+          @click="locate()"
+          id="planet_button"
+          :disabled="sector === undefined || leftObject === undefined || rightObject === undefined">
+          Locate Planet X (5 <ion-icon :icon="timeOutline" size="small"/>)
+            <ion-icon :icon="arrowForwardOutline"></ion-icon>
+        </ion-button>
+        <ion-item-divider/>
+        <div id="cancel_container">
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+        </div>
+      </div>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-title>Game Code: {{ store.state.gameCode }}</ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-page>
+</template>
+
+<script lang="ts">
+import { IonContent, IonPage, IonItemDivider,
+        IonButton, IonIcon, IonFooter,
+        IonToolbar, IonTitle, IonNavLink,
+        IonSelect, IonSelectOption, IonItem,
+        IonLabel } from '@ionic/vue';
+import { defineComponent } from 'vue';
+import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { SpaceObject } from '@/constants';
+
+export default defineComponent({
+  name: 'FindPlanetX',
+  components: {
+    IonContent,
+    IonPage,
+    IonButton,
+    IonIcon,
+    IonFooter,
+    IonToolbar,
+    IonTitle,
+    IonItemDivider,
+    IonNavLink,
+    IonSelect,
+    IonSelectOption,
+    IonItem,
+    IonLabel
+  },
+  data() {
+    const store = useStore();
+    const router = useRouter();
+    return {
+      store,
+      arrowForwardOutline,
+      timeOutline,
+      SpaceObject,
+      sector: undefined,
+      leftObject: undefined,
+      rightObject: undefined,
+      router,
+    }
+  },
+  computed: {
+    selectableObjects: function(): any {
+      const objects = Object.assign({}, SpaceObject);
+      delete objects.PLANET_X;
+      delete objects.DWARF_PLANET;
+      return objects;
+    },
+    leftSector: function(): number | undefined {
+      if (this.sector === undefined) {
+        return undefined;
+      } else {
+        let left = this.sector - 1;
+        if (left == 0) {
+          left = 24;
+        }
+        return left;
+      }
+    },
+    rightSector: function(): number | undefined {
+      if (this.sector === undefined) {
+        return undefined;
+      } else {
+        let left = this.sector + 1;
+        if (left == 25) {
+          left = 1;
+        }
+        return left;
+      }
+    }
+  },
+  methods: {
+    locate: function() {
+      this.store.commit('locatePlanetX', {
+        sector: this.sector,
+        leftObject: SpaceObject[this.leftObject],
+        rightObject: SpaceObject[this.rightObject]
+      });
+      this.sector = undefined;
+      this.leftObject = undefined;
+      this.rightObject = undefined;
+      this.router.push('/multiplayer/action/locateplanetx/result');
+    }
+  }
+});
+</script>
+
+<style scoped>
+#container {
+  padding: 20px;
+}
+
+#title_container {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 25%;
+}
+
+#title_container h1 {
+  font-size: 50px;
+  line-height: 56px;
+}
+
+#planet_selections {
+    margin-top: 20px;
+}
+
+#planet_button {
+  margin-top: 10px;
+  text-transform: none;
+}
+
+#cancel_container {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+</style>

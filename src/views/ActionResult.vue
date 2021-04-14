@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Current Action: {{currentAction}}</h3>
+          <h3>Current Action: {{store.state.lastActionResult.actionName}}</h3>
         </div>
         <p>Advance Player Pawn: {{store.state.lastActionResult.timeCost}}<ion-icon :icon="timeOutline" size="small"/>  &gt;&gt;&gt;&gt;&gt;</p>
         <p>{{store.state.lastActionResult.text}}</p>
@@ -57,12 +57,6 @@ export default defineComponent({
       timeOutline,
       route,
       router
-    }
-  },
-  computed: {
-    currentAction: function(): string {
-      const actionName = this.store.state.lastActionResult.actionType || "None";
-      return actionName[0].toUpperCase() + actionName.slice(1);
     }
   },
   methods: {

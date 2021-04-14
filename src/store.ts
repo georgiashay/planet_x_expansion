@@ -79,6 +79,7 @@ export default createStore({
 
       state.lastActionResult = {
         actionType: "survey",
+        actionName: "Survey",
         text,
         timeCost
       }
@@ -97,6 +98,7 @@ export default createStore({
       }
       state.lastActionResult = {
         actionType: "target",
+        actionName: "Target",
         text,
         timeCost: 4
       }
@@ -106,8 +108,33 @@ export default createStore({
     research(state: any, { index }) {
       state.lastActionResult = {
         actionType: "research",
+        actionName: "Research",
         text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
         timeCost: 1
+      }
+
+      state.history.push(state.lastActionResult);
+    },
+    locatePlanetX(state: any, { sector, leftObject, rightObject }) {
+      const leftSector = (sector == 1) ? 24 : sector - 1;
+      const rightSector = (sector == 24) ? 1 : sector + 1;
+
+      const found = state.game.board.objects[sector-1].initial === SpaceObject.PLANET_X.initial &&
+                    state.game.board.objects[leftSector-1].initial === leftObject.initial &&
+                    state.game.board.objects[rightSector-1].initial === rightObject.initial;
+
+      let text;
+      if (found) {
+        text = "Congratulations! You found Planet X!";
+      } else {
+        text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
+      }
+
+      state.lastActionResult = {
+        actionType: "locateplanetx",
+        actionName: "Locate Planet X",
+        text,
+        timeCost: 5
       }
 
       state.history.push(state.lastActionResult);
