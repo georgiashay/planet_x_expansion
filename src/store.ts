@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { SERVER_URL } from "@/constants";
+import { SERVER_URL, SpaceObject } from "@/constants";
 import axios from 'axios';
 
 //
@@ -11,7 +11,8 @@ export default createStore({
     gameCode: undefined,
     equinox: undefined,
     startingFacts: undefined,
-    history: []
+    history: [],
+    lastActionResult: undefined
   },
 
   actions: {
@@ -44,9 +45,44 @@ export default createStore({
       state.gameCode = undefined;
       state.equinox = undefined;
       state.startingFacts = undefined;
+      state.history = [];
+      state.lastActionResult = undefined;
     },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
+    },
+    survey(state: any, { surveyObject, startSector, endSector }) {
+      let sectors;
+      const spaceObject = SpaceObject[surveyObject];
+
+      if (endSector > startSector) {
+        sectors = state.game.board.objects.slice(startSector-1, endSector);
+      } else {
+        sectors = state.game.board.objects.slice(0, endSector)
+                    .concat(state.game.board.objects.slice(startSector-1));
+      }
+
+      const numObject = sectors.filter((obj: any) => {
+        if (spaceObject === SpaceObject.EMPTY) {
+          return obj.initial === spaceObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
+        } else {
+          return obj.initial === spaceObject.initial;
+        }
+      }).length;
+
+      let text = (numObject == 1) ? "There is " : "There are ";
+      text += (numObject == 0) ? "no " : numObject + " ";
+      text += (numObject == 1) ? spaceObject.name : spaceObject.plural;
+      text += " between sectors " + startSector + "-" + endSector + ".";
+
+      const timeCost = 5 - Math.ceil(sectors.length/4);
+
+      state.lastActionResult = {
+        actionType: "survey",
+        text,
+        timeCost
+      }
+      state.history.push(state.lastActionResult);
     }
   },
 

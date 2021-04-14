@@ -11,6 +11,7 @@ import ResearchCategories from '@/views/ResearchCategories.vue';
 import GameMenu from '@/views/GameMenu.vue';
 import SurveyReminder from '@/views/SurveyReminder.vue';
 import Survey from '@/views/Survey.vue';
+import ActionResult from '@/views/ActionResult.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -82,6 +83,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/survey',
     name: 'Survey',
     component: Survey
+  },
+  {
+    path: '/multiplayer/action/:actionType/result',
+    name: 'Action Result',
+    component: ActionResult
   }
 ]
 

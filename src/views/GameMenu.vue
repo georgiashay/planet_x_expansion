@@ -101,7 +101,8 @@ export default defineComponent({
   },
   methods: {
     clickSurvey: function() {
-      if (this.store.state.history.length > 0) {
+      const previousSurveys = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "survey");
+      if (previousSurveys.length > 0) {
         this.router.push('/multiplayer/action/survey');
       } else {
         this.router.push('/multiplayer/action/survey/reminder');

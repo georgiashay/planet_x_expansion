@@ -32,26 +32,28 @@
               v-model="surveyObject"
               @ionChange="startSector = undefined; endSector = undefined;">
               <ion-select-option
-                v-for="surveyObject in SpaceObject"
-                :key="surveyObject.name"
-                :value="surveyObject">
+                v-for="(surveyObject, objectCode) in surveyableObjects"
+                :key="objectCode"
+                :value="objectCode">
                 {{surveyObject.proper}}
               </ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item v-if="surveyObject !== undefined">
+          <ion-item v-if="surveyObject">
             <ion-label>In sectors:</ion-label>
             <ion-select placeholder="(Start Sector)" interface="popover" v-model="startSector">
               <ion-select-option
                 v-for="i in availableSectors"
-                :key="i">
+                :key="i"
+                :value="i">
                 {{i}}
               </ion-select-option>
             </ion-select>
             <ion-select placeholder="(End Sector)" interface="popover" v-model="endSector">
               <ion-select-option
                 v-for="i in availableSectors"
-                :key="i">
+                :key="i"
+                :value="i">
                 {{i}}
               </ion-select-option>
             </ion-select>
@@ -69,7 +71,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/home">Cancel</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -90,6 +92,7 @@ import { IonContent, IonPage, IonItemDivider,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 
 export default defineComponent({
@@ -111,6 +114,7 @@ export default defineComponent({
   },
   data() {
     const store = useStore();
+    const router = useRouter();
     return {
       store,
       arrowForwardOutline,
@@ -118,29 +122,35 @@ export default defineComponent({
       SpaceObject,
       surveyObject: undefined,
       startSector: undefined,
-      endSector: undefined
+      endSector: undefined,
+      router,
     }
   },
   computed: {
-    availableSectors: function() {
+    surveyableObjects: function(): any {
+      const objects = Object.assign({}, SpaceObject);
+      delete objects.PLANET_X;
+      return objects;
+    },
+    availableSectors: function(): Array<number> | number {
       if (this.surveyObject === undefined) {
         return [];
-      } else if (this.surveyObject.name === SpaceObject.COMET.name) {
+      } else if (this.surveyObject === "COMET") {
         return [2, 3, 5, 7, 11, 13, 17, 19, 23];
       } else {
         return 24;
       }
     },
-    surveySize: function() {
+    surveySize: function(): number {
       if (this.startSector === undefined || this.endSector === undefined) {
-        return undefined;
+        return 0;
       } else if (this.endSector > this.startSector) {
         return this.endSector - this.startSector + 1;
       } else {
         return 24 - (this.startSector - this.endSector) + 1;
       }
     },
-    sectorsValid: function() {
+    sectorsValid: function(): boolean {
       if (this.surveyObject === undefined ||
           this.startSector === undefined ||
           this.endSector === undefined) {
@@ -149,12 +159,25 @@ export default defineComponent({
         return this.surveySize >= 1 && this.surveySize <= 12;
       }
     },
-    timeCost: function() {
+    timeCost: function(): number{
       if (!this.sectorsValid) {
-        return undefined;
+        return -1;
       } else {
         return 5 - Math.ceil(this.surveySize/4);
       }
+    }
+  },
+  methods: {
+    survey: function() {
+      this.store.commit('survey', {
+        surveyObject: this.surveyObject,
+        startSector: this.startSector,
+        endSector: this.endSector
+      });
+      this.surveyObject = undefined;
+      this.startSector = undefined;
+      this.endSector = undefined;
+      this.router.push('/multiplayer/action/survey/result');
     }
   }
 });
