@@ -127,14 +127,14 @@ export default defineComponent({
                         message: 'Are you sure you want to end the game and reveal the objects in each sector?',
                         buttons: [
                           {
+                            text: 'Cancel',
+                            role: 'cancel'
+                          },
+                          {
                             text: 'Yes',
                             handler: () => {
                               this.router.push('/multiplayer/endgame');
                             }
-                          },
-                          {
-                            text: 'Cancel',
-                            role: 'cancel'
                           }]
                       });
       await alert.present();
