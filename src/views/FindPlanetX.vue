@@ -9,13 +9,15 @@
           <sector-select
             :label="'Sector:'"
             :value="sector"
-            @input="sector=$event"/>
+            @input="sector=$event"
+            :columns="6"/>
           <ion-item-divider v-if="sector"/>
           <space-object-select
             v-if="sector"
             :label="'Sector ' + leftSector"
             :value="leftObject"
             @input="leftObject = $event"
+            :columns="3"
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
           <ion-item v-if="sector">
             <ion-label>Sector {{sector}}</ion-label>
@@ -26,6 +28,7 @@
             :label="'Sector ' + rightSector"
             :value="rightObject"
             @input="rightObject = $event"
+            :columns="3"
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
         </div>
         <ion-button

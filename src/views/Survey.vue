@@ -28,13 +28,16 @@
             :label ="'Survey for:'"
             :value="surveyObject"
             @input="surveyObject = $event"
-            :exclude-objects="['PLANET_X']"/>
+            :exclude-objects="['PLANET_X']"
+            :columns="3"
+            :show-name="false"/>
           <sector-multi-select
             :label="'In sectors:'"
             :value="[startSector, endSector]"
             @input="startSector = $event[0]; endSector = $event[1]"
             :allowed-sectors="availableSectors"
-            :number-only="true"/>
+            :number-only="true"
+            :columns="6"/>
         </div>
         <ion-button
           expand="block"

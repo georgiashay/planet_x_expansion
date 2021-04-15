@@ -39,6 +39,14 @@ export default defineComponent({
     excludeObjects: {
       type: Array,
       default: () => []
+    },
+    showName: {
+      type: Boolean,
+      default: false
+    },
+    columns: {
+      type: Number,
+      default: 1
     }
   },
   methods: {
@@ -53,7 +61,11 @@ export default defineComponent({
       const popover = await popoverController
         .create({
           component: SpaceObjectSelectPopover,
-          componentProps: { excludeObjects: this.excludeObjects },
+          componentProps: {
+            excludeObjects: this.excludeObjects,
+            showName: this.showName,
+            columns: this.columns
+          },
           event: e
         });
       await popover.present();

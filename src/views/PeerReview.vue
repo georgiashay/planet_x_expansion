@@ -9,11 +9,13 @@
           <sector-select
             :label="'Sector:'"
             :value="selectedSector"
-            @input="selectedSector = $event"/>
+            @input="selectedSector = $event"
+            :columns="6"/>
           <space-object-select
             :label="'Object:'"
             :value="selectedObject"
             @input="selectedObject = $event"
+            :columns="3"
             :exclude-objects="['PLANET_X', 'EMPTY']"/>
         </div>
         <ion-button

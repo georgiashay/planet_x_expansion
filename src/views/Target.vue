@@ -9,7 +9,8 @@
           <sector-select
             :label="'Sector:'"
             :value="sectorNumber"
-            @input="sectorNumber = $event"/>
+            @input="sectorNumber = $event"
+            :columns="6"/>
         </div>
         <ion-button
           expand="block"

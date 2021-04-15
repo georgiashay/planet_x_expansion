@@ -50,6 +50,10 @@ export default defineComponent({
     numberOnly: {
       type: Boolean,
       default: false
+    },
+    columns: {
+      type: Number,
+      default: 1
     }
   },
   methods: {
@@ -57,7 +61,10 @@ export default defineComponent({
       const popover = await popoverController
         .create({
           component: SectorSelectPopover,
-          componentProps: { allowedSectors: this.allowedSectors },
+          componentProps: {
+            allowedSectors: this.allowedSectors,
+            columns: this.columns 
+          },
           event: e
         });
       await popover.present();

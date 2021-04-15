@@ -1,32 +1,31 @@
 <template>
   <div class="popover_container">
-    <ion-item-group>
-      <ion-item
-        v-for="(obj, objCode) in spaceObjects"
-        :key="objCode"
-        @click="choose(obj)"
-        class="space_item">
-        <ion-icon :src="obj.icon"></ion-icon>&nbsp;
-        {{obj.proper}}
-      </ion-item>
-    </ion-item-group>
+    <table>
+      <tr v-for="(row, index) in tableSpaceObjects" :key="index">
+        <td
+          v-for="(obj, j) in row"
+          :key="j"
+          @click="choose(obj)"
+          class="space_item">
+          <ion-icon :src="obj.icon"></ion-icon>
+          <span v-if="showName">&nbsp;{{obj.proper}}</span>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { popoverController, IonItemGroup,
-        IonItem, IonIcon } from '@ionic/vue';
+import { popoverController, IonIcon } from '@ionic/vue';
 import { SpaceObject } from '@/constants';
 
 export default defineComponent({
   name: 'SpaceObjectSelectPopover',
   components: {
-    IonItemGroup,
-    IonItem,
     IonIcon
   },
-  props: ['value', 'excludeObjects'],
+  props: ['value', 'excludeObjects', 'showName', 'columns'],
   data: function() {
     return {
       SpaceObject
@@ -41,6 +40,17 @@ export default defineComponent({
         }
       }
       return objects;
+    },
+    tableSpaceObjects: function(): any {
+      const objects: any[][] = [[]];
+      for (const objectCode in this.spaceObjects) {
+        if (objects[objects.length-1].length < this.columns) {
+          objects[objects.length-1].push(this.spaceObjects[objectCode]);
+        } else {
+          objects.push([this.spaceObjects[objectCode]]);
+        }
+      }
+      return objects;
     }
   },
   methods: {
@@ -52,11 +62,23 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-item:hover {
-  --background: whitesmoke;
+ion-col {
+  --background-hover: lightgray;
+}
+ion-col:hover {
+  --background: lightgray;
 }
 
 .space_item {
   cursor: pointer;
+  font-size: 25px;
+  margin: 0px;
+  padding: 10px;
+  border: 1px solid whitesmoke;
+  text-align: center;
+}
+
+.space_item:hover {
+  background-color: whitesmoke;
 }
 </style>
