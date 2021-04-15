@@ -3,12 +3,12 @@
     <ion-item @click="delegateFocus($event)">
       <ion-label>{{label}}</ion-label>
       <div id="select_object" @click="openPopover($event)">
-        <template v-if="value !== undefined">
+        <span v-if="value !== undefined">
           <ion-icon :src="value.icon"></ion-icon> {{value.proper}}
-        </template>
-        <template v-else>
+        </span>
+        <span v-else id="no_object">
           (Select Object)
-        </template>
+        </span>
         <span id="down_arrow">&nbsp;&#9662;</span>
       </div>
     </ion-item>
@@ -80,11 +80,11 @@ ion-item:hover {
   text-transform: none;
 }
 
-#select_object {
-  color: var(--ion-color-medium);
+#down_arrow {
+  color: var(--ion-color-medium)
 }
 
-#down_arrow {
-  color: black;
+#no_object {
+  color: var(--ion-color-medium)
 }
 </style>

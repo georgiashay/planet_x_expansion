@@ -24,21 +24,11 @@
           </table>
         </div>
         <div id="survey_selections">
-          <ion-item>
-            <ion-label>Survey for:</ion-label>
-            <ion-select
-              placeholder="(Select Object)"
-              interface="popover"
-              v-model="surveyObject"
-              @ionChange="objChanged">
-              <ion-select-option
-                v-for="(surveyObject, objectCode) in surveyableObjects"
-                :key="objectCode"
-                :value="objectCode">
-                {{surveyObject.proper}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <space-object-select
+            :label ="'Survey for:'"
+            :value="surveyObject"
+            @input="surveyObject = $event"
+            :exclude-objects="['PLANET_X']"/>
           <ion-item>
             <ion-label>In sectors:</ion-label>
             <ion-select placeholder="(Start Sector)" interface="popover" v-model="startSector">
@@ -95,6 +85,7 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
+import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
 
 export default defineComponent({
   name: 'Survey',
@@ -111,7 +102,8 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
     IonItem,
-    IonLabel
+    IonLabel,
+    SpaceObjectSelect
   },
   data() {
     const store = useStore();

@@ -21,38 +21,22 @@
             </ion-select>
           </ion-item>
           <ion-item-divider v-if="sector"/>
-          <ion-item v-if="sector">
-            <ion-label>Sector {{leftSector}}</ion-label>
-            <ion-select
-              placeholder="(Select Object)"
-              interface="popover"
-              v-model="leftObject">
-              <ion-select-option
-                v-for="(lObject, objectCode) in selectableObjects"
-                :key="objectCode"
-                :value="objectCode">
-                {{lObject.proper}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <space-object-select
+            v-if="sector"
+            :label="'Sector ' + leftSector"
+            :value="leftObject"
+            @input="leftObject = $event"
+            :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
           <ion-item v-if="sector">
             <ion-label>Sector {{sector}}</ion-label>
             Planet X
           </ion-item>
-          <ion-item v-if="sector">
-            <ion-label>Sector {{rightSector}}</ion-label>
-            <ion-select
-              placeholder="(Select Object)"
-              interface="popover"
-              v-model="rightObject">
-              <ion-select-option
-                v-for="(rObject, objectCode) in selectableObjects"
-                :key="objectCode"
-                :value="objectCode">
-                {{rObject.proper}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <space-object-select
+            v-if="sector"
+            :label="'Sector ' + rightSector"
+            :value="rightObject"
+            @input="rightObject = $event"
+            :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
         </div>
         <ion-button
           expand="block"
@@ -89,6 +73,7 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
+import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
 
 export default defineComponent({
   name: 'FindPlanetX',
@@ -105,7 +90,8 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
     IonItem,
-    IonLabel
+    IonLabel,
+    SpaceObjectSelect
   },
   data() {
     const store = useStore();
@@ -156,8 +142,8 @@ export default defineComponent({
     locate: function() {
       this.store.commit('locatePlanetX', {
         sector: this.sector,
-        leftObject: SpaceObject[this.leftObject],
-        rightObject: SpaceObject[this.rightObject]
+        leftObject: this.leftObject,
+        rightObject: this.rightObject
       });
       this.clearSelections();
       this.router.push('/multiplayer/action/locateplanetx/result');

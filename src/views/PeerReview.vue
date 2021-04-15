@@ -20,20 +20,11 @@
               </ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item>
-            <ion-label>Object:</ion-label>
-            <ion-select
-              placeholder="(Select Object)"
-              interface="popover"
-              v-model="selectedObject">
-              <ion-select-option
-                v-for="(obj, objectCode) in selectableObjects"
-                :key="objectCode"
-                :value="objectCode">
-                {{obj.proper}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <space-object-select
+            :label="'Object:'"
+            :value="selectedObject"
+            @input="selectedObject = $event"
+            :exclude-objects="['PLANET_X', 'EMPTY']"/>
         </div>
         <ion-button
           expand="block"
@@ -70,6 +61,7 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
+import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
 
 export default defineComponent({
   name: 'PeerReview',
@@ -86,7 +78,8 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
     IonItem,
-    IonLabel
+    IonLabel,
+    SpaceObjectSelect
   },
   data() {
     const store = useStore();
@@ -112,7 +105,7 @@ export default defineComponent({
   methods: {
     peerreview: function() {
       this.store.commit('peerReview', {
-        spaceObject: SpaceObject[this.selectedObject],
+        spaceObject: this.selectedObject,
         sector: this.selectedSector
       });
       this.clearSelections();
