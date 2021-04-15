@@ -69,8 +69,8 @@ export default defineComponent({
     }
   },
   computed: {
-    selectedHistory: function() {
-      return this.store.state.history.filter((item) => {
+    selectedHistory: function(): Array<any> {
+      return this.store.state.history.filter((item: any) => {
         return item.actionType != "peerReview" && item.actionType != "conference";
       });
     }
