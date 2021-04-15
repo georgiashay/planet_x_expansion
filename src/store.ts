@@ -72,6 +72,9 @@ export default createStore({
       text += (numObject == 0) ? "no " : numObject + " ";
       text += (numObject == 1) ? spaceObject.name : spaceObject.plural;
       text += " between sectors " + startSector + "-" + endSector + ".";
+      if (spaceObject === SpaceObject.EMPTY) {
+        text += "\nRemember, Planet X appears empty.";
+      }
 
       const actionText = "Survey, " + spaceObject.proper + ", " + startSector + "-" + endSector;
       const timeCost = 5 - Math.ceil(sectors.length/4);
