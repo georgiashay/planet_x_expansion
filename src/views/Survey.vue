@@ -30,7 +30,7 @@
               placeholder="(Select Object)"
               interface="popover"
               v-model="surveyObject"
-              @ionChange="startSector = undefined; endSector = undefined;">
+              @ionChange="objChanged">
               <ion-select-option
                 v-for="(surveyObject, objectCode) in surveyableObjects"
                 :key="objectCode"
@@ -39,7 +39,7 @@
               </ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item v-if="surveyObject">
+          <ion-item>
             <ion-label>In sectors:</ion-label>
             <ion-select placeholder="(Start Sector)" interface="popover" v-model="startSector">
               <ion-select-option
@@ -133,13 +133,11 @@ export default defineComponent({
       delete objects.PLANET_X;
       return objects;
     },
-    availableSectors: function(): Array<number> | number {
-      if (this.surveyObject === undefined) {
-        return [];
-      } else if (this.surveyObject === "COMET") {
+    availableSectors: function(): Array<number> {
+      if (this.surveyObject === "COMET") {
         return [2, 3, 5, 7, 11, 13, 17, 19, 23];
       } else {
-        return 24;
+        return Array.from(Array(24)).map((el,i)=>i+1);
       }
     },
     surveySize: function(): number {
@@ -182,6 +180,14 @@ export default defineComponent({
       this.surveyObject = undefined;
       this.startSector = undefined;
       this.endSector = undefined;
+    },
+    objChanged: function() {
+      if (this.availableSectors.indexOf(this.startSector) === -1) {
+        this.startSector = undefined;
+      }
+      if (this.availableSectors.indexOf(this.endSector) === -1) {
+        this.endSector = undefined;
+      }
     }
   }
 });
