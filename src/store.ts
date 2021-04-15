@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { SERVER_URL, SpaceObject } from "@/constants";
+import { SERVER_URL, SpaceObject, initialToSpaceObject } from "@/constants";
 import axios from 'axios';
 
 //
@@ -187,7 +187,13 @@ export default createStore({
       }
       return state.game.startingInformation[state.equinox.toUpperCase()]
               .slice(0, state.startingFacts)
-              .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector);
+              .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector)
+              .map((clue: any) => {
+                const newClue = Object.assign({}, clue);
+                const spaceObject = initialToSpaceObject[clue.eliminatedObject.initial];
+                newClue.spaceObject = spaceObject;
+                return newClue;
+              });
     },
     lastActionResult(state: any) {
       if (state.history.length) {

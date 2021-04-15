@@ -13,7 +13,9 @@
               v-for="(info, index) in store.getters.myStartingInformation"
               :key="index">
               <ion-item>
-                {{info.text}}
+                <span>Sector {{info.sector+1}}: </span>&nbsp;&nbsp;
+                <ion-icon :src="info.spaceObject.icon"/>&nbsp;&nbsp;
+                <span>not {{info.spaceObject.one}}</span>
               </ion-item>
             </template>
           </ion-item-group>
