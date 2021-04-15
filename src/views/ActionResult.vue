@@ -9,7 +9,9 @@
           {{store.getters.lastActionResult.upperText}}
         </p>
         <p id="advance_text" v-if="store.getters.lastActionResult.timeCost !== undefined">
-          Advance Player Pawn: {{store.getters.lastActionResult.timeCost}}<ion-icon :icon="timeOutline" size="small"/>  &gt;&gt;&gt;&gt;&gt;
+          Advance Player Pawn: {{store.getters.lastActionResult.timeCost}}
+          <ion-icon :icon="timeOutline" size="small"/>
+          {{arrowString}}
         </p>
         <p>{{store.getters.lastActionResult.text}}</p>
         <ion-item-divider/>
@@ -64,6 +66,15 @@ export default defineComponent({
       timeOutline,
       route,
       router
+    }
+  },
+  computed: {
+    arrowString: function() {
+      let arrows = "";
+      for (let i = 0; i < this.store.getters.lastActionResult.timeCost; i++) {
+        arrows += ">";
+      }
+      return arrows;
     }
   },
   methods: {
