@@ -83,7 +83,7 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a Planet X",
     the: "Planet X",
     initial: "X",
-    icons: "/assets/space_object_icons/planet_x.svg"
+    icon: "/assets/space_object_icons/planet_x.svg"
   },
   DWARF_PLANET: {
     name: "dwarf planet",
