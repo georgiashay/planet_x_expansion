@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container" v-if="store.getters.gameReady && store.getters.lastActionResult !== undefined">
         <div id="title_container">
           <h3>Current Action: {{store.getters.lastActionResult.actionName}}</h3>
         </div>

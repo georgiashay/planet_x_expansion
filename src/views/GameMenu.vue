@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Game Menu</h3>
         </div>

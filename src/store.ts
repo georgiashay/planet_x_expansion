@@ -133,11 +133,11 @@ export default createStore({
       if (found) {
         text = "Congratulations! You found Planet X!";
         upperText = "If you are the first to find Planet X,";
-        actionText = "Locate Planet X, Fail";
+        actionText = "Locate Planet X, Success";
       } else {
         text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
         upperText = "If no one has yet found Planet X,";
-        actionText = "Locate Planet X, Success";
+        actionText = "Locate Planet X, Fail";
       }
 
       const actionResult = {
@@ -194,6 +194,12 @@ export default createStore({
       } else {
         return undefined;
       }
+    },
+    gameReady(state: any) {
+      return state.game !== undefined && state.gameCode !== undefined;
+    },
+    playerReady(state: any, getters: any) {
+      return getters.gameReady && state.equinox !== undefined;
     }
   }
 });

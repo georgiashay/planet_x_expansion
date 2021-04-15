@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Game Over</h3>
           <h5>Game Code: {{store.state.gameCode}}</h5>
@@ -28,7 +28,8 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonButton } from '@ionic/vue';
+import { IonContent, IonPage, IonButton,
+          IonItem, IonItemGroup } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -39,7 +40,9 @@ export default defineComponent({
   components: {
     IonContent,
     IonPage,
-    IonButton
+    IonButton,
+    IonItem,
+    IonItemGroup
   },
   data() {
     const store = useStore();

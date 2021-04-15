@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container" v-if="store.getters.gameReady">
         <div id="title_container">
           <h3>Choose Your View</h3>
         </div>
@@ -80,6 +80,7 @@ export default defineComponent({
     },
     continueGame: function() {
       this.store.commit("setEquinox", this.selectedEquinox);
+      this.selectedEquinox = undefined;
       this.router.push("/multiplayer/choosedifficulty");
     }
   },

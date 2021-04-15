@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Current Action: Peer Review</h3>
         </div>
@@ -42,8 +42,7 @@
           id="peerreview_button"
           :disabled="selectedSector === undefined || selectedObject === undefined">
           View Results
-          <template v-if="sectorsValid">({{timeCost}} <ion-icon :icon="timeOutline" size="small"/>)</template>
-            <ion-icon :icon="arrowForwardOutline"></ion-icon>
+          <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">

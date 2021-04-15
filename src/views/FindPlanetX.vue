@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Current Action: Locate Planet X</h3>
         </div>
@@ -125,6 +125,7 @@ export default defineComponent({
       const objects = Object.assign({}, SpaceObject);
       delete objects.PLANET_X;
       delete objects.DWARF_PLANET;
+      delete objects.BLACK_HOLE;
       return objects;
     },
     leftSector: function(): number | undefined {

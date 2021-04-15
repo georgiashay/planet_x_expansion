@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container">
+      <div id="container"  v-if="store.getters.gameReady">
         <div id="title_container">
           <h3>{{ store.state.equinox }} Equinox</h3>
         </div>
@@ -83,6 +83,7 @@ export default defineComponent({
     },
     continueGame: function() {
       this.store.commit("setNumFacts", this.selectedFacts);
+      this.selectedFacts = undefined;
       this.router.push("/multiplayer/startinginfo");
     }
   },
