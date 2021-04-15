@@ -94,7 +94,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Survey
   },
   {
-    path: '/multiplayer/action/:actionType/result',
+    path: '/multiplayer/action/:actionType?/result/:historyIndex?',
     name: 'Action Result',
     component: ActionResult
   },

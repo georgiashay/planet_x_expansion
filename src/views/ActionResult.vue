@@ -1,19 +1,19 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container" v-if="store.getters.gameReady && store.getters.lastActionResult !== undefined">
+      <div id="container" v-if="store.getters.gameReady && actionResult !== undefined">
         <div id="title_container">
-          <h3>Current Action: {{store.getters.lastActionResult.actionName}}</h3>
+          <h3>Current Action: {{actionResult.actionName}}</h3>
         </div>
-        <p id="upper_text" v-if="store.getters.lastActionResult.upperText !== undefined">
-          {{store.getters.lastActionResult.upperText}}
+        <p id="upper_text" v-if="actionResult.upperText !== undefined">
+          {{actionResult.upperText}}
         </p>
-        <p id="advance_text" v-if="store.getters.lastActionResult.timeCost !== undefined">
-          Advance Player Pawn: {{store.getters.lastActionResult.timeCost}}
+        <p id="advance_text" v-if="actionResult.timeCost !== undefined">
+          Advance Player Pawn: {{actionResult.timeCost}}
           <ion-icon :icon="timeOutline" size="small"/>
           {{arrowString}}
         </p>
-        <p>{{store.getters.lastActionResult.text}}</p>
+        <p>{{actionResult.text}}</p>
         <ion-item-divider/>
         <ion-button
           expand="block"
@@ -42,6 +42,9 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 
+function isString(obj: any): obj is string {
+  return typeof obj === "string";
+}
 export default defineComponent({
   name: 'ActionResult',
   components: {
@@ -69,9 +72,25 @@ export default defineComponent({
     }
   },
   computed: {
+    actionResult: function(): any {
+      if (this.route.params.historyIndex === undefined) {
+        return undefined;
+      } else if (this.route.params.historyIndex !== "") {
+        let indexString: string;
+        if(isString(this.route.params.historyIndex)) {
+          indexString = this.route.params.historyIndex;
+        } else {
+          indexString = this.route.params.historyIndex[0];
+        }
+        const historyIndex = parseInt(indexString);
+        return this.store.state.history[historyIndex];
+      } else {
+        return this.store.getters.lastActionResult;
+      }
+    },
     arrowString: function() {
       let arrows = "";
-      for (let i = 0; i < this.store.getters.lastActionResult.timeCost; i++) {
+      for (let i = 0; i < this.actionResult.timeCost; i++) {
         arrows += ">";
       }
       return arrows;

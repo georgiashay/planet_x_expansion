@@ -14,11 +14,11 @@
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
           </ion-button>
           <ion-button
-            disabled
             v-for="(item, index) in selectedHistory"
             :key="index"
             expand="block"
             color="medium"
+            :router-link="'/multiplayer/action/result/' + index"
           >
             {{item.actionText}}
           </ion-button>
