@@ -11,7 +11,9 @@
             <ion-item
               v-for="(obj, index) in sectorObjects"
               :key="index">
-              Sector {{index+1}}: {{obj.proper}}
+              Sector {{index+1}}:&nbsp;&nbsp;&nbsp;
+              <ion-icon :src="obj.icon"></ion-icon>&nbsp;
+              {{obj.proper}}
             </ion-item>
           </ion-item-group>
         </div>

@@ -21,6 +21,7 @@
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
           <ion-item v-if="sector">
             <ion-label>Sector {{sector}}</ion-label>
+            <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;
             Planet X
           </ion-item>
           <space-object-select
