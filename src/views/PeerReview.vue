@@ -6,20 +6,10 @@
           <h3>Current Action: Peer Review</h3>
         </div>
         <div id="peerreview_selections">
-          <ion-item>
-            <ion-label>Sector:</ion-label>
-            <ion-select
-              placeholder="(Select Sector)"
-              interface="popover"
-              v-model="selectedSector">
-              <ion-select-option
-                v-for="i in 24"
-                :key="i"
-                :value="i">
-                {{i}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <sector-select
+            :label="'Sector:'"
+            :value="selectedSector"
+            @input="selectedSector = $event"/>
           <space-object-select
             :label="'Object:'"
             :value="selectedObject"
@@ -53,15 +43,14 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink,
-        IonSelect, IonSelectOption, IonItem,
-        IonLabel } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
+import SectorSelect from '@/views/SectorSelect.vue';
 
 export default defineComponent({
   name: 'PeerReview',
@@ -75,11 +64,8 @@ export default defineComponent({
     IonTitle,
     IonItemDivider,
     IonNavLink,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
-    IonLabel,
-    SpaceObjectSelect
+    SpaceObjectSelect,
+    SectorSelect
   },
   data() {
     const store = useStore();

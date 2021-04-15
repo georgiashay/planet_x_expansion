@@ -51,7 +51,6 @@ export default createStore({
     },
     survey(state: any, { surveyObject, startSector, endSector }) {
       let sectors;
-      const spaceObject = SpaceObject[surveyObject];
 
       if (endSector > startSector) {
         sectors = state.game.board.objects.slice(startSector-1, endSector);
@@ -61,22 +60,22 @@ export default createStore({
       }
 
       const numObject = sectors.filter((obj: any) => {
-        if (spaceObject === SpaceObject.EMPTY) {
-          return obj.initial === spaceObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
+        if (surveyObject === SpaceObject.EMPTY) {
+          return obj.initial === surveyObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
         } else {
-          return obj.initial === spaceObject.initial;
+          return obj.initial === surveyObject.initial;
         }
       }).length;
 
       let text = (numObject == 1) ? "There is " : "There are ";
       text += (numObject == 0) ? "no " : numObject + " ";
-      text += (numObject == 1) ? spaceObject.name : spaceObject.plural;
+      text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
       text += " between sectors " + startSector + "-" + endSector + ".";
-      if (spaceObject === SpaceObject.EMPTY) {
+      if (surveyObject === SpaceObject.EMPTY) {
         text += "\nRemember, Planet X appears empty.";
       }
 
-      const actionText = "Survey, " + spaceObject.proper + ", " + startSector + "-" + endSector;
+      const actionText = "Survey, " + surveyObject.proper + ", " + startSector + "-" + endSector;
       const timeCost = 5 - Math.ceil(sectors.length/4);
 
       const actionResult = {

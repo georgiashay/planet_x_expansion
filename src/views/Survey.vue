@@ -29,25 +29,12 @@
             :value="surveyObject"
             @input="surveyObject = $event"
             :exclude-objects="['PLANET_X']"/>
-          <ion-item>
-            <ion-label>In sectors:</ion-label>
-            <ion-select placeholder="(Start Sector)" interface="popover" v-model="startSector">
-              <ion-select-option
-                v-for="i in availableSectors"
-                :key="i"
-                :value="i">
-                {{i}}
-              </ion-select-option>
-            </ion-select>
-            <ion-select placeholder="(End Sector)" interface="popover" v-model="endSector">
-              <ion-select-option
-                v-for="i in availableSectors"
-                :key="i"
-                :value="i">
-                {{i}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <sector-multi-select
+            :label="'In sectors:'"
+            :value="[startSector, endSector]"
+            @input="startSector = $event[0]; endSector = $event[1]"
+            :allowed-sectors="availableSectors"
+            :number-only="true"/>
         </div>
         <ion-button
           expand="block"
@@ -77,15 +64,14 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink,
-        IonSelect, IonSelectOption, IonItem,
-        IonLabel } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
+import SectorMultiSelect from '@/views/SectorMultiSelect.vue';
 
 export default defineComponent({
   name: 'Survey',
@@ -99,11 +85,8 @@ export default defineComponent({
     IonTitle,
     IonItemDivider,
     IonNavLink,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
-    IonLabel,
-    SpaceObjectSelect
+    SpaceObjectSelect,
+    SectorMultiSelect
   },
   data() {
     const store = useStore();
@@ -120,11 +103,6 @@ export default defineComponent({
     }
   },
   computed: {
-    surveyableObjects: function(): any {
-      const objects = Object.assign({}, SpaceObject);
-      delete objects.PLANET_X;
-      return objects;
-    },
     availableSectors: function(): Array<number> {
       if (this.surveyObject === "COMET") {
         return [2, 3, 5, 7, 11, 13, 17, 19, 23];

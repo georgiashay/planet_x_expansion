@@ -6,20 +6,10 @@
           <h3>Current Action: Target</h3>
         </div>
         <div id="target_selections">
-          <ion-item>
-            <ion-label>Sector:</ion-label>
-            <ion-select
-              placeholder="(Select Sector)"
-              interface="popover"
-              v-model="sectorNumber">
-              <ion-select-option
-                v-for="i in 24"
-                :key="i"
-                :value="i">
-                {{i}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <sector-select
+            :label="'Sector:'"
+            :value="sectorNumber"
+            @input="sectorNumber = $event"/>
         </div>
         <ion-button
           expand="block"
@@ -49,13 +39,12 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink,
-        IonSelect, IonSelectOption, IonItem,
-        IonLabel } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import SectorSelect from '@/views/SectorSelect.vue';
 
 export default defineComponent({
   name: 'Target',
@@ -69,10 +58,7 @@ export default defineComponent({
     IonTitle,
     IonItemDivider,
     IonNavLink,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
-    IonLabel
+    SectorSelect
   },
   data() {
     const store = useStore();

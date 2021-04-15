@@ -6,20 +6,10 @@
           <h3>Current Action: Locate Planet X</h3>
         </div>
         <div id="planetx_selections">
-          <ion-item>
-            <ion-label>Sector:</ion-label>
-            <ion-select
-              placeholder="(Select Sector)"
-              interface="popover"
-              v-model="sector">
-              <ion-select-option
-                v-for="i in 24"
-                :key="i"
-                :value="i">
-                {{i}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <sector-select
+            :label="'Sector:'"
+            :value="sector"
+            @input="sector=$event"/>
           <ion-item-divider v-if="sector"/>
           <space-object-select
             v-if="sector"
@@ -66,14 +56,14 @@
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
         IonToolbar, IonTitle, IonNavLink,
-        IonSelect, IonSelectOption, IonItem,
-        IonLabel } from '@ionic/vue';
+        IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
+import SectorSelect from '@/views/SectorSelect.vue';
 
 export default defineComponent({
   name: 'FindPlanetX',
@@ -87,11 +77,10 @@ export default defineComponent({
     IonTitle,
     IonItemDivider,
     IonNavLink,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
     IonLabel,
-    SpaceObjectSelect
+    IonItem,
+    SpaceObjectSelect,
+    SectorSelect
   },
   data() {
     const store = useStore();
