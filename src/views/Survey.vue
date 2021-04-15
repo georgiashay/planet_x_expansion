@@ -64,7 +64,7 @@
           color="medium"
           @click="survey()"
           id="survey_button"
-          :disabled="!sectorsValid">
+          :disabled="!surveyReady">
           Survey
           <template v-if="sectorsValid">({{timeCost}} <ion-icon :icon="timeOutline" size="small"/>)</template>
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -150,13 +150,15 @@ export default defineComponent({
       }
     },
     sectorsValid: function(): boolean {
-      if (this.surveyObject === undefined ||
-          this.startSector === undefined ||
+      if (this.startSector === undefined ||
           this.endSector === undefined) {
         return false;
       } else {
         return this.surveySize >= 1 && this.surveySize <= 12;
       }
+    },
+    surveyReady: function(): boolean {
+      return this.sectorsValid && this.surveyObject !== undefined;
     },
     timeCost: function(): number{
       if (!this.sectorsValid) {
