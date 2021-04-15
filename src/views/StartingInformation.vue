@@ -7,6 +7,7 @@
           <h4>{{ store.state.equinox }} Equinox</h4>
         </div>
         <div id="starting_info">
+          <p v-if="store.getters.myStartingInformation.length === 0">You're a genius. You don't need any starting information.</p>
           <ion-item-group>
             <template
               v-for="(info, index) in store.getters.myStartingInformation"
