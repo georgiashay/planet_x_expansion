@@ -20,6 +20,7 @@
               </ion-select-option>
             </ion-select>
           </ion-item>
+          <ion-item-divider v-if="sector"/>
           <ion-item v-if="sector">
             <ion-label>Sector {{leftSector}}</ion-label>
             <ion-select
