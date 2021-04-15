@@ -16,7 +16,7 @@
                 v-for="i in 24"
                 :key="i"
                 :value="i">
-                Sector {{i}}
+                {{i}}
               </ion-select-option>
             </ion-select>
           </ion-item>
