@@ -39,7 +39,6 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
-import { SpaceObject } from '@/constants';
 
 export default defineComponent({
   name: 'ActionResult',
@@ -58,7 +57,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
-    
+
     return {
       store,
       arrowForwardOutline,

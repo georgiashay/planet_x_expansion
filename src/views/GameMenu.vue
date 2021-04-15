@@ -138,7 +138,7 @@ export default defineComponent({
                           }]
                       });
       await alert.present();
-      const { role } = await alert.onDidDismiss();
+      await alert.onDidDismiss();
     }
   }
 });

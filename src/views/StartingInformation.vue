@@ -44,7 +44,6 @@ import { IonContent, IonPage,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'StartingInformation',

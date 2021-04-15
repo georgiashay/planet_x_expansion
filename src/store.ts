@@ -15,7 +15,7 @@ export default createStore({
   },
 
   actions: {
-    async createGame({ commit }, sectors: number) {
+    async createGame({ commit }) {
       const response: any = await axios.get(SERVER_URL + "/creategame");
       commit('setGame', response.data.game);
       commit('setGameCode', response.data.gameCode);

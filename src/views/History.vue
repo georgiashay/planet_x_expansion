@@ -42,7 +42,7 @@ import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
         IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
+import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 

@@ -73,7 +73,7 @@ export default defineComponent({
         return "";
       } else {
         const boardSize: number = this.store.state.game.board.size;
-        return GAME_TYPES[boardSize!] + " Mode (" + boardSize + " sectors)";
+        return GAME_TYPES[boardSize] + " Mode (" + boardSize + " sectors)";
       }
     }
   }

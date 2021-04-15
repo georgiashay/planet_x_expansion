@@ -49,7 +49,6 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject } from '@/constants';
 
 export default defineComponent({
   name: 'Research',
