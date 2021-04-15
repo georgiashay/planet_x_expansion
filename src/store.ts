@@ -146,6 +146,7 @@ export default createStore({
         actionText,
         text,
         upperText,
+        success: found,
         timeCost: 5
       }
 

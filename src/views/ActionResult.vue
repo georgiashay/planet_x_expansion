@@ -40,6 +40,7 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
+import { Plugins } from '@capacitor/core';
 
 export default defineComponent({
   name: 'ActionResult',
@@ -58,6 +59,8 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
+    Plugins.SoundEffect.loadSound({ id: 'positiveSound', path: `/assets/positive_sound.wav` });
+    Plugins.SoundEffect.loadSound({ id: 'negativeSound', path: `/assets/negative_sound.wav` });
     return {
       store,
       arrowForwardOutline,
@@ -77,6 +80,15 @@ export default defineComponent({
         }
       } else {
         this.router.push("/multiplayer/gamemenu");
+      }
+    }
+  },
+  ionViewDidEnter: function() {
+    if (this.store.state.lastActionResult !== undefined) {
+      if (this.store.state.lastActionResult.success === false) {
+        Plugins.SoundEffect.play({ id: 'negativeSound' });
+      } else {
+        Plugins.SoundEffect.play({ id: 'positiveSound' });
       }
     }
   }
