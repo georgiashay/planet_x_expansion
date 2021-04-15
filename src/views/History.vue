@@ -71,7 +71,7 @@ export default defineComponent({
   computed: {
     selectedHistory: function(): Array<any> {
       return this.store.state.history.filter((item: any) => {
-        return item.actionType != "peerReview" && item.actionType != "conference";
+        return item.actionType != "peerreview" && item.actionType != "conference";
       });
     }
   }
