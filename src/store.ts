@@ -73,11 +73,13 @@ export default createStore({
       text += (numObject == 1) ? spaceObject.name : spaceObject.plural;
       text += " between sectors " + startSector + "-" + endSector + ".";
 
+      const actionText = "Survey, " + spaceObject.proper + ", " + startSector + "-" + endSector;
       const timeCost = 5 - Math.ceil(sectors.length/4);
 
       const actionResult = {
         actionType: "survey",
         actionName: "Survey",
+        actionText,
         text,
         timeCost
       }
@@ -94,9 +96,12 @@ export default createStore({
       if (foundObject == SpaceObject.EMPTY) {
         text += "\nRemember, Planet X appears empty."
       }
+
+      const actionText = "Target, Sector " + sectorNumber;
       const actionResult = {
         actionType: "target",
         actionName: "Target",
+        actionText,
         text,
         timeCost: 4
       }
@@ -107,6 +112,7 @@ export default createStore({
       const actionResult = {
         actionType: "research",
         actionName: "Research",
+        actionText: "Research " + String.fromCharCode(index+65) + ": " + state.game.research[index].categoryName,
         text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
         timeCost: 1
       }
@@ -123,17 +129,21 @@ export default createStore({
 
       let text;
       let upperText;
+      let actionText;
       if (found) {
         text = "Congratulations! You found Planet X!";
         upperText = "If you are the first to find Planet X,";
+        actionText = "Locate Planet X, Fail";
       } else {
         text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
         upperText = "If no one has yet found Planet X,";
+        actionText = "Locate Planet X, Success";
       }
 
       const actionResult = {
         actionType: "locateplanetx",
         actionName: "Locate Planet X",
+        actionText,
         text,
         upperText,
         timeCost: 5

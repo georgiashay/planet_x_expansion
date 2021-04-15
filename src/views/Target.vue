@@ -39,7 +39,8 @@
     </ion-content>
     <ion-footer>
       <ion-toolbar>
-        <ion-title>Game Code: {{ store.state.gameCode }}</ion-title>
+        <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
+        <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>
     </ion-footer>
   </ion-page>
@@ -57,7 +58,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  name: 'ResearchCategories',
+  name: 'Target',
   components: {
     IonContent,
     IonPage,
@@ -127,5 +128,15 @@ export default defineComponent({
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
+}
+
+#game_code {
+  float:left;
+}
+
+#history_link {
+  float:right;
+  text-decoration: underline;
+  margin-right: 20px;
 }
 </style>

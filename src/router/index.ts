@@ -19,6 +19,7 @@ import ResearchReminder from '@/views/ResearchReminder.vue';
 import FindPlanetX from '@/views/FindPlanetX.vue';
 import PeerReview from '@/views/PeerReview.vue';
 import PlanetXConference from '@/views/PlanetXConference.vue';
+import History from '@/views/History.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -130,6 +131,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/action/planetxconference',
     name: 'Planet X Conference',
     component: PlanetXConference
+  },
+  {
+    path: '/multiplayer/history',
+    name: 'History',
+    component: History
   }
 ]
 

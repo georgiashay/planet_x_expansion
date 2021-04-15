@@ -36,7 +36,8 @@
     </ion-content>
     <ion-footer>
       <ion-toolbar>
-        <ion-title>Game Code: {{ store.state.gameCode }}</ion-title>
+        <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
+        <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>
     </ion-footer>
   </ion-page>
@@ -45,7 +46,7 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -60,7 +61,8 @@ export default defineComponent({
     IonFooter,
     IonToolbar,
     IonTitle,
-    IonItemDivider
+    IonItemDivider,
+    IonNavLink
   },
   data() {
     const store = useStore();
@@ -110,5 +112,15 @@ export default defineComponent({
 #continue_button {
   margin-top: 10px;
   text-transform: none;
+}
+
+#game_code {
+  float:left;
+}
+
+#history_link {
+  float:right;
+  text-decoration: underline;
+  margin-right: 20px;
 }
 </style>

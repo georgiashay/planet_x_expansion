@@ -3,35 +3,35 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Choose Your View</h3>
+          <h3>History</h3>
         </div>
-        <p>Select the view that matches the side of the board you are facing and your score sheet:</p>
-        <div id="equinox_buttons">
+        <div id="history">
           <ion-button
-            expand="block"
-            v-for="equinox in Equinox"
-            :key="equinox"
-            :color="buttonColor(equinox)"
-            @click="selectedEquinox = (selectedEquinox == equinox ? undefined : equinox)"
-            >
-            {{equinox}} Equinox
-          </ion-button>
-          <ion-item-divider/>
-          <ion-button
-            v-if="selectedEquinox !== undefined"
             expand="block"
             color="medium"
-            @click="continueGame()">
-            Continue
-              <ion-icon :icon="arrowForwardOutline"></ion-icon>
+            router-link="/multiplayer/startinginfo">
+            Starting Information, {{store.state.equinox}} Equinox
+            <ion-icon :icon="arrowForwardOutline"></ion-icon>
           </ion-button>
+          <ion-button
+            disabled
+            v-for="(item, index) in selectedHistory"
+            :key="index"
+            expand="block"
+            color="medium"
+          >
+            {{item.actionText}}
+          </ion-button>
+        </div>
+        <ion-item-divider/>
+        <div id="cancel_container">
+          <ion-nav-link router-link="/multiplayer/gamemenu">Close History</ion-nav-link>
         </div>
       </div>
     </ion-content>
     <ion-footer>
       <ion-toolbar>
         <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
-        <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>
     </ion-footer>
   </ion-page>
@@ -42,47 +42,39 @@ import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
         IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { arrowForwardOutline } from 'ionicons/icons';
+import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { Equinox } from '@/constants';
 
 export default defineComponent({
-  name: 'ChooseView',
+  name: 'History',
   components: {
     IonContent,
     IonPage,
-    IonItemDivider,
     IonButton,
     IonIcon,
     IonFooter,
     IonToolbar,
     IonTitle,
+    IonItemDivider,
     IonNavLink
   },
   data() {
     const store = useStore();
+    const router = useRouter();
     return {
       store,
       arrowForwardOutline,
-      Equinox,
-      selectedEquinox: undefined,
-      router: useRouter()
+      router
     }
   },
-  methods: {
-    buttonColor: function(equinox: string) {
-      if (this.selectedEquinox == equinox) {
-        return "light";
-      } else {
-        return "medium";
-      }
-    },
-    continueGame: function() {
-      this.store.commit("setEquinox", this.selectedEquinox);
-      this.router.push("/multiplayer/choosedifficulty");
+  computed: {
+    selectedHistory: function() {
+      return this.store.state.history.filter((item) => {
+        return item.actionType != "peerReview" && item.actionType != "conference";
+      });
     }
-  },
+  }
 });
 </script>
 
@@ -103,26 +95,27 @@ export default defineComponent({
   line-height: 56px;
 }
 
-#equinox_buttons {
+#history {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10%;
 }
 
-#equinox_buttons ion-button {
+#history ion-button {
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;
 }
 
-#game_code {
-  float:left;
+#cancel_container {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  text-decoration: underline;
 }
 
-#history_link {
-  float:right;
-  text-decoration: underline;
-  margin-right: 20px;
+#game_code {
+  float:left;
 }
 </style>
