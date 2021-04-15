@@ -73,7 +73,7 @@ import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 
 export default defineComponent({
-  name: 'Survey',
+  name: 'PeerReview',
   components: {
     IonContent,
     IonPage,

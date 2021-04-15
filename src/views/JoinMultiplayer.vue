@@ -75,9 +75,7 @@ export default defineComponent({
       } else {
         const alert = await alertController
                         .create({
-                          // cssClass: 'my-custom-class',
                           header: 'Alert',
-                          // subHeader: 'Subtitle',
                           message: 'That game code could not be found. Please try again.',
                           buttons: ['OK'],
                         });

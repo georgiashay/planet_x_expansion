@@ -55,7 +55,7 @@
           <ion-button
             expand="block"
             color="medium"
-            router-link="/multiplayer/action/endgame">
+            @click="endGame()">
             End Game &amp; Reveal Objects
           </ion-button>
         </div>
@@ -73,7 +73,8 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink,
+        alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -117,6 +118,27 @@ export default defineComponent({
       } else {
         this.router.push('/multiplayer/action/target/reminder');
       }
+    },
+    endGame: async function() {
+      const alert = await alertController
+                      .create({
+                        header: 'End Game',
+                        // subHeader: 'Subtitle',
+                        message: 'Are you sure you want to end the game and reveal the objects in each sector?',
+                        buttons: [
+                          {
+                            text: 'Yes',
+                            handler: () => {
+                              this.router.push('/multiplayer/endgame');
+                            }
+                          },
+                          {
+                            text: 'Cancel',
+                            role: 'cancel'
+                          }]
+                      });
+      await alert.present();
+      const { role } = await alert.onDidDismiss();
     }
   }
 });

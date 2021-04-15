@@ -20,6 +20,7 @@ import FindPlanetX from '@/views/FindPlanetX.vue';
 import PeerReview from '@/views/PeerReview.vue';
 import PlanetXConference from '@/views/PlanetXConference.vue';
 import History from '@/views/History.vue';
+import EndGame from '@/views/EndGame.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -136,6 +137,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multiplayer/history',
     name: 'History',
     component: History
+  },
+  {
+    path: '/multiplayer/endgame',
+    name: 'End Game',
+    component: EndGame
   }
 ]
 
