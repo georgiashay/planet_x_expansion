@@ -175,6 +175,7 @@ export default createStore({
       const actionResult = {
         actionType: "conference",
         actionName: "Planet X Conference",
+        actionText: "Conference X" + (index+1) + ": " + state.game.conference[index].categoryName,
         text: "X" + (index + 1) + ". " + state.game.conference[index].text
       }
 

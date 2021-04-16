@@ -17,9 +17,9 @@
             :key="index"
             expand="block"
             color="medium"
-            :router-link="'/multiplayer/action/result/' + index"
+            :router-link="'/multiplayer/action/result/' + item.index"
           >
-            <span class="ion-text-left">{{item.actionText}}</span>
+            <span class="ion-text-left">{{item.item.actionText}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>
@@ -66,8 +66,10 @@ export default defineComponent({
   },
   computed: {
     selectedHistory: function(): Array<any> {
-      return this.store.state.history.filter((item: any) => {
-        return item.actionType != "peerreview" && item.actionType != "conference";
+      return this.store.state.history.map((item: any, index: number) => {
+        return { item, index };
+      }).filter((item: any) => {
+        return item.item.actionType != "peerreview";
       });
     }
   }
