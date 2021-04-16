@@ -2,8 +2,15 @@
   --width: unset;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Roboto:wght@300&display=swap');
+@font-face {
+  font-family: "Roboto";
+  src: url("./fonts/Roboto-Light.ttf");
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("./fonts/RobotoSlab-VariableFont_wght.ttf");
+}
 
 :root {
   --ion-font-family: "Roboto";
