@@ -6,7 +6,7 @@
           <h3>Multiplayer Game</h3>
         </div>
         <div id="enter_code">
-          <ion-item>
+          <ion-item color="dark">
             <ion-label position="floating">Enter Game Code</ion-label>
             <ion-input v-model="gameCode"></ion-input>
           </ion-item>
