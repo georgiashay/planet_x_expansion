@@ -1,14 +1,5 @@
 <template>
   <div class="popover_container">
-    <!-- <ion-item-group>
-      <ion-item
-        v-for="i in allowedSectors"
-        :key="i"
-        @click="choose(i)"
-        class="sector_item">
-        {{i}}
-      </ion-item>
-    </ion-item-group> -->
     <table>
       <tr v-for="(row, index) in tableSectors" :key="index">
         <td
@@ -65,7 +56,7 @@ ion-item:hover {
 
 .sector_item {
   cursor: pointer;
-  font-size: 25px;
+  font-size: 20px;
   margin: 0px;
   padding: 10px;
   border: 1px solid whitesmoke;

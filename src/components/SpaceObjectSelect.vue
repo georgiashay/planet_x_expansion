@@ -19,7 +19,7 @@
 import { popoverController,
         IonIcon, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import SpaceObjectSelectPopover from '@/views/SpaceObjectSelectPopover.vue';
+import SpaceObjectSelectPopover from '@/components/SpaceObjectSelectPopover.vue';
 
 export default defineComponent({
   name: 'SpaceObjectSelect',

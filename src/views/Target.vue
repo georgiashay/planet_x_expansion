@@ -45,7 +45,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import SectorSelect from '@/views/SectorSelect.vue';
+import SectorSelect from '@/components/SectorSelect.vue';
 
 export default defineComponent({
   name: 'Target',

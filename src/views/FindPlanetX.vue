@@ -66,8 +66,8 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
-import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
-import SectorSelect from '@/views/SectorSelect.vue';
+import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
+import SectorSelect from '@/components/SectorSelect.vue';
 
 export default defineComponent({
   name: 'FindPlanetX',

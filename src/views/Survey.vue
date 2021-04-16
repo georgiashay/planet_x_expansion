@@ -73,8 +73,8 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
-import SpaceObjectSelect from '@/views/SpaceObjectSelect.vue';
-import SectorMultiSelect from '@/views/SectorMultiSelect.vue';
+import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
+import SectorMultiSelect from '@/components/SectorMultiSelect.vue';
 
 export default defineComponent({
   name: 'Survey',

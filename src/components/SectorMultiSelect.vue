@@ -1,15 +1,20 @@
 <template>
   <div class="select_container">
-    <ion-item @click="delegateFocus($event)">
+    <ion-item>
       <ion-label>{{label}}</ion-label>
-      <div id="select_sector" @click="openPopover($event)">
-        <span v-if="value !== undefined">
-          <span v-if="!numberOnly">Sector</span> {{value}}
+      <div
+        v-for="(i, index) in value"
+        :key="index"
+        class="select_sector"
+        @click="openPopover($event, index)">
+        <span v-if="index > 0">&nbsp;{{delimiter}}&nbsp;</span>
+        <span v-if="i !== undefined">
+          <span v-if="!numberOnly">Sector</span> {{i}}
         </span>
-        <span v-else id="no_sector">
+        <span v-else class="no_sector">
           (Select Sector)
         </span>
-        <span id="down_arrow">&nbsp;&#9662;</span>
+        <span class="down_arrow">&nbsp;&#9662;</span>
       </div>
     </ion-item>
   </div>
@@ -18,17 +23,17 @@
 <script lang="ts">
 import { popoverController, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import SectorSelectPopover from '@/views/SectorSelectPopover.vue';
+import SectorSelectPopover from '@/components/SectorSelectPopover.vue';
 
 export default defineComponent({
-  name: 'SectorSelect',
+  name: 'SectorMultiSelect',
   components: {
     IonItem,
     IonLabel
   },
   props: {
     value: {
-      type: Number
+      type: Array
     },
     label: {
       type: String,
@@ -37,6 +42,10 @@ export default defineComponent({
     allowedSectors: {
       type: Array,
       default: () => Array.from(Array(24)).map((el,i)=>i+1)
+    },
+    delimiter: {
+      type: String,
+      default: "-"
     },
     numberOnly: {
       type: Boolean,
@@ -48,14 +57,7 @@ export default defineComponent({
     }
   },
   methods: {
-    delegateFocus: function(e: Event) {
-      const clicked = e.target as HTMLElement;
-      const item = clicked.closest("ion-item");
-      const el = item.querySelector("#select_sector") as HTMLElement;
-      el.click();
-    },
-    openPopover: async function(e: Event) {
-      e.stopPropagation();
+    openPopover: async function(e: Event, i: number) {
       const popover = await popoverController
         .create({
           component: SectorSelectPopover,
@@ -69,7 +71,10 @@ export default defineComponent({
 
       const { data } = await popover.onDidDismiss();
       if (data !== undefined) {
-        this.$emit('input', data);
+        const val = this.value as Array<number>;
+        const newValue = [...val];
+        newValue[i] = data;
+        this.$emit('input', newValue);
       }
     }
   }
@@ -89,11 +94,11 @@ ion-item:hover {
   text-transform: none;
 }
 
-#down_arrow {
+.down_arrow {
   color: var(--ion-color-medium)
 }
 
-#no_sector {
+.no_sector {
   color: var(--ion-color-medium)
 }
 </style>

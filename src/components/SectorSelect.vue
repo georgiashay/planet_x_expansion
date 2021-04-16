@@ -1,20 +1,15 @@
 <template>
   <div class="select_container">
-    <ion-item>
+    <ion-item @click="delegateFocus($event)">
       <ion-label>{{label}}</ion-label>
-      <div
-        v-for="(i, index) in value"
-        :key="index"
-        class="select_sector"
-        @click="openPopover($event, index)">
-        <span v-if="index > 0">&nbsp;{{delimiter}}&nbsp;</span>
-        <span v-if="i !== undefined">
-          <span v-if="!numberOnly">Sector</span> {{i}}
+      <div id="select_sector" @click="openPopover($event)">
+        <span v-if="value !== undefined">
+          <span v-if="!numberOnly">Sector</span> {{value}}
         </span>
-        <span v-else class="no_sector">
+        <span v-else id="no_sector">
           (Select Sector)
         </span>
-        <span class="down_arrow">&nbsp;&#9662;</span>
+        <span id="down_arrow">&nbsp;&#9662;</span>
       </div>
     </ion-item>
   </div>
@@ -23,17 +18,17 @@
 <script lang="ts">
 import { popoverController, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import SectorSelectPopover from '@/views/SectorSelectPopover.vue';
+import SectorSelectPopover from '@/components/SectorSelectPopover.vue';
 
 export default defineComponent({
-  name: 'SectorMultiSelect',
+  name: 'SectorSelect',
   components: {
     IonItem,
     IonLabel
   },
   props: {
     value: {
-      type: Array
+      type: Number
     },
     label: {
       type: String,
@@ -42,10 +37,6 @@ export default defineComponent({
     allowedSectors: {
       type: Array,
       default: () => Array.from(Array(24)).map((el,i)=>i+1)
-    },
-    delimiter: {
-      type: String,
-      default: "-"
     },
     numberOnly: {
       type: Boolean,
@@ -57,13 +48,20 @@ export default defineComponent({
     }
   },
   methods: {
-    openPopover: async function(e: Event, i: number) {
+    delegateFocus: function(e: Event) {
+      const clicked = e.target as HTMLElement;
+      const item = clicked.closest("ion-item");
+      const el = item.querySelector("#select_sector") as HTMLElement;
+      el.click();
+    },
+    openPopover: async function(e: Event) {
+      e.stopPropagation();
       const popover = await popoverController
         .create({
           component: SectorSelectPopover,
           componentProps: {
             allowedSectors: this.allowedSectors,
-            columns: this.columns 
+            columns: this.columns
           },
           event: e
         });
@@ -71,10 +69,7 @@ export default defineComponent({
 
       const { data } = await popover.onDidDismiss();
       if (data !== undefined) {
-        const val = this.value as Array<number>;
-        const newValue = [...val];
-        newValue[i] = data;
-        this.$emit('input', newValue);
+        this.$emit('input', data);
       }
     }
   }
@@ -94,11 +89,11 @@ ion-item:hover {
   text-transform: none;
 }
 
-.down_arrow {
+#down_arrow {
   color: var(--ion-color-medium)
 }
 
-.no_sector {
+#no_sector {
   color: var(--ion-color-medium)
 }
 </style>
