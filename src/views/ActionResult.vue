@@ -136,6 +136,13 @@ export default defineComponent({
 
 #advance_text {
   margin-top: 0px;
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+#advance_text ion-icon {
+  font-size: 1.2em;
 }
 
 #continue_button {
