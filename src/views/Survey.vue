@@ -33,7 +33,7 @@
           <space-object-select
             :label ="'Survey for:'"
             :value="surveyObject"
-            @input="surveyObject = $event"
+            @input="surveyObject = $event; objChanged()"
             :exclude-objects="['PLANET_X']"
             :columns="3"
             :show-name="false"/>
