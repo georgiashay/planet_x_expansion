@@ -180,7 +180,7 @@ export default defineComponent({
 }
 
 #title_container {
-  font-family: sans-serif;
+  font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
   margin-top: 25%;
