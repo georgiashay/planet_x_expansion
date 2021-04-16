@@ -82,14 +82,6 @@ export default defineComponent({
       router,
     }
   },
-  computed: {
-    selectableObjects: function(): any {
-      const objects = Object.assign({}, SpaceObject);
-      delete objects.PLANET_X;
-      delete objects.EMPTY;
-      return objects;
-    }
-  },
   methods: {
     peerreview: function() {
       this.store.commit('peerReview', {

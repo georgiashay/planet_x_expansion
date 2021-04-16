@@ -101,13 +101,6 @@ export default defineComponent({
     }
   },
   computed: {
-    selectableObjects: function(): any {
-      const objects = Object.assign({}, SpaceObject);
-      delete objects.PLANET_X;
-      delete objects.DWARF_PLANET;
-      delete objects.BLACK_HOLE;
-      return objects;
-    },
     leftSector: function(): number | undefined {
       if (this.sector === undefined) {
         return undefined;
