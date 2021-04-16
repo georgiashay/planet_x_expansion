@@ -1,6 +1,6 @@
 <template>
   <div class="select_container">
-    <ion-item>
+    <ion-item color="dark">
       <ion-label>{{label}}</ion-label>
       <div
         v-for="(i, index) in value"

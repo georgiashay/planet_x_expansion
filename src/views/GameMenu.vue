@@ -8,7 +8,7 @@
         <div id="action_buttons">
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             @click="clickSurvey()">
             Survey (2-4
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -16,7 +16,7 @@
           </ion-button>
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             @click="clickTarget()">
             Target (4
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -24,7 +24,7 @@
           </ion-button>
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             router-link="/multiplayer/action/research">
             Research (1
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -32,7 +32,7 @@
           </ion-button>
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             router-link="/multiplayer/action/locateplanetx">
             Locate Planet X (5
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -41,20 +41,20 @@
           <ion-item-divider/>
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             router-link="/multiplayer/action/peerreview">
             Peer Review
           </ion-button>
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             router-link="/multiplayer/action/planetxconference">
             Planet X Conference
           </ion-button>
           <ion-item-divider/>
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             @click="endGame()">
             End Game &amp; Reveal Objects
           </ion-button>
@@ -62,7 +62,7 @@
       </div>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="dark">
         <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
         <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>
@@ -123,7 +123,6 @@ export default defineComponent({
       const alert = await alertController
                       .create({
                         header: 'End Game',
-                        // subHeader: 'Subtitle',
                         message: 'Are you sure you want to end the game and reveal the objects in each sector?',
                         buttons: [
                           {
@@ -135,7 +134,8 @@ export default defineComponent({
                             handler: () => {
                               this.router.push('/multiplayer/endgame');
                             }
-                          }]
+                          }],
+                          cssClass: "custom-alert"
                       });
       await alert.present();
       await alert.onDidDismiss();

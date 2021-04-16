@@ -20,7 +20,7 @@
           <ion-button
             v-if="selectedEquinox !== undefined"
             expand="block"
-            color="medium"
+            color="dark"
             @click="continueGame()">
             Continue
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -29,7 +29,7 @@
       </div>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="dark">
         <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
         <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>
@@ -73,9 +73,9 @@ export default defineComponent({
   methods: {
     buttonColor: function(equinox: string) {
       if (this.selectedEquinox == equinox) {
-        return "light";
-      } else {
         return "medium";
+      } else {
+        return "dark";
       }
     },
     continueGame: function() {

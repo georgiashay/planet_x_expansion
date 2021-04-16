@@ -14,7 +14,7 @@
         </div>
         <ion-button
           expand="block"
-          color="medium"
+          color="dark"
           @click="target()"
           id="target_button"
           :disabled="!sectorNumber">
@@ -29,7 +29,7 @@
       </div>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="dark">
         <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
         <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>

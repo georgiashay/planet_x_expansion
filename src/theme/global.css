@@ -14,4 +14,22 @@
 
 :root {
   --ion-font-family: "Roboto";
+  --ion-text-color: white;
+}
+
+ion-content {
+  --background: linear-gradient(
+          rgba(0, 0, 0, 0.2),
+          rgba(0, 0, 0, 0.2)
+        ),
+        url("../../public/assets/space.jpeg") no-repeat center/cover fixed;
+}
+
+ion-item-divider {
+  --background: unset;
+  --color: white;
+}
+
+.custom-alert .alert-title {
+  color: black;
 }

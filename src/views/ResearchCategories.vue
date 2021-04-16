@@ -26,7 +26,7 @@
         <ion-item-divider/>
         <ion-button
           expand="block"
-          color="medium"
+          color="dark"
           router-link="/multiplayer/gamemenu"
           id="continue_button">
           Continue
@@ -35,7 +35,7 @@
       </div>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="dark">
         <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
         <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
       </ion-toolbar>

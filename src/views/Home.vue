@@ -9,8 +9,8 @@
         </div>
         <div id="start_game_buttons">
           <ion-item-divider/>
-          <ion-button expand="block" color="medium" router-link = "/multiplayer/create">Start New Game</ion-button>
-          <ion-button expand="block" color="medium" router-link = "/multiplayer/join">Enter Game Code</ion-button>
+          <ion-button expand="block" color="dark" router-link = "/multiplayer/create">Start New Game</ion-button>
+          <ion-button expand="block" color="dark" router-link = "/multiplayer/join">Enter Game Code</ion-button>
           <ion-item-divider/>
         </div>
       </div>

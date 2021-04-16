@@ -1,6 +1,6 @@
 <template>
   <div class="select_container">
-    <ion-item @click="delegateFocus($event)">
+    <ion-item @click="delegateFocus($event)" color="dark">
       <ion-label>{{label}}</ion-label>
       <div id="select_sector" @click="openPopover($event)">
         <span v-if="value !== undefined">

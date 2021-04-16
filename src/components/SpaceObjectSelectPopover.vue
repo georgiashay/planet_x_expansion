@@ -77,6 +77,7 @@ ion-col:hover {
 table {
   table-layout: fixed;
   width: var(--width);
+  background-color: var(--ion-color-dark);
 }
 
 .space_item {
@@ -84,7 +85,8 @@ table {
   font-size: 25px;
   margin: 0px;
   padding: 10px;
-  border: 1px solid whitesmoke;
+  outline: 1px solid white;
+  outline-offset: -1px;
   text-align: center;
 }
 

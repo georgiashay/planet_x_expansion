@@ -8,7 +8,7 @@
         <div id="history">
           <ion-button
             expand="block"
-            color="medium"
+            color="dark"
             router-link="/multiplayer/startinginfo">
             <span class="ion-text-left">Starting Information, {{store.state.equinox}} Equinox</span>
           </ion-button>
@@ -16,7 +16,7 @@
             v-for="(item, index) in selectedHistory"
             :key="index"
             expand="block"
-            color="medium"
+            color="dark"
             :router-link="'/multiplayer/action/result/' + item.index"
           >
             <span class="ion-text-left">{{item.item.actionText}}</span>
@@ -29,7 +29,7 @@
       </div>
     </ion-content>
     <ion-footer>
-      <ion-toolbar>
+      <ion-toolbar color="dark">
         <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
       </ion-toolbar>
     </ion-footer>

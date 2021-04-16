@@ -13,7 +13,7 @@
         </div>
         <ion-button
           expand="block"
-          color="medium"
+          color="dark"
           @click="joinGame()"
           id = "join_game_button">
           Join Game
@@ -78,6 +78,7 @@ export default defineComponent({
                           header: 'Alert',
                           message: 'That game code could not be found. Please try again.',
                           buttons: ['OK'],
+                          cssClass: 'custom-alert'
                         });
         await alert.present();
         await alert.onDidDismiss();

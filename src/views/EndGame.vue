@@ -24,7 +24,7 @@
         </div>
         <ion-button
           expand="block"
-          color="medium"
+          color="dark"
           id="return_button"
           router-link="/home">
           Return to Start Screen

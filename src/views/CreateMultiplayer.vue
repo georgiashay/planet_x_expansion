@@ -21,7 +21,7 @@
           <ion-button
             v-if="selectedGame !== undefined"
             expand="block"
-            color="medium"
+            color="dark"
             @click="createGame()">
             Start Game
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -68,9 +68,9 @@ export default defineComponent({
   methods: {
     buttonColor: function(boardType: number) {
       if (this.selectedGame == boardType) {
-        return "light";
-      } else {
         return "medium";
+      } else {
+        return "dark";
       }
     },
     createGame: function() {
