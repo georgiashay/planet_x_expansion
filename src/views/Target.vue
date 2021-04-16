@@ -24,7 +24,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu" @click="clearSelections()">Cancel</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -77,12 +77,14 @@ export default defineComponent({
       this.store.commit('target', {
         sectorNumber: this.sectorNumber
       });
-      this.clearSelections();
       this.router.push('/multiplayer/action/target/result');
     },
     clearSelections: function() {
       this.sectorNumber = undefined;
     }
+  },
+  ionViewDidLeave() {
+    this.clearSelections();
   }
 });
 </script>

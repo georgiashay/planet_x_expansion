@@ -42,7 +42,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu" @click="clearSelections()">Cancel</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -130,7 +130,6 @@ export default defineComponent({
         leftObject: this.leftObject,
         rightObject: this.rightObject
       });
-      this.clearSelections();
       this.router.push('/multiplayer/action/locateplanetx/result');
     },
     clearSelections: function() {
@@ -138,6 +137,9 @@ export default defineComponent({
       this.leftObject = undefined;
       this.rightObject = undefined;
     }
+  },
+  ionViewDidLeave() {
+    this.clearSelections();
   }
 });
 </script>

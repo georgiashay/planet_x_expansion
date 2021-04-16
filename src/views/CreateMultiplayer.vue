@@ -27,7 +27,7 @@
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
           </ion-button>
           <div id="cancel_container">
-            <ion-nav-link router-link="/home" @click="clearSelections()">Cancel</ion-nav-link>
+            <ion-nav-link router-link="/home">Cancel</ion-nav-link>
           </div>
         </div>
       </div>
@@ -75,13 +75,15 @@ export default defineComponent({
     },
     createGame: function() {
       this.store.dispatch("createGame", this.selectedGame);
-      this.clearSelections();
       this.router.push("/multiplayer/gamecode/new");
     },
     clearSelections: function() {
       this.selectedGame = undefined;
     }
   },
+  ionViewDidLeave() {
+    this.clearSelections();
+  }
 });
 </script>
 

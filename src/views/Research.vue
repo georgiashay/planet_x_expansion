@@ -28,7 +28,7 @@
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu" @click="clearSelections()">Cancel</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -86,12 +86,14 @@ export default defineComponent({
       this.store.commit('research', {
         index: this.selectedResearch
       });
-      this.clearSelections();
       this.router.push('/multiplayer/action/research/result');
     },
     clearSelections: function() {
       this.selectedResearch = undefined;
     }
+  },
+  ionViewDidLeave() {
+    this.clearSelections();
   }
 });
 </script>

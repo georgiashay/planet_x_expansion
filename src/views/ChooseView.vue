@@ -80,10 +80,15 @@ export default defineComponent({
     },
     continueGame: function() {
       this.store.commit("setEquinox", this.selectedEquinox);
-      this.selectedEquinox = undefined;
       this.router.push("/multiplayer/choosedifficulty");
+    },
+    clearSelections: function() {
+      this.selectedEquinox = undefined;
     }
   },
+  ionViewDidLeave() {
+    this.clearSelections();
+  }
 });
 </script>
 

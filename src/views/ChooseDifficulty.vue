@@ -27,7 +27,7 @@
           </ion-button>
         </div>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/chooseview" @click="clearSelections()">(Change View)</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/chooseview">(Change View)</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -83,13 +83,15 @@ export default defineComponent({
     },
     continueGame: function() {
       this.store.commit("setNumFacts", this.selectedFacts);
-      this.clearSelections();
       this.router.push("/multiplayer/startinginfo");
     },
     clearSelections: function() {
       this.selectedFacts = undefined;
     }
   },
+  ionViewDidLeave() {
+    this.clearSelections();
+  }
 });
 </script>
 

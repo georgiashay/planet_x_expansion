@@ -57,7 +57,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu" @click="clearSelections()">Cancel</ion-nav-link>
+          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -154,7 +154,6 @@ export default defineComponent({
         startSector: this.startSector,
         endSector: this.endSector
       });
-      this.clearSelections();
       this.router.push('/multiplayer/action/survey/result');
     },
     clearSelections: function() {
@@ -170,6 +169,9 @@ export default defineComponent({
         this.endSector = undefined;
       }
     }
+  },
+  ionViewDidLeave() {
+    this.clearSelections();
   }
 });
 </script>
