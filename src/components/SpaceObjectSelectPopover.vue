@@ -67,13 +67,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-col {
-  --background-hover: lightgray;
-}
-ion-col:hover {
-  --background: lightgray;
-}
-
 table {
   table-layout: fixed;
   width: var(--width);
@@ -91,6 +84,6 @@ table {
 }
 
 .space_item:hover {
-  background-color: whitesmoke;
+  background-color: dimgray;
 }
 </style>

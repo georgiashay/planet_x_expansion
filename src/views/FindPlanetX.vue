@@ -19,7 +19,7 @@
             @input="leftObject = $event"
             :columns="3"
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
-          <ion-item v-if="sector" id="planet_x_spacer">
+          <ion-item v-if="sector" id="planet_x_spacer" color="dark">
             <ion-label>Sector {{sector}}</ion-label>
             <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;Planet X
           </ion-item>
@@ -193,9 +193,5 @@ export default defineComponent({
 
 #planet_x_spacer ion-icon {
   font-size: 1.2em;
-}
-
-#planet_x_spacer {
-  --background: ghostwhite;
 }
 </style>

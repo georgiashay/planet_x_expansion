@@ -72,7 +72,7 @@ table {
 }
 
 .sector_item:hover {
-  background-color: whitesmoke;
+  background-color: dimgray;
 }
 
 </style>

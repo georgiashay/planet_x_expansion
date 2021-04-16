@@ -13,10 +13,10 @@
               v-for="(info, index) in store.getters.myStartingInformation"
               :key="index"
               class="clue_row">
-              <ion-col size="2" class="sector_num">
+              <ion-col size="4" class="sector_num">
                 Sector {{info.sector + 1}}
               </ion-col>
-              <ion-col size="10" class="clue_obj">
+              <ion-col size="8" class="clue_obj">
                 <ion-icon :src="info.spaceObject.icon"></ion-icon>&nbsp;
                 not {{info.spaceObject.one}}
               </ion-col>

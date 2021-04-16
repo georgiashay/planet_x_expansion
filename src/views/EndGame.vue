@@ -12,10 +12,10 @@
               v-for="(obj, index) in sectorObjects"
               :key="index"
               class="reveal_row">
-              <ion-col size="2" class="sector_num">
+              <ion-col size="4" class="sector_num">
                 Sector {{index + 1}}
               </ion-col>
-              <ion-col size="10" class="revealed_obj">
+              <ion-col size="8" class="revealed_obj">
                 <ion-icon :src="obj.icon"></ion-icon>&nbsp;
                 {{obj.proper}}
               </ion-col>
