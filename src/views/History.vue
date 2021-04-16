@@ -10,8 +10,7 @@
             expand="block"
             color="medium"
             router-link="/multiplayer/startinginfo">
-            Starting Information, {{store.state.equinox}} Equinox
-            <ion-icon :icon="arrowForwardOutline"></ion-icon>
+            <span class="ion-text-left">Starting Information, {{store.state.equinox}} Equinox</span>
           </ion-button>
           <ion-button
             v-for="(item, index) in selectedHistory"
@@ -20,7 +19,7 @@
             color="medium"
             :router-link="'/multiplayer/action/result/' + index"
           >
-            {{item.actionText}}
+            <span class="ion-text-left">{{item.actionText}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>
@@ -39,10 +38,9 @@
 
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
-        IonButton, IonIcon, IonFooter,
+        IonButton, IonFooter,
         IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
@@ -52,7 +50,6 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonButton,
-    IonIcon,
     IonFooter,
     IonToolbar,
     IonTitle,
@@ -64,7 +61,6 @@ export default defineComponent({
     const router = useRouter();
     return {
       store,
-      arrowForwardOutline,
       router
     }
   },
@@ -117,5 +113,9 @@ export default defineComponent({
 
 #game_code {
   float:left;
+}
+
+.ion-text-left {
+  margin-right: auto;
 }
 </style>

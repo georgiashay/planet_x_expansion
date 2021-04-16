@@ -14,7 +14,7 @@
             :color="buttonColor(index)"
             @click="selectedConference = (selectedConference == index ? undefined : index)"
             >
-            X{{index + 1}}. {{conference.categoryName}}
+            <span class="ion-text-left">X{{index + 1}}. {{conference.categoryName}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>
@@ -146,5 +146,9 @@ export default defineComponent({
   float:right;
   text-decoration: underline;
   margin-right: 20px;
+}
+
+.ion-text-left {
+  margin-right: auto;
 }
 </style>

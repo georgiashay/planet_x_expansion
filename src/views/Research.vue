@@ -14,7 +14,7 @@
             :color="buttonColor(index)"
             @click="selectedResearch = (selectedResearch == index ? undefined : index)"
             >
-            {{String.fromCharCode(index+65)}}. {{research.categoryName}}
+            <span class="ion-text-left">{{String.fromCharCode(index+65)}}. {{research.categoryName}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>
@@ -146,5 +146,9 @@ export default defineComponent({
   float:right;
   text-decoration: underline;
   margin-right: 20px;
+}
+
+.ion-text-left {
+  margin-right: auto;
 }
 </style>
