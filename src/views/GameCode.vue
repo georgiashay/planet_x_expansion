@@ -14,7 +14,7 @@
           <p>{{gameModeName}}</p>
         </div>
         <div>
-          <p v-if="gameCreator">Verify that all player devices are using the game code, and then press the Continue button below to start.</p>
+          <p v-if="gameCreator">Verify that all player devices are using the game code, and then press the continue button below to start.</p>
         </div>
         <ion-item-divider/>
         <ion-button
