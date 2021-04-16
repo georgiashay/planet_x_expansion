@@ -1,5 +1,5 @@
 <template>
-  <div class="popover_container">
+  <div class="popover_container" :style="cssVars">
     <table>
       <tr v-for="(row, index) in tableSpaceObjects" :key="index">
         <td
@@ -51,6 +51,11 @@ export default defineComponent({
         }
       }
       return objects;
+    },
+    cssVars: function(): any {
+      return {
+        "--width": (50*this.columns) + "px"
+      }
     }
   },
   methods: {
@@ -67,6 +72,11 @@ ion-col {
 }
 ion-col:hover {
   --background: lightgray;
+}
+
+table {
+  table-layout: fixed;
+  width: var(--width);
 }
 
 .space_item {

@@ -1,5 +1,5 @@
 <template>
-  <div class="popover_container">
+  <div class="popover_container" :style="cssVars">
     <table>
       <tr v-for="(row, index) in tableSectors" :key="index">
         <td
@@ -39,6 +39,11 @@ export default defineComponent({
         }
       }
       return table;
+    },
+    cssVars: function(): any {
+      return {
+        "--width": (45 * this.columns) + "px"
+      };
     }
   },
   methods: {
@@ -50,10 +55,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-item:hover {
-  --background: whitesmoke;
+table {
+  table-layout: fixed;
+  width: var(--width);
 }
-
 .sector_item {
   cursor: pointer;
   font-size: 20px;
@@ -61,6 +66,7 @@ ion-item:hover {
   padding: 10px;
   border: 1px solid whitesmoke;
   text-align: center;
+  text-overflow: clip;
 }
 
 .sector_item:hover {
