@@ -8,17 +8,20 @@
         </div>
         <div id="starting_info">
           <p v-if="store.getters.myStartingInformation.length === 0">You're a genius. You don't need any starting information.</p>
-          <ion-item-group>
-            <template
+          <ion-grid>
+            <ion-row
               v-for="(info, index) in store.getters.myStartingInformation"
-              :key="index">
-              <ion-item>
-                <span>Sector {{info.sector+1}}: </span>&nbsp;&nbsp;
-                <ion-icon :src="info.spaceObject.icon"/>&nbsp;&nbsp;
-                <span>not {{info.spaceObject.one}}</span>
-              </ion-item>
-            </template>
-          </ion-item-group>
+              :key="index"
+              class="clue_row">
+              <ion-col size="2" class="sector_num">
+                Sector {{info.sector + 1}}
+              </ion-col>
+              <ion-col size="10" class="clue_obj">
+                <ion-icon :src="info.spaceObject.icon"></ion-icon>&nbsp;
+                not {{info.spaceObject.one}}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
         <ion-button
           expand="block"
@@ -42,8 +45,8 @@
 <script lang="ts">
 import { IonContent, IonPage,
         IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonItem,
-        IonItemGroup, IonNavLink } from '@ionic/vue';
+        IonToolbar, IonTitle, IonNavLink,
+        IonGrid, IonCol, IonRow } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -58,9 +61,10 @@ export default defineComponent({
     IonFooter,
     IonToolbar,
     IonTitle,
-    IonItem,
-    IonItemGroup,
-    IonNavLink
+    IonNavLink,
+    IonGrid,
+    IonCol,
+    IonRow
   },
   data() {
     const store = useStore();
@@ -105,5 +109,24 @@ export default defineComponent({
   float:right;
   text-decoration: underline;
   margin-right: 20px;
+}
+
+.clue_row {
+  padding: 7px;
+  border-bottom: 1px solid lightgray;
+}
+
+.clue_row ion-col {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.clue_obj ion-icon {
+  font-size: 24px;
+}
+
+.sector_num {
+  font-style: bold;
 }
 </style>

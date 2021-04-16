@@ -7,15 +7,20 @@
           <h5>Game Code: {{store.state.gameCode}}</h5>
         </div>
         <div id="sector_objects">
-          <ion-item-group>
-            <ion-item
+          <ion-grid>
+            <ion-row
               v-for="(obj, index) in sectorObjects"
-              :key="index">
-              Sector {{index+1}}:&nbsp;&nbsp;&nbsp;
-              <ion-icon :src="obj.icon"></ion-icon>&nbsp;
-              {{obj.proper}}
-            </ion-item>
-          </ion-item-group>
+              :key="index"
+              class="reveal_row">
+              <ion-col size="2" class="sector_num">
+                Sector {{index + 1}}
+              </ion-col>
+              <ion-col size="10" class="revealed_obj">
+                <ion-icon :src="obj.icon"></ion-icon>&nbsp;
+                {{obj.proper}}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
         <ion-button
           expand="block"
@@ -31,7 +36,7 @@
 
 <script lang="ts">
 import { IonContent, IonPage, IonButton,
-          IonItem, IonItemGroup } from '@ionic/vue';
+          IonGrid, IonCol, IonRow, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -42,9 +47,11 @@ export default defineComponent({
   components: {
     IonContent,
     IonPage,
-    IonButton,
-    IonItem,
-    IonItemGroup
+    IonGrid,
+    IonCol,
+    IonRow,
+    IonIcon,
+    IonButton
   },
   data() {
     const store = useStore();
@@ -89,5 +96,24 @@ export default defineComponent({
 #return_button {
   text-transform: none;
   margin-top: 10px;
+}
+
+.reveal_row {
+  padding: 7px;
+  border-bottom: 1px solid lightgray;
+}
+
+.reveal_row ion-col {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.revealed_obj ion-icon {
+  font-size: 24px;
+}
+
+.sector_num {
+  font-style: bold;
 }
 </style>
