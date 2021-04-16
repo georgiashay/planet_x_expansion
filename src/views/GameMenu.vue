@@ -11,7 +11,7 @@
             color="medium"
             @click="clickSurvey()">
             Survey (2-4
-            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
           <ion-button
@@ -19,7 +19,7 @@
             color="medium"
             @click="clickTarget()">
             Target (4
-            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
           <ion-button
@@ -27,7 +27,7 @@
             color="medium"
             router-link="/multiplayer/action/research">
             Research (1
-            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
           <ion-button
@@ -35,7 +35,7 @@
             color="medium"
             router-link="/multiplayer/action/locateplanetx">
             Locate Planet X (5
-            <ion-icon :icon="timeOutline" size="small"></ion-icon>
+            <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
           <ion-item-divider/>
@@ -172,6 +172,13 @@ export default defineComponent({
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+#action_buttons ion-button ion-icon {
+  font-size: 1.2em;
 }
 
 #game_code {
@@ -183,5 +190,7 @@ export default defineComponent({
   text-decoration: underline;
   margin-right: 20px;
 }
+
+
 
 </style>

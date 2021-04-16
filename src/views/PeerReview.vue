@@ -125,6 +125,10 @@ export default defineComponent({
   text-transform: none;
 }
 
+#peerreview_button ion-icon {
+  font-size: 1.2em;
+}
+
 #cancel_container {
   text-align: center;
   width: 100%;

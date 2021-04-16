@@ -4,7 +4,7 @@
       <ion-label>{{label}}</ion-label>
       <div id="select_object" @click="openPopover($event)">
         <span v-if="value !== undefined">
-          <ion-icon :src="value.icon"></ion-icon> {{value.proper}}
+          <ion-icon :src="value.icon"></ion-icon>&nbsp;{{value.proper}}
         </span>
         <span v-else id="no_object">
           (Select Object)
@@ -98,5 +98,21 @@ ion-item:hover {
 
 #no_object {
   color: var(--ion-color-medium)
+}
+
+#select_object ion-icon {
+  font-size: 1.2em;
+}
+
+#select_object {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+#select_object span {
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 </style>

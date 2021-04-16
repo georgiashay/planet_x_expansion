@@ -10,15 +10,21 @@
           <table id="time_table">
             <tr>
               <td>
-                1, 2, 3, 4 sectors <ion-icon :icon="arrowForwardOutline" size="small"/> 4 <ion-icon :icon="timeOutline" size="small"/>
+                <div class="tc_cell">
+                  1, 2, 3, 4 sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;4 <ion-icon :icon="timeOutline"/>
+                </div>
               </td>
               <td>
-                5, 6, 7, 8 sectors <ion-icon :icon="arrowForwardOutline" size="small"/> 3 <ion-icon :icon="timeOutline" size="small"/>
+                <div class="tc_cell">
+                  5, 6, 7, 8 sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;3 <ion-icon :icon="timeOutline"/>
+                </div>
               </td>
             </tr>
             <tr>
               <td>
-                9, 10, 11, 12 sectors <ion-icon :icon="arrowForwardOutline" size="small"/> 2 <ion-icon :icon="timeOutline" size="small"/>
+                <div class="tc_cell">
+                  9, 10, 11, 12 sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;2 <ion-icon :icon="timeOutline"/>
+                </div>
               </td>
             </tr>
           </table>
@@ -46,7 +52,7 @@
           id="survey_button"
           :disabled="!surveyReady">
           Survey
-          <template v-if="sectorsValid">({{timeCost}} <ion-icon :icon="timeOutline" size="small"/>)</template>
+            <template v-if="sectorsValid">({{timeCost}} <ion-icon :icon="timeOutline"/>)</template>
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <ion-item-divider/>
@@ -107,7 +113,7 @@ export default defineComponent({
   },
   computed: {
     availableSectors: function(): Array<number> {
-      if (this.surveyObject === "COMET") {
+      if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
         return [2, 3, 5, 7, 11, 13, 17, 19, 23];
       } else {
         return Array.from(Array(24)).map((el,i)=>i+1);
@@ -191,6 +197,19 @@ export default defineComponent({
 
 #time_table td {
   width: 50%;
+
+}
+
+.tc_cell {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.tc_cell ion-icon {
+  font-size: 1.2em;
 }
 
 #time_cost {
@@ -198,12 +217,16 @@ export default defineComponent({
 }
 
 #survey_selections {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 #survey_button {
   margin-top: 10px;
   text-transform: none;
+}
+
+#survey_button ion-icon {
+  font-size: 1.2em;
 }
 
 #cancel_container {

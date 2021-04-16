@@ -118,6 +118,10 @@ export default defineComponent({
   text-transform: none;
 }
 
+#conference_button ion-icon {
+  font-size: 1.2em;
+}
+
 #conference_selections {
   width: 100%;
   margin-left: auto;

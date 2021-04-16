@@ -19,7 +19,7 @@
           id="target_button"
           :disabled="!sectorNumber">
           Target
-          <template v-if="sectorNumber">(4 <ion-icon :icon="timeOutline" size="small"/>)</template>
+          <template v-if="sectorNumber">(4 <ion-icon :icon="timeOutline"/>)</template>
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <ion-item-divider/>
@@ -111,6 +111,10 @@ export default defineComponent({
 #target_button {
   margin-top: 10px;
   text-transform: none;
+}
+
+#target_button ion-icon {
+  font-size: 1.2em;
 }
 
 #cancel_container {

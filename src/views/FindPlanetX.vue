@@ -19,10 +19,9 @@
             @input="leftObject = $event"
             :columns="3"
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
-          <ion-item v-if="sector">
+          <ion-item v-if="sector" id="planet_x_spacer">
             <ion-label>Sector {{sector}}</ion-label>
-            <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;
-            Planet X
+            <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;Planet X
           </ion-item>
           <space-object-select
             v-if="sector"
@@ -169,6 +168,10 @@ export default defineComponent({
   text-transform: none;
 }
 
+#planet_button ion-icon {
+  font-size: 1.2em;
+}
+
 #cancel_container {
   text-align: center;
   width: 100%;
@@ -184,5 +187,13 @@ export default defineComponent({
   float:right;
   text-decoration: underline;
   margin-right: 20px;
+}
+
+#planet_x_spacer ion-icon {
+  font-size: 1.2em;
+}
+
+#planet_x_spacer {
+  --background: ghostwhite;
 }
 </style>
