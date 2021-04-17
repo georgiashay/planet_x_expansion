@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
       <div id="container"  v-if="store.getters.gameReady">
         <div id="title_container">
-          <h3>{{ store.state.equinox }} Equinox</h3>
+          <h3>{{ store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</h3>
         </div>
         <p>Select a difficulty level:</p>
         <div id="difficulty_buttons">

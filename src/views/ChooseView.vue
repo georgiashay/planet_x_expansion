@@ -6,19 +6,19 @@
           <h3>Choose Your View</h3>
         </div>
         <p>Select the view that matches the side of the board you are facing and your score sheet:</p>
-        <div id="equinox_buttons">
+        <div id="view_buttons">
           <ion-button
             expand="block"
-            v-for="equinox in Equinox"
-            :key="equinox"
-            :color="buttonColor(equinox)"
-            @click="selectedEquinox = (selectedEquinox == equinox ? undefined : equinox)"
+            v-for="view in SeasonView"
+            :key="view.name"
+            :color="buttonColor(view)"
+            @click="selectedView = (selectedView == view ? undefined : view)"
             >
-            {{equinox}} Equinox
+            {{ view.name }} {{ view.viewType }}
           </ion-button>
           <ion-item-divider/>
           <ion-button
-            v-if="selectedEquinox !== undefined"
+            v-if="selectedView !== undefined"
             expand="block"
             color="dark"
             @click="continueGame()">
@@ -45,7 +45,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { Equinox } from '@/constants';
+import { SeasonView } from '@/constants';
 
 export default defineComponent({
   name: 'ChooseView',
@@ -65,25 +65,25 @@ export default defineComponent({
     return {
       store,
       arrowForwardOutline,
-      Equinox,
-      selectedEquinox: undefined,
+      SeasonView,
+      selectedView: undefined,
       router: useRouter()
     }
   },
   methods: {
-    buttonColor: function(equinox: string) {
-      if (this.selectedEquinox == equinox) {
+    buttonColor: function(view: string) {
+      if (this.selectedView == view) {
         return "medium";
       } else {
         return "dark";
       }
     },
     continueGame: function() {
-      this.store.commit("setEquinox", this.selectedEquinox);
+      this.store.commit("setSeasonView", this.selectedView);
       this.router.push("/multiplayer/choosedifficulty");
     },
     clearSelections: function() {
-      this.selectedEquinox = undefined;
+      this.selectedView = undefined;
     }
   },
   ionViewDidLeave() {
@@ -109,14 +109,14 @@ export default defineComponent({
   line-height: 56px;
 }
 
-#equinox_buttons {
+#view_buttons {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10%;
 }
 
-#equinox_buttons ion-button {
+#view_buttons ion-button {
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;

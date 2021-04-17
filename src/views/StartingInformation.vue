@@ -4,7 +4,7 @@
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Starting Information</h3>
-          <h4>{{ store.state.equinox }} Equinox</h4>
+          <h4>{{ store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</h4>
         </div>
         <div id="starting_info">
           <p v-if="store.getters.myStartingInformation.length === 0">You're a genius. You don't need any starting information.</p>

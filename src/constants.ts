@@ -4,11 +4,24 @@ export const GAME_TYPES: {[sector: number]: string} = {
   18: "Expert",
   24: "Ace"
 }
-export const Equinox: {[name: string]: string} = {
-  SPRING: "Spring",
-  SUMMER: "Summer",
-  AUTUMN: "Autumn",
-  WINTER: "Winter"
+
+export const SeasonView: {[code: string]: {[info: string]: string}} = {
+  SPRING: {
+    name: "Spring",
+    viewType: "Equinox"
+  },
+  SUMMER: {
+    name: "Summer",
+    viewType: "Solstice"
+  },
+  AUTUMN: {
+    name: "Autumn",
+    viewType: "Equinox"
+  },
+  WINTER: {
+    name: "Winter",
+    viewType: "Solstice"
+  }
 };
 
 export const DIFFICULTY_LEVELS = [
@@ -74,7 +87,7 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a black hole",
     the: "the black hole",
     initial: "B",
-    icon: "/assets/space_object_icons/black_hole.svg"
+    icon: "/assets/space_object_icons/black_hole_straight.svg"
   },
   PLANET_X: {
     name: "Planet X",

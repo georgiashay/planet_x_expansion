@@ -10,7 +10,7 @@
             expand="block"
             color="dark"
             router-link="/multiplayer/startinginfo">
-            <span class="ion-text-left">Starting Information, {{store.state.equinox}} Equinox</span>
+            <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
           <ion-button
             v-for="(item, index) in selectedHistory"

@@ -9,7 +9,7 @@ export default createStore({
   state: {
     game: undefined,
     gameCode: undefined,
-    equinox: undefined,
+    seasonView: undefined,
     startingFacts: undefined,
     history: []
   },
@@ -36,13 +36,13 @@ export default createStore({
     setGameCode(state: any, gameCode: string) {
       state.gameCode = gameCode;
     },
-    setEquinox(state: any, equinox: string) {
-      state.equinox = equinox;
+    setSeasonView(state: any, seasonView: string) {
+      state.seasonView = seasonView;
     },
     resetGame(state: any) {
       state.game = undefined;
       state.gameCode = undefined;
-      state.equinox = undefined;
+      state.seasonView = undefined;
       state.startingFacts = undefined;
       state.history = [];
     },
@@ -188,7 +188,7 @@ export default createStore({
       if (state.game === undefined) {
         return [];
       }
-      return state.game.startingInformation[state.equinox.toUpperCase()]
+      return state.game.startingInformation[state.seasonView.name.toUpperCase()]
               .slice(0, state.startingFacts)
               .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector)
               .map((clue: any) => {
@@ -209,7 +209,7 @@ export default createStore({
       return state.game !== undefined && state.gameCode !== undefined;
     },
     playerReady(state: any, getters: any) {
-      return getters.gameReady && state.equinox !== undefined;
+      return getters.gameReady && state.seasonView !== undefined;
     }
   }
 });
