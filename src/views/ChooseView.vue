@@ -123,7 +123,7 @@ export default defineComponent({
 }
 
 #view_buttons ion-icon {
-  font-size: 3em;
+  font-size: 2.5em;
 }
 
 #game_code {

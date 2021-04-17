@@ -7,51 +7,51 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64"
-   height="64"
-   viewBox="0 0 16.933333 16.933334"
-   version="1.1"
-   id="svg8"
+   sodipodi:docname="PlanetX24PlanetX copy.svg"
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
-   sodipodi:docname="PlanetX24PlanetX.svg">
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 16.933333 16.933334"
+   height="64"
+   width="64">
   <defs
      id="defs2">
     <inkscape:path-effect
-       lpeversion="1"
-       is_visible="true"
+       effect="spiro"
        id="path-effect6335"
-       effect="spiro" />
-    <inkscape:path-effect
-       lpeversion="1"
        is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
        id="path-effect6331"
-       effect="spiro" />
+       is_visible="true"
+       lpeversion="1" />
   </defs>
   <sodipodi:namedview
-     inkscape:bbox-nodes="true"
-     inkscape:bbox-paths="true"
-     inkscape:snap-bbox="false"
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.68155638"
-     inkscape:cx="-269.48025"
-     inkscape:cy="209.99059"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     units="px"
-     height="12in"
-     inkscape:snap-intersection-paths="true"
-     inkscape:window-width="1440"
-     inkscape:window-height="767"
-     inkscape:window-x="0"
+     inkscape:window-maximized="0"
      inkscape:window-y="23"
-     inkscape:window-maximized="0" />
+     inkscape:window-x="0"
+     inkscape:window-height="767"
+     inkscape:window-width="1440"
+     inkscape:snap-intersection-paths="true"
+     height="12in"
+     units="px"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="65.298168"
+     inkscape:cx="32.751117"
+     inkscape:zoom="1.4789994"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:snap-bbox="false"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -60,66 +60,62 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     id="layer1"
      inkscape:groupmode="layer"
-     id="layer1">
+     inkscape:label="Layer 1">
     <g
-       id="g2649"
-       transform="translate(7.9999982e-4,-58.464433)" />
+       transform="translate(7.9999982e-4,-58.464433)"
+       id="g2649" />
     <g
-       style="stroke-width:1.00157"
+       transform="matrix(0.96441112,0.25841318,-0.25841318,0.96441112,421.77036,67.047613)"
        id="g1543"
-       transform="matrix(0.96441112,0.25841318,-0.25841318,0.96441112,421.77036,67.047613)" />
+       style="stroke-width:1.00157" />
     <g
-       id="g1273"
-       transform="translate(3.9687401,10.583333)" />
+       transform="translate(3.9687401,10.583333)"
+       id="g1273" />
     <g
-       id="g2649-0"
+       style="stroke-width:1.11023"
        transform="translate(-256.13703,-382.91016)"
-       style="stroke-width:1.11023" />
+       id="g2649-0" />
+    <circle
+       style="fill-opacity:1;paint-order:markers fill stroke;fill:none;"
+       id="circle6926"
+       cx="8.4666662"
+       cy="8.4666672"
+       r="5.5541334" />
     <g
-       id="g7020"
        transform="matrix(0.67733333,0,0,0.67733333,-57.648605,-80.659189)"
-       style="fill:none;fill-opacity:1">
-      <circle
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.8;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         id="circle6926"
-         cx="97.61113"
-         cy="131.58345"
-         r="8.1999998" />
-      <g
-         id="g7010"
-         style="fill:none;fill-opacity:1">
-        <path
-           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 94.627137,127.35998 5.967983,8.44694"
-           id="path6958" />
-        <path
-           id="path6960"
-           d="m 100.59512,127.35998 -5.967983,8.44694"
-           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <path
-           id="path6966"
-           d="m 96.159387,127.38327 -2.722051,-0.0233"
-           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <path
-           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 101.78492,127.38327 -2.722048,-0.0233"
-           id="path6968" />
-        <path
-           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           d="m 96.159387,135.80692 -2.722051,-0.0233"
-           id="path6978" />
-        <path
-           id="path6980"
-           d="m 101.78492,135.80692 -2.722048,-0.0233"
-           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      </g>
+       id="g7010"
+       style="fill-opacity:1">
+      <path
+         style="fill-opacity:1"
+         d="m 94.627137,127.35998 5.967983,8.44694"
+         id="path6958" />
+      <path
+         id="path6960"
+         d="m 100.59512,127.35998 -5.967983,8.44694"
+         style="fill-opacity:1" />
+      <path
+         id="path6966"
+         d="m 96.159387,127.38327 -2.722051,-0.0233"
+         style="fill-opacity:1" />
+      <path
+         style="fill-opacity:1"
+         d="m 101.78492,127.38327 -2.722048,-0.0233"
+         id="path6968" />
+      <path
+         style="fill-opacity:1"
+         d="m 96.159387,135.80692 -2.722051,-0.0233"
+         id="path6978" />
+      <path
+         id="path6980"
+         d="m 101.78492,135.80692 -2.722048,-0.0233"
+         style="fill-opacity:1" />
     </g>
   </g>
 </svg>

@@ -7,51 +7,51 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64"
-   height="64"
-   viewBox="0 0 16.933333 16.933334"
-   version="1.1"
-   id="svg8"
+   sodipodi:docname="PlanetX24TrulyEmpty copy.svg"
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
-   sodipodi:docname="PlanetX24TrulyEmpty.svg">
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 16.933333 16.933334"
+   height="64"
+   width="64">
   <defs
      id="defs2">
     <inkscape:path-effect
-       lpeversion="1"
-       is_visible="true"
+       effect="spiro"
        id="path-effect6335"
-       effect="spiro" />
-    <inkscape:path-effect
-       lpeversion="1"
        is_visible="true"
+       lpeversion="1" />
+    <inkscape:path-effect
+       effect="spiro"
        id="path-effect6331"
-       effect="spiro" />
+       is_visible="true"
+       lpeversion="1" />
   </defs>
   <sodipodi:namedview
-     inkscape:bbox-nodes="true"
-     inkscape:bbox-paths="true"
-     inkscape:snap-bbox="false"
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.68155638"
-     inkscape:cx="-269.48025"
-     inkscape:cy="209.99059"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     units="px"
-     height="12in"
-     inkscape:snap-intersection-paths="true"
-     inkscape:window-width="1440"
-     inkscape:window-height="767"
-     inkscape:window-x="0"
+     inkscape:window-maximized="0"
      inkscape:window-y="23"
-     inkscape:window-maximized="0" />
+     inkscape:window-x="0"
+     inkscape:window-height="767"
+     inkscape:window-width="1440"
+     inkscape:snap-intersection-paths="true"
+     height="12in"
+     units="px"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="146.09604"
+     inkscape:cx="94.870819"
+     inkscape:zoom="0.65733305"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:snap-bbox="false"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -60,52 +60,52 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     id="layer1"
      inkscape:groupmode="layer"
-     id="layer1">
+     inkscape:label="Layer 1">
     <g
-       id="g2649"
-       transform="translate(7.9999982e-4,-58.464433)" />
+       transform="translate(7.9999982e-4,-58.464433)"
+       id="g2649" />
     <g
-       style="stroke-width:1.00157"
+       transform="matrix(0.96441112,0.25841318,-0.25841318,0.96441112,421.77036,67.047613)"
        id="g1543"
-       transform="matrix(0.96441112,0.25841318,-0.25841318,0.96441112,421.77036,67.047613)" />
+       style="stroke-width:1.00157" />
     <g
-       id="g1273"
-       transform="translate(3.9687401,10.583333)" />
+       transform="translate(3.9687401,10.583333)"
+       id="g1273" />
     <g
-       id="g2649-0"
+       style="stroke-width:1.11023"
        transform="translate(-256.13703,-382.91016)"
-       style="stroke-width:1.11023" />
+       id="g2649-0" />
     <g
-       id="g6898"
+       style="fill:none;"
        transform="matrix(0.55276614,0,0,0.55276614,-50.969807,-52.903885)"
-       style="stroke-width:0.980282;stroke-miterlimit:4;stroke-dasharray:none">
+       id="g6898">
       <path
-         id="path6868"
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+         sodipodi:nodetypes="ccc"
          d="m 98.825541,108.02444 -5e-6,-5.69999 5.700014,-1e-5"
-         sodipodi:nodetypes="ccc" />
+         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+         id="path6868" />
       <path
-         sodipodi:nodetypes="ccc"
+         id="path6888"
+         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
          d="m 104.52553,119.72444 -5.69998,-1e-5 -1.4e-5,-5.70001"
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         id="path6888" />
-      <path
-         id="path6890"
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         d="m 116.22554,114.02444 -2e-5,5.69997 -5.7,3e-5"
          sodipodi:nodetypes="ccc" />
       <path
          sodipodi:nodetypes="ccc"
+         d="m 116.22554,114.02444 -2e-5,5.69997 -5.7,3e-5"
+         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+         id="path6890" />
+      <path
+         id="path6892"
+         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
          d="m 110.52554,102.32444 5.69995,4e-5 5e-5,5.69999"
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         id="path6892" />
+         sodipodi:nodetypes="ccc" />
     </g>
   </g>
 </svg>
