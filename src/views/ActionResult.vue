@@ -41,10 +41,12 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 function isString(obj: any): obj is string {
   return typeof obj === "string";
 }
+
 export default defineComponent({
   name: 'ActionResult',
   components: {
@@ -58,6 +60,7 @@ export default defineComponent({
     IonItemDivider,
     IonNavLink
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const route = useRoute();
@@ -107,6 +110,19 @@ export default defineComponent({
         }
       } else {
         this.router.push("/multiplayer/gamemenu");
+      }
+    }
+  },
+  ionViewDidEnter: function() {
+    if (this.store.getters.gameReady && this.actionResult !== undefined) {
+      if (this.actionResult.actionType == "locateplanetx") {
+        if (this.actionResult.success) {
+          this.playCorrect();
+        } else {
+          this.playIncorrect();
+        }
+      } else {
+        this.playSonar2();
       }
     }
   }

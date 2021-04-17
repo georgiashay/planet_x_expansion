@@ -79,6 +79,7 @@ import { defineComponent } from 'vue';
 import { timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'GameMenu',
@@ -93,6 +94,7 @@ export default defineComponent({
     IonItemDivider,
     IonNavLink
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -140,6 +142,9 @@ export default defineComponent({
       await alert.present();
       await alert.onDidDismiss();
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   }
 });
 </script>

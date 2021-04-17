@@ -50,6 +50,7 @@ import { IonContent, IonPage,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'StartingInformation',
@@ -66,12 +67,16 @@ export default defineComponent({
     IonCol,
     IonRow
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     return {
       store,
       arrowForwardOutline
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   }
 });
 </script>

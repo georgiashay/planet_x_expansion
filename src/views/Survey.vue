@@ -81,6 +81,7 @@ import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorMultiSelect from '@/components/SectorMultiSelect.vue';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'Survey',
@@ -97,6 +98,7 @@ export default defineComponent({
     SpaceObjectSelect,
     SectorMultiSelect
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -169,6 +171,9 @@ export default defineComponent({
         this.endSector = undefined;
       }
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   },
   ionViewDidLeave() {
     this.clearSelections();

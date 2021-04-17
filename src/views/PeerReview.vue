@@ -53,6 +53,7 @@ import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'PeerReview',
@@ -69,6 +70,7 @@ export default defineComponent({
     SpaceObjectSelect,
     SectorSelect
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -94,6 +96,9 @@ export default defineComponent({
       this.selectedObject = undefined;
       this.selectedSector = undefined;
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   },
   ionViewDidLeave() {
     this.clearSelections();

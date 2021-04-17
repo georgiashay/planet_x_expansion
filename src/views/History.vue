@@ -43,6 +43,7 @@ import { IonContent, IonPage, IonItemDivider,
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'History',
@@ -56,6 +57,7 @@ export default defineComponent({
     IonItemDivider,
     IonNavLink
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -72,6 +74,9 @@ export default defineComponent({
         return item.item.actionType != "peerreview";
       });
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   }
 });
 </script>

@@ -41,6 +41,7 @@ import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { GAME_TYPES } from '@/constants';
 import { useRoute } from 'vue-router';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'GameCode',
@@ -52,6 +53,7 @@ export default defineComponent({
     IonNavLink,
     IonIcon
   },
+  mixins: [SoundMixin],
   props: {
     gameCreator: {
       required: true,
@@ -76,6 +78,9 @@ export default defineComponent({
         return GAME_TYPES[boardSize] + " Mode (" + boardSize + " sectors)";
       }
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   }
 });
 </script>

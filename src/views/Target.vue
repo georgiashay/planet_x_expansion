@@ -46,6 +46,7 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SectorSelect from '@/components/SectorSelect.vue';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'Target',
@@ -61,6 +62,7 @@ export default defineComponent({
     IonNavLink,
     SectorSelect
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -82,6 +84,9 @@ export default defineComponent({
     clearSelections: function() {
       this.sectorNumber = undefined;
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   },
   ionViewDidLeave() {
     this.clearSelections();

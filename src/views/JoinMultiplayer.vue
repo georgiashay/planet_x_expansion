@@ -37,6 +37,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'JoinMultiplayer',
@@ -50,6 +51,7 @@ export default defineComponent({
     IonItem,
     IonLabel
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -87,6 +89,9 @@ export default defineComponent({
   },
   ionViewWillEnter: function() {
     this.gameCode = "";
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   }
 });
 </script>

@@ -49,6 +49,7 @@ import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { DIFFICULTY_LEVELS } from '@/constants';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'ChooseDifficulty',
@@ -63,6 +64,7 @@ export default defineComponent({
     IonTitle,
     IonNavLink
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     return {
@@ -88,6 +90,9 @@ export default defineComponent({
     clearSelections: function() {
       this.selectedFacts = undefined;
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   },
   ionViewDidLeave() {
     this.clearSelections();

@@ -43,6 +43,7 @@ import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { GAME_TYPES } from '@/constants';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'CreateMultiplayer',
@@ -54,6 +55,7 @@ export default defineComponent({
     IonNavLink,
     IonIcon
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -80,6 +82,9 @@ export default defineComponent({
     clearSelections: function() {
       this.selectedGame = undefined;
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   },
   ionViewDidLeave() {
     this.clearSelections();

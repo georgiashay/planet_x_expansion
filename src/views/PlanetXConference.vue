@@ -49,6 +49,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'PlanetXConference',
@@ -63,6 +64,7 @@ export default defineComponent({
     IonItemDivider,
     IonNavLink
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -91,6 +93,9 @@ export default defineComponent({
     clearSelections: function() {
       this.selectedConference = undefined;
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   },
   ionViewDidLeave() {
     this.clearSelections();

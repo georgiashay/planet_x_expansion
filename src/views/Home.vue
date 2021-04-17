@@ -22,6 +22,7 @@
 import { IonContent, IonPage, IonButton, IonItemDivider } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'Home',
@@ -31,6 +32,7 @@ export default defineComponent({
     IonButton,
     IonItemDivider
   },
+  mixins: [SoundMixin],
   data() {
     return {
       store: useStore()
@@ -38,6 +40,7 @@ export default defineComponent({
   },
   ionViewDidEnter() {
     this.store.commit('resetGame');
+    this.playStartup();
   }
 });
 </script>

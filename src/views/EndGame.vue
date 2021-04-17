@@ -41,6 +41,7 @@ import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SpaceObject } from '@/constants';
+import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
   name: 'EndGame',
@@ -53,6 +54,7 @@ export default defineComponent({
     IonIcon,
     IonButton
   },
+  mixins: [SoundMixin],
   data() {
     const store = useStore();
     const router = useRouter();
@@ -72,6 +74,9 @@ export default defineComponent({
         return initialToSpaceObject(obj);
       });
     }
+  },
+  ionViewDidEnter() {
+    this.playSonar1();
   }
 });
 </script>
