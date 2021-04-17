@@ -110,7 +110,7 @@ export default defineComponent({
 }
 
 .revealed_obj ion-icon {
-  font-size: 24px;
+  font-size: 2em;
 }
 
 .sector_num {

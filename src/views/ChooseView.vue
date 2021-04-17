@@ -14,7 +14,7 @@
             :color="buttonColor(view)"
             @click="selectedView = (selectedView == view ? undefined : view)"
             >
-            {{ view.name }} {{ view.viewType }}
+            <ion-icon :src="view.icon"></ion-icon> {{ view.name }} {{ view.viewType }}
           </ion-button>
           <ion-item-divider/>
           <ion-button
@@ -120,6 +120,10 @@ export default defineComponent({
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;
+}
+
+#view_buttons ion-icon {
+  font-size: 3em;
 }
 
 #game_code {

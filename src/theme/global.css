@@ -30,6 +30,10 @@ ion-item-divider {
   --color: white;
 }
 
+ion-icon {
+  stroke: white;
+}
+
 .custom-alert .alert-title {
   color: black;
 }

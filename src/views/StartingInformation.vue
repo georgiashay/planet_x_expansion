@@ -123,7 +123,7 @@ export default defineComponent({
 }
 
 .clue_obj ion-icon {
-  font-size: 24px;
+  font-size: 2em;
 }
 
 .sector_num {

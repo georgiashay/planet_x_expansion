@@ -75,7 +75,7 @@ table {
 
 .space_item {
   cursor: pointer;
-  font-size: 25px;
+  font-size: 2em;
   margin: 0px;
   padding: 10px;
   outline: 1px solid white;
