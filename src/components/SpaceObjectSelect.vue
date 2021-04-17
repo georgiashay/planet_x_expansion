@@ -101,7 +101,7 @@ ion-item:hover {
 }
 
 #select_object ion-icon {
-  font-size: 2em;
+  font-size: 1.6em;
 }
 
 #select_object {

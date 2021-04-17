@@ -197,6 +197,6 @@ export default defineComponent({
 }
 
 #planet_x_spacer ion-icon {
-  font-size: 1.2em;
+  font-size: 1.6em;
 }
 </style>

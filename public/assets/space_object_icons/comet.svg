@@ -7,7 +7,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="PlanetX24Comet copy.svg"
+   sodipodi:docname="PlanetX24CometWhite.svg"
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
    id="svg8"
    version="1.1"
@@ -40,9 +40,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="95.386078"
-     inkscape:cx="-14.155597"
-     inkscape:zoom="1.4789994"
+     inkscape:cy="64.420363"
+     inkscape:cx="-77.18128"
+     inkscape:zoom="1.4774609"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -84,16 +84,16 @@
        id="g2649-0" />
     <g
        id="g1424"
-       transform="matrix(0.48443438,0.4843907,-0.48443438,0.4843907,46.6559,-83.68408)"
-       style="fill-opacity:1;fill:none;">
+       transform="matrix(0.55821131,0.55816099,-0.55821131,0.55816099,52.471935,-97.71818)"
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.988717;stroke-opacity:1">
       <path
          id="circle7063"
-         style="fill-opacity:1;paint-order:markers fill stroke;fill:none;"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:2.9895;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
          d="m 1440.9662,613.46434 -6.9721,30.23878 -4.0873,-7.8982 c -0.4496,10.13109 -5.9845,20.64493 -6.065,30.20485 10e-5,9.81059 7.9531,17.76363 17.7637,17.76367 9.8106,-1e-4 17.7635,-7.95312 17.7636,-17.76367 -0.076,-12.4935 -7.2099,-17.10582 -9.7966,-35.65957 l -4.4121,9.31446 z"
          transform="matrix(0.26458333,0,0,0.26458333,-325.67129,-37.296331)"
          sodipodi:nodetypes="ccccscccc" />
       <circle
-         style="fill-opacity:1;paint-order:markers fill stroke;fill:none;"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.59323;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
          id="path7061"
          cx="55.753597"
          cy="138.91891"

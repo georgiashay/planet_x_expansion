@@ -7,7 +7,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="PlanetX24TrulyEmpty copy.svg"
+   sodipodi:docname="PlanetX24TrulyEmptyWhite.svg"
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
    id="svg8"
    version="1.1"
@@ -40,9 +40,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="146.09604"
-     inkscape:cx="94.870819"
-     inkscape:zoom="0.65733305"
+     inkscape:cy="64.420363"
+     inkscape:cx="-77.18128"
+     inkscape:zoom="1.4774609"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -83,27 +83,27 @@
        transform="translate(-256.13703,-382.91016)"
        id="g2649-0" />
     <g
-       style="fill:none;"
-       transform="matrix(0.55276614,0,0,0.55276614,-50.969807,-52.903885)"
+       style="stroke:#ffffff;stroke-width:0.980282;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       transform="matrix(0.63694966,0,0,0.63694966,-60.021691,-62.250313)"
        id="g6898">
       <path
          sodipodi:nodetypes="ccc"
          d="m 98.825541,108.02444 -5e-6,-5.69999 5.700014,-1e-5"
-         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
          id="path6868" />
       <path
          id="path6888"
-         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
          d="m 104.52553,119.72444 -5.69998,-1e-5 -1.4e-5,-5.70001"
          sodipodi:nodetypes="ccc" />
       <path
          sodipodi:nodetypes="ccc"
          d="m 116.22554,114.02444 -2e-5,5.69997 -5.7,3e-5"
-         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
          id="path6890" />
       <path
          id="path6892"
-         style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
          d="m 110.52554,102.32444 5.69995,4e-5 5e-5,5.69999"
          sodipodi:nodetypes="ccc" />
     </g>

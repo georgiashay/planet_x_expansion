@@ -7,7 +7,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="PlanetX24BlackHoleAngle copy.svg"
+   sodipodi:docname="PlanetX24BlackHoleWhite.svg"
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
    id="svg8"
    version="1.1"
@@ -40,9 +40,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="93.264289"
-     inkscape:cx="54.043979"
-     inkscape:zoom="1.4789994"
+     inkscape:cy="71.355067"
+     inkscape:cx="23.667412"
+     inkscape:zoom="1.4774609"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -83,26 +83,25 @@
        transform="translate(-256.13703,-382.91016)"
        id="g2649-0" />
     <g
-       style="fill:none;fill-opacity:1;"
        id="g2474"
-       transform="matrix(0.47164224,-0.48614199,0.48614199,0.47164224,-307.94642,151.71033)">
+       transform="matrix(0.543471,-0.56017899,0.56017899,0.543471,-356.1346,173.52593)"
+       style="stroke:#ffffff;stroke-opacity:1">
       <g
-         style="fill:none;fill-opacity:1;"
-         id="g2501">
+         id="g2501"
+         style="stroke:#ffffff;stroke-opacity:1">
         <g
-           style="fill:none;fill-opacity:1;"
-           id="g2493">
+           id="g2493"
+           style="stroke:#ffffff;stroke-opacity:1">
           <g
-             style="fill:none;fill-opacity:1;"
              transform="translate(0,15.875)"
-             id="g2468">
+             id="g2468"
+             style="stroke:#ffffff;stroke-opacity:1">
             <path
                sodipodi:nodetypes="csczc"
                d="m 472.8107,170.19361 c 0.77194,-1.65543 2.43308,-2.71369 4.25964,-2.71369 1.82657,0 3.48771,1.05826 4.25965,2.71369 0,0 -1.18356,0.29914 -4.25964,0.29914 -3.07609,0 -4.25965,-0.29914 -4.25965,-0.29914 z"
-               style="fill:none;fill-opacity:1;paint-order:markers fill stroke;"
+               style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5.4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
                id="path2464" />
             <path
-               d="M 481.73275,172.77318 A 4.6999993,4.6999993 0 0 1 477,176.87936 a 4.6999993,4.6999993 0 0 1 -4.60773,-4.246"
                sodipodi:open="true"
                sodipodi:arc-type="arc"
                sodipodi:end="3.044959"
@@ -113,10 +112,10 @@
                sodipodi:cx="477.07034"
                sodipodi:type="arc"
                id="path2466"
-               style="fill:none;fill-opacity:1;paint-order:markers fill stroke;" />
+               style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5.4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+               d="M 481.73275,172.77318 A 4.6999993,4.6999993 0 0 1 477,176.87936 a 4.6999993,4.6999993 0 0 1 -4.60773,-4.246" />
           </g>
           <path
-             d="m 483.74344,188.6546 a 6.6999998,6.6999998 0 0 1 -6.69798,6.10016 6.6999998,6.6999998 0 0 1 -6.65249,-6.14975"
              sodipodi:open="true"
              sodipodi:arc-type="arc"
              sodipodi:end="3.0593801"
@@ -127,12 +126,13 @@
              sodipodi:cx="477.07034"
              sodipodi:type="arc"
              id="path2470"
-             style="fill:none;fill-opacity:1;paint-order:markers fill stroke;" />
+             style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5.4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+             d="m 483.74344,188.6546 a 6.6999998,6.6999998 0 0 1 -6.69798,6.10016 6.6999998,6.6999998 0 0 1 -6.65249,-6.14975" />
           <path
              sodipodi:nodetypes="zcscscz"
              id="path2472"
              d="m 477.06623,188.55333 c 11.59795,0.005 14.44095,-0.52918 14.44095,-0.52918 -3.1756,0.003 -6.14242,-0.80812 -7.74501,-2.66004 -2.41296,-2.78837 -3.99144,-4.07075 -6.69182,-4.07075 -2.70038,0 -4.27886,1.28238 -6.69182,4.07075 -1.60259,1.85192 -4.56941,2.66304 -7.74442,2.66004 0,0 2.83417,0.52433 14.43212,0.52918 z"
-             style="fill:none;fill-opacity:1;" />
+             style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         </g>
       </g>
     </g>

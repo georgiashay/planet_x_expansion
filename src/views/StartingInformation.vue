@@ -125,6 +125,8 @@ export default defineComponent({
   display: flex;
   align-content: center;
   align-items: center;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .clue_obj ion-icon {

@@ -14,7 +14,7 @@
             :color="buttonColor(view)"
             @click="selectedView = (selectedView == view ? undefined : view)"
             >
-            <ion-icon :src="view.icon"></ion-icon> {{ view.name }} {{ view.viewType }}
+            <ion-icon :src="view.icon"></ion-icon>&nbsp; {{ view.name }} {{ view.viewType }}
           </ion-button>
           <ion-item-divider/>
           <ion-button

@@ -91,7 +91,7 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a black hole",
     the: "the black hole",
     initial: "B",
-    icon: "/assets/space_object_icons/black_hole_straight.svg"
+    icon: "/assets/space_object_icons/black_hole.svg"
   },
   PLANET_X: {
     name: "Planet X",
