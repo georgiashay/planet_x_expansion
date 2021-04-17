@@ -7,7 +7,6 @@
         </div>
         <div id="reminder">
         <p>Reminder: You must choose a different action on your next turn; you cannot take the research action twice in a row.</p>
-        <img src = "/assets/socks.jpeg">
         </div>
         <ion-item-divider/>
         <ion-button
