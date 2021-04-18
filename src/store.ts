@@ -60,7 +60,7 @@ export default createStore({
       }
 
       const numObject = sectors.filter((obj: any) => {
-        if (surveyObject === SpaceObject.EMPTY) {
+        if (surveyObject.initial === SpaceObject.EMPTY.initial) {
           return obj.initial === surveyObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
         } else {
           return obj.initial === surveyObject.initial;
@@ -69,10 +69,15 @@ export default createStore({
 
       let text = (numObject == 1) ? "There is " : "There are ";
       text += (numObject == 0) ? "no " : numObject + " ";
-      text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
-      text += " between sectors " + startSector + "-" + endSector + ".";
-      if (surveyObject === SpaceObject.EMPTY) {
-        text += "\nRemember, Planet X appears empty.";
+      if (surveyObject.initial === SpaceObject.EMPTY.initial) {
+        text += (numObject == 1) ? "sector " : "sectors ";
+        text += "that ";
+        text += (numObject == 1) ? "appears " : "appear ";
+        text += "empty in sectors " + startSector + "-" + endSector + ".";
+        text += (numObject == 1) ? "\nIt may be truly empty, or it may be Planet X." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
+      } else {
+        text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
+        text += " in sectors " + startSector + "-" + endSector + ".";
       }
 
       const actionText = "Survey, " + surveyObject.proper + ", " + startSector + "-" + endSector;
@@ -94,9 +99,11 @@ export default createStore({
         foundObject = SpaceObject.EMPTY;
       }
 
-      let text = "There is " + foundObject.one + " in sector " + sectorNumber + ".";
-      if (foundObject == SpaceObject.EMPTY) {
-        text += "\nRemember, Planet X appears empty."
+      let text;
+      if (foundObject.initial == SpaceObject.EMPTY.initial) {
+        text = "Sector " + sectorNumber + " appears empty.\nRemember, Planet X appears empty.";
+      } else {
+        text = "There is " + foundObject.one + " in sector " + sectorNumber + ".";
       }
 
       const actionText = "Target, Sector " + sectorNumber;
