@@ -21,7 +21,8 @@
             v-if="selectedView !== undefined"
             expand="block"
             color="dark"
-            @click="continueGame()">
+            @click="continueGame()"
+            id="continue_button">
             Continue
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
           </ion-button>
@@ -128,7 +129,11 @@ export default defineComponent({
 }
 
 #view_buttons ion-icon {
-  font-size: 2.5em;
+  font-size: 2em;
+}
+
+#continue_button ion-icon {
+  font-size: 1.2em;
 }
 
 #game_code {
