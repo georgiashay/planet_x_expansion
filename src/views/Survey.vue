@@ -124,7 +124,7 @@ export default defineComponent({
     surveySize: function(): number {
       if (this.startSector === undefined || this.endSector === undefined) {
         return 0;
-      } else if (this.endSector > this.startSector) {
+      } else if (this.endSector >= this.startSector) {
         return this.endSector - this.startSector + 1;
       } else {
         return 24 - (this.startSector - this.endSector) + 1;

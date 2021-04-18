@@ -52,7 +52,7 @@ export default createStore({
     survey(state: any, { surveyObject, startSector, endSector }) {
       let sectors;
 
-      if (endSector > startSector) {
+      if (endSector >= startSector) {
         sectors = state.game.board.objects.slice(startSector-1, endSector);
       } else {
         sectors = state.game.board.objects.slice(0, endSector)
