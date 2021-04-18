@@ -67,18 +67,37 @@ export default createStore({
         }
       }).length;
 
-      let text = (numObject == 1) ? "There is " : "There are ";
-      text += (numObject == 0) ? "no " : numObject + " ";
-      if (surveyObject.initial === SpaceObject.EMPTY.initial) {
-        text += (numObject == 1) ? "sector " : "sectors ";
-        text += "that ";
-        text += (numObject == 1) ? "appears " : "appear ";
-        text += "empty in sectors " + startSector + "-" + endSector + ".";
-        text += (numObject == 1) ? "\nIt may be truly empty, or it may be Planet X." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
+      let text;
+      if (startSector !== endSector) {
+        text = (numObject == 1) ? "There is " : "There are ";
+        text += (numObject == 0) ? "no " : numObject + " ";
+        if (surveyObject.initial === SpaceObject.EMPTY.initial) {
+          text += (numObject == 1) ? "sector " : "sectors ";
+          text += "that ";
+          text += (numObject == 1) ? "appears " : "appear ";
+          text += "empty in sectors " + startSector + "-" + endSector + ".";
+          text += (numObject == 1) ? "\nIt may be truly empty, or it may be Planet X." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
+        } else {
+          text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
+          text += " in sectors " + startSector + "-" + endSector + ".";
+        }
       } else {
-        text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
-        text += " in sectors " + startSector + "-" + endSector + ".";
+        text = "Sector " + endSector + " ";
+        if (surveyObject.initial === SpaceObject.EMPTY.initial) {
+          if (numObject == 0) {
+            text += " does not appear empty.";
+          } else {
+            text += " appears empty. It may be truly empty, or it may be Planet X.";
+          }
+        } else {
+          if (numObject == 0) {
+            text += " is not " + surveyObject.one + ".";
+          } else {
+            text += " is " + surveyObject.one + ".";
+          }
+        }
       }
+
 
       const actionText = "Survey, " + surveyObject.proper + ", " + startSector + "-" + endSector;
       const timeCost = 5 - Math.ceil(sectors.length/4);
