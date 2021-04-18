@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="container"  v-if="store.getters.gameReady">
+      <div id="container"  v-if="store.getters.gameReady && store.state.seasonView !== undefined">
         <div id="title_container">
           <h3>{{ store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</h3>
         </div>
