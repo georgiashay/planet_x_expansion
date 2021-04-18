@@ -30,6 +30,7 @@ ion-item-divider {
   --color: white;
 }
 
-.custom-alert .alert-title {
-  color: black;
+.custom-alert .alert-wrapper {
+  background-color: var(--ion-color-dark);
+  color: var(--ion-color-dark-contrast);
 }
