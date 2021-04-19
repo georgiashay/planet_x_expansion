@@ -47,7 +47,7 @@ function listenBackButton(router: Router) {
     }
     next();
   });
-  useBackButton(10, (processNextHandler: () => void) => {
+  useBackButton(10, () => {
     if (router.currentRoute.value.path === home) {
       // Exit the app if pressing back button on home page
       App.exitApp();
