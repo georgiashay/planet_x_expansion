@@ -32,24 +32,19 @@
         </div>
       </div>
     </ion-content>
-    <ion-footer>
-      <ion-toolbar color="dark">
-        <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
-        <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
-      </ion-toolbar>
-    </ion-footer>
+    <game-footer/>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
-        IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
+        IonButton, IonIcon, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import GameFooter from "@/components/GameFooter.vue";
 
 export default defineComponent({
   name: 'Research',
@@ -58,11 +53,9 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonFooter,
-    IonToolbar,
-    IonTitle,
     IonItemDivider,
-    IonNavLink
+    IonNavLink,
+    GameFooter
   },
   mixins: [SoundMixin],
   data() {
@@ -147,16 +140,6 @@ export default defineComponent({
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
-}
-
-#game_code {
-  float:left;
-}
-
-#history_link {
-  float:right;
-  text-decoration: underline;
-  margin-right: 20px;
 }
 
 .ion-text-left {

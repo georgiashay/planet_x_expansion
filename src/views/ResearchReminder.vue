@@ -19,22 +19,17 @@
         </ion-button>
       </div>
     </ion-content>
-    <ion-footer>
-      <ion-toolbar color="dark">
-        <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
-        <ion-nav-link id="history_link" router-link="/multiplayer/history">History</ion-nav-link>
-      </ion-toolbar>
-    </ion-footer>
+    <game-footer/>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
-        IonButton, IonIcon, IonFooter,
-        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
+        IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
+import GameFooter from "@/components/GameFooter.vue";
 
 export default defineComponent({
   name: 'ResearchReminder',
@@ -43,11 +38,8 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonFooter,
-    IonToolbar,
-    IonTitle,
     IonItemDivider,
-    IonNavLink
+    GameFooter
   },
   data() {
     const store = useStore();
@@ -83,15 +75,5 @@ export default defineComponent({
 #continue_button {
   margin-top: 10px;
   text-transform: none;
-}
-
-#game_code {
-  float:left;
-}
-
-#history_link {
-  float:right;
-  text-decoration: underline;
-  margin-right: 20px;
 }
 </style>

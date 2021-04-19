@@ -28,22 +28,18 @@
         </div>
       </div>
     </ion-content>
-    <ion-footer>
-      <ion-toolbar color="dark">
-        <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
-      </ion-toolbar>
-    </ion-footer>
+    <game-footer :show-history-link="false"/>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
-        IonButton, IonFooter,
-        IonToolbar, IonTitle, IonNavLink } from '@ionic/vue';
+        IonButton, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import GameFooter from "@/components/GameFooter.vue";
 
 export default defineComponent({
   name: 'History',
@@ -51,11 +47,9 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonButton,
-    IonFooter,
-    IonToolbar,
-    IonTitle,
     IonItemDivider,
-    IonNavLink
+    IonNavLink,
+    GameFooter
   },
   mixins: [SoundMixin],
   data() {
@@ -116,10 +110,6 @@ export default defineComponent({
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
-}
-
-#game_code {
-  float:left;
 }
 
 .ion-text-left {
