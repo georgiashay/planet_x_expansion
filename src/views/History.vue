@@ -65,6 +65,7 @@ export default defineComponent({
       return this.store.state.history.map((item: any, index: number) => {
         return { item, index };
       }).filter((item: any) => {
+        // Don't display peer reviews in history 
         return item.item.actionType != "peerreview";
       });
     }

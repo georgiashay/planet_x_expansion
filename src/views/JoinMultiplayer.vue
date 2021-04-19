@@ -68,13 +68,16 @@ export default defineComponent({
     async joinGame() {
       this.gameCode = this.gameCode.toUpperCase();
 
+      // Fetch game asynchronously
       this.fetchingGame = true;
       await this.store.dispatch("joinGame", this.gameCode);
       this.fetchingGame = false;
 
       if (this.store.state.game !== undefined) {
+        // Start game
         this.router.push("/multiplayer/gamecode/join");
       } else {
+        // Game code incorrect, show alert
         const alert = await alertController
                         .create({
                           header: 'Alert',

@@ -51,6 +51,8 @@ export default defineComponent({
   },
   methods: {
     delegateFocus: function(e: Event) {
+      // If entire item is clicked, delegate click to the
+      // select itself, so the popover is aligned properly
       const clicked = e.target as HTMLElement;
       const item = clicked.closest("ion-item");
       const el = item.querySelector("#select_object") as HTMLElement;
@@ -58,6 +60,7 @@ export default defineComponent({
     },
     openPopover: async function(e: Event) {
       e.stopPropagation();
+      // Display popover to select space object
       const popover = await popoverController
         .create({
           component: SpaceObjectSelectPopover,
@@ -70,8 +73,10 @@ export default defineComponent({
         });
       await popover.present();
 
+      // Returns new space object
       const { data } = await popover.onDidDismiss();
       if (data !== undefined) {
+        // Emit input even with new space object
         this.$emit('input', data);
       }
     }

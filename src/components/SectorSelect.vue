@@ -49,12 +49,15 @@ export default defineComponent({
   },
   methods: {
     delegateFocus: function(e: Event) {
+      // If entire item is clicked, delegate click to the
+      // select itself, so the popover is aligned properly
       const clicked = e.target as HTMLElement;
       const item = clicked.closest("ion-item");
       const el = item.querySelector("#select_sector") as HTMLElement;
       el.click();
     },
     openPopover: async function(e: Event) {
+      // Open popover to choose sector
       e.stopPropagation();
       const popover = await popoverController
         .create({
@@ -67,8 +70,10 @@ export default defineComponent({
         });
       await popover.present();
 
+      // Returns new sector number
       const { data } = await popover.onDidDismiss();
       if (data !== undefined) {
+        // Emit input event with new sector number
         this.$emit('input', data);
       }
     }

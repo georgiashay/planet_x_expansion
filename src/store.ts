@@ -16,11 +16,13 @@ export default createStore({
 
   actions: {
     async createGame({ commit }) {
+      // Get fresh game from server
       const response: any = await axios.get(SERVER_URL + "/creategame");
       commit('setGame', response.data.game);
       commit('setGameCode', response.data.gameCode);
     },
     async joinGame({ commit }, gameCode: string) {
+      // Get game with game code from server if it exists
       const response: any = await axios.get(SERVER_URL + "/joingame/" + gameCode);
       if (response.data.game) {
         commit('setGame', response.data.game);
@@ -52,6 +54,7 @@ export default createStore({
     survey(state: any, { surveyObject, startSector, endSector }) {
       let sectors;
 
+      // Get slice of only sectors being surveyed
       if (endSector >= startSector) {
         sectors = state.game.board.objects.slice(startSector-1, endSector);
       } else {
@@ -59,7 +62,9 @@ export default createStore({
                     .concat(state.game.board.objects.slice(startSector-1));
       }
 
+      // Find the number of the object being surveyed
       const numObject = sectors.filter((obj: any) => {
+        // If the object is an empty sector, include Planet X in the count
         if (surveyObject.initial === SpaceObject.EMPTY.initial) {
           return obj.initial === surveyObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
         } else {
@@ -67,6 +72,7 @@ export default createStore({
         }
       }).length;
 
+      // Construct text for result
       let text;
       if (startSector !== endSector) {
         text = (numObject == 1) ? "There is " : "There are ";
@@ -98,8 +104,9 @@ export default createStore({
         }
       }
 
-
+      // Text to be displayed in history
       const actionText = "Survey, " + surveyObject.proper + ", " + startSector + "-" + endSector;
+      // Calculate time cost for survey
       const timeCost = 5 - Math.ceil(sectors.length/4);
 
       const actionResult = {
@@ -112,12 +119,16 @@ export default createStore({
       state.history.push(actionResult);
     },
     target(state: any, { sectorNumber }) {
+      // Check what is in that sector
       let foundObject = state.game.board.objects[sectorNumber-1];
-      foundObject = SpaceObject[Object.keys(SpaceObject).filter((objCode: any) => SpaceObject[objCode].initial === foundObject.initial)[0]];
+      foundObject = initialToSpaceObject[foundObject.initial];
+
+      // If it is Planet X, show that it appears empty
       if (foundObject.initial === SpaceObject.PLANET_X.initial) {
         foundObject = SpaceObject.EMPTY;
       }
 
+      // Construct text for the result
       let text;
       if (foundObject.initial == SpaceObject.EMPTY.initial) {
         text = "Sector " + sectorNumber + " appears empty.\nRemember, Planet X appears empty.";
@@ -125,7 +136,9 @@ export default createStore({
         text = "There is " + foundObject.one + " in sector " + sectorNumber + ".";
       }
 
+      // Text to be displayed in history
       const actionText = "Target, Sector " + sectorNumber;
+
       const actionResult = {
         actionType: "target",
         actionName: "Target",
@@ -137,6 +150,7 @@ export default createStore({
       state.history.push(actionResult);
     },
     research(state: any, { index }) {
+      // Get research at specific index
       const actionResult = {
         actionType: "research",
         actionName: "Research",
@@ -151,10 +165,12 @@ export default createStore({
       const leftSector = (sector == 1) ? 24 : sector - 1;
       const rightSector = (sector == 24) ? 1 : sector + 1;
 
+      // Check if objects are all correct
       const found = state.game.board.objects[sector-1].initial === SpaceObject.PLANET_X.initial &&
                     state.game.board.objects[leftSector-1].initial === leftObject.initial &&
                     state.game.board.objects[rightSector-1].initial === rightObject.initial;
 
+      // Construct text depending on success or failure
       let text;
       let upperText;
       let actionText;
@@ -181,6 +197,7 @@ export default createStore({
       state.history.push(actionResult);
     },
     peerReview(state: any, { spaceObject, sector }) {
+      // Check if theory object is correct
       const realObject = state.game.board.objects[sector - 1];
       let text;
       if (realObject.initial === spaceObject.initial) {
@@ -198,6 +215,7 @@ export default createStore({
       state.history.push(actionResult);
     },
     conference(state: any, { index }) {
+      // Get conference at specific index
       const actionResult = {
         actionType: "conference",
         actionName: "Planet X Conference",
@@ -214,17 +232,20 @@ export default createStore({
       if (state.game === undefined) {
         return [];
       }
+
+
       return state.game.startingInformation[state.seasonView.name.toUpperCase()]
-              .slice(0, state.startingFacts)
-              .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector)
+              .slice(0, state.startingFacts) // Use only first state.startingFacts clues
+              .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector) // Display in order
               .map((clue: any) => {
                 const newClue = Object.assign({}, clue);
                 const spaceObject = initialToSpaceObject[clue.eliminatedObject.initial];
                 newClue.spaceObject = spaceObject;
                 return newClue;
-              });
+              }); // Get space object info from each initial
     },
     lastActionResult(state: any) {
+      // Get last action result in history if it exists
       if (state.history.length) {
         return state.history[state.history.length - 1];
       } else {

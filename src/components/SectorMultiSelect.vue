@@ -58,6 +58,7 @@ export default defineComponent({
   },
   methods: {
     openPopover: async function(e: Event, i: number) {
+      // Display popover to choose sector
       const popover = await popoverController
         .create({
           component: SectorSelectPopover,
@@ -69,8 +70,12 @@ export default defineComponent({
         });
       await popover.present();
 
+      // Returns sector number for the ith select
       const { data } = await popover.onDidDismiss();
+
       if (data !== undefined) {
+        // Create a new value array with new sector number
+        // and emit input event for it
         const val = this.value as Array<number>;
         const newValue = [...val];
         newValue[i] = data;

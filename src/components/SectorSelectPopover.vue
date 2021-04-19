@@ -26,9 +26,11 @@ export default defineComponent({
   props: ['value', 'allowedSectors', 'columns'],
   computed: {
     percentWidth: function(): number {
+      // Percent each column should take up
       return Math.floor(100/this.columns);
     },
     tableSectors: function(): any[][] {
+      // Split sectors into rows of size this.columns
       const table: any[][] = [[]];
       for (let i = 0; i < this.allowedSectors.length; i++) {
         const sector = this.allowedSectors[i];
@@ -41,6 +43,8 @@ export default defineComponent({
       return table;
     },
     cssVars: function(): any {
+      // Construct reasonable table width depending on number of
+      // columns
       return {
         "--width": (45 * this.columns) + "px"
       };
@@ -48,6 +52,7 @@ export default defineComponent({
   },
   methods: {
     choose: async function(num: number) {
+      // Dismiss popover and return chosen sector
       await popoverController.dismiss(num);
     }
   }

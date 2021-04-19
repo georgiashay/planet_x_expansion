@@ -96,6 +96,7 @@ export default defineComponent({
   },
   computed: {
     leftSector: function(): number | undefined {
+      // Get sector to the left of selected sector on a circle of 24
       if (this.sector === undefined) {
         return undefined;
       } else {
@@ -107,6 +108,7 @@ export default defineComponent({
       }
     },
     rightSector: function(): number | undefined {
+      // Get sector to the right of selected sector on a circle of 24
       if (this.sector === undefined) {
         return undefined;
       } else {

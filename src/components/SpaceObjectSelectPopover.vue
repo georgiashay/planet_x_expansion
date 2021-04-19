@@ -33,6 +33,7 @@ export default defineComponent({
   },
   computed: {
     spaceObjects: function(): any {
+      // Remove excluded space objects
       const objects = Object.assign({}, SpaceObject);
       for (const objectCode in objects) {
         if (this.excludeObjects.indexOf(objectCode) >= 0) {
@@ -42,6 +43,7 @@ export default defineComponent({
       return objects;
     },
     tableSpaceObjects: function(): any {
+      // Split space objects into rows of size this.columns
       const objects: any[][] = [[]];
       for (const objectCode in this.spaceObjects) {
         if (objects[objects.length-1].length < this.columns) {
@@ -53,6 +55,7 @@ export default defineComponent({
       return objects;
     },
     cssVars: function(): any {
+      // Return reasonable width for popover table
       return {
         "--width": (50*this.columns) + "px"
       }
@@ -60,6 +63,7 @@ export default defineComponent({
   },
   methods: {
     choose: async function(obj: any) {
+      // Dismiss popover and return selected space object
       await popoverController.dismiss(obj);
     }
   }

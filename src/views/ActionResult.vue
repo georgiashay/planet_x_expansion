@@ -71,6 +71,7 @@ export default defineComponent({
       if (this.route.params.historyIndex === undefined) {
         return undefined;
       } else if (this.route.params.historyIndex !== "") {
+        // Get history index from string
         let indexString: string;
         if(isString(this.route.params.historyIndex)) {
           indexString = this.route.params.historyIndex;
@@ -78,12 +79,15 @@ export default defineComponent({
           indexString = this.route.params.historyIndex[0];
         }
         const historyIndex = parseInt(indexString);
+        // Use action result at that index in history
         return this.store.state.history[historyIndex];
       } else {
+        // No history index provided, use last action result
         return this.store.getters.lastActionResult;
       }
     },
     arrowString: function() {
+      // Get number of arrows corresponding to the time cost of this action
       let arrows = "";
       for (let i = 0; i < this.actionResult.timeCost; i++) {
         arrows += ">";
@@ -96,11 +100,14 @@ export default defineComponent({
       if (this.route.params.actionType == "research") {
         const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "research").length > 1;
         if (hasDoneResearch) {
+          // Done research before, go straight to game menu
           this.router.push("/multiplayer/gamemenu")
         } else {
+          // Never done research, display reminder
           this.router.push("/multiplayer/action/research/reminder");
         }
       } else {
+        // Not a research action, go back to game menu
         this.router.push("/multiplayer/gamemenu");
       }
     }
@@ -109,11 +116,14 @@ export default defineComponent({
     if (this.store.getters.gameReady && this.actionResult !== undefined) {
       if (this.actionResult.actionType == "locateplanetx") {
         if (this.actionResult.success) {
+          // Play correct sound when planet x is located
           this.playCorrect();
         } else {
+          // Play incorrect sound if it is not located
           this.playIncorrect();
         }
       } else {
+        // Play sonar ping if it's not a planet x action
         this.playSonar2();
       }
     }

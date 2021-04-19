@@ -108,13 +108,17 @@ export default defineComponent({
   },
   computed: {
     availableSectors: function(): Array<number> {
+      // Which sectors are available to survey depend on the object being surveyed
       if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
+        // Comets can only be in prime sectors
         return [2, 3, 5, 7, 11, 13, 17, 19, 23];
       } else {
+        // Otherwise all 24 sectors are available
         return Array.from(Array(24)).map((el,i)=>i+1);
       }
     },
     surveySize: function(): number {
+      // Calculate width of survey on a 24 circle
       if (this.startSector === undefined || this.endSector === undefined) {
         return 0;
       } else if (this.endSector >= this.startSector) {
@@ -124,6 +128,8 @@ export default defineComponent({
       }
     },
     sectorsValid: function(): boolean {
+      // Sectors are valid when both sectors are defined and the survey
+      // size is not larger than 12
       if (this.startSector === undefined ||
           this.endSector === undefined) {
         return false;
@@ -132,9 +138,13 @@ export default defineComponent({
       }
     },
     surveyReady: function(): boolean {
+      // Survey ready to proceed when the sectors make a valid survey
+      // and the object is defined
       return this.sectorsValid && this.surveyObject !== undefined;
     },
     timeCost: function(): number{
+      // Time cost is 2 for 1-4 sectors, 3 for 4-8 sectors,
+      // and 4 for 9-12 sectors
       if (!this.sectorsValid) {
         return -1;
       } else {
@@ -157,6 +167,8 @@ export default defineComponent({
       this.endSector = undefined;
     },
     objChanged: function() {
+      // Clear out sectors if they are no longer valid when the survey
+      // object changes 
       if (this.availableSectors.indexOf(this.startSector) === -1) {
         this.startSector = undefined;
       }

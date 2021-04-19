@@ -97,6 +97,7 @@ export default defineComponent({
   },
   methods: {
     clickSurvey: function() {
+      // Display reminder on first survey
       const previousSurveys = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "survey");
       if (previousSurveys.length > 0) {
         this.router.push('/multiplayer/action/survey');
@@ -105,6 +106,7 @@ export default defineComponent({
       }
     },
     clickTarget: function() {
+      // Display reminder on first target
       const previousTargets = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "target");
       if (previousTargets.length > 0) {
         this.router.push('/multiplayer/action/target');
@@ -113,6 +115,7 @@ export default defineComponent({
       }
     },
     endGame: async function() {
+      // Ensure user actually wants to end game
       const alert = await alertController
                       .create({
                         header: 'End Game',
