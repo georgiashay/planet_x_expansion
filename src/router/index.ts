@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import listenBackButton from './backButton';
 import Home from '../views/Home.vue';
 import CreateMultiplayer from '@/views/CreateMultiplayer.vue';
 import GameCode from '@/views/GameCode.vue';
@@ -148,6 +149,8 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
+
+listenBackButton(router);
 
 export default router

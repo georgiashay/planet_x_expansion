@@ -27,7 +27,7 @@ import './theme/global.css';
 const app = createApp(App)
   .use(IonicVue)
   .use(store)
-  .use(router)
+  .use(router);
 
 router.isReady().then(() => {
   app.mount('#app');
