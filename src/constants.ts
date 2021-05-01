@@ -1,9 +1,96 @@
 // export const SERVER_URL = "https://planetx.shaytech.net";
 export const SERVER_URL = "http://localhost:8000";
-export const GAME_TYPES: {[sector: number]: string} = {
-  12: "Standard",
-  18: "Expert",
-  24: "Ace"
+export const GAME_TYPES: {[sector: number]: any} = {
+  12: {
+    name: "Standard",
+    sectors: 12,
+    difficulties: [
+      {
+        facts: 12,
+        name: "Youth"
+      },
+      {
+        facts: 8,
+        name: "Beginner"
+      },
+      {
+        facts: 4,
+        name: "Experienced"
+      },
+      {
+        facts: 0,
+        name: "Genius"
+      }
+    ],
+    surveyCost: {
+      min: 3,
+      max: 4,
+      interval: 3
+    },
+    targetCost: 4,
+    researchCost: 1,
+    locatePlanetXCost: 5
+  },
+  18: {
+    name: "Expert",
+    sectors: 18,
+    difficulties: [
+      {
+        facts: 12,
+        name: "Youth"
+      },
+      {
+        facts: 8,
+        name: "Beginner"
+      },
+      {
+        facts: 4,
+        name: "Experienced"
+      },
+      {
+        facts: 0,
+        name: "Genius"
+      }
+    ],
+    surveyCost: {
+      min: 2,
+      max: 4,
+      interval: 3
+    },
+    targetCost: 4,
+    researchCost: 1,
+    locatePlanetXCost: 5
+  },
+  24: {
+    name: "Ace",
+    sectors: 24,
+    difficulties: [
+      {
+        facts: 18,
+        name: "Youth"
+      },
+      {
+        facts: 12,
+        name: "Beginner"
+      },
+      {
+        facts: 6,
+        name: "Experienced"
+      },
+      {
+        facts: 0,
+        name: "Genius"
+      }
+    ],
+    surveyCost: {
+      min: 2,
+      max: 4,
+      interval: 4
+    },
+    targetCost: 4,
+    researchCost: 1,
+    locatePlanetXCost: 5
+  }
 }
 
 export const SeasonView: {[code: string]: {[info: string]: string}} = {
@@ -28,25 +115,6 @@ export const SeasonView: {[code: string]: {[info: string]: string}} = {
     icon: "/assets/season_icons/winter.svg"
   }
 };
-
-export const DIFFICULTY_LEVELS = [
-  {
-    facts: 18,
-    name: "Youth"
-  },
-  {
-    facts: 12,
-    name: "Beginner"
-  },
-  {
-    facts: 6,
-    name: "Experienced"
-  },
-  {
-    facts: 0,
-    name: "Genius"
-  }
-]
 
 export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
   ASTEROID: {

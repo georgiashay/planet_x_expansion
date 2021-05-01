@@ -19,7 +19,7 @@
           id="target_button"
           :disabled="!sectorNumber">
           Target
-          <template v-if="sectorNumber">(4 <ion-icon :icon="timeOutline"/>)</template>
+          <template v-if="sectorNumber">({{store.state.gameType.targetCost}} <ion-icon :icon="timeOutline"/>)</template>
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <ion-item-divider/>

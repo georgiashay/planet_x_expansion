@@ -9,7 +9,7 @@
         <div id="difficulty_buttons">
           <ion-button
             expand="block"
-            v-for="difficulty in DIFFICULTY_LEVELS"
+            v-for="difficulty in store.state.gameType.difficulties"
             :key="difficulty.facts"
             :color="buttonColor(difficulty.facts)"
             @click="selectedFacts = (selectedFacts == difficulty.facts ? undefined : difficulty.facts)"
@@ -42,7 +42,6 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { DIFFICULTY_LEVELS } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 
@@ -63,7 +62,6 @@ export default defineComponent({
     return {
       store,
       arrowForwardOutline,
-      DIFFICULTY_LEVELS,
       selectedFacts: undefined,
       router: useRouter()
     }

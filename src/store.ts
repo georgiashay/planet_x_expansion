@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { SERVER_URL, SpaceObject, initialToSpaceObject } from "@/constants";
+import { SERVER_URL, GAME_TYPES, SpaceObject, initialToSpaceObject } from "@/constants";
 import axios from 'axios';
 
 //
@@ -11,15 +11,17 @@ export default createStore({
     gameCode: undefined,
     seasonView: undefined,
     startingFacts: undefined,
-    history: []
+    history: [],
+    gameType: undefined
   },
 
   actions: {
-    async createGame({ commit }) {
+    async createGame({ commit }, numSectors) {
       // Get fresh game from server
-      const response: any = await axios.get(SERVER_URL + "/creategame/24");
+      const response: any = await axios.get(SERVER_URL + "/creategame/"  + numSectors);
       commit('setGame', response.data.game);
       commit('setGameCode', response.data.gameCode);
+      commit('setGameType', GAME_TYPES[numSectors]);
     },
     async joinGame({ commit }, gameCode: string) {
       // Get game with game code from server if it exists
@@ -27,6 +29,7 @@ export default createStore({
       if (response.data.game) {
         commit('setGame', response.data.game);
         commit('setGameCode', response.data.gameCode);
+        commit('setGameType', GAME_TYPES[response.data.game.board.size]);
       }
     }
   },
@@ -37,6 +40,9 @@ export default createStore({
     },
     setGameCode(state: any, gameCode: string) {
       state.gameCode = gameCode;
+    },
+    setGameType(state: any, gameType: any) {
+      state.gameType = gameType;
     },
     setSeasonView(state: any, seasonView: string) {
       state.seasonView = seasonView;
@@ -162,8 +168,8 @@ export default createStore({
       state.history.push(actionResult);
     },
     locatePlanetX(state: any, { sector, leftObject, rightObject }) {
-      const leftSector = (sector == 1) ? 24 : sector - 1;
-      const rightSector = (sector == 24) ? 1 : sector + 1;
+      const leftSector = (sector == 1) ? state.gameType.sectors : sector - 1;
+      const rightSector = (sector == state.gameType.sectors) ? 1 : sector + 1;
 
       // Check if objects are all correct
       const found = state.game.board.objects[sector-1].initial === SpaceObject.PLANET_X.initial &&

@@ -39,7 +39,6 @@ import { IonContent, IonPage, IonItemDivider,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
-import { GAME_TYPES } from '@/constants';
 import { useRoute } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 
@@ -70,12 +69,12 @@ export default defineComponent({
     }
   },
   computed: {
-    gameModeName() {
+    gameModeName(): string {
       if (this.store.state.game === undefined) {
         return "";
       } else {
-        const boardSize: number = this.store.state.game.board.size;
-        return GAME_TYPES[boardSize] + " Mode (" + boardSize + " sectors)";
+        return this.store.state.gameType.name + " Mode (" +
+         this.store.state.gameType.sectors + " sectors)";
       }
     }
   },

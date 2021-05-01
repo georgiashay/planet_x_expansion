@@ -10,7 +10,7 @@
             expand="block"
             color="dark"
             @click="clickSurvey()">
-            Survey (2-4
+            Survey ({{store.state.gameType.surveyCost.min}}-{{store.state.gameType.surveyCost.max}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
@@ -18,7 +18,7 @@
             expand="block"
             color="dark"
             @click="clickTarget()">
-            Target (4
+            Target ({{store.state.gameType.targetCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
@@ -26,7 +26,7 @@
             expand="block"
             color="dark"
             router-link="/multiplayer/action/research">
-            Research (1
+            Research ({{store.state.gameType.researchCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
@@ -34,7 +34,7 @@
             expand="block"
             color="dark"
             router-link="/multiplayer/action/locateplanetx">
-            Locate Planet X (5
+            Locate Planet X ({{store.state.gameType.locatePlanetXCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>

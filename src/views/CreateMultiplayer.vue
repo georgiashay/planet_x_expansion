@@ -10,12 +10,12 @@
           <p>Select Game Mode:</p>
           <ion-button
             expand="block"
-            v-for="(name, sectors) in GAME_TYPES"
+            v-for="(gameType, sectors) in GAME_TYPES"
             :key="sectors"
             :color="buttonColor(sectors)"
             @click="selectedGame = (selectedGame == sectors ? undefined : sectors)"
             >
-            {{name}} Mode ({{sectors}} sectors)
+            {{gameType.name}} Mode ({{sectors}} sectors)
           </ion-button>
           <ion-item-divider/>
           <ion-button

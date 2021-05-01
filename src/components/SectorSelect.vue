@@ -18,6 +18,7 @@
 <script lang="ts">
 import { popoverController, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
 import SectorSelectPopover from '@/components/SectorSelectPopover.vue';
 
 export default defineComponent({
@@ -35,8 +36,7 @@ export default defineComponent({
       default: "Select Object: "
     },
     allowedSectors: {
-      type: Array,
-      default: () => Array.from(Array(24)).map((el,i)=>i+1)
+      type: Array
     },
     numberOnly: {
       type: Boolean,
@@ -45,6 +45,17 @@ export default defineComponent({
     columns: {
       type: Number,
       default: 1
+    }
+  },
+  data() {
+    return {
+      store: useStore()
+    }
+  },
+  computed: {
+    _allowedSectors(): any {
+      return this.allowedSectors ||
+      Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
     }
   },
   methods: {
@@ -63,7 +74,7 @@ export default defineComponent({
         .create({
           component: SectorSelectPopover,
           componentProps: {
-            allowedSectors: this.allowedSectors,
+            allowedSectors: this._allowedSectors,
             columns: this.columns
           },
           event: e

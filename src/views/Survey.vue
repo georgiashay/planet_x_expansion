@@ -8,22 +8,10 @@
         <div id="time_cost">
           <p>Time cost varies by the selected range.</p>
           <table id="time_table">
-            <tr>
-              <td>
+            <tr v-for="(row, index) in timeCostOptions" :key="index">
+              <td v-for="costOption in row" :key="costOption.cost">
                 <div class="tc_cell">
-                  1, 2, 3, 4 sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;4 <ion-icon :icon="timeOutline"/>
-                </div>
-              </td>
-              <td>
-                <div class="tc_cell">
-                  5, 6, 7, 8 sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;3 <ion-icon :icon="timeOutline"/>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="tc_cell">
-                  9, 10, 11, 12 sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;2 <ion-icon :icon="timeOutline"/>
+                  {{costOption.sectors.join(", ")}} sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;{{costOption.cost}} <ion-icon :icon="timeOutline"/>
                 </div>
               </td>
             </tr>
@@ -111,30 +99,30 @@ export default defineComponent({
       // Which sectors are available to survey depend on the object being surveyed
       if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
         // Comets can only be in prime sectors
-        return [2, 3, 5, 7, 11, 13, 17, 19, 23];
+        return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => s <= this.store.state.gameType.sectors);
       } else {
-        // Otherwise all 24 sectors are available
-        return Array.from(Array(24)).map((el,i)=>i+1);
+        // Otherwise all sectors are available
+        return Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
       }
     },
     surveySize: function(): number {
-      // Calculate width of survey on a 24 circle
+      // Calculate width of survey on a circle
       if (this.startSector === undefined || this.endSector === undefined) {
         return 0;
       } else if (this.endSector >= this.startSector) {
         return this.endSector - this.startSector + 1;
       } else {
-        return 24 - (this.startSector - this.endSector) + 1;
+        return this.store.state.gameType.sectors - (this.startSector - this.endSector) + 1;
       }
     },
     sectorsValid: function(): boolean {
       // Sectors are valid when both sectors are defined and the survey
-      // size is not larger than 12
+      // size is not larger than half the board
       if (this.startSector === undefined ||
           this.endSector === undefined) {
         return false;
       } else {
-        return this.surveySize >= 1 && this.surveySize <= 12;
+        return this.surveySize >= 1 && this.surveySize <= this.store.state.gameType.sectors/2;
       }
     },
     surveyReady: function(): boolean {
@@ -142,13 +130,33 @@ export default defineComponent({
       // and the object is defined
       return this.sectorsValid && this.surveyObject !== undefined;
     },
+    timeCostOptions: function(): Array<Array<any>> {
+      const numIntervals = (this.store.state.gameType.sectors/2)/this.store.state.gameType.surveyCost.interval;
+      const maxCost = this.store.state.gameType.surveyCost.max;
+      const costOptions: Array<Array<any>> = [[]];
+      for (let i = 0; i < numIntervals; i++) {
+        const minSector = i * this.store.state.gameType.surveyCost.interval + 1;
+        const maxSector = minSector + this.store.state.gameType.surveyCost.interval - 1;
+        const sectorsAtCost = Array.from(Array(maxSector-minSector+1)).map((el,i)=>minSector+i);
+        const costOption = {
+          cost: maxCost - i,
+          sectors: sectorsAtCost
+        };
+
+        if (costOptions[costOptions.length - 1].length < 2) {
+          costOptions[costOptions.length - 1].push(costOption);
+        } else {
+          costOptions.push([costOption]);
+        }
+      }
+      return costOptions;
+    },
     timeCost: function(): number{
-      // Time cost is 2 for 1-4 sectors, 3 for 4-8 sectors,
-      // and 4 for 9-12 sectors
       if (!this.sectorsValid) {
         return -1;
       } else {
-        return 5 - Math.ceil(this.surveySize/4);
+        return this.store.state.gameType.surveyCost.max + 1
+          - Math.ceil(this.surveySize/this.store.state.gameType.surveyCost.interval);
       }
     }
   },
@@ -168,7 +176,7 @@ export default defineComponent({
     },
     objChanged: function() {
       // Clear out sectors if they are no longer valid when the survey
-      // object changes 
+      // object changes
       if (this.availableSectors.indexOf(this.startSector) === -1) {
         this.startSector = undefined;
       }

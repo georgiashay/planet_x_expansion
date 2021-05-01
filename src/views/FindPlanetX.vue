@@ -37,7 +37,7 @@
           @click="locate()"
           id="planet_button"
           :disabled="sector === undefined || leftObject === undefined || rightObject === undefined">
-          Locate Planet X (5 <ion-icon :icon="timeOutline" size="small"/>)
+          Locate Planet X ({{store.state.gameType.locatePlanetXCost}} <ion-icon :icon="timeOutline" size="small"/>)
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <ion-item-divider/>
@@ -96,24 +96,24 @@ export default defineComponent({
   },
   computed: {
     leftSector: function(): number | undefined {
-      // Get sector to the left of selected sector on a circle of 24
+      // Get sector to the left of selected sector on a circle
       if (this.sector === undefined) {
         return undefined;
       } else {
         let left = this.sector - 1;
         if (left == 0) {
-          left = 24;
+          left = this.store.state.gameType.sectors;
         }
         return left;
       }
     },
     rightSector: function(): number | undefined {
-      // Get sector to the right of selected sector on a circle of 24
+      // Get sector to the right of selected sector on a circle
       if (this.sector === undefined) {
         return undefined;
       } else {
         let left = this.sector + 1;
-        if (left == 25) {
+        if (left == this.store.state.gameType.sectors + 1) {
           left = 1;
         }
         return left;
