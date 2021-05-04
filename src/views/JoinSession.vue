@@ -3,23 +3,30 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Multiplayer Game</h3>
+          <h3>Join Session</h3>
         </div>
         <div id="enter_code">
           <ion-item color="dark">
-            <ion-label position="floating">Enter Game Code</ion-label>
-            <ion-input v-model="gameCode"></ion-input>
+            <ion-label position="floating">Enter Session Code</ion-label>
+            <ion-input v-model="sessionCode"></ion-input>
+          </ion-item>
+        </div>
+        <div id="enter_name">
+          <ion-item color="dark">
+            <ion-label position="floating">Enter Name</ion-label>
+            <ion-input v-model="name"></ion-input>
           </ion-item>
         </div>
         <ion-button
+          :disabled="sessionCode.length == 0 || name.length == 0"
           expand="block"
           color="dark"
-          @click="joinGame()"
-          id = "join_game_button">
-          Join Game
+          @click="joinSession()"
+          id = "join_session_button">
+          Join Session
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
-        <p id="fetching" v-if="fetchingGame">Fetching Game...</p>
+        <p id="fetching" v-if="fetchingSession">Fetching Session...</p>
         <div id="cancel_container">
           <ion-nav-link router-link="/home">Cancel</ion-nav-link>
         </div>
@@ -40,7 +47,7 @@ import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
-  name: 'JoinMultiplayer',
+  name: 'JoinGame',
   components: {
     IonContent,
     IonPage,
@@ -60,28 +67,32 @@ export default defineComponent({
       arrowForwardOutline,
       store,
       router,
-      gameCode: "",
-      fetchingGame: false
+      sessionCode: "",
+      name: "",
+      fetchingSession: false
     }
   },
   methods: {
-    async joinGame() {
-      this.gameCode = this.gameCode.toUpperCase();
+    async joinSession() {
+      this.sessionCode = this.sessionCode.toUpperCase();
 
-      // Fetch game asynchronously
-      this.fetchingGame = true;
-      await this.store.dispatch("joinGame", this.gameCode);
-      this.fetchingGame = false;
+      // Fetch session asynchronously
+      this.fetchingSession = true;
+      await this.store.dispatch("joinSession", {
+        sessionCode: this.sessionCode,
+        name: this.name
+      });
+      this.fetchingSession = false;
 
-      if (this.store.state.game !== undefined) {
-        // Start game
-        this.router.push("/multiplayer/gamecode/join");
+      if (this.store.state.session !== undefined) {
+        // Start session
+        this.router.push("/session/lobby/join");
       } else {
-        // Game code incorrect, show alert
+        // Session code incorrect, show alert
         const alert = await alertController
                         .create({
                           header: 'Alert',
-                          message: 'That game code could not be found. Please try again.',
+                          message: 'That session code could not be found. Please try again.',
                           buttons: ['OK'],
                           cssClass: 'custom-alert'
                         });
@@ -91,7 +102,8 @@ export default defineComponent({
     }
   },
   ionViewWillEnter: function() {
-    this.gameCode = "";
+    this.sessionCode = "";
+    this.name = "";
   },
   ionViewDidEnter() {
     this.playSonar1();
@@ -120,7 +132,7 @@ export default defineComponent({
   text-transform: uppercase;
 }
 
-#join_game_button {
+#join_session_button {
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;

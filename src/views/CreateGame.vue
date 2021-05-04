@@ -3,10 +3,9 @@
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
-          <h3>Multiplayer Game</h3>
+          <h3>Multiplayer {{isSession ? "Online " : ""}}Game</h3>
         </div>
         <div id="create_game_buttons">
-
           <p>Select Game Mode:</p>
           <ion-button
             expand="block"
@@ -17,9 +16,15 @@
             >
             {{gameType.name}} Mode ({{sectors}} sectors)
           </ion-button>
+          <div id="enter_name" v-if="isSession">
+            <p>Enter Name:</p>
+            <ion-item color="dark">
+              <ion-input v-model="name"></ion-input>
+            </ion-item>
+          </div>
           <ion-item-divider/>
           <ion-button
-            v-if="selectedGame !== undefined"
+            v-if="readyToCreate"
             expand="block"
             color="dark"
             @click="createGame()">
@@ -37,7 +42,8 @@
 
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
-        IonButton, IonNavLink, IonIcon } from '@ionic/vue';
+        IonButton, IonNavLink, IonIcon,
+        IonItem, IonInput } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -46,14 +52,16 @@ import { GAME_TYPES } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 
 export default defineComponent({
-  name: 'CreateMultiplayer',
+  name: 'CreateGame',
   components: {
     IonContent,
     IonPage,
     IonItemDivider,
     IonButton,
     IonNavLink,
-    IonIcon
+    IonIcon,
+    IonItem,
+    IonInput
   },
   mixins: [SoundMixin],
   data() {
@@ -64,7 +72,14 @@ export default defineComponent({
       GAME_TYPES,
       arrowForwardOutline,
       store,
-      router
+      router,
+      name: ""
+    }
+  },
+  props: {
+    isSession: {
+      required: true,
+      type: Boolean
     }
   },
   methods: {
@@ -76,11 +91,30 @@ export default defineComponent({
       }
     },
     createGame: function() {
-      this.store.dispatch("createGame", this.selectedGame);
-      this.router.push("/multiplayer/gamecode/new");
+      if (this.isSession) {
+        this.store.commit("setIsSession", true);
+        this.store.dispatch("createSession", {
+          numSectors: this.selectedGame,
+          name: this.name
+        });
+        this.router.push("/session/lobby/wait");
+      } else {
+        this.store.dispatch("createGame", this.selectedGame);
+        this.router.push("/multiplayer/gamecode/new");
+      }
     },
     clearSelections: function() {
       this.selectedGame = undefined;
+      this.name = undefined;
+    }
+  },
+  computed: {
+    readyToCreate: function(): boolean {
+      if (this.isSession) {
+        return this.selectedGame !== undefined && this.name.length > 0;
+      } else {
+        return this.selectedGame !== undefined;
+      }
     }
   },
   ionViewDidEnter() {

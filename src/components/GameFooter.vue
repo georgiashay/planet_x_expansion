@@ -1,7 +1,8 @@
 <template>
   <ion-footer>
     <ion-toolbar color="dark">
-      <ion-title id="game_code">Game Code: {{ store.state.gameCode }}</ion-title>
+      <ion-title id="game_code" v-if="!store.state.isSession">Game Code: {{ store.state.gameCode }}</ion-title>
+      <ion-title id="game_code" v-else>Session Code: {{ store.state.sessionCode }}</ion-title>
       <ion-nav-link id="history_link" v-if="showHistoryLink" router-link="/multiplayer/history">History</ion-nav-link>
     </ion-toolbar>
   </ion-footer>

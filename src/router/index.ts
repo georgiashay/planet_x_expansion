@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import listenBackButton from './backButton';
 import Home from '../views/Home.vue';
-import CreateMultiplayer from '@/views/CreateMultiplayer.vue';
+import CreateGame from '@/views/CreateGame.vue';
 import GameCode from '@/views/GameCode.vue';
 import ChooseView from '@/views/ChooseView.vue';
-import JoinMultiplayer from '@/views/JoinMultiplayer.vue';
+import JoinGame from '@/views/JoinGame.vue';
 import ChooseDifficulty from '@/views/ChooseDifficulty.vue';
 import StartingInformation from '@/views/StartingInformation.vue';
 import ResearchCategories from '@/views/ResearchCategories.vue';
@@ -22,6 +22,8 @@ import PeerReview from '@/views/PeerReview.vue';
 import PlanetXConference from '@/views/PlanetXConference.vue';
 import History from '@/views/History.vue';
 import EndGame from '@/views/EndGame.vue';
+import Lobby from '@/views/Lobby.vue';
+import JoinSession from '@/views/JoinSession.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -34,14 +36,46 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/multiplayer/create',
+    path: '/:gameType/create',
     name: 'Create Multiplayer',
-    component: CreateMultiplayer
+    component: CreateGame,
+    props: (route) => {
+      if (route.params.gameType == "multiplayer") {
+        return {
+          isSession: false
+        }
+      } else if (route.params.gameType == "session") {
+        return {
+          isSession: true
+        }
+      }
+    }
   },
   {
     path: '/multiplayer/join',
     name: 'Join Multiplayer',
-    component: JoinMultiplayer
+    component: JoinGame
+  },
+  {
+    path: '/session/join',
+    name: 'Join Session',
+    component: JoinSession
+  },
+  {
+    path: '/session/lobby/:waiting',
+    name: 'Lobby',
+    component: Lobby,
+    props: (route) => {
+      if (route.params.waiting == "wait") {
+        return {
+          sessionCreator: true
+        }
+      } else if (route.params.waiting == "join") {
+        return {
+          sessionCreator: false
+        }
+      }
+    }
   },
   {
     path: '/multiplayer/gamecode/:isnew',
@@ -60,7 +94,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/multiplayer/chooseview',
+    path: '/:gameType/chooseview',
     name: 'Choose View',
     component: ChooseView
   },

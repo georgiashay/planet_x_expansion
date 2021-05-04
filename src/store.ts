@@ -12,7 +12,14 @@ export default createStore({
     seasonView: undefined,
     startingFacts: undefined,
     history: [],
-    gameType: undefined
+    gameType: undefined,
+    isSession: false,
+    sessionID: undefined,
+    sessionCode: undefined,
+    session: undefined,
+    playerID: undefined,
+    playerNum: undefined,
+    playerName: undefined
   },
 
   actions: {
@@ -26,11 +33,42 @@ export default createStore({
     async joinGame({ commit }, gameCode: string) {
       // Get game with game code from server if it exists
       const response: any = await axios.get(SERVER_URL + "/joingame/" + gameCode);
-      if (response.data.game) {
+      if (response.data.found) {
         commit('setGame', response.data.game);
         commit('setGameCode', response.data.gameCode);
         commit('setGameType', GAME_TYPES[response.data.game.board.size]);
       }
+    },
+    async createSession({ commit }, { numSectors, name }) {
+      // Start new session
+      const response: any = await axios.post(SERVER_URL + "/createSession/" + numSectors + "?name=" + name);
+      commit('setGame', response.data.game);
+      commit('setSessionState', response.data.state);
+      commit('setGameType', GAME_TYPES[numSectors]);
+      commit('setSessionCode', response.data.state.sessionCode);
+      commit('setSessionID', response.data.state.sessionID);
+      commit('setPlayerNum', response.data.playerNum);
+      commit('setPlayerID', response.data.playerID);
+      commit('setPlayerName', name);
+    },
+    async joinSession({ commit }, { sessionCode, name }) {
+      // Join existing session
+      const response: any = await axios.post(SERVER_URL + "/joinSession/" + sessionCode + "?name=" + name);
+      if (response.data.found) {
+        console.log(response.data);
+        commit('setGame', response.data.game);
+        commit('setSessionState', response.data.state);
+        commit('setGameType', GAME_TYPES[response.data.game.board.size]);
+        commit('setSessionCode', response.data.state.sessionCode);
+        commit('setSessionID', response.data.state.sessionID);
+        commit('setPlayerNum', response.data.playerNum);
+        commit('setPlayerID', response.data.playerID);
+        commit('setPlayerName', name);
+      }
+    },
+    async startSession({ state }) {
+      // Start session (when all players have joined)
+      const response: any = await axios.post(SERVER_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
     }
   },
 
@@ -43,6 +81,27 @@ export default createStore({
     },
     setGameType(state: any, gameType: any) {
       state.gameType = gameType;
+    },
+    setIsSession(state: any, isSession: boolean) {
+      state.isSession = isSession;
+    },
+    setSessionState(state: any, sessionState: any) {
+      state.session = sessionState;
+    },
+    setSessionID(state: any, sessionID: number) {
+      state.sessionID = sessionID;
+    },
+    setSessionCode(state: any, sessionCode: string) {
+      state.sessionCode = sessionCode;
+    },
+    setPlayerID(state: any, playerID: number) {
+      state.playerID = playerID;
+    },
+    setPlayerNum(state: any, playerNum: number) {
+      state.playerNum = playerNum;
+    },
+    setPlayerName(state: any, name: string) {
+      state.playerName = name;
     },
     setSeasonView(state: any, seasonView: string) {
       state.seasonView = seasonView;
@@ -239,7 +298,6 @@ export default createStore({
         return [];
       }
 
-
       return state.game.startingInformation[state.seasonView.name.toUpperCase()]
               .slice(0, state.startingFacts) // Use only first state.startingFacts clues
               .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector) // Display in order
@@ -259,10 +317,21 @@ export default createStore({
       }
     },
     gameReady(state: any) {
-      return state.game !== undefined && state.gameCode !== undefined;
+      if (state.isSession) {
+        return state.game !== undefined && state.session !== undefined && state.sessionCode !== undefined;
+      } else {
+        return state.game !== undefined && state.gameCode !== undefined;
+      }
     },
     playerReady(state: any, getters: any) {
       return getters.gameReady && state.seasonView !== undefined;
+    },
+    sessionPlayers(state: any) {
+      if (state.session !== undefined) {
+        return state.session.players;
+      } else {
+        return [];
+      }
     }
   }
 });
