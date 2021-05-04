@@ -1,5 +1,7 @@
 // export const SERVER_URL = "https://planetx.shaytech.net";
-export const SERVER_URL = "http://localhost:8000";
+export const SERVER_URL = "localhost:8000";
+export const API_URL = "http://" + SERVER_URL;
+export const WEBSOCKET_URL = "ws://" + SERVER_URL;
 export const GAME_TYPES: {[sector: number]: any} = {
   12: {
     name: "Standard",

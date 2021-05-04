@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { SERVER_URL, GAME_TYPES, SpaceObject, initialToSpaceObject } from "@/constants";
+import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject } from "@/constants";
 import axios from 'axios';
 
 //
@@ -25,23 +25,23 @@ export default createStore({
   actions: {
     async createGame({ commit }, numSectors) {
       // Get fresh game from server
-      const response: any = await axios.get(SERVER_URL + "/creategame/"  + numSectors);
+      const response: any = await axios.get(API_URL + "/creategame/"  + numSectors);
       commit('setGame', response.data.game);
       commit('setGameCode', response.data.gameCode);
       commit('setGameType', GAME_TYPES[numSectors]);
     },
     async joinGame({ commit }, gameCode: string) {
       // Get game with game code from server if it exists
-      const response: any = await axios.get(SERVER_URL + "/joingame/" + gameCode);
+      const response: any = await axios.get(API_URL + "/joingame/" + gameCode);
       if (response.data.found) {
         commit('setGame', response.data.game);
         commit('setGameCode', response.data.gameCode);
         commit('setGameType', GAME_TYPES[response.data.game.board.size]);
       }
     },
-    async createSession({ commit }, { numSectors, name }) {
+    async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
-      const response: any = await axios.post(SERVER_URL + "/createSession/" + numSectors + "?name=" + name);
+      const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
       commit('setGame', response.data.game);
       commit('setSessionState', response.data.state);
       commit('setGameType', GAME_TYPES[numSectors]);
@@ -50,10 +50,11 @@ export default createStore({
       commit('setPlayerNum', response.data.playerNum);
       commit('setPlayerID', response.data.playerID);
       commit('setPlayerName', name);
+      dispatch('listenSession');
     },
-    async joinSession({ commit }, { sessionCode, name }) {
+    async joinSession({ commit, dispatch }, { sessionCode, name }) {
       // Join existing session
-      const response: any = await axios.post(SERVER_URL + "/joinSession/" + sessionCode + "?name=" + name);
+      const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode + "?name=" + name);
       if (response.data.found) {
         console.log(response.data);
         commit('setGame', response.data.game);
@@ -64,11 +65,21 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', name);
+        dispatch('listenSession');
       }
     },
     async startSession({ state }) {
       // Start session (when all players have joined)
-      const response: any = await axios.post(SERVER_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+      const response: any = await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+    },
+    listenSession({ state, commit }) {
+      // Listen for updates to the session
+      const ws = new WebSocket(WEBSOCKET_URL + "/" + state.sessionID);
+      ws.onopen = () => console.log("Listening for updates to state");
+      ws.onmessage = (message) => {
+        const sessionState = JSON.parse(message.data);
+        commit('setSessionState', sessionState);
+      };
     }
   },
 
