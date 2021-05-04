@@ -120,6 +120,12 @@ export default createStore({
     resetGame(state: any) {
       state.game = undefined;
       state.gameCode = undefined;
+      state.session = undefined;
+      state.playerID = undefined;
+      state.playerNum = undefined;
+      state.playerName = undefined;
+      state.sessionID = undefined;
+      state.sessionCode = undefined;
       state.seasonView = undefined;
       state.startingFacts = undefined;
       state.history = [];

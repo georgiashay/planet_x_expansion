@@ -15,7 +15,7 @@
         </div>
         <div id="players">
           <ion-item color="dark" v-for="player in store.getters.sessionPlayers" :key="player.num">
-            <div class="player_circle" style="--player-color: blue;"></div>
+            <div class="player_circle" :style="playerStyle(player.num)"></div>
             P{{player.num}}: {{player.name}}
           </ion-item>
         </div>
@@ -49,6 +49,7 @@ import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import PlayerColors from "@/mixins/PlayerColors.ts";
 
 export default defineComponent({
   name: 'Lobby',
@@ -61,7 +62,7 @@ export default defineComponent({
     IonIcon,
     IonItem
   },
-  mixins: [SoundMixin],
+  mixins: [SoundMixin, PlayerColors],
   props: {
     sessionCreator: {
       required: true,
