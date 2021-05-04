@@ -162,7 +162,7 @@ export default defineComponent({
   },
   methods: {
     survey: function() {
-      this.store.commit('survey', {
+      this.store.dispatch('survey', {
         surveyObject: this.surveyObject,
         startSector: this.startSector,
         endSector: this.endSector

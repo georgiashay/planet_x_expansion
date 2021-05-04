@@ -69,7 +69,7 @@ export default defineComponent({
   },
   methods: {
     target: function() {
-      this.store.commit('target', {
+      this.store.dispatch('target', {
         sectorNumber: this.sectorNumber
       });
       this.router.push('/multiplayer/action/target/result');

@@ -122,7 +122,7 @@ export default defineComponent({
   },
   methods: {
     locate: function() {
-      this.store.commit('locatePlanetX', {
+      this.store.dispatch('locatePlanetX', {
         sector: this.sector,
         leftObject: this.leftObject,
         rightObject: this.rightObject

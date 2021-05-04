@@ -70,7 +70,7 @@ export default createStore({
     },
     async startSession({ state }) {
       // Start session (when all players have joined)
-      const response: any = await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+      await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
     },
     listenSession({ state, commit }) {
       // Listen for updates to the session
@@ -78,62 +78,14 @@ export default createStore({
       ws.onopen = () => console.log("Listening for updates to state");
       ws.onmessage = (message) => {
         const sessionState = JSON.parse(message.data);
+        console.log(sessionState);
         commit('setSessionState', sessionState);
       };
-    }
-  },
-
-  mutations: {
-    setGame(state: any, game: object) {
-      state.game = game;
     },
-    setGameCode(state: any, gameCode: string) {
-      state.gameCode = gameCode;
+    async makeSessionMove({ state }, moveData) {
+      await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
     },
-    setGameType(state: any, gameType: any) {
-      state.gameType = gameType;
-    },
-    setIsSession(state: any, isSession: boolean) {
-      state.isSession = isSession;
-    },
-    setSessionState(state: any, sessionState: any) {
-      state.session = sessionState;
-    },
-    setSessionID(state: any, sessionID: number) {
-      state.sessionID = sessionID;
-    },
-    setSessionCode(state: any, sessionCode: string) {
-      state.sessionCode = sessionCode;
-    },
-    setPlayerID(state: any, playerID: number) {
-      state.playerID = playerID;
-    },
-    setPlayerNum(state: any, playerNum: number) {
-      state.playerNum = playerNum;
-    },
-    setPlayerName(state: any, name: string) {
-      state.playerName = name;
-    },
-    setSeasonView(state: any, seasonView: string) {
-      state.seasonView = seasonView;
-    },
-    resetGame(state: any) {
-      state.game = undefined;
-      state.gameCode = undefined;
-      state.session = undefined;
-      state.playerID = undefined;
-      state.playerNum = undefined;
-      state.playerName = undefined;
-      state.sessionID = undefined;
-      state.sessionCode = undefined;
-      state.seasonView = undefined;
-      state.startingFacts = undefined;
-      state.history = [];
-    },
-    setNumFacts(state: any, facts: number) {
-      state.startingFacts = facts;
-    },
-    survey(state: any, { surveyObject, startSector, endSector }) {
+    survey({ state, dispatch }, { surveyObject, startSector, endSector }) {
       let sectors;
 
       // Get slice of only sectors being surveyed
@@ -198,9 +150,21 @@ export default createStore({
         text,
         timeCost
       }
+
       state.history.push(actionResult);
+
+      if (state.isSession) {
+        const moveData = {
+          turnType: "SURVEY",
+          spaceObject: surveyObject.initial,
+          sectors: [startSector-1, endSector-1],
+          timeCost
+        };
+
+        dispatch('makeSessionMove', moveData);
+      }
     },
-    target(state: any, { sectorNumber }) {
+    target({ state, dispatch }, { sectorNumber }) {
       // Check what is in that sector
       let foundObject = state.game.board.objects[sectorNumber-1];
       foundObject = initialToSpaceObject[foundObject.initial];
@@ -230,8 +194,18 @@ export default createStore({
       }
 
       state.history.push(actionResult);
+
+      if (state.isSession) {
+        const moveData = {
+          turnType: "TARGET",
+          sector: sectorNumber - 1,
+          timeCost: 4
+        };
+
+        dispatch('makeSessionMove', moveData);
+      }
     },
-    research(state: any, { index }) {
+    research({ state, dispatch }, { index }) {
       // Get research at specific index
       const actionResult = {
         actionType: "research",
@@ -242,8 +216,18 @@ export default createStore({
       }
 
       state.history.push(actionResult);
+
+      if (state.isSession) {
+        const moveData = {
+          turnType: "RESEARCH",
+          index,
+          timeCost: 1
+        };
+
+        dispatch('makeSessionMove', moveData);
+      }
     },
-    locatePlanetX(state: any, { sector, leftObject, rightObject }) {
+    locatePlanetX({ state, dispatch }, { sector, leftObject, rightObject }) {
       const leftSector = (sector == 1) ? state.gameType.sectors : sector - 1;
       const rightSector = (sector == state.gameType.sectors) ? 1 : sector + 1;
 
@@ -277,6 +261,68 @@ export default createStore({
       }
 
       state.history.push(actionResult);
+
+      if (state.isSession) {
+        const moveData = {
+          turnType: "LOCATE_PLANET_X",
+          successful: found,
+          timeCost: 5
+        };
+
+        dispatch('makeSessionMove', moveData);
+      }
+    }
+  },
+  mutations: {
+    setGame(state: any, game: object) {
+      state.game = game;
+    },
+    setGameCode(state: any, gameCode: string) {
+      state.gameCode = gameCode;
+    },
+    setGameType(state: any, gameType: any) {
+      state.gameType = gameType;
+    },
+    setIsSession(state: any, isSession: boolean) {
+      state.isSession = isSession;
+    },
+    setSessionState(state: any, sessionState: any) {
+      state.session = sessionState;
+    },
+    setSessionID(state: any, sessionID: number) {
+      state.sessionID = sessionID;
+    },
+    setSessionCode(state: any, sessionCode: string) {
+      state.sessionCode = sessionCode;
+    },
+    setPlayerID(state: any, playerID: number) {
+      state.playerID = playerID;
+    },
+    setPlayerNum(state: any, playerNum: number) {
+      state.playerNum = playerNum;
+    },
+    setPlayerName(state: any, name: string) {
+      state.playerName = name;
+    },
+    setSeasonView(state: any, seasonView: string) {
+      state.seasonView = seasonView;
+    },
+    resetGame(state: any) {
+      state.game = undefined;
+      state.gameCode = undefined;
+      state.session = undefined;
+      state.isSession = false;
+      state.playerID = undefined;
+      state.playerNum = undefined;
+      state.playerName = undefined;
+      state.sessionID = undefined;
+      state.sessionCode = undefined;
+      state.seasonView = undefined;
+      state.startingFacts = undefined;
+      state.history = [];
+    },
+    setNumFacts(state: any, facts: number) {
+      state.startingFacts = facts;
     },
     peerReview(state: any, { spaceObject, sector }) {
       // Check if theory object is correct

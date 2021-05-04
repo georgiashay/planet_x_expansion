@@ -78,7 +78,7 @@ export default defineComponent({
       }
     },
     research: function() {
-      this.store.commit('research', {
+      this.store.dispatch('research', {
         index: this.selectedResearch
       });
       this.router.push('/multiplayer/action/research/result');
