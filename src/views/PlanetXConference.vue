@@ -8,6 +8,7 @@
         <div id="conference_selections">
           Select the current conference:
           <ion-button
+            :disabled="store.state.isSession && index != store.getters.currentConference"
             expand="block"
             v-for="(conference, index) in store.state.game.conference"
             :key="index"
@@ -58,6 +59,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const router = useRouter();
@@ -78,7 +85,7 @@ export default defineComponent({
       }
     },
     conference: function() {
-      this.store.commit('conference', {
+      this.store.dispatch('conference', {
         index: this.selectedConference
       });
       this.router.push('/' + this.gameType + '/action/conference/result');

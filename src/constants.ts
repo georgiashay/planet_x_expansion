@@ -31,7 +31,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
     },
     targetCost: 4,
     researchCost: 1,
-    locatePlanetXCost: 5
+    locatePlanetXCost: 5,
+    theoriesPerTurn: 1,
+    conferences: [8]
   },
   18: {
     name: "Expert",
@@ -61,7 +63,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
     },
     targetCost: 4,
     researchCost: 1,
-    locatePlanetXCost: 5
+    locatePlanetXCost: 5,
+    theoriesPerTurn: 2,
+    conferences: [6, 15]
   },
   24: {
     name: "Ace",
@@ -91,7 +95,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
     },
     targetCost: 4,
     researchCost: 1,
-    locatePlanetXCost: 5
+    locatePlanetXCost: 5,
+    theoriesPerTurn: 2,
+    conferences: [6, 15, 21]
   }
 }
 

@@ -67,6 +67,7 @@
           </ion-button>
           <ion-item-divider/>
           <ion-button
+            :disabled="!store.getters.actionAllowed('END_GAME')"
             expand="block"
             color="dark"
             @click="endGame()">

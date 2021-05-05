@@ -6,7 +6,7 @@
           <h3>Current Action: Target</h3>
         </div>
         <div id="reminder">
-        <p>Reminder: you can only target a sector in the visible sky. (At the beginning of the game, the visible sky is 1-12.)</p>
+        <p>Reminder: you can only target a sector in the visible sky. (At the beginning of the game, the visible sky is 1-{{store.getters.skySize}}.)</p>
         <p>You can only target in the visible half of the sky.</p>
         </div>
         <ion-button

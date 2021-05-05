@@ -271,6 +271,25 @@ export default createStore({
 
         dispatch('makeSessionMove', moveData);
       }
+    },
+    async submitTheories({ state }, theories) {
+      const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
+      await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories});
+    },
+    async conference({ state, dispatch }, { index }) {
+      // Get conference at specific index
+      const actionResult = {
+        actionType: "conference",
+        actionName: "Planet X Conference",
+        actionText: "Conference X" + (index+1) + ": " + state.game.conference[index].categoryName,
+        text: "X" + (index + 1) + ". " + state.game.conference[index].text
+      }
+
+      state.history.push(actionResult);
+
+      if (state.isSession) {
+        await axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+      }
     }
   },
   mutations: {
@@ -341,20 +360,8 @@ export default createStore({
       }
 
       state.history.push(actionResult);
-    },
-    conference(state: any, { index }) {
-      // Get conference at specific index
-      const actionResult = {
-        actionType: "conference",
-        actionName: "Planet X Conference",
-        actionText: "Conference X" + (index+1) + ": " + state.game.conference[index].categoryName,
-        text: "X" + (index + 1) + ". " + state.game.conference[index].text
-      }
-
-      state.history.push(actionResult);
     }
   },
-
   getters: {
     myStartingInformation(state: any) {
       if (state.game === undefined) {
@@ -454,6 +461,56 @@ export default createStore({
     skySectors(state: any, getters: any) {
       const sectors = Array.from(Array(getters.skySize)).map((el, i) => (i + state.session.currentSector) % state.gameType.sectors);
       return sectors;
+    },
+    playerInfo(state: any) {
+      const players = state.session.players;
+      const me = players.filter((p: any) => p.playerID === state.playerID);
+      if (me.length == 0) {
+        return null;
+      } else {
+        return me[0];
+      }
+    },
+    sectorsBehind(state: any, getters: any) {
+      const players = state.session.players.slice();
+      players.sort((a: any, b: any) => a.sector - b.sector);
+
+      if (players.length == 1) {
+        return 0;
+      }
+
+      let maxDiff = 0;
+      let sector = players[0].sector;
+
+      for (let i = -1; i < players.length - 1; i++) {
+        let diff;
+        if (i > 0) {
+          diff = players[i+1].sector - players[i].sector;
+        } else {
+          diff = players[0].sector - players[players.length - 1].sector;
+        }
+
+        if (diff > maxDiff) {
+          maxDiff = diff;
+          sector = players[i].sector;
+        }
+      }
+
+      const mySector = getters.playerInfo.sector;
+
+      let behind = sector - mySector;
+      if (behind < 0) {
+        behind += state.gameType.sectors;
+      }
+
+      return behind;
+    },
+    currentConference(state: any) {
+      if (!state.isSession) {
+        return -1;
+      } else {
+        return state.gameType.conferences.indexOf(state.session.currentSector);
+      }
     }
   }
 });

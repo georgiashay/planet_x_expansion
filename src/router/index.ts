@@ -24,6 +24,7 @@ import History from '@/views/History.vue';
 import EndGame from '@/views/EndGame.vue';
 import Lobby from '@/views/Lobby.vue';
 import JoinSession from '@/views/JoinSession.vue';
+import SubmitTheories from '@/views/SubmitTheories.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -183,6 +184,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/:gameType/action/planetxconference',
     name: 'Planet X Conference',
     component: PlanetXConference,
+    props: true
+  },
+  {
+    path: '/:gameType/action/submittheories',
+    name: 'Submit Theories',
+    component: SubmitTheories,
     props: true
   },
   {
