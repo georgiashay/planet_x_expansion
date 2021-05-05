@@ -9,7 +9,7 @@
           <ion-button
             expand="block"
             color="dark"
-            router-link="/multiplayer/startinginfo">
+            :router-link="'/' + gameType + '/startinginfo'">
             <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
           <ion-button
@@ -17,14 +17,14 @@
             :key="index"
             expand="block"
             color="dark"
-            :router-link="'/multiplayer/action/result/' + item.index"
+            :router-link="'/' + gameType + '/action/result/' + item.index"
           >
             <span class="ion-text-left">{{item.item.actionText}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Close History</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Close History</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -52,6 +52,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const router = useRouter();
@@ -65,7 +71,7 @@ export default defineComponent({
       return this.store.state.history.map((item: any, index: number) => {
         return { item, index };
       }).filter((item: any) => {
-        // Don't display peer reviews in history 
+        // Don't display peer reviews in history
         return item.item.actionType != "peerreview";
       });
     }

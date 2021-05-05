@@ -55,6 +55,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     return {
@@ -75,7 +81,7 @@ export default defineComponent({
     },
     continueGame: function() {
       this.store.commit("setSeasonView", this.selectedView);
-      this.router.push("/multiplayer/choosedifficulty");
+      this.router.push("/" + this.gameType + "/choosedifficulty");
     },
     clearSelections: function() {
       this.selectedView = undefined;

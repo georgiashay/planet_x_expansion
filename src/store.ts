@@ -395,6 +395,65 @@ export default createStore({
       } else {
         return [];
       }
+    },
+    myNextAction(state: any) {
+      const myActions = state.session.actions.filter((action: any) => action.playerID == state.playerID);
+      if (myActions.length == 0) {
+        return null;
+      } else {
+        return myActions[0];
+      }
+    },
+    actionAllowed: (state: any, getters: any) => (actionName: string): boolean => {
+      if (!state.isSession) {
+        return true;
+      }
+
+      const action = getters.myNextAction;
+
+      if (action == null) {
+        switch(state.session.currentAction.actionType) {
+          case "END_GAME": return actionName === "END_GAME";
+          default: return false;
+        }
+      }
+
+      switch(action.actionType) {
+        case "START_GAME":
+          return actionName === "START_GAME";
+          break;
+        case "THEORY_PHASE":
+          return actionName === "THEORY";
+          break;
+        case "CONFERENCE_PHASE":
+          return actionName === "CONFERENCE";
+          break;
+        case "LAST_ACTION":
+          return actionName === "THEORY" || actionName === "LOCATE_PLANET_X";
+          break;
+        case "PLAYER_TURN": {
+          const researchAllowed = getters.lastActionResult?.actionType != "research";
+          return actionName === "SURVEY"
+                  || actionName === "TARGET"
+                  || actionName === "LOCATE_PLANET_X"
+                  || (actionName === "RESEARCH" && researchAllowed);
+          }
+      }
+    },
+    skySize(state: any) {
+      return Math.floor(state.gameType.sectors/2);
+    },
+    isSectorInSky: (state: any, getters: any) => (sector: number) => {
+      let sectorsPast = (sector - 1) - state.session.currentSector;
+      if (sectorsPast < 0) {
+        sectorsPast = state.gameType.sectors + sectorsPast;
+      }
+
+      return sectorsPast < getters.skySize;
+    },
+    skySectors(state: any, getters: any) {
+      const sectors = Array.from(Array(getters.skySize)).map((el, i) => (i + state.session.currentSector) % state.gameType.sectors);
+      return sectors;
     }
   }
 });

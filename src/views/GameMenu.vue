@@ -7,6 +7,7 @@
         </div>
         <div id="action_buttons">
           <ion-button
+            :disabled="!store.getters.actionAllowed('SURVEY')"
             expand="block"
             color="dark"
             @click="clickSurvey()">
@@ -15,6 +16,7 @@
             )
           </ion-button>
           <ion-button
+            :disabled="!store.getters.actionAllowed('TARGET')"
             expand="block"
             color="dark"
             @click="clickTarget()">
@@ -23,32 +25,44 @@
             )
           </ion-button>
           <ion-button
+            :disabled="!store.getters.actionAllowed('RESEARCH')"
             expand="block"
             color="dark"
-            router-link="/multiplayer/action/research">
+            :router-link="'/' + gameType + '/action/research'">
             Research ({{store.state.gameType.researchCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
           <ion-button
+            :disabled="!store.getters.actionAllowed('LOCATE_PLANET_X')"
             expand="block"
             color="dark"
-            router-link="/multiplayer/action/locateplanetx">
+            :router-link="'/' + gameType + '/action/locateplanetx'">
             Locate Planet X ({{store.state.gameType.locatePlanetXCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
           <ion-item-divider/>
           <ion-button
+            v-if="store.state.isSession"
+            :disabled="!store.getters.actionAllowed('THEORY')"
             expand="block"
             color="dark"
-            router-link="/multiplayer/action/peerreview">
+            :router-link="'/' + gameType + '/action/submittheories'">
+            Submit Theories
+          </ion-button>
+          <ion-button
+            v-if="!store.state.isSession"
+            expand="block"
+            color="dark"
+            :router-link="'/' + gameType + '/action/peerreview'">
             Peer Review
           </ion-button>
           <ion-button
+            :disabled="!store.getters.actionAllowed('CONFERENCE')"
             expand="block"
             color="dark"
-            router-link="/multiplayer/action/planetxconference">
+            :router-link="'/' + gameType + '/action/planetxconference'">
             Planet X Conference
           </ion-button>
           <ion-item-divider/>
@@ -86,6 +100,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const router = useRouter();
@@ -100,18 +120,18 @@ export default defineComponent({
       // Display reminder on first survey
       const previousSurveys = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "survey");
       if (previousSurveys.length > 0) {
-        this.router.push('/multiplayer/action/survey');
+        this.router.push('/' + this.gameType + '/action/survey');
       } else {
-        this.router.push('/multiplayer/action/survey/reminder');
+        this.router.push('/' + this.gameType + '/action/survey/reminder');
       }
     },
     clickTarget: function() {
       // Display reminder on first target
       const previousTargets = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "target");
       if (previousTargets.length > 0) {
-        this.router.push('/multiplayer/action/target');
+        this.router.push('/' + this.gameType + '/action/target');
       } else {
-        this.router.push('/multiplayer/action/target/reminder');
+        this.router.push('/' + this.gameType + '/action/target/reminder');
       }
     },
     endGame: async function() {
@@ -128,7 +148,7 @@ export default defineComponent({
                           {
                             text: 'Yes',
                             handler: () => {
-                              this.router.push('/multiplayer/endgame');
+                              this.router.push('/' + this.gameType + '/endgame');
                             }
                           }],
                           cssClass: "custom-alert"

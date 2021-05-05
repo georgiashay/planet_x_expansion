@@ -10,6 +10,7 @@
             :label="'Sector:'"
             :value="sectorNumber"
             @input="sectorNumber = $event"
+            :allowed-sectors="allowedSectors"
             :columns="6"/>
         </div>
         <ion-button
@@ -24,7 +25,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -56,6 +57,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const router = useRouter();
@@ -72,10 +79,19 @@ export default defineComponent({
       this.store.dispatch('target', {
         sectorNumber: this.sectorNumber
       });
-      this.router.push('/multiplayer/action/target/result');
+      this.router.push('/' + this.gameType + '/action/target/result');
     },
     clearSelections: function() {
       this.sectorNumber = undefined;
+    }
+  },
+  computed: {
+    allowedSectors: function(): Array<number> {
+      if (this.store.state.isSession) {
+        return this.store.getters.skySectors.map((s: number) => s + 1);
+      } else {
+        return Array.from(Array(this.store.state.gameType.sectors)).map((el, i) => i+1);
+      }
     }
   },
   ionViewDidEnter() {

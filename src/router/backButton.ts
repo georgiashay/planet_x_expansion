@@ -5,8 +5,8 @@ const { App } = Plugins;
 
 const history: string[] = [];
 
-const backDisabled: string[] = ["/multiplayer/endgame"];
-const detours: string[] = ["/multiplayer/action"];
+const backDisabled: string[] = ["/multiplayer/endgame", "/session/endgame"];
+const detours: string[] = ["/multiplayer/action", "/session/action"];
 const home = "/home";
 
 // Check if route is on a "detour" of pages from main flow

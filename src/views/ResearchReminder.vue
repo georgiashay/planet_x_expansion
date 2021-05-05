@@ -12,7 +12,7 @@
         <ion-button
           expand="block"
           color="dark"
-          router-link="/multiplayer/gamemenu"
+          :router-link="'/' + gameType + '/gamemenu'"
           id="continue_button">
           Continue
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -40,6 +40,12 @@ export default defineComponent({
     IonIcon,
     IonItemDivider,
     GameFooter
+  },
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
   },
   data() {
     const store = useStore();

@@ -27,7 +27,7 @@
           </ion-button>
         </div>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/chooseview">(Change View)</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/chooseview'">(Change View)</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -57,6 +57,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     return {
@@ -76,7 +82,7 @@ export default defineComponent({
     },
     continueGame: function() {
       this.store.commit("setNumFacts", this.selectedFacts);
-      this.router.push("/multiplayer/startinginfo");
+      this.router.push("/" + this.gameType + "/startinginfo");
     },
     clearSelections: function() {
       this.selectedFacts = undefined;

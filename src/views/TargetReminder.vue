@@ -12,14 +12,14 @@
         <ion-button
           expand="block"
           color="dark"
-          router-link="/multiplayer/action/target"
+          :router-link="'/' + gameType + '/action/target'"
           id="continue_button">
           Continue
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -45,6 +45,12 @@ export default defineComponent({
     IonItemDivider,
     IonNavLink,
     GameFooter
+  },
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
   },
   data() {
     const store = useStore();

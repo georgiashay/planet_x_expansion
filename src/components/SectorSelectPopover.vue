@@ -45,8 +45,9 @@ export default defineComponent({
     cssVars: function(): any {
       // Construct reasonable table width depending on number of
       // columns
+      const numColumns = Math.min(this.columns, this.allowedSectors.length);
       return {
-        "--width": (45 * this.columns) + "px"
+        "--width": (45 * numColumns) + "px"
       };
     }
   },

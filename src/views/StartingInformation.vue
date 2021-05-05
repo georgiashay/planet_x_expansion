@@ -26,7 +26,7 @@
         <ion-button
           expand="block"
           color="dark"
-          router-link="/multiplayer/researchcategories"
+          :router-link="'/' + gameType + '/researchcategories'"
           id="start_button">
           Start Game
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -60,6 +60,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     return {

@@ -45,7 +45,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -80,6 +80,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const router = useRouter();
@@ -97,12 +103,22 @@ export default defineComponent({
   computed: {
     availableSectors: function(): Array<number> {
       // Which sectors are available to survey depend on the object being surveyed
-      if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
-        // Comets can only be in prime sectors
-        return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => s <= this.store.state.gameType.sectors);
+      if (this.store.state.isSession) {
+        if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
+          // Comets can only be in prime sectors
+          return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => (s-1) in this.store.getters.skySectors);
+        } else {
+          // Otherwise all sectors in the sky are available
+          return this.store.getters.skySectors.map((s: number) => s + 1);
+        }
       } else {
-        // Otherwise all sectors are available
-        return Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
+        if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
+          // Comets can only be in prime sectors
+          return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => s <= this.store.state.gameType.sectors);
+        } else {
+          // Otherwise all sectors are available
+          return Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
+        }
       }
     },
     surveySize: function(): number {
@@ -167,7 +183,7 @@ export default defineComponent({
         startSector: this.startSector,
         endSector: this.endSector
       });
-      this.router.push('/multiplayer/action/survey/result');
+      this.router.push('/' + this.gameType + '/action/survey/result');
     },
     clearSelections: function() {
       this.surveyObject = undefined;

@@ -53,6 +53,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const route = useRoute();
@@ -101,14 +107,14 @@ export default defineComponent({
         const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "research").length > 1;
         if (hasDoneResearch) {
           // Done research before, go straight to game menu
-          this.router.push("/multiplayer/gamemenu")
+          this.router.push("/" + this.gameType + "/gamemenu")
         } else {
           // Never done research, display reminder
-          this.router.push("/multiplayer/action/research/reminder");
+          this.router.push("/" + this.gameType + "/action/research/reminder");
         }
       } else {
         // Not a research action, go back to game menu
-        this.router.push("/multiplayer/gamemenu");
+        this.router.push("/" + this.gameType + "/gamemenu");
       }
     }
   },

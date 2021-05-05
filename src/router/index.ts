@@ -78,17 +78,19 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/multiplayer/gamecode/:isnew',
+    path: '/:gameType/gamecode/:isnew',
     name: 'Game Code',
     component: GameCode,
     props: (route) => {
       if (route.params.isnew == "new") {
         return {
-          gameCreator: true
+          gameCreator: true,
+          gameType: route.params.gameType
         }
       } else if (route.params.isnew == "join"){
         return {
-          gameCreator: false
+          gameCreator: false,
+          gameType: route.params.gameType
         }
       }
     }
@@ -96,87 +98,104 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/:gameType/chooseview',
     name: 'Choose View',
-    component: ChooseView
+    component: ChooseView,
+    props: true
   },
   {
-    path: '/multiplayer/choosedifficulty',
+    path: '/:gameType/choosedifficulty',
     name: 'Choose Difficulty',
-    component: ChooseDifficulty
+    component: ChooseDifficulty,
+    props: true
   },
   {
-    path: '/multiplayer/startinginfo',
+    path: '/:gameType/startinginfo',
     name: 'Starting Information',
-    component: StartingInformation
+    component: StartingInformation,
+    props: true
   },
   {
-    path: '/multiplayer/researchcategories',
+    path: '/:gameType/researchcategories',
     name: 'Research Categories',
-    component: ResearchCategories
+    component: ResearchCategories,
+    props: true
   },
   {
-    path: '/multiplayer/gamemenu',
+    path: '/:gameType/gamemenu',
     name: 'Game Menu',
-    component: GameMenu
+    component: GameMenu,
+    props: true
   },
   {
-    path: '/multiplayer/action/survey/reminder',
+    path: '/:gameType/action/survey/reminder',
     name: 'Survey Reminder',
-    component: SurveyReminder
+    component: SurveyReminder,
+    props: true
   },
   {
-    path: '/multiplayer/action/survey',
+    path: '/:gameType/action/survey',
     name: 'Survey',
-    component: Survey
+    component: Survey,
+    props: true
   },
   {
-    path: '/multiplayer/action/:actionType?/result/:historyIndex?',
+    path: '/:gameType/action/:actionType?/result/:historyIndex?',
     name: 'Action Result',
-    component: ActionResult
+    component: ActionResult,
+    props: true
   },
   {
-    path: '/multiplayer/action/target/reminder',
+    path: '/:gameType/action/target/reminder',
     name: 'Target Reminder',
-    component: TargetReminder
+    component: TargetReminder,
+    props: true
   },
   {
-    path: '/multiplayer/action/target',
+    path: '/:gameType/action/target',
     name: 'Target',
-    component: Target
+    component: Target,
+    props: true
   },
   {
-    path: '/multiplayer/action/research',
+    path: '/:gameType/action/research',
     name: 'Research',
-    component: Research
+    component: Research,
+    props: true
   },
   {
-    path: '/multiplayer/action/research/reminder',
+    path: '/:gameType/action/research/reminder',
     name: 'Research Reminder',
-    component: ResearchReminder
+    component: ResearchReminder,
+    props: true
   },
   {
-    path: '/multiplayer/action/locateplanetx',
+    path: '/:gameType/action/locateplanetx',
     name: 'Find Planet X',
-    component: FindPlanetX
+    component: FindPlanetX,
+    props: true
   },
   {
-    path: '/multiplayer/action/peerreview',
+    path: '/:gameType/action/peerreview',
     name: 'Peer Review',
-    component: PeerReview
+    component: PeerReview,
+    props: true
   },
   {
-    path: '/multiplayer/action/planetxconference',
+    path: '/:gameType/action/planetxconference',
     name: 'Planet X Conference',
-    component: PlanetXConference
+    component: PlanetXConference,
+    props: true
   },
   {
-    path: '/multiplayer/history',
+    path: '/:gameType/history',
     name: 'History',
-    component: History
+    component: History,
+    props: true
   },
   {
-    path: '/multiplayer/endgame',
+    path: '/:gameType/endgame',
     name: 'End Game',
-    component: EndGame
+    component: EndGame,
+    props: true
   }
 ]
 

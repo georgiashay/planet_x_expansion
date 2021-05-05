@@ -28,7 +28,7 @@
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -81,7 +81,7 @@ export default defineComponent({
       this.store.commit('conference', {
         index: this.selectedConference
       });
-      this.router.push('/multiplayer/action/conference/result');
+      this.router.push('/' + this.gameType + '/action/conference/result');
     },
     clearSelections: function() {
       this.selectedConference = undefined;

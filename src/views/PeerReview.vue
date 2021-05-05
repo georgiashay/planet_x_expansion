@@ -29,7 +29,7 @@
         </ion-button>
         <ion-item-divider/>
         <div id="cancel_container">
-          <ion-nav-link router-link="/multiplayer/gamemenu">Cancel</ion-nav-link>
+          <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
       </div>
     </ion-content>
@@ -64,6 +64,12 @@ export default defineComponent({
     GameFooter
   },
   mixins: [SoundMixin],
+  props: {
+    gameType: {
+      required: true,
+      type: String
+    }
+  },
   data() {
     const store = useStore();
     const router = useRouter();
@@ -83,7 +89,7 @@ export default defineComponent({
         spaceObject: this.selectedObject,
         sector: this.selectedSector
       });
-      this.router.push('/multiplayer/action/peerreview/result');
+      this.router.push('/' + this.gameType + '/action/peerreview/result');
     },
     clearSelections: function() {
       this.selectedObject = undefined;

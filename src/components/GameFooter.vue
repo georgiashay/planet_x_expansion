@@ -3,7 +3,7 @@
     <ion-toolbar color="dark">
       <ion-title id="game_code" v-if="!store.state.isSession">Game Code: {{ store.state.gameCode }}</ion-title>
       <ion-title id="game_code" v-else>Session Code: {{ store.state.sessionCode }}</ion-title>
-      <ion-nav-link id="history_link" v-if="showHistoryLink" router-link="/multiplayer/history">History</ion-nav-link>
+      <ion-nav-link id="history_link" v-if="showHistoryLink" :router-link="historyLink">History</ion-nav-link>
     </ion-toolbar>
   </ion-footer>
 </template>
@@ -31,6 +31,11 @@ export default defineComponent({
   data: function() {
     return {
       store: useStore()
+    }
+  },
+  computed: {
+    historyLink: function(): string {
+      return this.store.state.isSession ? "/session/history" : "/multiplayer/history";
     }
   }
 });
