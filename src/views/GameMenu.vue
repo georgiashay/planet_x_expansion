@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <session-header v-if="store.state.isSession"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
@@ -100,6 +101,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
+import SessionHeader from "@/components/SessionHeader.vue";
 import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
 
 export default defineComponent({
@@ -110,7 +112,8 @@ export default defineComponent({
     IonButton,
     IonIcon,
     IonItemDivider,
-    GameFooter
+    GameFooter,
+    SessionHeader
   },
   mixins: [SoundMixin],
   props: {

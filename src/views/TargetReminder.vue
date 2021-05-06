@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <session-header v-if="store.state.isSession"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
@@ -34,6 +35,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import GameFooter from "@/components/GameFooter.vue";
+import SessionHeader from "@/components/SessionHeader.vue";
 
 export default defineComponent({
   name: 'TargetReminder',
@@ -44,7 +46,8 @@ export default defineComponent({
     IonIcon,
     IonItemDivider,
     IonNavLink,
-    GameFooter
+    GameFooter,
+    SessionHeader
   },
   props: {
     gameType: {

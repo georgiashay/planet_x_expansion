@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <session-header v-if="store.state.isSession"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
@@ -46,6 +47,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
+import SessionHeader from "@/components/SessionHeader.vue";
 
 export default defineComponent({
   name: 'PlanetXConference',
@@ -56,7 +58,8 @@ export default defineComponent({
     IonIcon,
     IonItemDivider,
     IonNavLink,
-    GameFooter
+    GameFooter,
+    SessionHeader
   },
   mixins: [SoundMixin],
   props: {

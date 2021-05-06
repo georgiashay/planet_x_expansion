@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <session-header v-if="store.state.isSession"/>
     <ion-content :fullscreen="true">
       <div id="container"  v-if="store.getters.gameReady && store.state.seasonView !== undefined">
         <div id="title_container">
@@ -44,6 +45,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
+import SessionHeader from "@/components/SessionHeader.vue";
 
 export default defineComponent({
   name: 'ChooseDifficulty',
@@ -54,7 +56,8 @@ export default defineComponent({
     IonButton,
     IonIcon,
     IonNavLink,
-    GameFooter
+    GameFooter,
+    SessionHeader
   },
   mixins: [SoundMixin],
   props: {

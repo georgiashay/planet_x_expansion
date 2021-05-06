@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <session-header v-if="store.state.isSession"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.gameReady && actionResult !== undefined">
         <div id="title_container">
@@ -37,6 +38,7 @@ import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
+import SessionHeader from "@/components/SessionHeader.vue";
 
 function isString(obj: any): obj is string {
   return typeof obj === "string";
@@ -50,7 +52,8 @@ export default defineComponent({
     IonButton,
     IonIcon,
     IonItemDivider,
-    GameFooter
+    GameFooter,
+    SessionHeader
   },
   mixins: [SoundMixin],
   props: {
