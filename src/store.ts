@@ -42,6 +42,9 @@ export default createStore({
     async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
+      console.log(response.data);
+      const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
+      console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       commit('setGame', response.data.game);
       commit('setSessionState', response.data.state);
       commit('setGameType', GAME_TYPES[numSectors]);
@@ -57,6 +60,8 @@ export default createStore({
       const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode + "?name=" + name);
       if (response.data.found) {
         console.log(response.data);
+        const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
+        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         commit('setGame', response.data.game);
         commit('setSessionState', response.data.state);
         commit('setGameType', GAME_TYPES[response.data.game.board.size]);
@@ -79,6 +84,11 @@ export default createStore({
       ws.onmessage = (message) => {
         const sessionState = JSON.parse(message.data);
         console.log(sessionState);
+        if (state.session.currentAction.actionType === "THEORY_PHASE") {
+          commit('getNewlyRevealedTheories', sessionState);
+        } else {
+          commit('resetNewlyRevealedTheories');
+        }
         commit('setSessionState', sessionState);
       };
     },
@@ -144,11 +154,12 @@ export default createStore({
       const timeCost = 5 - Math.ceil(sectors.length/4);
 
       const actionResult = {
-        actionType: "survey",
+        actionType: "SURVEY",
         actionName: "Survey",
         actionText,
         text,
-        timeCost
+        timeCost,
+        time: new Date()
       }
 
       state.history.push(actionResult);
@@ -186,11 +197,12 @@ export default createStore({
       const actionText = "Target, Sector " + sectorNumber;
 
       const actionResult = {
-        actionType: "target",
+        actionType: "TARGET",
         actionName: "Target",
         actionText,
         text,
-        timeCost: 4
+        timeCost: 4,
+        time: new Date()
       }
 
       state.history.push(actionResult);
@@ -208,11 +220,12 @@ export default createStore({
     research({ state, dispatch }, { index }) {
       // Get research at specific index
       const actionResult = {
-        actionType: "research",
+        actionType: "RESEARCH",
         actionName: "Research",
         actionText: "Research " + String.fromCharCode(index+65) + ": " + state.game.research[index].categoryName,
         text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
-        timeCost: 1
+        timeCost: 1,
+        time: new Date()
       }
 
       state.history.push(actionResult);
@@ -240,24 +253,27 @@ export default createStore({
       let text;
       let upperText;
       let actionText;
+
+      const locationText = leftObject.initial + "-" + sector + "-" + rightObject.initial;
       if (found) {
         text = "Congratulations! You found Planet X!";
         upperText = "If you are the first to find Planet X,";
-        actionText = "Locate Planet X, Success";
+        actionText = "Locate Planet X, " + locationText + ", Success";
       } else {
         text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
         upperText = "If no one has yet found Planet X,";
-        actionText = "Locate Planet X, Fail";
+        actionText = "Locate Planet X, " + locationText + ", Fail";
       }
 
       const actionResult = {
-        actionType: "locateplanetx",
+        actionType: "LOCATE_PLANET_X",
         actionName: "Locate Planet X",
         actionText,
         text,
         upperText,
         success: found,
-        timeCost: 5
+        timeCost: 5,
+        time: new Date()
       }
 
       state.history.push(actionResult);
@@ -274,15 +290,34 @@ export default createStore({
     },
     async submitTheories({ state }, theories) {
       const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
-      await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories});
+      const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories});
+
+      if (response.data.allowed) {
+        const actionText = "Submit Theories, " + response.data.successfulTheories.map((theory: any) => (theory.sector+1) + theory.spaceObject.initial).join(" ");
+        const text = "Submitted theories: " + response.data.successfulTheories.map((theory: any) => {
+          const spaceObject = initialToSpaceObject[theory.spaceObject.initial];
+          return "Sector " + (theory.sector+1) + " is " + spaceObject.one;
+        }).join("; ") + ".";
+
+        const actionResult = {
+          actionType: "THEORY",
+          actionName: "Submit Theories",
+          actionText,
+          text,
+          time: new Date()
+        }
+
+        state.history.push(actionResult);
+      }
     },
     async conference({ state, dispatch }, { index }) {
       // Get conference at specific index
       const actionResult = {
-        actionType: "conference",
+        actionType: "CONFERENCE",
         actionName: "Planet X Conference",
         actionText: "Conference X" + (index+1) + ": " + state.game.conference[index].categoryName,
-        text: "X" + (index + 1) + ". " + state.game.conference[index].text
+        text: "X" + (index + 1) + ". " + state.game.conference[index].text,
+        time: new Date()
       }
 
       state.history.push(actionResult);
@@ -354,12 +389,52 @@ export default createStore({
       }
 
       const actionResult = {
-        actionType: "peerreview",
+        actionType: "PEER_REVIEW",
         actionName: "Peer Review",
-        text
+        text,
+        time: new Date()
       }
 
       state.history.push(actionResult);
+    },
+    getNewlyRevealedTheories(state: any) {
+      const newlyRevealed = [];
+      for (let i = 0; i < state.session.theories.length; i++) {
+        const theory = state.session.theories[i];
+        if (theory.progress === 2) {
+          const isCorrect = state.game.board.objects[theory.sector].initial === theory.spaceObject.initial;
+          newlyRevealed.push({
+            spaceObject: initialToSpaceObject[theory.spaceObject.initial],
+            sector: theory.sector,
+            isCorrect
+          });
+        }
+      }
+      state.newlyRevealedTheories = newlyRevealed;
+
+      if (newlyRevealed.length > 0) {
+        const actionText = "Revealed Theories, " + newlyRevealed.map((theory: any) => (theory.sector + 1) + (theory.spaceObject.initial) + ":" + (theory.isCorrect ? "✓" : "X")).join(" ");
+        const text = "Revealed theories: " + newlyRevealed.map((theory: any) => {
+          return "Sector " + (theory.sector + 1) + " is " + (theory.isCorrect ? "" : "not ") + theory.spaceObject.one;
+        }).join("; ") + ".";
+
+        console.log(newlyRevealed);
+        console.log(actionText);
+        console.log(text);
+
+        const actionResult = {
+          actionType: "THEORY_REVEAL",
+          actionName: "Revealed Theories",
+          actionText,
+          text,
+          time: new Date()
+        }
+
+        state.history.push(actionResult);
+      }
+    },
+    resetNewlyRevealedTheories(state: any) {
+      state.newlyRevealedTheories = [];
     }
   },
   getters: {
@@ -385,6 +460,9 @@ export default createStore({
       } else {
         return undefined;
       }
+    },
+    lastTurnResult(state: any) {
+      return state.history.slice().reverse().find((action: any) => ["SURVEY", "TARGET", "RESEARCH", "LOCATE_PLANET_X"].indexOf(action.actionType) >= 0);
     },
     gameReady(state: any) {
       if (state.isSession) {
@@ -439,7 +517,7 @@ export default createStore({
           return actionName === "THEORY" || actionName === "LOCATE_PLANET_X";
           break;
         case "PLAYER_TURN": {
-          const researchAllowed = getters.lastActionResult?.actionType != "research";
+          const researchAllowed = getters.lastTurnResult?.actionType != "RESEARCH";
           return actionName === "SURVEY"
                   || actionName === "TARGET"
                   || actionName === "LOCATE_PLANET_X"
@@ -463,8 +541,11 @@ export default createStore({
       return sectors;
     },
     playerInfo(state: any) {
+      console.log("getting player info");
       const players = state.session.players;
-      const me = players.filter((p: any) => p.playerID === state.playerID);
+      console.log(players);
+      const me = players.filter((p: any) => p.id === state.playerID);
+      console.log(me);
       if (me.length == 0) {
         return null;
       } else {
@@ -482,18 +563,19 @@ export default createStore({
       let maxDiff = 0;
       let sector = players[0].sector;
 
-      for (let i = -1; i < players.length - 1; i++) {
-        let diff;
-        if (i > 0) {
-          diff = players[i+1].sector - players[i].sector;
-        } else {
-          diff = players[0].sector - players[players.length - 1].sector;
-        }
+      for (let i = 0; i < players.length - 1; i++) {
+        const diff = players[i+1].sector - players[i].sector;
 
         if (diff > maxDiff) {
           maxDiff = diff;
           sector = players[i].sector;
         }
+      }
+
+      const lastDiff = players[0].sector - players[players.length-1].sector + state.gameType.sectors;
+      if (lastDiff > maxDiff) {
+        maxDiff = lastDiff;
+        sector = players[players.length-1].sector;
       }
 
       const mySector = getters.playerInfo.sector;
@@ -511,6 +593,77 @@ export default createStore({
       } else {
         return state.gameType.conferences.indexOf(state.session.currentSector);
       }
+    },
+    revealedTheories(state: any) {
+      const revealed = [];
+      for (let i = 0; i < state.session.theories.length; i++) {
+        const theory = state.session.theories[i];
+        if (theory.revealed) {
+          const isCorrect = state.game.board.objects[theory.sector].initial === theory.spaceObject.initial;
+          revealed.push({
+            spaceObject: initialToSpaceObject[theory.spaceObject.initial],
+            sector: theory.sector,
+            isCorrect
+          });
+        }
+      }
+      return revealed;
+    },
+    playerMap(state: any) {
+      const playerMap: {[playerID: string]: any} = {};
+      for (let i = 0; i < state.session.players.length; i++) {
+        const player = state.session.players[i];
+        playerMap[player.id] = player;
+      }
+      return playerMap;
+    },
+    fullHistory(state: any, getters: any) {
+      const myHistory = state.history.slice();
+      const allHistory = state.session.history.map((action: any) => Object.assign({}, action, {time: new Date(action.time)})).sort((action: any) => action.time);
+
+      // console.log("my history");
+      // console.log(myHistory);
+      // console.log("all history");
+      // console.log(allHistory);
+
+      // let m = 0;
+      // let a = 0;
+
+      const history = [];
+
+      const myPlayerNum = getters.playerMap[state.playerID].num;
+
+      for (let i = 0; i < myHistory.length; i++) {
+        history.push(Object.assign({
+          mine: true,
+          playerNum: myPlayerNum,
+          historyIndex: i
+        }, myHistory[i]));
+      }
+
+      for (let i = 0; i < allHistory.length; i++) {
+        if (allHistory[i].playerID != state.playerID) {
+          let actionText = allHistory[i].text;
+          if (allHistory[i].turnType === "RESEARCH") {
+            actionText += ": " + state.game.research[allHistory[i].index].categoryName;
+          }
+
+          const action = {
+            actionType: allHistory[i].turnType,
+            actionName: allHistory[i].turnType.split("_").map((word: string) => word.slice(0, 1) + word.slice(1).toLowerCase()).join(" "),
+            actionText,
+            time: allHistory[i].time,
+            mine: false,
+            playerNum: getters.playerMap[allHistory[i].playerID].num
+          }
+
+          history.push(action);
+        }
+      }
+
+      history.sort((a, b) => a.time - b.time);
+
+      return history;
     }
   }
 });

@@ -103,8 +103,8 @@ export default defineComponent({
   },
   methods: {
     continueGame: function() {
-      if (this.route.params.actionType == "research") {
-        const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "research").length > 1;
+      if (this.route.params.actionType == "RESEARCH") {
+        const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "RESEARCH").length > 1;
         if (hasDoneResearch) {
           // Done research before, go straight to game menu
           this.router.push("/" + this.gameType + "/gamemenu")
@@ -120,7 +120,7 @@ export default defineComponent({
   },
   ionViewDidEnter: function() {
     if (this.store.getters.gameReady && this.actionResult !== undefined) {
-      if (this.actionResult.actionType == "locateplanetx") {
+      if (this.actionResult.actionType == "LOCATE_PLANET_X") {
         if (this.actionResult.success) {
           // Play correct sound when planet x is located
           this.playCorrect();

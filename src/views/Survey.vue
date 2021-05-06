@@ -106,7 +106,7 @@ export default defineComponent({
       if (this.store.state.isSession) {
         if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
           // Comets can only be in prime sectors
-          return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => (s-1) in this.store.getters.skySectors);
+          return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => this.store.getters.skySectors.indexOf(s-1) >= 0);
         } else {
           // Otherwise all sectors in the sky are available
           return this.store.getters.skySectors.map((s: number) => s + 1);

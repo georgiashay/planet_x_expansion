@@ -13,13 +13,14 @@
             <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
           <ion-button
-            v-for="(item, index) in selectedHistory"
+            v-for="(item, index) in store.getters.fullHistory"
             :key="index"
             expand="block"
             color="dark"
-            :router-link="'/' + gameType + '/action/result/' + item.index"
+            :disabled = "!item.mine"
+            :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
           >
-            <span class="ion-text-left">{{item.item.actionText}}</span>
+            P{{item.playerNum}}:&nbsp;<span class="ion-text-left">{{item.actionText}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>
@@ -72,7 +73,7 @@ export default defineComponent({
         return { item, index };
       }).filter((item: any) => {
         // Don't display peer reviews in history
-        return item.item.actionType != "peerreview";
+        return item.item.actionType != "PEER_REVIEW";
       });
     }
   },

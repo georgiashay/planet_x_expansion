@@ -32,9 +32,10 @@
           color="dark"
           @click="submitTheories()"
           id="theory_button"
-          :disabled="!theoriesReady">
+          :disabled="!theoriesReady || !theoriesValid.valid">
           Submit Theories
         </ion-button>
+        <p id="invalid_theories" v-if="theoriesReady && !theoriesValid.valid">{{theoriesValid.message}}</p>
         <ion-item-divider/>
         <div id="cancel_container">
           <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
@@ -117,6 +118,66 @@ export default defineComponent({
         }
       }
       return true;
+    },
+    theoriesValid: function(): any {
+      if (!this.theoriesReady) {
+        return {
+          valid: false,
+          message: "Please select a sector and object for all theories."
+        }
+      }
+
+      const numObjects = this.store.state.game.board.numObjects;
+      const existingTheories = this.store.state.session.theories.filter((theory: any) => theory.playerID === this.store.state.playerID);
+
+      const tokensLeft = Object.assign({}, numObjects);
+      for (let i = 0; i < existingTheories.length; i++) {
+        const theory = existingTheories[i];
+        tokensLeft[theory.spaceObject.initial] -= 1;
+      }
+
+      const revealedSectors = new Set(this.store.getters.revealedTheories.filter((theory: any) => theory.isCorrect).map((theory: any) => theory.sector));
+      const sectors = new Set();
+
+      for (let i = 0; i < this.numTheories; i++) {
+        tokensLeft[this.theories[i].spaceObject.initial] -= 1;
+
+        if (tokensLeft[this.theories[i].spaceObject.initial] < 0) {
+          return {
+            valid: false,
+            message: "You do not have enough " + this.theories[i].spaceObject.name + " theory tokens left."
+          }
+        }
+
+        if (revealedSectors.has(this.theories[i].sector-1)) {
+          return {
+            valid: false,
+            message: "You cannot submit a theory for sector " + this.theories[i].sector + " - it has already been revealed."
+          }
+        }
+
+        if (sectors.has(this.theories[i].sector)) {
+          return {
+            valid: false,
+            message: "You cannot submit multiple theories for sector " + this.theories[i].sector + " in the same turn."
+          }
+        }
+
+        sectors.add(this.theories[i].sector);
+
+        if (existingTheories.some((t: any) => t.spaceObject.initial === this.theories[i].spaceObject.initial && t.sector === this.theories[i].sector - 1)) {
+          return {
+            valid: false,
+            message: "You already submitted the theory that sector " + this.theories[i].sector + " is " + this.theories[i].spaceObject.one + "."
+          }
+        }
+      }
+
+      return {
+        valid: true,
+        message: ""
+      }
+
     }
   },
   methods: {
@@ -176,5 +237,9 @@ export default defineComponent({
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
+}
+
+#invalid_theories {
+  text-align: center;
 }
 </style>

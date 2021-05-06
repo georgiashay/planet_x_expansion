@@ -111,7 +111,7 @@ export default defineComponent({
   computed: {
     readyToCreate: function(): boolean {
       if (this.isSession) {
-        return this.selectedGame !== undefined && this.name.length > 0;
+        return this.selectedGame !== undefined && this.name !== undefined && this.name.length > 0;
       } else {
         return this.selectedGame !== undefined;
       }

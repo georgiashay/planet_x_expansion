@@ -34,3 +34,8 @@ ion-item-divider {
   background-color: var(--ion-color-dark);
   color: var(--ion-color-dark-contrast);
 }
+
+.custom-popover .popover-content {
+  background-color: var(--ion-color-dark);
+  color: var(--ion-color-dark-contrast);
+}

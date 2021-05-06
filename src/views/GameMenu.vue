@@ -5,6 +5,9 @@
         <div id="title_container">
           <h3>Game Menu</h3>
         </div>
+        <!-- {{store.getters.currentConference}}
+        {{store.state.gameType.conferences}}
+        {{store.state.session.currentSector}} -->
         <div id="action_buttons">
           <ion-button
             :disabled="!store.getters.actionAllowed('SURVEY')"
@@ -67,6 +70,13 @@
           </ion-button>
           <ion-item-divider/>
           <ion-button
+            :disabled="store.getters.revealedTheories.length === 0"
+            expand="block"
+            color="dark"
+            @click="showRevealedTheories()">
+            Show Revealed Theories
+          </ion-button>
+          <ion-button
             :disabled="!store.getters.actionAllowed('END_GAME')"
             expand="block"
             color="dark"
@@ -82,13 +92,15 @@
 
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
-        IonButton, IonIcon, alertController } from '@ionic/vue';
+        IonButton, IonIcon, alertController,
+        popoverController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
+import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
 
 export default defineComponent({
   name: 'GameMenu',
@@ -156,6 +168,39 @@ export default defineComponent({
                       });
       await alert.present();
       await alert.onDidDismiss();
+    },
+    showRevealedTheories: async function() {
+      const popover = await popoverController
+        .create({
+          component: RevealedTheoriesPopover,
+          componentProps: {
+            revealedTheories: this.store.getters.revealedTheories
+          },
+          cssClass: "custom-popover"
+        });
+      await popover.present();
+      await popover.onDidDismiss();
+    }
+  },
+  computed: {
+    newlyRevealedTheories(): Array<any> {
+      return this.store.state.newlyRevealedTheories;
+    }
+  },
+  watch: {
+    async newlyRevealedTheories(revealedTheories) {
+      if (revealedTheories.length) {
+        const popover = await popoverController
+          .create({
+            component: RevealedTheoriesPopover,
+            componentProps: {
+              revealedTheories: revealedTheories
+            },
+            cssClass: "custom-popover"
+          });
+        await popover.present();
+        await popover.onDidDismiss();
+      }
     }
   },
   ionViewDidEnter() {
