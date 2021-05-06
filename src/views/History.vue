@@ -21,7 +21,7 @@
             :disabled = "!item.mine"
             :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
           >
-            P{{item.playerNum}}:&nbsp;<span class="ion-text-left">{{item.actionText}}</span>
+            <span v-if="item.playerNum !== undefined">P{{item.playerNum}}:&nbsp;</span><span class="ion-text-left">{{item.actionText}}</span>
           </ion-button>
         </div>
         <ion-item-divider/>

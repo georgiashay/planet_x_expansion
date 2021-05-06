@@ -660,11 +660,18 @@ export default createStore({
       const myPlayerNum = getters.playerMap[state.playerID].num;
 
       for (let i = 0; i < myHistory.length; i++) {
-        history.push(Object.assign({
-          mine: true,
-          playerNum: myPlayerNum,
-          historyIndex: i
-        }, myHistory[i]));
+        if (myHistory[i].actionType === "THEORY_REVEAL") {
+          history.push(Object.assign({
+            mine: true,
+            historyIndex: i
+          }, myHistory[i]));
+        } else {
+          history.push(Object.assign({
+            mine: true,
+            playerNum: myPlayerNum,
+            historyIndex: i
+          }, myHistory[i]));
+        }
       }
 
       for (let i = 0; i < allHistory.length; i++) {
@@ -705,7 +712,7 @@ export default createStore({
             history.splice(i, 1);
           }
         }
-        
+
       }
 
 
