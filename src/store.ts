@@ -83,12 +83,7 @@ export default createStore({
       ws.onopen = () => console.log("Listening for updates to state");
       ws.onmessage = (message) => {
         const sessionState = JSON.parse(message.data);
-        console.log(sessionState);
-        if (state.session.currentAction.actionType === "THEORY_PHASE") {
-          commit('getNewlyRevealedTheories', sessionState);
-        } else {
-          commit('resetNewlyRevealedTheories');
-        }
+        commit('getNewlyRevealedTheories', sessionState);
         commit('setSessionState', sessionState);
       };
     },
@@ -397,11 +392,21 @@ export default createStore({
 
       state.history.push(actionResult);
     },
-    getNewlyRevealedTheories(state: any) {
+    getNewlyRevealedTheories(state: any, sessionState: any) {
       const newlyRevealed = [];
-      for (let i = 0; i < state.session.theories.length; i++) {
-        const theory = state.session.theories[i];
-        if (theory.progress === 2) {
+      let j = 0;
+
+      const currentTheories = state.session.theories.slice().sort((a: any, b: any) => a.id - b.id);
+      const newTheories = sessionState.theories.slice().sort((a: any, b: any) => a.id - b.id);
+
+      for (let i = 0; i < currentTheories.length; i++) {
+        const theory = currentTheories[i];
+
+        while (newTheories[j].id != theory.id) {
+          j++;
+        }
+
+        if (newTheories[j].revealed && !theory.revealed) {
           const isCorrect = state.game.board.objects[theory.sector].initial === theory.spaceObject.initial;
           newlyRevealed.push({
             spaceObject: initialToSpaceObject[theory.spaceObject.initial],
@@ -410,6 +415,7 @@ export default createStore({
           });
         }
       }
+
       state.newlyRevealedTheories = newlyRevealed;
 
       if (newlyRevealed.length > 0) {
@@ -417,10 +423,6 @@ export default createStore({
         const text = "Revealed theories: " + newlyRevealed.map((theory: any) => {
           return "Sector " + (theory.sector + 1) + " is " + (theory.isCorrect ? "" : "not ") + theory.spaceObject.one;
         }).join("; ") + ".";
-
-        console.log(newlyRevealed);
-        console.log(actionText);
-        console.log(text);
 
         const actionResult = {
           actionType: "THEORY_REVEAL",
@@ -432,9 +434,6 @@ export default createStore({
 
         state.history.push(actionResult);
       }
-    },
-    resetNewlyRevealedTheories(state: any) {
-      state.newlyRevealedTheories = [];
     }
   },
   getters: {
