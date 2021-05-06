@@ -44,7 +44,7 @@ export default createStore({
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
       console.log(response.data);
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-      console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+      console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       commit('setGame', response.data.game);
       commit('setSessionState', response.data.state);
       commit('setGameType', GAME_TYPES[numSectors]);
@@ -61,7 +61,7 @@ export default createStore({
       if (response.data.found) {
         console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         commit('setGame', response.data.game);
         commit('setSessionState', response.data.state);
         commit('setGameType', GAME_TYPES[response.data.game.board.size]);
@@ -416,6 +416,16 @@ export default createStore({
         }
       }
 
+      newlyRevealed.sort((a: any, b: any) => {
+        if (a.sector != b.sector) {
+          return a.sector - b.sector;
+        } else if (a.isCorrect != b.isCorrect) {
+          return b.isCorrect - a.isCorrect;
+        } else {
+          return a.spaceObject.initial.localeCompare(b.spaceObject.initial);
+        }
+      });
+
       state.newlyRevealedTheories = newlyRevealed;
 
       if (newlyRevealed.length > 0) {
@@ -540,11 +550,8 @@ export default createStore({
       return sectors;
     },
     playerInfo(state: any) {
-      console.log("getting player info");
       const players = state.session.players;
-      console.log(players);
       const me = players.filter((p: any) => p.id === state.playerID);
-      console.log(me);
       if (me.length == 0) {
         return null;
       } else {
@@ -606,7 +613,32 @@ export default createStore({
           });
         }
       }
+      revealed.sort((a: any, b: any) => {
+        if (a.sector != b.sector) {
+          return a.sector - b.sector;
+        } else if (a.isCorrect != b.isCorrect) {
+          return b.isCorrect - a.isCorrect;
+        } else {
+          return a.spaceObject.initial.localeCompare(b.spaceObject.initial);
+        }
+      });
       return revealed;
+    },
+    uniqueRevealedTheories(state: any, getters: any) {
+      const revealed = getters.revealedTheories.slice();
+      const uniqueRevealed = [];
+      for (let i = 0; i < revealed.length; i++) {
+        const l = uniqueRevealed.length - 1;
+        if (i > 0 && revealed[i].sector === uniqueRevealed[l].sector) {
+          if (uniqueRevealed[l].isCorrect) {
+            continue;
+          } else if (revealed[i].spaceObject.initial === uniqueRevealed[l].spaceObject.initial) {
+            continue;
+          }
+        }
+        uniqueRevealed.push(revealed[i]);
+      }
+      return uniqueRevealed;
     },
     playerMap(state: any) {
       const playerMap: {[playerID: string]: any} = {};

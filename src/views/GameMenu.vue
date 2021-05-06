@@ -70,7 +70,7 @@
           </ion-button>
           <ion-item-divider/>
           <ion-button
-            :disabled="store.getters.revealedTheories.length === 0"
+            :disabled="store.getters.uniqueRevealedTheories.length === 0"
             expand="block"
             color="dark"
             @click="showRevealedTheories()">
@@ -174,7 +174,7 @@ export default defineComponent({
         .create({
           component: RevealedTheoriesPopover,
           componentProps: {
-            revealedTheories: this.store.getters.revealedTheories
+            revealedTheories: this.store.getters.uniqueRevealedTheories
           },
           cssClass: "custom-popover"
         });
