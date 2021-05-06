@@ -655,14 +655,6 @@ export default createStore({
       const myHistory = state.history.slice();
       const allHistory = state.session.history.map((action: any) => Object.assign({}, action, {time: new Date(action.time)})).sort((action: any) => action.time);
 
-      // console.log("my history");
-      // console.log(myHistory);
-      // console.log("all history");
-      // console.log(allHistory);
-
-      // let m = 0;
-      // let a = 0;
-
       const history = [];
 
       const myPlayerNum = getters.playerMap[state.playerID].num;
@@ -696,6 +688,26 @@ export default createStore({
       }
 
       history.sort((a, b) => a.time - b.time);
+
+      if (state.session.currentAction.actionType === "THEORY_PHASE") {
+        let i = history.length - 1;
+        let lastTheories = 0;
+
+        while (i >= 0 && history[i].actionType === "THEORY") {
+          lastTheories += 1;
+          i--;
+        }
+
+        const removeTheories = lastTheories % state.session.players.length;
+
+        for (let i = history.length - 1; i >= history.length - removeTheories; i--) {
+          if (history[i].playerNum !== myPlayerNum) {
+            history.splice(i, 1);
+          }
+        }
+        
+      }
+
 
       return history;
     }
