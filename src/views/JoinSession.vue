@@ -86,7 +86,6 @@ export default defineComponent({
 
       if (this.store.state.session !== undefined) {
         // Start session
-        this.store.commit("setIsSession", true);
         this.router.push("/session/lobby/join");
       } else {
         // Session code incorrect, show alert

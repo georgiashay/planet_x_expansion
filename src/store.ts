@@ -46,6 +46,7 @@ export default createStore({
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
       console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       commit('setGame', response.data.game);
+      commit('setIsSession', true);
       commit('setSessionState', response.data.state);
       commit('setGameType', GAME_TYPES[numSectors]);
       commit('setSessionCode', response.data.state.sessionCode);
@@ -63,6 +64,7 @@ export default createStore({
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
         console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         commit('setGame', response.data.game);
+        commit('setIsSession', true);
         commit('setSessionState', response.data.state);
         commit('setGameType', GAME_TYPES[response.data.game.board.size]);
         commit('setSessionCode', response.data.state.sessionCode);
@@ -82,6 +84,7 @@ export default createStore({
       const ws = new WebSocket(WEBSOCKET_URL + "/" + state.sessionID);
       ws.onopen = () => console.log("Listening for updates to state");
       ws.onmessage = (message) => {
+        console.log("Received update to session");
         const sessionState = JSON.parse(message.data);
         commit('getNewlyRevealedTheories', sessionState);
         commit('setSessionState', sessionState);
@@ -657,7 +660,8 @@ export default createStore({
 
       const history = [];
 
-      const myPlayerNum = getters.playerMap[state.playerID].num;
+      const myPlayerNum = getters.playerInfo.num;
+      const myPlayerName = getters.playerInfo.name;
 
       for (let i = 0; i < myHistory.length; i++) {
         if (myHistory[i].actionType === "THEORY_REVEAL") {
@@ -669,6 +673,8 @@ export default createStore({
           history.push(Object.assign({
             mine: true,
             playerNum: myPlayerNum,
+            playerName: myPlayerName,
+            playerID: state.session.playerID,
             historyIndex: i
           }, myHistory[i]));
         }
@@ -681,20 +687,27 @@ export default createStore({
             actionText += ": " + state.game.research[allHistory[i].index].categoryName;
           }
 
-          const action = {
+          const action = Object.assign(allHistory[i], {
             actionType: allHistory[i].turnType,
             actionName: allHistory[i].turnType.split("_").map((word: string) => word.slice(0, 1) + word.slice(1).toLowerCase()).join(" "),
             actionText,
-            time: allHistory[i].time,
             mine: false,
-            playerNum: getters.playerMap[allHistory[i].playerID].num
-          }
+            playerNum: getters.playerMap[allHistory[i].playerID].num,
+            playerName: getters.playerMap[allHistory[i].playerID].name,
+          });
 
           history.push(action);
         }
       }
 
       history.sort((a, b) => a.time - b.time);
+
+      return history;
+    },
+    selectedHistory(state: any, getters: any) {
+      const history = getters.fullHistory.filter((action: any) => action.actionType !== "PEER_REVIEW");
+
+      const myPlayerNum = getters.playerInfo.num;
 
       if (state.session.currentAction.actionType === "THEORY_PHASE") {
         let i = history.length - 1;
@@ -712,9 +725,7 @@ export default createStore({
             history.splice(i, 1);
           }
         }
-
       }
-
 
       return history;
     }

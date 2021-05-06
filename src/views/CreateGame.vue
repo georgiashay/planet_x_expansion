@@ -92,7 +92,6 @@ export default defineComponent({
     },
     createGame: function() {
       if (this.isSession) {
-        this.store.commit("setIsSession", true);
         this.store.dispatch("createSession", {
           numSectors: this.selectedGame,
           name: this.name

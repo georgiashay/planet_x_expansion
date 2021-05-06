@@ -13,16 +13,28 @@
             :router-link="'/' + gameType + '/startinginfo'">
             <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
-          <ion-button
-            v-for="(item, index) in store.getters.fullHistory"
-            :key="index"
-            expand="block"
-            color="dark"
-            :disabled = "!item.mine"
-            :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
-          >
-            <span v-if="item.playerNum !== undefined">P{{item.playerNum}}:&nbsp;</span><span class="ion-text-left">{{item.actionText}}</span>
+          <template v-if="store.state.isSession">
+            <ion-button
+              v-for="(item, index) in store.getters.selectedHistory"
+              :key="index"
+              expand="block"
+              color="dark"
+              :disabled = "!item.mine"
+              :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
+            >
+              <span v-if="item.playerNum !== undefined">P{{item.playerNum}}:&nbsp;</span><span class="ion-text-left">{{item.actionText}}</span>
+            </ion-button>
+          </template>
+          <template v-else>
+            <ion-button
+              v-for="(item, index) in selectedGameHistory"
+              :key="index"
+              expand="block"
+              color="dark"
+              :router-link="'/' + gameType + '/action/result/' + item.index">
+            <span class="ion-text-left">{{item.item.actionText}}</span>
           </ion-button>
+          </template>
         </div>
         <ion-item-divider/>
         <div id="cancel_container">
@@ -71,12 +83,12 @@ export default defineComponent({
     }
   },
   computed: {
-    selectedHistory: function(): Array<any> {
+    selectedGameHistory: function(): Array<any> {
       return this.store.state.history.map((item: any, index: number) => {
         return { item, index };
       }).filter((item: any) => {
         // Don't display peer reviews in history
-        return item.item.actionType != "PEER_REVIEW";
+        return item.item.actionType != "peerreview";
       });
     }
   },
