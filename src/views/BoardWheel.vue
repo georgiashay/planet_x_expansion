@@ -45,10 +45,10 @@ export default defineComponent({
       return this.store.state.session;
     },
     playerSectors: function(): {[sector: number]: Array<number | null>} {
-      const sectorMap = {};
+      const sectorMap: {[sector: number]: Array<number | null>} = {};
       const players = this.store.state.session.players.slice().sort((a: any, b: any) => a.arrival - b.arrival);
       for (let i = 0; i < players.length; i++) {
-        const sector = players[i].sector;
+        const sector: number = players[i].sector as number;
         if (sectorMap[sector] === undefined) {
           sectorMap[sector] = [];
         }
@@ -61,7 +61,7 @@ export default defineComponent({
     }
   },
   methods: {
-    pegLocations: function(boardRadius, pegRadius, pegPadding, numPlayers): any {
+    pegLocations: function(boardRadius: number, pegRadius: number, pegPadding: number, numPlayers: number): any {
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
 
       const topPaddingAngle = 2*Math.atan2(pegPadding/2, boardRadius - pegPadding - pegRadius);
@@ -82,7 +82,7 @@ export default defineComponent({
         for (let r = 0; r < rows; r++) {
           const paddingAngle = 4*Math.atan2(pegPadding/4, pegLoc);
           const extra = (numPlayers % rows) > (rows - 1 - r);
-          const rowAngle = divAngle * ((rows-1)+extra);
+          const rowAngle = divAngle * ((rows-1)+ +extra);
           const angleLeft = sectorAngle - paddingAngle - rowAngle;
 
           const pegAngle = 2*Math.atan2((2*pegRadius + pegPadding)/2, pegLoc);
@@ -220,7 +220,8 @@ export default defineComponent({
 
       const pegLocs = this.pegLocations(boardRadius, pegRadius, pegPadding, this.store.state.session.players.length);
 
-      for (const [sector, players] of Object.entries(this.playerSectors)) {
+      for (const [sectorStr, players] of Object.entries(this.playerSectors)) {
+        const sector: number = parseInt(sectorStr);
         for (let i = 0; i < players.length; i++) {
           if (players[i] !== null && pegLocs[i] !== undefined) {
             const { angle, radius } = pegLocs[i];
