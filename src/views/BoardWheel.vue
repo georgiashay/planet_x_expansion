@@ -64,12 +64,12 @@ export default defineComponent({
     pegLocations: function(boardRadius, pegRadius, pegPadding, numPlayers): any {
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
 
-      const topPaddingAngle = 2*Math.atan2(pegPadding/4, boardRadius - pegPadding - pegRadius);
-      const angle = (sectorAngle - topPaddingAngle)/(numPlayers + 1);
+      const topPaddingAngle = 2*Math.atan2(pegPadding/2, boardRadius - pegPadding - pegRadius);
+      const angle = (sectorAngle - 2 * topPaddingAngle)/(numPlayers + 1);
 
       let rows = 1;
       let foundRows = false;
-      const locations = [];
+      const locations = Array.from(Array(numPlayers));
 
       while (!foundRows) {
         let totalPegs = 0;
@@ -87,23 +87,60 @@ export default defineComponent({
 
           pegNums.push(numPegs);
           totalPegs += numPegs;
-
           pegLoc -= (2*pegRadius + pegPadding);
         }
 
-        if (totalPegs >= numPlayers) {
+        if (totalPegs >= numPlayers || pegNums[pegNums.length-1] === 0) {
           foundRows = true;
-          const extraPegs = totalPegs - numPlayers;
-          const eachExtra = Math.ceil(extraPegs/rows);
-          const newPegNums = pegNums.map((np: number, i: number) => np - eachExtra + (i < (extraPegs % rows)));
+          let newPegNums;
+
+          if (pegNums[pegNums.length-1] === 0) {
+            newPegNums = pegNums;
+          } else {
+            newPegNums = Array.from(Array(rows)).map(() => 0);
+            let pn = rows - 1;
+            while(newPegNums.reduce((a: number, b: number) => a + b, 0) < numPlayers) {
+              const pegs = pegNums[pn];
+              for (let j = 0; j < rows; j++) {
+                if (pegNums[j] >= pegs) {
+                  newPegNums[j] = pegs;
+                }
+              }
+              pn--;
+            }
+
+            const extraPegs = newPegNums.reduce((a: number, b: number) => a + b, 0) - numPlayers;
+
+            for (let i = rows - 1; i >= rows - extraPegs; i--) {
+              newPegNums[i]--;
+            }
+          }
+
+          const indices = newPegNums.map(() => []);
+          const pegsCopy = newPegNums.slice();
+          let idx = 0;
+          let r = 0;
+          while (idx < numPlayers) {
+            if (r > pegsCopy.length) {
+              r = 0;
+            }
+            if (pegsCopy[r] > 0) {
+              pegsCopy[r]--;
+              indices[r].push(idx);
+              idx++;
+              r++;
+            } else {
+              r = 0;
+            }
+          }
 
           for (let r = 0; r < rows; r++) {
             for (let p = 0; p < newPegNums[r]; p++) {
-              const i = p * rows + r;
-              locations.push({
+              const i = indices[r][p];
+              locations[i] = {
                 angle: topPaddingAngle + angle * (i+1),
                 radius: boardRadius - pegPadding - pegRadius - r * (2*pegRadius + pegPadding)
-              });
+              };
             }
           }
         } else {
@@ -114,7 +151,6 @@ export default defineComponent({
       return locations;
     },
     computeCanvas: function() {
-      this.pegLocations(1400, 50, 10, 8);
       const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
@@ -147,13 +183,15 @@ export default defineComponent({
         ctx.stroke();
       }
 
-      const pegRadius = 50;
-      const pegPadding = 10;
+      const maxPegRadius = Math.floor(Math.tan(sectorAngle/5)*(boardRadius-60)/2);
+      const pegRadius = Math.min(50, maxPegRadius);
+      const pegPadding = Math.floor(pegRadius/5);
+
       const pegLocs = this.pegLocations(boardRadius, pegRadius, pegPadding, this.store.state.session.players.length);
 
       for (const [sector, players] of Object.entries(this.playerSectors)) {
         for (let i = 0; i < players.length; i++) {
-          if (players[i] !== null) {
+          if (players[i] !== null && pegLocs[i] !== undefined) {
             const { angle, radius } = pegLocs[i];
             const myAngle = sector * sectorAngle + angle;
             const x = radius * Math.cos(myAngle);
@@ -163,6 +201,12 @@ export default defineComponent({
             ctx.arc(x, y, pegRadius, 0, 2*Math.PI);
             ctx.fillStyle = this.playerColor(players[i]);
             ctx.fill();
+
+            // ctx.beginPath();
+            // ctx.moveTo(0, 0);
+            // ctx.lineTo(x, y);
+            // ctx.strokeStyle = "white";
+            // ctx.stroke();
           }
         }
       }
