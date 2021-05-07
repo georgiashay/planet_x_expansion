@@ -139,7 +139,7 @@ export default defineComponent({
         tokensLeft[theory.spaceObject.initial] -= 1;
       }
 
-      const revealedSectors = new Set(this.store.getters.revealedTheories.filter((theory: any) => theory.isCorrect).map((theory: any) => theory.sector));
+      const revealedSectors = new Set(this.store.getters.revealedTheories.filter((theory: any) => theory.accurate).map((theory: any) => theory.sector));
       const sectors = new Set();
 
       for (let i = 0; i < this.numTheories; i++) {

@@ -86,6 +86,7 @@ export default createStore({
       ws.onmessage = (message) => {
         console.log("Received update to session");
         const sessionState = JSON.parse(message.data);
+        console.log(sessionState);
         commit('getNewlyRevealedTheories', sessionState);
         commit('setSessionState', sessionState);
       };
@@ -411,11 +412,10 @@ export default createStore({
         }
 
         if (newTheories[j].revealed && !theory.revealed) {
-          const isCorrect = state.game.board.objects[theory.sector].initial === theory.spaceObject.initial;
           newlyRevealed.push({
             spaceObject: initialToSpaceObject[theory.spaceObject.initial],
             sector: theory.sector,
-            isCorrect
+            accurate: theory.accurate
           });
         }
       }
@@ -423,8 +423,8 @@ export default createStore({
       newlyRevealed.sort((a: any, b: any) => {
         if (a.sector != b.sector) {
           return a.sector - b.sector;
-        } else if (a.isCorrect != b.isCorrect) {
-          return b.isCorrect - a.isCorrect;
+        } else if (a.accurate != b.accurate) {
+          return b.accurate - a.accurate;
         } else {
           return a.spaceObject.initial.localeCompare(b.spaceObject.initial);
         }
@@ -433,9 +433,9 @@ export default createStore({
       state.newlyRevealedTheories = newlyRevealed;
 
       if (newlyRevealed.length > 0) {
-        const actionText = "Revealed Theories, " + newlyRevealed.map((theory: any) => (theory.sector + 1) + (theory.spaceObject.initial) + ":" + (theory.isCorrect ? "✓" : "X")).join(" ");
+        const actionText = "Revealed Theories, " + newlyRevealed.map((theory: any) => (theory.sector + 1) + (theory.spaceObject.initial) + ":" + (theory.accurate ? "✓" : "X")).join(" ");
         const text = "Revealed theories: " + newlyRevealed.map((theory: any) => {
-          return "Sector " + (theory.sector + 1) + " is " + (theory.isCorrect ? "" : "not ") + theory.spaceObject.one;
+          return "Sector " + (theory.sector + 1) + " is " + (theory.accurate ? "" : "not ") + theory.spaceObject.one;
         }).join("; ") + ".";
 
         const actionResult = {
@@ -610,19 +610,18 @@ export default createStore({
       for (let i = 0; i < state.session.theories.length; i++) {
         const theory = state.session.theories[i];
         if (theory.revealed) {
-          const isCorrect = state.game.board.objects[theory.sector].initial === theory.spaceObject.initial;
           revealed.push({
             spaceObject: initialToSpaceObject[theory.spaceObject.initial],
             sector: theory.sector,
-            isCorrect
+            accurate: theory.accurate
           });
         }
       }
       revealed.sort((a: any, b: any) => {
         if (a.sector != b.sector) {
           return a.sector - b.sector;
-        } else if (a.isCorrect != b.isCorrect) {
-          return b.isCorrect - a.isCorrect;
+        } else if (a.accurate != b.accurate) {
+          return b.accurate - a.accurate;
         } else {
           return a.spaceObject.initial.localeCompare(b.spaceObject.initial);
         }
@@ -635,7 +634,7 @@ export default createStore({
       for (let i = 0; i < revealed.length; i++) {
         const l = uniqueRevealed.length - 1;
         if (i > 0 && revealed[i].sector === uniqueRevealed[l].sector) {
-          if (uniqueRevealed[l].isCorrect) {
+          if (uniqueRevealed[l].accurate) {
             continue;
           } else if (revealed[i].spaceObject.initial === uniqueRevealed[l].spaceObject.initial) {
             continue;
