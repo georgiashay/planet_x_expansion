@@ -91,7 +91,8 @@ export default createStore({
       };
     },
     async makeSessionMove({ state }, moveData) {
-      await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
+      const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
+      console.log(response.data);
     },
     survey({ state, dispatch }, { surveyObject, startSector, endSector }) {
       let sectors;
@@ -530,8 +531,9 @@ export default createStore({
           break;
         case "PLAYER_TURN": {
           const researchAllowed = getters.lastTurnResult?.actionType != "RESEARCH";
+          const targetAllowed = state.history.filter((action: any) => action.actionType === "TARGET").length < state.gameType.numTargets;
           return actionName === "SURVEY"
-                  || actionName === "TARGET"
+                  || actionName === "TARGET" && targetAllowed
                   || actionName === "LOCATE_PLANET_X"
                   || (actionName === "RESEARCH" && researchAllowed);
           }

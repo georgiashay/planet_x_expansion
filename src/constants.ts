@@ -34,7 +34,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
     locatePlanetXCost: 5,
     theoriesPerTurn: 1,
     conferences: [8],
-    theoryPhaseInterval: 3
+    theoryPhaseInterval: 3,
+    numTargets: 2
   },
   18: {
     name: "Expert",
@@ -67,7 +68,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
     locatePlanetXCost: 5,
     theoriesPerTurn: 2,
     conferences: [6, 15],
-    theoryPhaseInterval: 3
+    theoryPhaseInterval: 3,
+    numTargets: 2
   },
   24: {
     name: "Ace",
@@ -100,7 +102,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
     locatePlanetXCost: 5,
     theoriesPerTurn: 2,
     conferences: [6, 15, 21],
-    theoryPhaseInterval: 3
+    theoryPhaseInterval: 3,
+    numTargets: 3
   }
 }
 
