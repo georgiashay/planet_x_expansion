@@ -25,6 +25,7 @@ import EndGame from '@/views/EndGame.vue';
 import Lobby from '@/views/Lobby.vue';
 import JoinSession from '@/views/JoinSession.vue';
 import SubmitTheories from '@/views/SubmitTheories.vue';
+import BoardWheel from "@/views/BoardWheel.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -191,6 +192,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Submit Theories',
     component: SubmitTheories,
     props: true
+  },
+  {
+    path: '/session/board',
+    name: 'Current Board',
+    component: BoardWheel
   },
   {
     path: '/:gameType/history',
