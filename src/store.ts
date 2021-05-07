@@ -600,9 +600,6 @@ export default createStore({
       if (!state.isSession) {
         return -1;
       } else {
-        console.log(state.gameType.conferences);
-        console.log(state.session.currentSector);
-        console.log(state.gameType.conferences.indexOf(state.session.currentSector));
         return state.gameType.conferences.indexOf(state.session.currentSector);
       }
     },

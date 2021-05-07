@@ -161,10 +161,27 @@ export default defineComponent({
       ctx.lineWidth = 4;
 
       const boardRadius = 1400;
+      const outerRadius = 1500;
+      const textRadius = (boardRadius + outerRadius)/2;
+      const textHeight = 100;
+
+      const iconSize = 100;
+      const theoryRadius = 700;
+      const conferenceRadius = 800;
+
+      ctx.beginPath();
+      ctx.fillStyle = "#222428";
+      ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
+      ctx.fill();
 
       ctx.beginPath();
       ctx.strokeStyle = "white";
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "white";
+      ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
@@ -179,11 +196,22 @@ export default defineComponent({
       for (let i = 0; i < this.store.state.gameType.sectors; i++) {
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        const x = boardRadius * Math.cos(i * sectorAngle);
-        const y = boardRadius * Math.sin(i * sectorAngle);
+        const x = outerRadius * Math.cos(i * sectorAngle);
+        const y = outerRadius * Math.sin(i * sectorAngle);
         ctx.lineTo(x, y);
         ctx.strokeStyle = "white";
         ctx.stroke();
+
+        ctx.save();
+
+        ctx.font = textHeight + "px serif";
+        ctx.rotate(Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
+        ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.textBaseline = "middle";
+        ctx.fillText("" + (i+1), 0, -(textRadius));
+
+        ctx.restore();
       }
 
       const maxPegRadius = Math.floor(Math.tan(sectorAngle/5)*(boardRadius-60)/2);
@@ -206,6 +234,54 @@ export default defineComponent({
             ctx.fill();
           }
         }
+      }
+
+      const theoryInterval = this.store.state.gameType.theoryPhaseInterval;
+      for (let i = theoryInterval - 1; i < this.store.state.gameType.sectors; i += theoryInterval) {
+        const angle = sectorAngle/2 + i * sectorAngle;
+
+        ctx.save();
+
+        ctx.font = "75px serif";
+        ctx.rotate(Math.PI/2 + (angle));
+        ctx.textAlign = "center";
+        ctx.fillStyle = "cyan";
+        ctx.textBaseline = "middle";
+        ctx.fillText("T", 0, -(theoryRadius));
+
+        ctx.beginPath();
+        ctx.strokeStyle = "cyan";
+        ctx.rect(-40, -theoryRadius-50, 80, 100);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      for (let i = 0; i < this.store.state.gameType.conferences.length; i++) {
+        const sector = this.store.state.gameType.conferences[i];
+        const angle = sectorAngle/2 + sector * sectorAngle;
+
+        let radius = theoryRadius;
+
+        if (sector % theoryInterval === theoryInterval-1) {
+          radius = conferenceRadius;
+        }
+
+        ctx.save();
+
+        ctx.font = "75px serif";
+        ctx.rotate(Math.PI/2 + (angle));
+        ctx.textAlign = "center";
+        ctx.fillStyle = "yellow";
+        ctx.textBaseline = "middle";
+        ctx.fillText("C", 0, -radius);
+
+        ctx.beginPath();
+        ctx.strokeStyle = "yellow";
+        ctx.rect(-40, -radius-50, 80, 100);
+        ctx.stroke();
+
+        ctx.restore();
       }
     }
   },
@@ -257,7 +333,6 @@ export default defineComponent({
   margin-left: auto;
   margin-right: auto;
   display: block;
-  background-color: var(--ion-color-dark);
   width: 100%;
   height: 100%;
 }
