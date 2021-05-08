@@ -26,6 +26,7 @@ import Lobby from '@/views/Lobby.vue';
 import JoinSession from '@/views/JoinSession.vue';
 import SubmitTheories from '@/views/SubmitTheories.vue';
 import BoardWheel from "@/views/BoardWheel.vue";
+import ReconnectSession from "@/views/ReconnectSession.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -209,6 +210,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'End Game',
     component: EndGame,
     props: true
+  },
+  {
+    path: '/session/reconnect',
+    name: 'Reconnect Session',
+    component: ReconnectSession
   }
 ]
 

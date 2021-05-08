@@ -13,6 +13,7 @@
           <ion-button expand="block" color="dark" router-link = "/multiplayer/join">Enter Game Code</ion-button>
           <ion-button expand="block" color="dark" router-link = "/session/create">Start New Session</ion-button>
           <ion-button expand="block" color="dark" router-link = "/session/join">Enter Session Code</ion-button>
+          <ion-button expand="block" color="dark" router-link = "/session/reconnect">Reconnect to Session</ion-button>
           <ion-item-divider/>
         </div>
       </div>

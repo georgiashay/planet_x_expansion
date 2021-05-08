@@ -50,7 +50,7 @@ export default defineComponent({
     }
   },
   computed: {
-    scoreHeaders: function(): Array<[string, string]> {
+    scoreHeaders: function(): Array<Array<string>> {
       const headers = [["first", "/assets/first.svg"]];
       for (const obj in this.store.state.gameType.numObjects) {
         if (obj !== "X" && obj !== "E") {
@@ -62,7 +62,7 @@ export default defineComponent({
       headers.push(["planetX", SpaceObject.PLANET_X.icon]);
       return headers;
     },
-    scoreTable: function(): Array<Array<string | num>> {
+    scoreTable: function(): Array<Array<string | number>> {
       const table = [];
       for (const score of this.store.state.session.scores) {
         const row = [];
@@ -78,8 +78,8 @@ export default defineComponent({
       }
       return table;
     },
-    players: function(): Array<[string, any]> {
-      return this.store.state.session.scores.map((score) => {
+    players: function(): Array<Array<any>> {
+      return this.store.state.session.scores.map((score: any) => {
         const player = this.store.getters.playerMap[score.playerID];
         return ["P" + player.num + ": " + player.name, this.playerStyle(player.num)];
       });

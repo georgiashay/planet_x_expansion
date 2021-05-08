@@ -75,6 +75,25 @@ export default createStore({
         dispatch('listenSession');
       }
     },
+    async reconnectSession({ commit, dispatch }, { sessionCode, playerNum }) {
+      // Reconnect to existing session
+      const response: any = await axios.get(API_URL + "/reconnectSession/" + sessionCode + "/?playerNum=" + playerNum);
+      if (response.data.found) {
+        console.log(response.data);
+        const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
+        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        commit('setGame', response.data.game);
+        commit('setIsSession', true);
+        commit('setSessionState', response.data.state);
+        commit('setGameType', GAME_TYPES[response.data.game.board.size]);
+        commit('setSessionCode', response.data.state.sessionCode);
+        commit('setSessionID', response.data.state.sessionID);
+        commit('setPlayerNum', response.data.playerNum);
+        commit('setPlayerID', response.data.playerID);
+        commit('setPlayerName', response.data.playerName);
+        dispatch('listenSession');
+      }
+    },
     async startSession({ state }) {
       // Start session (when all players have joined)
       await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
