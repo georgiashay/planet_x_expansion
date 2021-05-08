@@ -439,7 +439,7 @@ export default createStore({
       state.history.push(actionResult);
     },
     getNewlyRevealedTheories(state: any, sessionState: any) {
-      const newlyRevealed = [];
+      let newlyRevealed: Array<any> = [];
       let j = 0;
 
       const currentTheories = state.session.theories.slice().sort((a: any, b: any) => a.id - b.id);
@@ -469,6 +469,17 @@ export default createStore({
         } else {
           return a.spaceObject.initial.localeCompare(b.spaceObject.initial);
         }
+      });
+
+      newlyRevealed = newlyRevealed.filter((theory: any, i: number) => {
+        if (i > 0) {
+          if (theory.sector === newlyRevealed[i-1].sector) {
+            if(theory.accurate || theory.spaceObject.initial === newlyRevealed[i-1].spaceObject.initial) {
+              return false;
+            }
+          }
+        }
+        return true;
       });
 
       state.newlyRevealedTheories = newlyRevealed;
