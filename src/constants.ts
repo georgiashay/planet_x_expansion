@@ -110,26 +110,30 @@ export const GAME_TYPES: {[sector: number]: any} = {
   }
 }
 
-export const SeasonView: {[code: string]: {[info: string]: string}} = {
+export const SeasonView: {[code: string]: {[info: string]: string | number}} = {
   SPRING: {
     name: "Spring",
     viewType: "Equinox",
-    icon: "/assets/season_icons/spring.svg"
+    icon: "/assets/season_icons/spring.svg",
+    angle: 0
   },
   SUMMER: {
     name: "Summer",
     viewType: "Solstice",
-    icon: "/assets/season_icons/summer.svg"
+    icon: "/assets/season_icons/summer.svg",
+    angle: 3*Math.PI/2
   },
   AUTUMN: {
     name: "Autumn",
     viewType: "Equinox",
-    icon: "/assets/season_icons/fall.svg"
+    icon: "/assets/season_icons/fall.svg",
+    angle: Math.PI
   },
   WINTER: {
     name: "Winter",
     viewType: "Solstice",
-    icon: "/assets/season_icons/winter.svg"
+    icon: "/assets/season_icons/winter.svg",
+    angle: Math.PI/2
   }
 };
 

@@ -169,7 +169,10 @@ export default defineComponent({
     computeCanvas: async function() {
       const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
+      ctx.resetTransform();
       ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
+      ctx.translate(canvas.width/2, canvas.height/2);
+      ctx.rotate(this.store.state.seasonView.angle);
 
       ctx.lineWidth = 4;
 
@@ -389,9 +392,6 @@ export default defineComponent({
     }
   },
   mounted() {
-    const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d");
-    ctx.translate(canvas.width/2, canvas.height/2);
     this.computeCanvas();
   }
 });
