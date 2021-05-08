@@ -7,6 +7,8 @@
           <h3>Current Board</h3>
         </div>
         <canvas id="boardCanvas" height="3000" width="3000"/>
+        <h4>Current Scores</h4>
+        <scores/>
         <div id="cancel_container">
           <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
         </div>
@@ -23,6 +25,7 @@ import { useStore } from 'vuex';
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import PlayerColors from "@/mixins/PlayerColors.ts";
+import Scores from "@/components/Scores.vue";
 
 export default defineComponent({
   name: 'BoardWheel',
@@ -31,7 +34,8 @@ export default defineComponent({
     IonPage,
     IonNavLink,
     GameFooter,
-    SessionHeader
+    SessionHeader,
+    Scores
   },
   mixins: [PlayerColors],
   data() {
@@ -309,7 +313,7 @@ export default defineComponent({
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 25%;
+  margin-top: 5%;
 }
 
 #title_container h1 {

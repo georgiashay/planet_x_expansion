@@ -35,7 +35,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
     theoriesPerTurn: 1,
     conferences: [8],
     theoryPhaseInterval: 3,
-    numTargets: 2
+    numTargets: 2,
+    numObjects: {X: 1, E: 2, G: 2, D: 1, A: 4, C: 2}
   },
   18: {
     name: "Expert",
@@ -69,7 +70,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
     theoriesPerTurn: 2,
     conferences: [6, 15],
     theoryPhaseInterval: 3,
-    numTargets: 2
+    numTargets: 2,
+    numObjects: {X: 1, E: 5, G: 2, D: 4, A: 4, C: 2}
   },
   24: {
     name: "Ace",
@@ -103,7 +105,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
     theoriesPerTurn: 2,
     conferences: [6, 15, 21],
     theoryPhaseInterval: 3,
-    numTargets: 3
+    numTargets: 3,
+    numObjects: {X: 1, E: 6, G: 3, D: 4, A: 6, C: 3, B: 1}
   }
 }
 
