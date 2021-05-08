@@ -65,6 +65,7 @@ export default defineComponent({
       return sectorMap;
     },
     theorySlots: function(): Array<Array<Array<any>>> {
+      console.log(this.store.getters.visibleTheories);
       const sectors = Array.from(Array(this.store.state.gameType.sectors)).map(() => Array.from(Array(4)).map(() => []));
       for (let i = 0; i < this.store.getters.visibleTheories.length; i++) {
         const theory = this.store.getters.visibleTheories[i];

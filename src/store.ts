@@ -781,18 +781,22 @@ export default createStore({
     },
     visibleTheories(state: any, getters: any) {
       const allTheories = state.session.theories.slice();
-      const revealedSectors = new Set(allTheories.filter((theory: any) => theory.revealed).map((theory: any) => theory.sector));
-      const theories = []
+      const revealedSectors = new Set(allTheories.filter((theory: any) => theory.revealed && theory.accurate).map((theory: any) => theory.sector));
+      const theories = [];
       for (let i = 0; i < allTheories.length; i++) {
         const theory = allTheories[i];
         if (revealedSectors.has(theory.sector)) {
-          if (theory.revealed) {
-            theories.push(theory);
-          } else if (theory.accurate) {
-            theories.push(Object.assign({boardProgress: 3}, theory));
+          if (theory.accurate) {
+            if (theory.revealed) {
+              theories.push(theory);
+            } else {
+              theories.push(Object.assign({boardProgress: 3}, theory));
+            }
           }
         } else {
-          theories.push(theory);
+          if (theory.boardProgress < 3) {
+            theories.push(theory);
+          }
         }
       }
 
