@@ -19,7 +19,8 @@ export default createStore({
     session: undefined,
     playerID: undefined,
     playerNum: undefined,
-    playerName: undefined
+    playerName: undefined,
+    webSocketFailures: 0
   },
 
   actions: {
@@ -98,7 +99,7 @@ export default createStore({
       // Start session (when all players have joined)
       await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
     },
-    listenSession({ state, commit }) {
+    listenSession({ state, dispatch, commit }) {
       // Listen for updates to the session
       const ws = new WebSocket(WEBSOCKET_URL + "/" + state.sessionID);
       ws.onopen = () => console.log("Listening for updates to state");
@@ -109,6 +110,18 @@ export default createStore({
         commit('getNewlyRevealedTheories', sessionState);
         commit('setSessionState', sessionState);
       };
+      ws.onclose = () => {
+        this.state.webSocketFailures++;
+        console.log("Disconnecting, re-connecting to listen.");
+        if (this.state.webSocketFailures < 10) {
+          dispatch('listenSession');
+        } else {
+          console.log("10 consecutive failures. Not reconnecting.");
+        }
+        setTimeout(() => {
+          this.state.webSocketFailures--;
+        }, 10000);
+      }
     },
     async makeSessionMove({ state }, moveData) {
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
