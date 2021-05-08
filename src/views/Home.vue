@@ -43,6 +43,7 @@ export default defineComponent({
   },
   ionViewDidEnter() {
     this.store.commit('resetGame');
+    this.store.dispatch('stopListening');
     this.playStartup();
   }
 });

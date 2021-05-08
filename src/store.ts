@@ -20,7 +20,8 @@ export default createStore({
     playerID: undefined,
     playerNum: undefined,
     playerName: undefined,
-    webSocketFailures: 0
+    webSocketFailures: 0,
+    currentWebSocket: undefined
   },
 
   actions: {
@@ -111,17 +112,25 @@ export default createStore({
         commit('setSessionState', sessionState);
       };
       ws.onclose = () => {
-        this.state.webSocketFailures++;
+        state.webSocketFailures++;
         console.log("Disconnecting, re-connecting to listen.");
-        if (this.state.webSocketFailures < 10) {
+        if (state.webSocketFailures < 10) {
           dispatch('listenSession');
         } else {
           console.log("10 consecutive failures. Not reconnecting.");
         }
         setTimeout(() => {
-          this.state.webSocketFailures--;
+          state.webSocketFailures--;
         }, 10000);
       }
+      state.currentWebSocket = ws;
+    },
+    stopListening({ state }) {
+      if (state.currentWebSocket) {
+        state.currentWebSocket.onclose = function() { return; };
+        state.currentWebSocket.close();
+      }
+      state.currentWebSocket = undefined;
     },
     async makeSessionMove({ state }, moveData) {
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
@@ -342,7 +351,7 @@ export default createStore({
         state.history.push(actionResult);
       }
     },
-    async conference({ state, dispatch }, { index }) {
+    async conference({ state }, { index }) {
       // Get conference at specific index
       const actionResult = {
         actionType: "CONFERENCE",
