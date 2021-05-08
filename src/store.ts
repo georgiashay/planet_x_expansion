@@ -726,6 +726,29 @@ export default createStore({
       }
 
       return history;
+    },
+    visibleTheories(state: any, getters: any) {
+      const allTheories = state.session.theories.slice();
+      const revealedSectors = new Set(allTheories.filter((theory: any) => theory.revealed).map((theory: any) => theory.sector));
+      const theories = []
+      for (let i = 0; i < allTheories.length; i++) {
+        const theory = allTheories[i];
+        if (revealedSectors.has(theory.sector)) {
+          if (theory.revealed) {
+            theories.push(theory);
+          } else if (theory.accurate) {
+            theories.push(Object.assign({boardProgress: 3}, theory));
+          }
+        } else {
+          theories.push(theory);
+        }
+      }
+
+      if (state.session.currentAction.actionType === "THEORY_PHASE" && getters.myNextAction !== null) {
+        return theories.filter((theory: any) => theory.progress > 0);
+      } else {
+        return theories;
+      }
     }
   }
 });

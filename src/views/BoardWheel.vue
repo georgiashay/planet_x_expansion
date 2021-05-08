@@ -26,6 +26,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
+import { initialToSpaceObject } from "@/constants.ts";
 
 export default defineComponent({
   name: 'BoardWheel',
@@ -62,6 +63,14 @@ export default defineComponent({
         sectorMap[sector][players[i].arrival-1] = players[i].num;
       }
       return sectorMap;
+    },
+    theorySlots: function(): Array<Array<Array<any>>> {
+      const sectors = Array.from(Array(this.store.state.gameType.sectors)).map(() => Array.from(Array(4)).map(() => []));
+      for (let i = 0; i < this.store.getters.visibleTheories.length; i++) {
+        const theory = this.store.getters.visibleTheories[i];
+        sectors[theory.sector][theory.boardProgress].push(theory);
+      }
+      return sectors;
     }
   },
   methods: {
@@ -157,21 +166,31 @@ export default defineComponent({
 
       return locations;
     },
-    computeCanvas: function() {
+    computeCanvas: async function() {
       const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
 
       ctx.lineWidth = 4;
 
+      const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
+      const skyAngle = sectorAngle * this.store.state.session.currentSector;
+
       const boardRadius = 1400;
       const outerRadius = 1500;
       const textRadius = (boardRadius + outerRadius)/2;
       const textHeight = 100;
 
-      const iconSize = 100;
-      const theoryRadius = 700;
-      const conferenceRadius = 800;
+      const iconSize = 80;
+      const theoryRadius = 300;
+      const conferenceRadius = theoryRadius + iconSize;
+
+      const startTokenRadius = conferenceRadius + 300;
+      const maxTokenWidth = Math.floor(2 * Math.tan(sectorAngle/2) * startTokenRadius);
+      const maxTokenHeight = Math.floor((boardRadius - startTokenRadius)/4);
+      const tokenSize = Math.min(125, 0.9*maxTokenWidth, 0.75*maxTokenHeight);
+      const tokenEdgePadding = 100;
+      const tokenIncrement = (boardRadius - startTokenRadius - tokenSize - tokenEdgePadding)/3;
 
       ctx.beginPath();
       ctx.fillStyle = "#222428";
@@ -188,16 +207,13 @@ export default defineComponent({
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
-      const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
-
-      const skyAngle = sectorAngle * this.store.state.session.currentSector;
-
       ctx.beginPath();
       ctx.fillStyle = "#575757";
       ctx.arc(0, 0, boardRadius, skyAngle, skyAngle + Math.PI);
       ctx.fill();
 
       for (let i = 0; i < this.store.state.gameType.sectors; i++) {
+        // Sector line
         ctx.beginPath();
         ctx.moveTo(0, 0);
         const x = outerRadius * Math.cos(i * sectorAngle);
@@ -206,16 +222,93 @@ export default defineComponent({
         ctx.strokeStyle = "white";
         ctx.stroke();
 
+        // Sector number label
         ctx.save();
 
         ctx.font = textHeight + "px serif";
         ctx.rotate(Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
+
         ctx.textAlign = "center";
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
-        ctx.fillText("" + (i+1), 0, -(textRadius));
+        ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.08));
 
         ctx.restore();
+
+        // Theory token slots
+        for (let j = 0; j < 4; j++) {
+          const progress = 3 - j;
+          const radius = startTokenRadius + j * tokenIncrement;
+          ctx.save();
+
+          ctx.rotate(-Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
+
+          ctx.beginPath();
+          ctx.strokeStyle = "white";
+          ctx.rect(-tokenSize/2, radius-tokenSize/2, tokenSize, tokenSize);
+          ctx.stroke();
+
+          if (this.theorySlots[i][progress].length > 0) {
+            const gradient = ctx.createLinearGradient(-tokenSize/2, radius-tokenSize/2, tokenSize/2, radius+tokenSize/2);
+            const part = 1/(this.theorySlots[i][progress].length);
+            for (let k = 0; k < this.theorySlots[i][progress].length; k++) {
+              const theory = this.theorySlots[i][progress][k];
+              const playerNum = this.store.getters.playerMap[theory.playerID].num;
+              const color = this.playerColor(playerNum);
+
+              gradient.addColorStop(k*part, color);
+              gradient.addColorStop((k+1)*part, color);
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(-tokenSize/2, radius-tokenSize/2, tokenSize, tokenSize);
+
+            if (progress === 3) {
+              ctx.fillStyle = "black";
+              ctx.fillRect(-tokenSize*0.75/2, radius-tokenSize*0.75/2, tokenSize*0.75, tokenSize*0.75);
+
+              const img = new Image();
+              img.src = initialToSpaceObject[this.store.state.game.board.objects[i].initial].icon;
+
+              await new Promise((resolve, reject) => {
+                img.onload = function() {
+                  ctx.drawImage(img, -tokenSize*0.75/2, radius-tokenSize*0.75/2, tokenSize*0.75, tokenSize*0.75);
+                  resolve();
+                }
+              });
+            }
+          } else {
+            if (progress === 0) {
+              ctx.beginPath();
+              ctx.moveTo(0, radius-tokenSize*0.25);
+              ctx.lineTo(0, radius+tokenSize*0.25);
+              ctx.moveTo(-tokenSize*0.25, radius);
+              ctx.lineTo(tokenSize*0.25, radius);
+              ctx.stroke();
+            } else if (progress === 3) {
+              ctx.beginPath();
+              ctx.arc(0, radius, tokenSize*0.25, 0, 1.5*Math.PI);
+              ctx.stroke();
+
+              ctx.save();
+
+              ctx.translate(0, radius-tokenSize*0.25);
+              ctx.rotate(Math.PI/4 - 0.27);
+
+              const arrowLength = tokenSize * 0.2;
+
+              ctx.beginPath();
+              ctx.moveTo(0,0);
+              ctx.lineTo(0, arrowLength);
+              ctx.moveTo(0, 0);
+              ctx.lineTo(-arrowLength, 0);
+              ctx.stroke();
+
+              ctx.restore();
+            }
+          }
+
+          ctx.restore();
+        }
       }
 
       const maxPegRadius = Math.floor(Math.tan(sectorAngle/5)*(boardRadius-60)/2);
@@ -247,7 +340,7 @@ export default defineComponent({
 
         ctx.save();
 
-        ctx.font = "75px serif";
+        ctx.font = "60px serif";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
         ctx.fillStyle = "cyan";
@@ -256,7 +349,7 @@ export default defineComponent({
 
         ctx.beginPath();
         ctx.strokeStyle = "cyan";
-        ctx.rect(-40, -theoryRadius-50, 80, 100);
+        ctx.rect(-30, -theoryRadius-40, 60, 80);
         ctx.stroke();
 
         ctx.restore();
@@ -274,7 +367,7 @@ export default defineComponent({
 
         ctx.save();
 
-        ctx.font = "75px serif";
+        ctx.font = "60px serif";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
         ctx.fillStyle = "yellow";
@@ -283,7 +376,7 @@ export default defineComponent({
 
         ctx.beginPath();
         ctx.strokeStyle = "yellow";
-        ctx.rect(-40, -radius-50, 80, 100);
+        ctx.rect(-30, -radius-40, 60, 80);
         ctx.stroke();
 
         ctx.restore();
