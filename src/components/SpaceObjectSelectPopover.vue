@@ -19,6 +19,7 @@
 import { defineComponent } from 'vue';
 import { popoverController, IonIcon } from '@ionic/vue';
 import { SpaceObject } from '@/constants';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   name: 'SpaceObjectSelectPopover',
@@ -28,7 +29,8 @@ export default defineComponent({
   props: ['value', 'excludeObjects', 'showName', 'columns'],
   data: function() {
     return {
-      SpaceObject
+      SpaceObject,
+      store: useStore()
     }
   },
   computed: {
@@ -37,6 +39,8 @@ export default defineComponent({
       const objects = Object.assign({}, SpaceObject);
       for (const objectCode in objects) {
         if (this.excludeObjects.indexOf(objectCode) >= 0) {
+          delete objects[objectCode];
+        } else if (this.store.state.gameType.numObjects[SpaceObject[objectCode].initial] === undefined) {
           delete objects[objectCode];
         }
       }
