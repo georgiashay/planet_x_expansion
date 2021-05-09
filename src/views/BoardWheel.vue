@@ -65,8 +65,6 @@ export default defineComponent({
       return sectorMap;
     },
     theorySlots: function(): Array<Array<Array<any>>> {
-      console.log(this.store.state.session.theories);
-      console.log(this.store.getters.visibleTheories);
       const sectors = Array.from(Array(this.store.state.gameType.sectors)).map(() => Array.from(Array(4)).map(() => []));
       for (let i = 0; i < this.store.getters.visibleTheories.length; i++) {
         const theory = this.store.getters.visibleTheories[i];
@@ -368,7 +366,7 @@ export default defineComponent({
           ctx.stroke();
 
           if (this.theorySlots[i][progress].length > 0) {
-            const gradient = ctx.createLinearGradient(-tokenSize/2, radius-tokenSize/2, tokenSize/2, radius+tokenSize/2);
+            const gradient = ctx.createLinearGradient(-tokenSize/2, radius, tokenSize/2, radius+tokenSize);
             const part = 1/(this.theorySlots[i][progress].length);
             for (let k = 0; k < this.theorySlots[i][progress].length; k++) {
               const theory = this.theorySlots[i][progress][k];
