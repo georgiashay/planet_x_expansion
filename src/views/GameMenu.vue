@@ -70,13 +70,15 @@
             Planet X Conference
           </ion-button>
           <ion-item-divider/>
-          <ion-button v-if="store.state.isSession"
+          <ion-button
+            v-if="store.state.isSession"
             expand="block"
             color="dark"
             router-link="/session/board">
             View Board
           </ion-button>
           <ion-button
+            v-if="store.state.isSession"
             :disabled="store.getters.uniqueRevealedTheories.length === 0"
             expand="block"
             color="dark"
