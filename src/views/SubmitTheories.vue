@@ -9,7 +9,7 @@
         <div id="theory_selections">
           <ion-item color="dark">
             <ion-label position="floating">Number of Theories</ion-label>
-            <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories" @ionChange="changedNumTheories"></ion-input>
+            <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories"></ion-input>
           </ion-item>
           <ion-item-divider/>
           <template v-for="(theory, i) in theories.slice(0, numTheories)" :key="i">
