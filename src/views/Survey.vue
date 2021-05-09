@@ -22,14 +22,14 @@
           <space-object-select
             :label ="'Survey for:'"
             :value="surveyObject"
-            @input="surveyObject = $event; objChanged()"
+            @input="surveyObject = $event; validateSelections()"
             :exclude-objects="['PLANET_X']"
             :columns="3"
             :show-name="false"/>
           <sector-multi-select
             :label="'In sectors:'"
             :value="[startSector, endSector]"
-            @input="startSector = $event[0]; endSector = $event[1]"
+            @input="startSector = $event[0]; endSector = $event[1]; validateSelections()"
             :allowed-sectors="availableSectors"
             :number-only="true"
             :columns="6"/>
@@ -193,7 +193,7 @@ export default defineComponent({
       this.startSector = undefined;
       this.endSector = undefined;
     },
-    objChanged: function() {
+    validateSelections: function() {
       // Clear out sectors if they are no longer valid when the survey
       // object changes
       if (this.availableSectors.indexOf(this.startSector) === -1) {
