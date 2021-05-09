@@ -342,13 +342,13 @@ export default defineComponent({
         // Sector number label
         ctx.save();
 
-        ctx.font = textHeight + "px serif";
+        ctx.font = textHeight + "px Roboto";
         ctx.rotate(Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
 
         ctx.textAlign = "center";
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
-        ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.08));
+        ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
 
         ctx.restore();
 
@@ -457,7 +457,6 @@ export default defineComponent({
 
         ctx.save();
 
-        ctx.font = "60px serif";
         ctx.rotate(Math.PI/2 + (angle));
 
         const img = new Image();
@@ -485,7 +484,7 @@ export default defineComponent({
 
         ctx.save();
 
-        ctx.font = "60px serif";
+        ctx.font = "60px Roboto Slab";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
         ctx.fillStyle = "yellow";
