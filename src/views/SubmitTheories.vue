@@ -9,7 +9,7 @@
         <div id="theory_selections">
           <ion-item color="dark">
             <ion-label position="floating">Number of Theories</ion-label>
-            <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories"></ion-input>
+            <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories" @ionChange="changedNumTheories"></ion-input>
           </ion-item>
           <ion-item-divider/>
           <template v-for="(theory, i) in theories.slice(0, numTheories)" :key="i">
@@ -191,6 +191,20 @@ export default defineComponent({
     clearSelections: function() {
       this.numTheories = this.maxTheories;
       this.theories = Array.from(Array(this.maxTheories)).map(() => {return {};});
+    }
+  },
+  watch: {
+    numTheories: function(newNumTheories) {
+      const intTheories = parseInt(newNumTheories);
+      if (!isNaN(intTheories)) {
+        if(intTheories > this.maxTheories) {
+          this.numTheories = this.maxTheories;
+        } else if (intTheories < 0) {
+          this.numTheories = 0;
+        } else {
+          this.numTheories = intTheories;
+        }
+      }
     }
   },
   ionViewWillEnter() {
