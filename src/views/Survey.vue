@@ -105,11 +105,13 @@ export default defineComponent({
   },
   computed: {
     availableSectors: function(): Array<number> {
+      const primeSectors = [2, 3, 5, 7, 11, 13, 17, 19, 23];
       // Which sectors are available to survey depend on the object being surveyed
       if (this.store.state.isSession) {
         if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
           // Comets can only be in prime sectors
-          return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => this.store.getters.skySectors.indexOf(s-1) >= 0);
+          return this.store.getters.skySectors.map((s: number) => s + 1)
+            .filter((s: number) => primeSectors.indexOf(s) >= 0);
         } else {
           // Otherwise all sectors in the sky are available
           return this.store.getters.skySectors.map((s: number) => s + 1);
@@ -117,7 +119,7 @@ export default defineComponent({
       } else {
         if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
           // Comets can only be in prime sectors
-          return [2, 3, 5, 7, 11, 13, 17, 19, 23].filter((s) => s <= this.store.state.gameType.sectors);
+          return primeSectors.filter((s) => s <= this.store.state.gameType.sectors);
         } else {
           // Otherwise all sectors are available
           return Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
