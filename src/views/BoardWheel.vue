@@ -403,14 +403,15 @@ export default defineComponent({
               ctx.stroke();
             } else if (progress === 3) {
               ctx.beginPath();
-              ctx.arc(0, radius+tokenSize*0.5, tokenSize*0.25, 0, 1.5*Math.PI);
+              ctx.arc(0, radius+tokenSize*0.5, tokenSize*0.25, Math.PI/6, 11*Math.PI/6);
               ctx.stroke();
 
               ctx.save();
 
-              ctx.translate(0, radius+tokenSize*0.25);
-              ctx.rotate(Math.PI/4 - 0.27);
-
+              const x = Math.cos(Math.PI/6) * tokenSize * 0.25;
+              const y = Math.sin(Math.PI/6) * tokenSize * 0.25;
+              ctx.translate(x, radius+tokenSize*0.5+y);
+              
               const arrowLength = tokenSize * 0.2;
 
               ctx.beginPath();
