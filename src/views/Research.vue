@@ -9,6 +9,7 @@
         <div id="research_selections">
           Select a research item:
           <ion-button
+            :disabled = "store.getters.researchedAlready(index)"
             expand="block"
             v-for="(research, index) in store.state.game.research"
             :key="index"

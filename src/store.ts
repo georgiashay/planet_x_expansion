@@ -269,7 +269,8 @@ export default createStore({
         actionText: "Research " + String.fromCharCode(index+65) + ": " + state.game.research[index].categoryName,
         text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
         timeCost: 1,
-        time: new Date()
+        time: new Date(),
+        index
       }
 
       state.history.push(actionResult);
@@ -593,6 +594,9 @@ export default createStore({
                   || (actionName === "RESEARCH" && researchAllowed);
           }
       }
+    },
+    researchedAlready: (state: any, getters: any) => (index: number) => {
+      return state.history.filter((action: any) => action.actionType === "RESEARCH" && action.index === index).length > 0;
     },
     skySize(state: any) {
       return Math.floor(state.gameType.sectors/2);
