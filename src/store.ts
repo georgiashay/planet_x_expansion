@@ -793,7 +793,7 @@ export default createStore({
             if (theory.revealed) {
               theories.push(theory);
             } else {
-              theories.push(Object.assign({boardProgress: 3}, theory));
+              theories.push(Object.assign(theory, { boardProgress: 3}));
             }
           }
         } else {
