@@ -411,7 +411,7 @@ export default defineComponent({
               const x = Math.cos(Math.PI/6) * tokenSize * 0.25;
               const y = Math.sin(Math.PI/6) * tokenSize * 0.25;
               ctx.translate(x, radius+tokenSize*0.5+y);
-              
+
               const arrowLength = tokenSize * 0.2;
 
               ctx.beginPath();
@@ -459,15 +459,16 @@ export default defineComponent({
 
         ctx.font = "60px serif";
         ctx.rotate(Math.PI/2 + (angle));
-        ctx.textAlign = "center";
-        ctx.fillStyle = "cyan";
-        ctx.textBaseline = "middle";
-        ctx.fillText("T", 0, -(theoryRadius));
 
-        ctx.beginPath();
-        ctx.strokeStyle = "cyan";
-        ctx.rect(-30, -theoryRadius-40, 60, 80);
-        ctx.stroke();
+        const img = new Image();
+        img.src = "/assets/theory.svg";
+
+        await new Promise((resolve, reject) => {
+          img.onload = function() {
+            ctx.drawImage(img, -iconSize/2, -theoryRadius-iconSize, iconSize, iconSize);
+            resolve();
+          }
+        });
 
         ctx.restore();
       }
@@ -488,13 +489,8 @@ export default defineComponent({
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
         ctx.fillStyle = "yellow";
-        ctx.textBaseline = "middle";
-        ctx.fillText("C", 0, -radius);
-
-        ctx.beginPath();
-        ctx.strokeStyle = "yellow";
-        ctx.rect(-30, -radius-40, 60, 80);
-        ctx.stroke();
+        ctx.textBaseline = "bottom";
+        ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
 
         ctx.restore();
       }
