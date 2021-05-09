@@ -1,15 +1,16 @@
 <template>
   <ion-header>
-    <!-- <ion-toolbar color="dark" v-if="recentActions.length === 0"> -->
-    <ion-item color="dark" v-if="recentActions.length === 0">
+    <ion-item id="status_bar" color="dark" v-if="recentActions.length === 0">
+      <div id="sky_start">
+        <ion-icon src="/assets/sun.svg"/>
+        &nbsp;{{store.getters.skyStart + 1}}
+      </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
+      <div id="sky_end">
+        {{store.getters.skyEnd + 1}}
+        &nbsp;<ion-icon src="/assets/moon.svg"/>
+      </div>
     </ion-item>
-    <!-- </ion-toolbar> -->
-    <!-- <ion-item-group v-else>
-      <ion-item color="dark" v-for="(action, index) in recentActions" :key="index" class = "action_notif">
-        <ion-label>{{action.message}}</ion-label>
-      </ion-item>
-    </ion-item-group> -->
     <ion-item color="light" v-else>
       <ion-label class="action_notif">{{recentActions[recentActions.length-1].message}}</ion-label>
     </ion-item>
@@ -17,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { IonHeader, IonToolbar, IonTitle, IonItem, IonItemDivider, IonItemGroup, IonLabel } from '@ionic/vue';
+import { IonHeader, IonToolbar, IonTitle, IonItem, IonItemDivider, IonItemGroup, IonLabel, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import RecentActions from "@/mixins/RecentActions.ts";
@@ -30,7 +31,8 @@ export default defineComponent({
     IonTitle,
     IonItem,
     // IonItemGroup
-    IonLabel
+    IonLabel,
+    IonIcon
   },
   data: function() {
     return {
@@ -64,7 +66,31 @@ export default defineComponent({
   text-align: center;
 }
 
+#sky_start {
+  float: left;
+  text-align: left;
+}
+
+#sky_end {
+  float: right;
+  text-align: right;
+}
+
 .action_notif {
   text-align: center;
+}
+
+#sky_start {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  vertical-align: middle;
+}
+
+#sky_end {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  vertical-align: middle;
 }
 </style>

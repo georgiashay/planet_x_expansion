@@ -597,6 +597,12 @@ export default createStore({
     skySize(state: any) {
       return Math.floor(state.gameType.sectors/2);
     },
+    skyStart(state: any) {
+      return state.session.currentSector;
+    },
+    skyEnd(state: any, getters: any) {
+      return (state.session.currentSector + getters.skySize - 1) % state.gameType.sectors;
+    },
     isSectorInSky: (state: any, getters: any) => (sector: number) => {
       let sectorsPast = (sector - 1) - state.session.currentSector;
       if (sectorsPast < 0) {
