@@ -106,7 +106,7 @@ export default defineComponent({
     this.playerNum = undefined;
   },
   ionViewDidEnter() {
-    this.playSonar1();
+    this.playSound("sonar1");
   }
 });
 </script>

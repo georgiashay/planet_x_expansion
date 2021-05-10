@@ -126,14 +126,14 @@ export default defineComponent({
       if (this.actionResult.actionType == "LOCATE_PLANET_X") {
         if (this.actionResult.success) {
           // Play correct sound when planet x is located
-          this.playCorrect();
+          this.playSound("correct");
         } else {
           // Play incorrect sound if it is not located
-          this.playIncorrect();
+          this.playSound("incorrect");
         }
       } else {
         // Play sonar ping if it's not a planet x action
-        this.playSonar2();
+        this.playSound("sonar2");
       }
     }
   }

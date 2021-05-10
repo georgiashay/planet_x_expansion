@@ -98,7 +98,7 @@ export default defineComponent({
     }
   },
   ionViewDidEnter() {
-    this.playSonar1();
+    this.playSound("sonar1");
   },
   ionViewDidLeave() {
     this.clearSelections();

@@ -22,7 +22,8 @@ export default createStore({
     playerNum: undefined,
     playerName: undefined,
     webSocketFailures: 0,
-    currentWebSocket: undefined
+    currentWebSocket: undefined,
+    muteLevel: 1
   },
 
   actions: {
@@ -146,12 +147,12 @@ export default createStore({
         if (state.session.currentAction.playerID !== state.playerID
           || state.session.currentAction.actionType !== sessionState.currentAction.actionType
           || state.session.currentSector !== sessionState.currenSector) {
-          SoundEffects.playDoorbell();
+          SoundEffects.playSound("doorbell", state.muteLevel);
         }
       } else if (sessionState.currentAction.playerID === null) {
         if (state.session.currentAction.actionType !== sessionState.currentAction.actionType
             || state.session.currentSector !== sessionState.currentSector) {
-          SoundEffects.playDoorbell();
+          SoundEffects.playSound("doorbell", state.muteLevel);
         }
       }
     },

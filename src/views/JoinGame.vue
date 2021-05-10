@@ -94,7 +94,7 @@ export default defineComponent({
     this.gameCode = "";
   },
   ionViewDidEnter() {
-    this.playSonar1();
+    this.playSound("sonar1");
   }
 });
 </script>
