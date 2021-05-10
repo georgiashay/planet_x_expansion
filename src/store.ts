@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject } from "@/constants";
 import axios from 'axios';
+import SoundEffects from '@/mixins/SoundEffects.ts';
 
 //
 // @see https://github.com/vuejs/vuex/tree/v4.0.0-rc.1
@@ -112,6 +113,7 @@ export default createStore({
         const sessionState = JSON.parse(message.data);
         console.log(sessionState);
         commit('getNewlyRevealedTheories', sessionState);
+        dispatch('checkMyTurn', sessionState);
         commit('setSessionState', sessionState);
       };
       ws.onclose = () => {
@@ -138,6 +140,20 @@ export default createStore({
     async makeSessionMove({ state }, moveData) {
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
       console.log(response.data);
+    },
+    checkMyTurn({ state }, sessionState) {
+      if (sessionState.currentAction.playerID === state.playerID) {
+        if (state.session.currentAction.playerID !== state.playerID
+          || state.session.currentAction.actionType !== sessionState.currentAction.actionType
+          || state.session.currentSector !== sessionState.currenSector) {
+          SoundEffects.playDoorbell();
+        }
+      } else if (sessionState.currentAction.playerID === null) {
+        if (state.session.currentAction.actionType !== sessionState.currentAction.actionType
+            || state.session.currentSector !== sessionState.currentSector) {
+          SoundEffects.playDoorbell();
+        }
+      }
     },
     survey({ state, dispatch }, { surveyObject, startSector, endSector }) {
       let sectors;
