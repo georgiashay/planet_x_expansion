@@ -29,6 +29,10 @@ import BoardWheel from "@/views/BoardWheel.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
 
 const routes: Array<RouteRecordRaw> = [
+  // {
+  //   path: '/Users/georgiashay/Documents/0Projects/PlanetXApp/electron/app/index.html',
+  //   redirect: '/home'
+  // },
   {
     path: '/',
     redirect: '/home'

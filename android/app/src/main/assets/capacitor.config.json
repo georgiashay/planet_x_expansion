@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "Planet X Expansion",
+  "appName": "PlanetXExpansion",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist",

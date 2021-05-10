@@ -12,6 +12,7 @@
   "dependencies": {
     "@capacitor/android": "^2.4.7",
     "@capacitor/core": "^2.4.7",
+    "@capacitor/ios": "^2.4.7",
     "@ionic-native/core": "^5.32.1",
     "@ionic-native/file": "^5.32.1",
     "@ionic-native/native-audio": "^5.32.1",
@@ -45,5 +46,6 @@
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "homepage": "."
 }

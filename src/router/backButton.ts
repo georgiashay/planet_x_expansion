@@ -38,6 +38,11 @@ function getBackIndex() {
 // Record history and select page when pressing back button
 function listenBackButton(router: Router) {
   router.beforeEach((to, from, next) => {
+    console.log("Router before each");
+    console.log("Coming from:");
+    console.log(from);
+    console.log("Going to:");
+    console.log(to);
     if (to.path !== home) {
       // Record history
       history.push(to.path);
