@@ -6,7 +6,7 @@
         <div id="title_container">
           <h3>Current Board</h3>
         </div>
-        <canvas id="boardCanvas" height="3000" width="3000"/>
+        <canvas id="boardCanvas" height="3500" width="3500"/>
         <h4>Current Scores</h4>
         <scores/>
         <div id="cancel_container">
@@ -81,9 +81,9 @@ export default defineComponent({
       const rawPegAngle = this.sectorAngle/(numPegs * (1 + paddingFactor) + paddingFactor);
       // Solving system
       // pegRadius = Math.tan(rawPegRangle/2) * pegLoc
-      // pegLoc = boardRadius - pegRadius - 2 * pegRadius * paddingFactor
+      // pegLoc = boardRadius + pegRadius + 2 * pegRadius * paddingFactor
       const tanAngle = Math.tan(rawPegAngle/2);
-      const pegRadius = (tanAngle * boardRadius)/(1 + tanAngle + 2 * tanAngle * paddingFactor);
+      const pegRadius = (tanAngle * boardRadius)/(1 - tanAngle - 2 * tanAngle * paddingFactor);
 
       return {
         radius: pegRadius,
@@ -103,9 +103,9 @@ export default defineComponent({
 
       // Solving system
       // pegRadius = Math.tan(rawPegRangle/2) * pegLoc
-      // pegLoc = boardRadius - 3 * pegRadius - (2 + Math.sqrt(2)) * pegRadius * paddingFactor
+      // pegLoc = boardRadius + 3 * pegRadius + (2 + Math.sqrt(2)) * pegRadius * paddingFactor
       const tanAngle = Math.tan(rawPegAngle/2);
-      const pegRadius = (tanAngle * boardRadius)/(1 + 3 * tanAngle + (2 + Math.sqrt(2)) * tanAngle * paddingFactor);
+      const pegRadius = (tanAngle * boardRadius)/(1 - 3 * tanAngle - (2 + Math.sqrt(2)) * tanAngle * paddingFactor);
 
       return {
         radius: pegRadius,
@@ -114,9 +114,11 @@ export default defineComponent({
     },
     pegLocations: function(boardRadius: number, pegRadius: number, paddingFactor: number, numPlayers: number, space: number) {
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
+      pegRadius = Math.min(pegRadius, space/(2 + 4*paddingFactor));
       let pegPadding = 2 * pegRadius * paddingFactor;
-      let outerPegLoc = boardRadius - pegPadding - pegRadius;
-      const outerPaddingAngle = 2 * Math.atan2(pegPadding/4, boardRadius - pegPadding - pegRadius);
+      let outerPegLoc = boardRadius + space/2;
+      // let outerPegLoc = boardRadius + pegPadding + pegRadius;
+      const outerPaddingAngle = 2 * Math.atan2(pegPadding/4, outerPegLoc);
       const pegAngle = 2 * Math.atan2((2*pegRadius + pegPadding)/2, outerPegLoc);
 
       const maxPegsAtSize = Math.floor((sectorAngle - 2 * outerPaddingAngle)/pegAngle);
@@ -129,7 +131,7 @@ export default defineComponent({
         pegRadius = Math.min(pegRadius, space/(2 + 4*paddingFactor));
 
         pegPadding = 2 * pegRadius * paddingFactor;
-        outerPegLoc = boardRadius - pegRadius - pegPadding;
+        // outerPegLoc = boardRadius + pegRadius + pegPadding;
 
         const rawPegAngle = 2 * Math.atan2(pegRadius, outerPegLoc);
         const leftoverAngle = sectorAngle - numPlayers * rawPegAngle;
@@ -157,14 +159,14 @@ export default defineComponent({
         const offset = rawPegAngle * (1/2 + paddingFactor);
 
         pegPadding = 2 * pegRadius * paddingFactor;
-        outerPegLoc = boardRadius - pegRadius - pegPadding;
+        const innerPegLoc = boardRadius + pegRadius + pegPadding;
 
-        const innerPegLoc = boardRadius - 3 * pegRadius - (1 + Math.sqrt(2)/2) * pegPadding;
+        outerPegLoc = boardRadius + space - pegRadius - pegPadding;
 
         const locations = [];
 
         for (let i = 0; i < numPlayers; i++) {
-          const radius = (i % 2 === 0) ? outerPegLoc : innerPegLoc;
+          const radius = (i % 2 === 0) ? innerPegLoc : outerPegLoc;
           locations.push({
             angle: offset + i * intervalAngle,
             radius,
@@ -174,111 +176,6 @@ export default defineComponent({
 
         return locations;
       }
-    },
-    pegLocationsOld: function(boardRadius: number, pegRadius: number, pegPadding: number, numPlayers: number): any {
-      const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
-
-      const topPaddingAngle = 2*Math.atan2(pegPadding/2, boardRadius - pegPadding - pegRadius);
-      const divAngle = (sectorAngle - 2 * topPaddingAngle)/(numPlayers + 1);
-
-      const angle = (sectorAngle - 2 * topPaddingAngle)/numPlayers;
-      const offset = topPaddingAngle + angle/2;
-
-      let rows = 1;
-      let foundRows = false;
-      const locations = Array.from(Array(numPlayers));
-
-      while (!foundRows) {
-        let totalPegs = 0;
-        const pegNums = [];
-        let pegLoc = boardRadius - pegPadding - pegRadius;
-
-        for (let r = 0; r < rows; r++) {
-          const paddingAngle = 4*Math.atan2(pegPadding/4, pegLoc);
-          const extra = (numPlayers % rows) > (rows - 1 - r);
-          const rowAngle = divAngle * ((rows-1)+ +extra);
-          const angleLeft = sectorAngle - paddingAngle - rowAngle;
-
-          const pegAngle = 2*Math.atan2((2*pegRadius + pegPadding)/2, pegLoc);
-          const numPegs = Math.floor(angleLeft/pegAngle);
-
-          pegNums.push(numPegs);
-          totalPegs += numPegs;
-          pegLoc -= (2*pegRadius + pegPadding);
-        }
-
-        if (totalPegs >= numPlayers || pegNums[pegNums.length-1] === 0) {
-          foundRows = true;
-          let newPegNums;
-
-          if (pegNums[pegNums.length-1] === 0) {
-            newPegNums = pegNums;
-          } else {
-            newPegNums = Array.from(Array(rows)).map(() => 0);
-            console.log("initial", newPegNums)
-            let pn = rows - 1;
-            while(newPegNums.reduce((a: number, b: number) => a + b, 0) < numPlayers) {
-              const pegs = pegNums[pn];
-              for (let j = 0; j < rows; j++) {
-                if (pegNums[j] >= pegs) {
-                  newPegNums[j] = pegs;
-                }
-              }
-              pn--;
-            }
-
-            console.log("evening", newPegNums);
-
-            let totalPegs = newPegNums.reduce((a: number, b: number) => a + b, 0);
-
-            console.log("extra pegs", totalPegs - numPlayers);
-
-            while (totalPegs > numPlayers) {
-              for (let i = rows - 1; i >= 0; i--) {
-                newPegNums[i]--;
-                totalPegs--;
-              }
-            }
-            // for (let i = rows - 1; i >= rows - extraPegs; i--) {
-            //   newPegNums[i]--;
-            // }
-
-            console.log("remove extra", newPegNums);
-          }
-
-          const indices = newPegNums.map(() => []);
-          const pegsCopy = newPegNums.slice();
-          let idx = 0;
-          let r = 0;
-          while (idx < newPegNums.reduce((a: number, b: number) => a + b, 0)) {
-            if (r > pegsCopy.length) {
-              r = 0;
-            }
-            if (pegsCopy[r] > 0) {
-              pegsCopy[r]--;
-              indices[r].push(idx);
-              idx++;
-              r++;
-            } else {
-              r = 0;
-            }
-          }
-
-          for (let r = 0; r < rows; r++) {
-            for (let p = 0; p < newPegNums[r]; p++) {
-              const i = indices[r][p];
-              locations[i] = {
-                angle: offset + angle * i,
-                radius: boardRadius - pegPadding - pegRadius - r * (2*pegRadius + pegPadding)
-              };
-            }
-          }
-        } else {
-          rows++;
-        }
-      }
-
-      return locations;
     },
     computeCanvas: async function() {
       const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
@@ -294,25 +191,43 @@ export default defineComponent({
       const skyAngle = sectorAngle * this.store.state.session.currentSector;
 
       const boardRadius = 1400;
-      const outerRadius = 1500;
+      const outerRadius = 1600;
+      const trackRadius = 1750;
+      const trackSpace = trackRadius - outerRadius;
       const textRadius = (boardRadius + outerRadius)/2;
-      const textHeight = 100;
+      const textHeight = 150;
 
-      const iconSize = 80;
-      const theoryRadius = 300;
-      const conferenceRadius = theoryRadius + iconSize;
-
-      const startTokenRadius = conferenceRadius + 175;
+      const startTokenRadius = 700;
       const maxTokenWidth = Math.floor(2 * Math.tan(sectorAngle/2) * startTokenRadius);
       const maxTokenHeight = Math.floor((boardRadius - startTokenRadius)/4);
-      const tokenSize = Math.min(125, 0.8*maxTokenWidth, 0.75*maxTokenHeight);
-      const tokenEdgePadding = 250;
+      const tokenSize = Math.min(136, 0.8*maxTokenWidth, 0.8*maxTokenHeight);
+
+      const tokenEdgePadding = 32;
       const tokenIncrement = (boardRadius - startTokenRadius - tokenSize - tokenEdgePadding)/3;
+
+      const innerRadius = 550;
+      const innerTextRadius = 500;
+      const innerTextHeight = 80;
+      const sunRadius = 100;
+
+      const iconSize = 80;
+      const theoryRadius = innerTextRadius - innerTextHeight/2 - 10 - iconSize;
+      const conferenceRadius = theoryRadius - iconSize;
 
       ctx.beginPath();
       ctx.fillStyle = "#222428";
-      ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
+      ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
       ctx.fill();
+
+      ctx.beginPath();
+      ctx.fillStyle = "#575757";
+      ctx.arc(0, 0, trackRadius, skyAngle, skyAngle + Math.PI);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "white";
+      ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
+      ctx.stroke();
 
       ctx.beginPath();
       ctx.strokeStyle = "white";
@@ -325,16 +240,16 @@ export default defineComponent({
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.fillStyle = "#575757";
-      ctx.arc(0, 0, boardRadius, skyAngle, skyAngle + Math.PI);
-      ctx.fill();
+      ctx.strokeStyle = "white";
+      ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
+      ctx.stroke();
 
       for (let i = 0; i < this.store.state.gameType.sectors; i++) {
         // Sector line
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        const x = outerRadius * Math.cos(i * sectorAngle);
-        const y = outerRadius * Math.sin(i * sectorAngle);
+        const x = trackRadius * Math.cos(i * sectorAngle);
+        const y = trackRadius * Math.sin(i * sectorAngle);
         ctx.lineTo(x, y);
         ctx.strokeStyle = "white";
         ctx.stroke();
@@ -342,13 +257,19 @@ export default defineComponent({
         // Sector number label
         ctx.save();
 
-        ctx.font = textHeight + "px Roboto";
         ctx.rotate(Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
 
+        ctx.font = textHeight + "px Roboto";
         ctx.textAlign = "center";
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
         ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
+
+        ctx.font = innerTextHeight + "px Roboto";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.textBaseline = "middle";
+        ctx.fillText("" + (i+1), 0, -(innerTextRadius-innerTextHeight*0.1));
 
         ctx.restore();
 
@@ -429,10 +350,15 @@ export default defineComponent({
         }
       }
 
+      ctx.beginPath();
+      ctx.fillStyle = "#ebd534";
+      ctx.arc(0, 0, sunRadius, 0, 2*Math.PI);
+      ctx.fill();
+
       const pegRadius = 100;
       const paddingFactor = 0.2;
 
-      const pegLocs = this.pegLocations(boardRadius, pegRadius, paddingFactor, this.store.state.session.players.length, tokenEdgePadding);
+      const pegLocs = this.pegLocations(outerRadius, pegRadius, paddingFactor, this.store.state.session.players.length, trackSpace);
 
       for (const [sectorStr, players] of Object.entries(this.playerSectors)) {
         const sector: number = parseInt(sectorStr);
