@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <session-header v-if="store.state.isSession" hide-above="md"/>
+    <session-header v-if="store.state.isSession" hide-above="sm"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
@@ -68,7 +68,7 @@
           </ion-button>
           <ion-item-divider/>
           <ion-button
-            v-if="store.state.isSession"
+            v-if="store.state.isSession && screenSizeLessThan('md')"
             expand="block"
             color="dark"
             router-link="/session/board">
@@ -92,7 +92,7 @@
         </div>
       </div>
     </ion-content>
-    <game-footer hide-above="md"/>
+    <game-footer hide-above="sm"/>
   </ion-page>
 </template>
 
@@ -108,6 +108,7 @@ import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
+import ScreenSize from "@/mixins/ScreenSize.ts";
 
 export default defineComponent({
   name: 'GameMenu',
@@ -120,7 +121,7 @@ export default defineComponent({
     GameFooter,
     SessionHeader
   },
-  mixins: [SoundMixin],
+  mixins: [SoundMixin, ScreenSize],
   props: {
     gameType: {
       required: true,

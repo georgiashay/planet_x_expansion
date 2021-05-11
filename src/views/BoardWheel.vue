@@ -11,7 +11,7 @@
         <div id="scores_container">
           <scores/>
         </div>
-        <div id="cancel_container">
+        <div id="cancel_container" v-if="breakpoint !== 'md'">
           <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
         </div>
       </div>
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonNavLink } from '@ionic/vue';
+import { IonContent, IonPage, IonNavLink, menuController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import GameFooter from "@/components/GameFooter.vue";
@@ -29,6 +29,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
 import { initialToSpaceObject } from "@/constants.ts";
+import ScreenSize from "@/mixins/ScreenSize.ts";
 
 export default defineComponent({
   name: 'BoardWheel',
@@ -40,7 +41,7 @@ export default defineComponent({
     SessionHeader,
     Scores
   },
-  mixins: [PlayerColors],
+  mixins: [PlayerColors, ScreenSize],
   data() {
     const store = useStore();
     return {
@@ -440,6 +441,9 @@ export default defineComponent({
     }
   },
   mounted() {
+    if (this.breakpoint === "md") {
+      menuController.open("menu");
+    }
     this.computeCanvas();
   }
 });

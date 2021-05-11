@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <session-header v-if="store.state.isSession" hide-above="md"/>
+    <session-header v-if="store.state.isSession" hide-above="sm"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
@@ -20,7 +20,7 @@
         </ion-button>
       </div>
     </ion-content>
-    <game-footer hide-above="md"/>
+    <game-footer hide-above="sm"/>
   </ion-page>
 </template>
 
