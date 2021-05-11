@@ -1,5 +1,5 @@
 <template>
-  <ion-header>
+  <ion-header v-if="screenSizeAtMost(hideAbove)">
     <ion-item id="status_bar" color="dark" v-if="recentActions.length === 0">
       <div id="sky_sectors">
         <ion-icon src="/assets/sun.svg"/>
@@ -21,6 +21,7 @@ import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import RecentActions from "@/mixins/RecentActions.ts";
 import { gameControllerOutline, menuOutline } from "ionicons/icons";
+import ScreenSize from "@/mixins/ScreenSize.ts";
 
 export default defineComponent({
   name: "GameFooter",
@@ -31,6 +32,12 @@ export default defineComponent({
     IonLabel,
     IonIcon
   },
+  props: {
+    hideAbove: {
+      type: String,
+      default: "xl"
+    }
+  },
   data: function() {
     return {
       store: useStore(),
@@ -38,7 +45,7 @@ export default defineComponent({
       menuOutline
     }
   },
-  mixins: [RecentActions],
+  mixins: [RecentActions, ScreenSize],
   computed: {
     phaseName: function(): string {
       const actionName = this.store.state.session.currentAction.actionType.split("_").map((word: string)=>word.slice(0,1) + word.slice(1).toLowerCase()).join(" ");

@@ -1,14 +1,11 @@
 <template>
   <ion-page>
-    <session-header v-if="store.state.isSession"/>
+    <session-header v-if="store.state.isSession" hide-above="md"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Game Menu</h3>
         </div>
-        <!-- {{store.getters.currentConference}}
-        {{store.state.gameType.conferences}}
-        {{store.state.session.currentSector}} -->
         <div id="action_buttons">
           <ion-button
             :disabled="!store.getters.actionAllowed('SURVEY')"
@@ -95,12 +92,12 @@
         </div>
       </div>
     </ion-content>
-    <game-footer/>
+    <game-footer hide-above="md"/>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonItemDivider, IonPage, IonContent,
         IonButton, IonIcon, alertController,
         popoverController } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -213,9 +210,6 @@ export default defineComponent({
         await popover.onDidDismiss();
       }
     }
-  },
-  ionViewDidEnter() {
-    this.playSound("sonar1");
   }
 });
 </script>

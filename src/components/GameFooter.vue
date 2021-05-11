@@ -1,5 +1,5 @@
 <template>
-  <ion-footer>
+  <ion-footer v-if="screenSizeAtMost(hideAbove)">
     <ion-toolbar color="dark">
       <ion-title id="game_code" v-if="!store.state.isSession">Game Code: {{ store.state.gameCode }}</ion-title>
       <ion-title id="game_code" v-else>Session Code: {{ store.state.sessionCode }}</ion-title>
@@ -13,6 +13,7 @@ import { IonFooter, IonToolbar,
           IonTitle, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
+import ScreenSize from "@/mixins/ScreenSize.ts";
 
 export default defineComponent({
   name: "GameFooter",
@@ -22,10 +23,15 @@ export default defineComponent({
     IonTitle,
     IonNavLink
   },
+  mixins: [ScreenSize],
   props: {
     showHistoryLink: {
       type: Boolean,
       default: true
+    },
+    hideAbove: {
+      type: String,
+      default: "xl"
     }
   },
   data: function() {
