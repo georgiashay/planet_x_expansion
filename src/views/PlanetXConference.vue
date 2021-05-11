@@ -109,13 +109,16 @@ export default defineComponent({
 <style scoped>
 #container {
   padding: 20px;
+  max-width: var(--max-form-width);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 25%;
+  margin-top: 15vh;
 }
 
 #title_container h1 {
@@ -136,7 +139,7 @@ export default defineComponent({
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10%;
+  margin-top: 10vh;
 }
 
 #conference_selections ion-button {

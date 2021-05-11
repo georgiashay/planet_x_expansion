@@ -4,7 +4,8 @@
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Game Over</h3>
-          <h5>Game Code: {{store.state.gameCode}}</h5>
+          <h5 v-if="!store.state.isSession">Game Code: {{store.state.gameCode}}</h5>
+          <h5 v-else>Session Code: {{store.state.sessionCode}}</h5>
         </div>
         <div id="sector_objects">
           <ion-grid>
@@ -79,13 +80,16 @@ export default defineComponent({
 <style scoped>
 #container {
   padding: 20px;
+  max-width: var(--max-form-width);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 25%;
+  margin-top: 15vh;
 }
 
 #title_container h1 {

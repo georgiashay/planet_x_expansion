@@ -15,6 +15,7 @@
 :root {
   --ion-font-family: "Roboto";
   --ion-text-color: white;
+  --max-form-width: 500px;
 }
 
 ion-content {
@@ -43,3 +44,9 @@ ion-item-divider {
 .split-pane-visible > ion-menu {
   max-width: 36%;
 }
+
+/* ion-button[expand=block] {
+  max-width: var(--max-form-width);
+  margin-right: auto;
+  margin-left: auto;
+} */

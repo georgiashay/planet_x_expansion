@@ -102,13 +102,16 @@ export default defineComponent({
 <style scoped>
 #container {
   padding: 20px;
+  max-width: var(--max-form-width);
+  margin-right: auto;
+  margin-left: auto;
 }
 
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 25%;
+  margin-top: 15vh;
 }
 
 #title_container h1 {
