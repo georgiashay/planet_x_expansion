@@ -1,15 +1,11 @@
 <template>
   <ion-header>
     <ion-item id="status_bar" color="dark" v-if="recentActions.length === 0">
-      <div id="sky_start">
+      <div id="sky_sectors">
         <ion-icon src="/assets/sun.svg"/>
-        &nbsp;{{store.getters.skyStart + 1}}
+        &nbsp;Sky: {{store.getters.skyStart + 1}}-{{store.getters.skyEnd + 1}}
       </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
-      <div id="sky_end">
-        {{store.getters.skyEnd + 1}}
-        &nbsp;<ion-icon src="/assets/moon.svg"/>
-      </div>
     </ion-item>
     <ion-item color="light" v-else>
       <ion-label class="action_notif">{{recentActions[recentActions.length-1].message}}</ion-label>
@@ -18,25 +14,28 @@
 </template>
 
 <script lang="ts">
-import { IonHeader, IonToolbar, IonTitle, IonItem, IonItemDivider, IonItemGroup, IonLabel, IonIcon } from '@ionic/vue';
+import { IonHeader, IonTitle, IonItem,
+        IonItemDivider, IonLabel, IonIcon,
+        menuController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import RecentActions from "@/mixins/RecentActions.ts";
+import { gameControllerOutline, menuOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: "GameFooter",
   components: {
     IonHeader,
-    // IonToolbar,
     IonTitle,
     IonItem,
-    // IonItemGroup
     IonLabel,
     IonIcon
   },
   data: function() {
     return {
-      store: useStore()
+      store: useStore(),
+      gameControllerOutline,
+      menuOutline
     }
   },
   mixins: [RecentActions],
@@ -57,6 +56,9 @@ export default defineComponent({
       }
       return name;
     }
+  },
+  mounted() {
+    menuController.enable(true, "menu");
   }
 });
 </script>
@@ -66,31 +68,16 @@ export default defineComponent({
   text-align: center;
 }
 
-#sky_start {
-  float: left;
-  text-align: left;
-}
-
-#sky_end {
-  float: right;
-  text-align: right;
+#sky_sectors {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  vertical-align: middle;
+  position: absolute;
 }
 
 .action_notif {
   text-align: center;
 }
 
-#sky_start {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  vertical-align: middle;
-}
-
-#sky_end {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  vertical-align: middle;
-}
 </style>

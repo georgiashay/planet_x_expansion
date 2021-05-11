@@ -7,8 +7,10 @@
           <h3>Current Board</h3>
         </div>
         <canvas id="boardCanvas" height="3500" width="3500"/>
-        <h4>Current Scores</h4>
-        <scores/>
+        <h4 id="current_scores">Current Scores</h4>
+        <div id="scores_container">
+          <scores/>
+        </div>
         <div id="cancel_container">
           <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
         </div>
@@ -48,6 +50,9 @@ export default defineComponent({
   computed: {
     session: function(): any {
       return this.store.state.session;
+    },
+    seasonView: function(): any {
+      return this.store.state.seasonView;
     },
     playerSectors: function(): {[sector: number]: Array<number | null>} {
       const sectorMap: {[sector: number]: Array<number | null>} = {};
@@ -179,11 +184,16 @@ export default defineComponent({
     },
     computeCanvas: async function() {
       const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
+      if (canvas === null) {
+        return;
+      }
       const ctx = canvas.getContext("2d");
       ctx.resetTransform();
       ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
       ctx.translate(canvas.width/2, canvas.height/2);
-      ctx.rotate(this.store.state.seasonView.angle);
+      if (this.store.state.seasonView !== undefined) {
+        ctx.rotate(this.store.state.seasonView.angle);
+      }
 
       ctx.lineWidth = 4;
 
@@ -424,6 +434,9 @@ export default defineComponent({
   watch: {
     session: function() {
       this.computeCanvas();
+    },
+    seasonView: function() {
+      this.computeCanvas();
     }
   },
   mounted() {
@@ -468,5 +481,15 @@ export default defineComponent({
   display: block;
   width: 100%;
   height: 100%;
+  max-width: 50vh;
+}
+
+#scores_container table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#current_scores {
+  text-align: center;
 }
 </style>

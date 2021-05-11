@@ -1,33 +1,31 @@
 <template>
-  <div>
-    <table id="score_table">
-      <tr>
-        <th>Player</th>
-        <th
-          v-for="(header, index) in scoreHeaders"
-          :key="index"
-          >
-          <ion-icon :src="header[1]"/>
-        </th>
-        <th>
-          Total
-        </th>
-      </tr>
-      <tr
-        v-for="(row, index) in scoreTable"
+  <table id="score_table">
+    <tr>
+      <th>Player</th>
+      <th
+        v-for="(header, index) in scoreHeaders"
         :key="index"
-         :style="players[index][1]">
-        <td class="player_cell">
-          {{players[index][0]}}
-        </td>
-        <td
-          v-for="(value, j) in row"
-          :key="j">
-          {{ value }}
-        </td>
-      </tr>
-    </table>
-  </div>
+        >
+        <ion-icon :src="header[1]"/>
+      </th>
+      <th>
+        Total
+      </th>
+    </tr>
+    <tr
+      v-for="(row, index) in scoreTable"
+      :key="index"
+       :style="players[index][1]">
+      <td class="player_cell">
+        {{players[index][0]}}
+      </td>
+      <td
+        v-for="(value, j) in row"
+        :key="j">
+        {{ value }}
+      </td>
+    </tr>
+  </table>
 </template>
 
 <script lang="ts">
@@ -91,6 +89,7 @@ export default defineComponent({
 <style scoped>
 #score_table {
   width: 100%;
+  max-width: 50vh;
   background-color: var(--ion-color-dark);
   border: 2px solid white;
 }
@@ -101,17 +100,17 @@ export default defineComponent({
   outline-offset: -4px;
   padding: 3px;
   text-align: center;
-  font-size: 3vw;
+  font-size: 1em;
 }
 
 #score_table th {
   border: 2px solid white;
   padding: 3px;
-  font-size: 3vw;
+  font-size: 1em;
 }
 
 #score_table th ion-icon {
-  font-size: 5vw;
+  font-size: 1.3em;
 }
 
 #score_table table td {
