@@ -1,21 +1,21 @@
 <template>
   <ion-app>
     <ion-split-pane content-id="main" when="lg" v-if="store.state.isSession && store.getters.gameReady && screenSizeAtLeast('md')">
-      <ion-menu content-id="main" side="end">
+      <ion-menu content-id="main" side="end" menu-id="menu">
         <ion-router-outlet />
       </ion-menu>
 
-      <div id="main" v-show="screenSizeAtLeast('lg')">
-        <board-wheel/>
-      </div>
-      <ion-router-outlet id="main" v-show="!screenSizeAtLeast('lg')"/>
+      <ion-page id="main">
+        <board-wheel v-if="showWheel"/>
+        <ion-router-outlet v-else />
+      </ion-page>
     </ion-split-pane>
     <ion-router-outlet v-else/>
   </ion-app>
 </template>
 
 <script lang="ts">
-import { IonApp, IonRouterOutlet, IonSplitPane, IonMenu } from '@ionic/vue';
+import { IonApp, IonRouterOutlet, IonSplitPane, IonMenu, IonPage } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import ScreenSize from "@/mixins/ScreenSize.ts";
 import BoardWheel from "@/views/BoardWheel.vue"
@@ -28,12 +28,18 @@ export default defineComponent({
     IonRouterOutlet,
     IonSplitPane,
     IonMenu,
-    BoardWheel
+    BoardWheel,
+    IonPage
   },
   mixins: [ScreenSize],
   data() {
     return {
       store: useStore()
+    }
+  },
+  computed: {
+    showWheel: function(): boolean {
+      return this.screenSizeAtLeast('lg') || this.store.getters.playerReady;
     }
   }
 });

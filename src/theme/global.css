@@ -39,3 +39,7 @@ ion-item-divider {
   background-color: var(--ion-color-dark);
   color: var(--ion-color-dark-contrast);
 }
+
+.split-pane-visible > ion-menu {
+  max-width: 36%;
+}

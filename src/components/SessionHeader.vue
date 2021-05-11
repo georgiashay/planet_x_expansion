@@ -6,6 +6,9 @@
         &nbsp;Sky: {{store.getters.skyStart + 1}}-{{store.getters.skyEnd + 1}}
       </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
+      <div id="menu_icon" @click="openMenu()" v-if="!hideMenu && screenSizeAtLeast('md') && screenSizeAtMost('md')">
+        <ion-icon :icon="menuOutline" />
+      </div>
     </ion-item>
     <ion-item color="light" v-else>
       <ion-label class="action_notif">{{recentActions[recentActions.length-1].message}}</ion-label>
@@ -36,6 +39,10 @@ export default defineComponent({
     hideAbove: {
       type: String,
       default: "xl"
+    },
+    hideMenu: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
@@ -64,6 +71,11 @@ export default defineComponent({
       return name;
     }
   },
+  methods: {
+    openMenu: function() {
+      menuController.toggle("menu");
+    }
+  },
   mounted() {
     menuController.enable(true, "menu");
   }
@@ -81,6 +93,16 @@ export default defineComponent({
   align-content: center;
   vertical-align: middle;
   position: absolute;
+}
+
+#menu_icon {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  vertical-align: middle;
+  position: absolute;
+  right: 0;
+  margin-right: 0.5em;
 }
 
 .action_notif {
