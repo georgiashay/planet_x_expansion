@@ -23,9 +23,9 @@ export default createStore({
     playerName: undefined,
     webSocketFailures: 0,
     currentWebSocket: undefined,
-    muteLevel: 1
+    muteLevel: 1,
+    logicBoard: {}
   },
-
   actions: {
     async createGame({ commit }, numSectors) {
       // Get fresh game from server
@@ -521,6 +521,70 @@ export default createStore({
 
         state.history.push(actionResult);
       }
+    },
+    logicEliminate(state: any, { sector, object }) {
+      if (state.logicBoard[sector] !== undefined) {
+        state.logicBoard[sector].eliminated.push(object);
+      } else {
+        state.logicBoard[sector] = {
+          eliminated: [object],
+          equalTo: undefined
+        }
+      }
+    },
+    logicUneliminate(state: any, { sector, object }) {
+      const index = state.logicBoard[sector].eliminated.indexOf(object);
+      if (index >= 0) {
+        state.logicBoard[sector].eliminated.splice(index, 1);
+        state.logicBoard[sector].equalTo = undefined;
+      }
+    },
+    logicToggle(state: any, { sector, object }) {
+      if (state.logicBoard[sector] == undefined) {
+        state.logicBoard[sector] = {
+          eliminated: [object],
+          equalTo: undefined
+        }
+      } else {
+        const index = state.logicBoard[sector].eliminated.indexOf(object);
+        if (index >= 0) {
+          state.logicBoard[sector].eliminated.splice(index, 1);
+          state.logicBoard[sector].equalTo = undefined;
+        } else if (state.logicBoard[sector].equalTo === object) {
+          state.logicBoard[sector].equalTo = undefined;
+        } else {
+          state.logicBoard[sector].eliminated.push(object);
+        }
+      }
+    },
+    logicSet(state: any, { sector, object }) {
+      if (state.logicBoard[sector] !== undefined) {
+        state.logicBoard[sector].equalTo = object;
+      } else {
+        state.logicBoard[sector] = {
+          eliminated: [],
+          equalTo: object
+        }
+      }
+    },
+    logicToggleEqual(state: any, { sector, object }) {
+      if (state.logicBoard[sector] === undefined) {
+        state.logicBoard[sector] = {
+          eliminated: [],
+          equalTo: object
+        }
+      } else if (state.logicBoard[sector].equalTo === object) {
+        state.logicBoard[sector].equalTo = undefined;
+      } else {
+        state.logicBoard[sector].equalTo = object;
+        const index = state.logicBoard[sector].eliminated.indexOf(object);
+        if (index >= 0) {
+          state.logicBoard[sector].eliminated.splice(index, 1);
+        }
+      }
+    },
+    logicResetAll(state: any) {
+      state.logicBoard = {};
     }
   },
   getters: {

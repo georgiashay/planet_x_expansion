@@ -26,7 +26,8 @@ import EndGame from '@/views/EndGame.vue';
 import Lobby from '@/views/Lobby.vue';
 import JoinSession from '@/views/JoinSession.vue';
 import SubmitTheories from '@/views/SubmitTheories.vue';
-import BoardWheel from "@/views/BoardWheel.vue";
+import BoardPage from "@/views/BoardPage.vue";
+import LogicPage from "@/views/LogicPage.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -198,7 +199,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/session/board',
     name: 'Current Board',
-    component: BoardWheel
+    component: BoardPage
+  },
+  {
+    path: '/session/logic',
+    name: 'Logic Sheet',
+    component: LogicPage
   },
   {
     path: '/:gameType/history',

@@ -6,7 +6,22 @@
       </ion-menu>
 
       <ion-page id="main">
-        <board-wheel v-if="showWheel"/>
+        <template v-if="showWheel">
+          <ion-segment v-model="whichCircle" color="dark">
+            <ion-segment-button value="board" color="dark">
+              Board
+            </ion-segment-button>
+            <ion-segment-button value="logic">
+              Logic
+            </ion-segment-button>
+          </ion-segment>
+          <session-header/>
+          <ion-content>
+            <board-wheel v-show="whichCircle === 'board'"/>
+            <logic-sheet v-show="whichCircle === 'logic'"/>
+          </ion-content>
+          <game-footer/>
+        </template>
         <ion-router-outlet v-else />
       </ion-page>
     </ion-split-pane>
@@ -15,11 +30,17 @@
 </template>
 
 <script lang="ts">
-import { IonApp, IonRouterOutlet, IonSplitPane, IonMenu, IonPage } from '@ionic/vue';
+import { IonApp, IonRouterOutlet, IonSplitPane,
+        IonMenu, IonPage, IonSegment,
+        IonSegmentButton, IonContent,
+        menuController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import ScreenSize from "@/mixins/ScreenSize.ts";
-import BoardWheel from "@/views/BoardWheel.vue"
+import BoardWheel from "@/components/BoardWheel.vue";
+import LogicSheet from "@/components/LogicSheet.vue";
 import { useStore } from "vuex";
+import SessionHeader from "@/components/SessionHeader.vue";
+import GameFooter from "@/components/GameFooter.vue";
 
 export default defineComponent({
   name: 'App',
@@ -29,12 +50,19 @@ export default defineComponent({
     IonSplitPane,
     IonMenu,
     BoardWheel,
-    IonPage
+    LogicSheet,
+    IonPage,
+    IonSegment,
+    IonSegmentButton,
+    IonContent,
+    SessionHeader,
+    GameFooter
   },
   mixins: [ScreenSize],
   data() {
     return {
-      store: useStore()
+      store: useStore(),
+      whichCircle: "board"
     }
   },
   computed: {

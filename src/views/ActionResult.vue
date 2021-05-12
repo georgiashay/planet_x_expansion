@@ -106,18 +106,22 @@ export default defineComponent({
   },
   methods: {
     continueGame: function() {
-      if (this.route.params.actionType == "research") {
-        const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "RESEARCH").length > 1;
-        if (hasDoneResearch) {
-          // Done research before, go straight to game menu
-          this.router.push("/" + this.gameType + "/gamemenu")
-        } else {
-          // Never done research, display reminder
-          this.router.push("/" + this.gameType + "/action/research/reminder");
-        }
+      if (this.route.params.historyIndex !== "") {
+        this.router.push("/" + this.gameType + "/history");
       } else {
-        // Not a research action, go back to game menu
-        this.router.push("/" + this.gameType + "/gamemenu");
+        if (this.route.params.actionType == "research") {
+          const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "RESEARCH").length > 1;
+          if (hasDoneResearch) {
+            // Done research before, go straight to game menu
+            this.router.push("/" + this.gameType + "/gamemenu")
+          } else {
+            // Never done research, display reminder
+            this.router.push("/" + this.gameType + "/action/research/reminder");
+          }
+        } else {
+          // Not a research action, go back to game menu
+          this.router.push("/" + this.gameType + "/gamemenu");
+        }
       }
     }
   },

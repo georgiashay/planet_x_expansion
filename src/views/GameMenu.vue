@@ -75,6 +75,13 @@
             View Board
           </ion-button>
           <ion-button
+            v-if="store.state.isSession && screenSizeLessThan('md')"
+            expand="block"
+            color="dark"
+            router-link="/session/logic">
+            View Logic Sheet
+          </ion-button>
+          <ion-button
             v-if="store.state.isSession"
             :disabled="store.getters.uniqueRevealedTheories.length === 0"
             expand="block"

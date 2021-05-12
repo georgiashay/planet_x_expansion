@@ -39,7 +39,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
     conferences: [8],
     theoryPhaseInterval: 3,
     numTargets: 2,
-    numObjects: {X: 1, E: 2, G: 2, D: 1, A: 4, C: 2}
+    numObjects: {X: 1, E: 2, G: 2, D: 1, A: 4, C: 2},
+    logicSheetOrder: ['C', 'A', 'D', 'G', 'E', 'X'],
+    logicPatternInterval: 3
   },
   18: {
     name: "Expert",
@@ -74,7 +76,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
     conferences: [6, 15],
     theoryPhaseInterval: 3,
     numTargets: 2,
-    numObjects: {X: 1, E: 5, G: 2, D: 4, A: 4, C: 2}
+    numObjects: {X: 1, E: 5, G: 2, D: 4, A: 4, C: 2},
+    logicSheetOrder: ['C', 'A', 'D', 'G', 'E', 'X'],
+    logicPatternInterval: 3
   },
   24: {
     name: "Ace",
@@ -109,7 +113,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
     conferences: [6, 15, 21],
     theoryPhaseInterval: 3,
     numTargets: 3,
-    numObjects: {X: 1, E: 6, G: 3, D: 4, A: 6, C: 3, B: 1}
+    numObjects: {X: 1, E: 6, G: 3, D: 4, A: 6, C: 3, B: 1},
+    logicSheetOrder: ['C', 'A', 'D', 'B', 'G', 'E', 'X'],
+    logicPatternInterval: 4
   }
 }
 
@@ -118,24 +124,32 @@ export const SeasonView: {[code: string]: {[info: string]: string | number}} = {
     name: "Spring",
     viewType: "Equinox",
     icon: "/assets/season_icons/spring.svg",
+		iconShort: "/assets/season_icons/spring_short.svg",
+		iconFull: "/assets/season_icons/spring_full.svg",
     angle: 0
   },
   SUMMER: {
     name: "Summer",
     viewType: "Solstice",
     icon: "/assets/season_icons/summer.svg",
+		iconShort: "/assets/season_icons/summer_short.svg",
+		iconFull: "/assets/season_icons/summer_full.svg",
     angle: 3*Math.PI/2
   },
   AUTUMN: {
     name: "Autumn",
     viewType: "Equinox",
     icon: "/assets/season_icons/fall.svg",
+		iconShort: "/assets/season_icons/fall_short.svg",
+		iconFull: "/assets/season_icons/fall_full.svg",
     angle: Math.PI
   },
   WINTER: {
     name: "Winter",
     viewType: "Solstice",
     icon: "/assets/season_icons/winter.svg",
+		iconShort: "/assets/season_icons/winter_short.svg",
+		iconFull: "/assets/season_icons/winter_full.svg",
     angle: Math.PI/2
   }
 };
@@ -148,7 +162,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "an asteroid",
     the: "the asteroid",
     initial: "A",
-    icon: "/assets/space_object_icons/asteroid.svg"
+    icon: "/assets/space_object_icons/asteroid.svg",
+		iconShort: "/assets/space_object_icons/asteroid_short.svg",
+		iconFull: "/assets/space_object_icons/asteroid_full.svg"
   },
   COMET: {
     name: "comet",
@@ -157,7 +173,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a comet",
     the: "the comet",
     initial: "C",
-    icon: "/assets/space_object_icons/comet.svg"
+    icon: "/assets/space_object_icons/comet.svg",
+		iconShort: "/assets/space_object_icons/comet_short.svg",
+		iconFull: "/assets/space_object_icons/comet_full.svg"
   },
   GAS_CLOUD: {
     name: "gas cloud",
@@ -166,7 +184,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a gas cloud",
     the: "the gas cloud",
     initial: "G",
-    icon: "/assets/space_object_icons/gas_cloud.svg"
+    icon: "/assets/space_object_icons/gas_cloud.svg",
+		iconShort: "/assets/space_object_icons/gas_cloud_short.svg",
+		iconFull: "/assets/space_object_icons/gas_cloud_full.svg"
   },
   EMPTY: {
     name: "empty sector",
@@ -175,7 +195,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "an empty sector",
     the: "the empty sector",
     initial: "E",
-    icon: "/assets/space_object_icons/empty.svg"
+    icon: "/assets/space_object_icons/empty.svg",
+		iconShort: "/assets/space_object_icons/empty_short.svg",
+		iconFull: "/assets/space_object_icons/empty_full.svg"
   },
   BLACK_HOLE: {
     name: "black hole",
@@ -184,7 +206,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a black hole",
     the: "the black hole",
     initial: "B",
-    icon: "/assets/space_object_icons/black_hole.svg"
+    icon: "/assets/space_object_icons/black_hole.svg",
+		iconShort: "/assets/space_object_icons/black_hole_short.svg",
+		iconFull: "/assets/space_object_icons/black_hole_full.svg"
   },
   PLANET_X: {
     name: "Planet X",
@@ -193,7 +217,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a Planet X",
     the: "Planet X",
     initial: "X",
-    icon: "/assets/space_object_icons/planet_x.svg"
+    icon: "/assets/space_object_icons/planet_x.svg",
+		iconShort: "/assets/space_object_icons/planet_x_short.svg",
+		iconFull: "/assets/space_object_icons/planet_x_full.svg"
   },
   DWARF_PLANET: {
     name: "dwarf planet",
@@ -202,7 +228,9 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
     one: "a dwarf planet",
     the: "the dwarf planet",
     initial: "D",
-    icon: "/assets/space_object_icons/dwarf_planet.svg"
+    icon: "/assets/space_object_icons/dwarf_planet.svg",
+		iconShort: "/assets/space_object_icons/dwarf_planet_short.svg",
+		iconFull: "/assets/space_object_icons/dwarf_planet_full.svg"
   }
 }
 

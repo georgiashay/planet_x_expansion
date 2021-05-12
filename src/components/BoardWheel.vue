@@ -1,31 +1,23 @@
 <template>
-  <ion-page>
-    <session-header v-if="store.state.isSession"/>
-    <ion-content :fullscreen="true">
-      <div id="container" v-if="store.getters.gameReady && store.state.isSession">
-        <div id="title_container">
-          <h3>Current Board</h3>
-        </div>
-        <canvas id="boardCanvas" height="3500" width="3500"/>
-        <h4 id="current_scores">Current Scores</h4>
-        <div id="scores_container">
-          <scores/>
-        </div>
-        <div id="cancel_container" v-if="breakpoint !== 'md'">
-          <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
-        </div>
-      </div>
-    </ion-content>
-    <game-footer/>
-  </ion-page>
+  <div id="container" v-if="store.getters.gameReady && store.state.isSession">
+    <div id="title_container">
+      <h3>Current Board</h3>
+    </div>
+    <canvas id="boardCanvas" height="3500" width="3500"/>
+    <h4 id="current_scores">Current Scores</h4>
+    <div id="scores_container">
+      <scores/>
+    </div>
+    <div id="cancel_container" v-if="breakpoint !== 'md'">
+      <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonNavLink, menuController } from '@ionic/vue';
+import { IonNavLink, menuController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
-import GameFooter from "@/components/GameFooter.vue";
-import SessionHeader from "@/components/SessionHeader.vue";
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
 import { initialToSpaceObject } from "@/constants.ts";
@@ -34,11 +26,7 @@ import ScreenSize from "@/mixins/ScreenSize.ts";
 export default defineComponent({
   name: 'BoardWheel',
   components: {
-    IonContent,
-    IonPage,
     IonNavLink,
-    GameFooter,
-    SessionHeader,
     Scores
   },
   mixins: [PlayerColors, ScreenSize],
@@ -184,6 +172,9 @@ export default defineComponent({
       }
     },
     computeCanvas: async function() {
+      if (!this.store.getters.gameReady || !this.store.state.isSession) {
+        return;
+      }
       const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
       if (canvas === null) {
         return;
