@@ -1,5 +1,13 @@
 <template>
   <div id="container" v-if="store.getters.gameReady && store.state.isSession">
+    <ion-fab slot="fixed" top right>
+      <ion-fab-button
+        size="small"
+        color="dark"
+        @click="showNumObjects($event)">
+        <ion-icon :src="informationCircleOutline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
     <div id="title_container">
       <h3>Logic Sheet</h3>
     </div>
@@ -73,11 +81,14 @@
 
 <script lang="ts">
 import { IonNavLink, IonGrid, IonRow, IonCol,
-          IonIcon } from '@ionic/vue';
+          IonIcon, IonFab, IonFabButton,
+          popoverController } from '@ionic/vue';
+import { informationCircleOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
 import ScreenSize from "@/mixins/ScreenSize.ts";
+import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 
 export default defineComponent({
   name: 'LogicSheet',
@@ -86,7 +97,9 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-    IonIcon
+    IonIcon,
+    IonFab,
+    IonFabButton
   },
   mixins: [ScreenSize],
   data() {
@@ -95,7 +108,8 @@ export default defineComponent({
       store,
       paths: undefined,
       iconRadii: undefined,
-      iconWidth: undefined
+      iconWidth: undefined,
+      informationCircleOutline
     }
   },
   computed: {
@@ -129,6 +143,16 @@ export default defineComponent({
     }
   },
   methods: {
+    showNumObjects: async function(e: Event) {
+      const popover = await popoverController
+        .create({
+          component: NumObjectsPopover,
+          cssClass: "custom-popover",
+          event: e
+        });
+      await popover.present();
+      await popover.onDidDismiss();
+    },
     iconImages: async function(): Promise<Array<any>> {
       const imagePromises = [];
       for (const objectInitial of this.store.state.gameType.logicSheetOrder) {

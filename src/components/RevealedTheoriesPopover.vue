@@ -14,7 +14,7 @@ import { defineComponent } from 'vue';
 import { popoverController, IonIcon, IonItem, IonButton } from '@ionic/vue';
 
 export default defineComponent({
-  name: 'SpaceObjectSelectPopover',
+  name: 'RevealedTheoriesPopover',
   components: {
     IonIcon,
     IonItem,
