@@ -4,22 +4,13 @@
       <h3>Logic Sheet</h3>
     </div>
     <canvas id="logicCanvas" height="3200" width="3200"/>
-    <div id="cancel_container" v-if="breakpoint !== 'md'">
+    <div id="cancel_container_logic" v-if="breakpoint !== 'md'">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
     <div id="resultsSummary">
       <h6 id="summary_title">Results Summary</h6>
       <ion-grid>
         <ion-row>
-          <ion-col size="4" v-if="resultsSummary.revealed.length > 0">
-            <p>Revealed Theories</p>
-            <p
-              v-for="(theory, index) in resultsSummary.revealed"
-              :key="index"
-              class="reveal_row">
-                {{theory.sector + 1}}: {{theory.accurate ? "" : "not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
-            </p>
-          </ion-col>
           <ion-col size="4" v-if="resultsSummary.targeted.length > 0">
             <p>Targeted Sectors</p>
             <p
@@ -29,13 +20,22 @@
                 {{target.sector+1}}:&nbsp;<ion-icon :src="target.spaceObject.icon"></ion-icon>{{target.spaceObject.name}}&nbsp;
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.surveyed.length > 0">
-            <p>Surveys</p>
+          <ion-col size="4" v-if="resultsSummary.conferences.length > 0">
+            <p>Conferences</p>
             <p
-              v-for="(survey, index) in resultsSummary.surveyed"
+              v-for="(conference, index) in resultsSummary.conferences"
               :key="index"
               class="reveal_row">
-                {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}<ion-icon :src="survey.spaceObject.icon"></ion-icon>&nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}}
+                {{conference.index + 1}}. {{conference.shortText}}
+            </p>
+          </ion-col>
+          <ion-col size="4" v-if="resultsSummary.revealed.length > 0">
+            <p>Revealed Theories</p>
+            <p
+              v-for="(theory, index) in resultsSummary.revealed"
+              :key="index"
+              class="reveal_row">
+                {{theory.sector + 1}}: {{theory.accurate ? "" : "not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
             </p>
           </ion-col>
           <ion-col size="4" v-if="resultsSummary.research.length > 0">
@@ -47,13 +47,13 @@
                 {{research.shortText}}
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.conferences.length > 0">
-            <p>Conferences</p>
+          <ion-col size="4" v-if="resultsSummary.surveyed.length > 0">
+            <p>Surveys</p>
             <p
-              v-for="(conference, index) in resultsSummary.conferences"
+              v-for="(survey, index) in resultsSummary.surveyed"
               :key="index"
               class="reveal_row">
-                {{conference.text}}
+                {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}<ion-icon :src="survey.spaceObject.icon"></ion-icon>&nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}}
             </p>
           </ion-col>
           <ion-col size="4" v-if="resultsSummary.located.length > 0">
@@ -475,14 +475,14 @@ export default defineComponent({
   line-height: 56px;
 }
 
-#cancel_container {
+#cancel_container_logic {
   text-align: center;
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
 }
 
-#canvas-container {
+#canvas-container_logic {
   width: 100%;
 }
 

@@ -268,7 +268,7 @@ export default createStore({
         text,
         timeCost: 4,
         time: new Date(),
-        sector: sectorNumber,
+        sector: sectorNumber-1,
         spaceObject: foundObject
       }
 
@@ -448,6 +448,7 @@ export default createStore({
       state.seasonView = undefined;
       state.startingFacts = undefined;
       state.history = [];
+      state.logicBoard = {};
     },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
@@ -959,7 +960,8 @@ export default createStore({
                             .map((action: any) => {
                               return {
                                 index: action.index,
-                                text: action.text
+                                text: action.text,
+                                shortText: action.shortText
                               };
                             }).sort((a: any, b: any) => a.index - b.index);
 
