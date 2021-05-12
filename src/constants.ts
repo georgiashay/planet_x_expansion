@@ -1,7 +1,7 @@
-export const SERVER_URL = "planetx.shaytech.net";
-// export const SERVER_URL = "localhost:8000";
-const SECURE = true;
-// const SECURE = false;
+// export const SERVER_URL = "planetx.shaytech.net";
+export const SERVER_URL = "localhost:8000";
+// const SECURE = true;
+const SECURE = false;
 const URL_PREFIX = SECURE ? "https://" : "http://";
 export const API_URL = URL_PREFIX + SERVER_URL;
 export const WEBSOCKET_URL = "ws://" + SERVER_URL;

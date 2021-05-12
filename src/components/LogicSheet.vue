@@ -7,11 +7,73 @@
     <div id="cancel_container" v-if="breakpoint !== 'md'">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
+    <div id="resultsSummary">
+      <h6 id="summary_title">Results Summary</h6>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4" v-if="resultsSummary.revealed.length > 0">
+            <p>Revealed Theories</p>
+            <p
+              v-for="(theory, index) in resultsSummary.revealed"
+              :key="index"
+              class="reveal_row">
+                {{theory.sector + 1}}: {{theory.accurate ? "" : "not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
+            </p>
+          </ion-col>
+          <ion-col size="4" v-if="resultsSummary.targeted.length > 0">
+            <p>Targeted Sectors</p>
+            <p
+              v-for="(target, index) in resultsSummary.targeted"
+              :key = "index"
+              class="reveal_row">
+                {{target.sector+1}}:&nbsp;<ion-icon :src="target.spaceObject.icon"></ion-icon>{{target.spaceObject.name}}&nbsp;
+            </p>
+          </ion-col>
+          <ion-col size="4" v-if="resultsSummary.surveyed.length > 0">
+            <p>Surveys</p>
+            <p
+              v-for="(survey, index) in resultsSummary.surveyed"
+              :key="index"
+              class="reveal_row">
+                {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}<ion-icon :src="survey.spaceObject.icon"></ion-icon>&nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}}
+            </p>
+          </ion-col>
+          <ion-col size="4" v-if="resultsSummary.research.length > 0">
+            <p>Research</p>
+            <p
+              v-for="(research, index) in resultsSummary.research"
+              :key="index"
+              class="reveal_row">
+                {{research.shortText}}
+            </p>
+          </ion-col>
+          <ion-col size="4" v-if="resultsSummary.conferences.length > 0">
+            <p>Conferences</p>
+            <p
+              v-for="(conference, index) in resultsSummary.conferences"
+              :key="index"
+              class="reveal_row">
+                {{conference.text}}
+            </p>
+          </ion-col>
+          <ion-col size="4" v-if="resultsSummary.located.length > 0">
+            <p>Locate Planet X Attempts</p>
+            <p
+              v-for="(locate, index) in resultsSummary.located"
+              :key="index"
+              class="reveal_row">
+                {{locate.leftObject.initial}}-{{locate.sector + 1}}-{{locate.rightObject.initial}}: {{locate.successful ? "✓" : "X"}}
+            </p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { IonNavLink } from '@ionic/vue';
+import { IonNavLink, IonGrid, IonRow, IonCol,
+          IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
@@ -20,7 +82,11 @@ import ScreenSize from "@/mixins/ScreenSize.ts";
 export default defineComponent({
   name: 'LogicSheet',
   components: {
-    IonNavLink
+    IonNavLink,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonIcon
   },
   mixins: [ScreenSize],
   data() {
@@ -33,6 +99,12 @@ export default defineComponent({
     }
   },
   computed: {
+    seasonView: function(): any {
+      return this.store.state.seasonView;
+    },
+    resultsSummary: function(): any {
+      return this.store.getters.resultsSummary
+    },
     sectorAngle: function(): number {
       return 2 * Math.PI/this.store.state.gameType.sectors;
     },
@@ -126,14 +198,15 @@ export default defineComponent({
       const cy = y *  canvas.height/canvas.offsetHeight - canvas.height/2;
       const angle = Math.atan2(cy, cx);
 
-      let sectorAngle = angle;
+      let seasonAngle = 0;
       if (this.store.state.seasonView !== undefined) {
-        sectorAngle -= this.store.state.seasonView.angle;
+        seasonAngle = this.store.state.seasonView.angle;
       }
+      let sectorAngle = angle - seasonAngle;
       sectorAngle = (sectorAngle % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
       const sector = Math.floor(sectorAngle/this.sectorAngle);
 
-      const rotatedCoords = this.rotate(cx, -cy, -Math.PI/2 - sector * this.sectorAngle - this.sectorAngle/2 + this.store.state.seasonView.angle);
+      const rotatedCoords = this.rotate(cx, -cy, -Math.PI/2 - sector * this.sectorAngle - this.sectorAngle/2 - seasonAngle);
       const rx = rotatedCoords.x;
       const ry = rotatedCoords.y;
 
@@ -352,6 +425,11 @@ export default defineComponent({
       }
     }
   },
+  watch: {
+    seasonView: function() {
+      this.computeCanvas();
+    }
+  },
   mounted() {
     this.computeCanvas();
     const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
@@ -417,5 +495,33 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   max-width: 50vh;
+}
+
+#resultsSummary {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: var(--ion-color-dark);
+  width: 100%;
+  border: 1px solid gray;
+  overflow: scroll;
+  max-height: 15vh;
+}
+
+.reveal_row {
+  margin: 1px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.reveal_row ion-icon {
+  font-size: 1.2em;
+}
+
+#summary_title {
+  margin-left: 6px;
+  margin-bottom: 0;
+  text-decoration: underline;
 }
 </style>

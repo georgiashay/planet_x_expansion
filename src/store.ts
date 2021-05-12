@@ -220,7 +220,11 @@ export default createStore({
         actionText,
         text,
         timeCost,
-        time: new Date()
+        time: new Date(),
+        spaceObject: surveyObject,
+        startSector: startSector - 1,
+        endSector: endSector - 1,
+        numObject
       }
 
       state.history.push(actionResult);
@@ -263,7 +267,9 @@ export default createStore({
         actionText,
         text,
         timeCost: 4,
-        time: new Date()
+        time: new Date(),
+        sector: sectorNumber,
+        spaceObject: foundObject
       }
 
       state.history.push(actionResult);
@@ -287,7 +293,8 @@ export default createStore({
         text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
         timeCost: 1,
         time: new Date(),
-        index
+        index,
+        shortText: String.fromCharCode(index+65) + ". " + state.game.research[index].shortText
       }
 
       state.history.push(actionResult);
@@ -335,7 +342,10 @@ export default createStore({
         upperText,
         success: found,
         timeCost: 5,
-        time: new Date()
+        time: new Date(),
+        sector: sector - 1,
+        leftObject,
+        rightObject
       }
 
       state.history.push(actionResult);
@@ -379,7 +389,9 @@ export default createStore({
         actionName: "Planet X Conference",
         actionText: "Conference X" + (index+1) + ": " + state.game.conference[index].categoryName,
         text: "X" + (index + 1) + ". " + state.game.conference[index].text,
-        time: new Date()
+        time: new Date(),
+        index,
+        shortText: state.game.conference[index].shortText
       }
 
       state.history.push(actionResult);
@@ -676,7 +688,7 @@ export default createStore({
           }
       }
     },
-    researchedAlready: (state: any, getters: any) => (index: number) => {
+    researchedAlready: (state: any) => (index: number) => {
       return state.history.filter((action: any) => action.actionType === "RESEARCH" && action.index === index).length > 0;
     },
     skySize(state: any) {
@@ -899,6 +911,69 @@ export default createStore({
       } else {
         return theories;
       }
+    },
+    resultsSummary(state: any, getters: any) {
+      const targeted: any[] = [];
+      const surveyed: any[] = [];
+      const research: any[] = [];
+      const conferences: any[] = [];
+      const located: any[] = [];
+
+      const summary = {
+        revealed: getters.revealedTheories,
+        targeted: targeted,
+        surveyed: surveyed,
+        research: research,
+        conferences: conferences,
+        located: located
+      }
+
+      summary.targeted = state.history.filter((action: any) => action.actionType === "TARGET")
+                          .map((action: any) => {
+                            return {
+                              sector: action.sector,
+                              spaceObject: action.spaceObject
+                            };
+                          });
+
+      summary.surveyed = state.history.filter((action: any) => action.actionType === "SURVEY")
+                          .map((action: any) => {
+                            return {
+                              startSector: action.startSector,
+                              endSector: action.endSector,
+                              spaceObject: action.spaceObject,
+                              numObject: action.numObject
+                            };
+                          });
+
+      summary.research = state.history.filter((action: any) => action.actionType === "RESEARCH")
+                          .map((action: any) => {
+                            return {
+                              index: action.index,
+                              text: action.text,
+                              shortText: action.shortText
+                            };
+                          }).sort((a: any, b: any) => a.index - b.index);
+
+      summary.conferences = state.history.filter((action: any) => action.actionType === "CONFERENCE")
+                            .map((action: any) => {
+                              return {
+                                index: action.index,
+                                text: action.text
+                              };
+                            }).sort((a: any, b: any) => a.index - b.index);
+
+      summary.located = state.history.filter((action: any) => action.actionType === "LOCATE_PLANET_X")
+                          .map((action: any) => {
+                            return {
+                              sector: action.sector,
+                              leftObject: action.leftObject,
+                              rightObject: action.rightObject,
+                              successful: action.successful
+                            };
+                          });
+
+      return summary;
     }
   }
 });
