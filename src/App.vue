@@ -25,7 +25,7 @@
         <ion-router-outlet v-else />
       </ion-page>
     </ion-split-pane>
-    <ion-router-outlet v-show = "!showSplitPane"/>
+    <ion-router-outlet v-if = "!showSplitPane"/>
   </ion-app>
 </template>
 
