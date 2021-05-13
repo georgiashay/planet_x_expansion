@@ -103,7 +103,8 @@ export default createStore({
     },
     async startSession({ state }) {
       // Start session (when all players have joined)
-      await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+      const response = await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+      console.log(response);
     },
     listenSession({ state, dispatch, commit }) {
       // Listen for updates to the session
