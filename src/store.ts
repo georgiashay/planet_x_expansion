@@ -115,6 +115,7 @@ export default createStore({
         console.log(sessionState);
         commit('getNewlyRevealedTheories', sessionState);
         dispatch('checkMyTurn', sessionState);
+        dispatch('checkWinner', sessionState);
         commit('setSessionState', sessionState);
       };
       ws.onclose = () => {
@@ -154,6 +155,30 @@ export default createStore({
             || state.session.currentSector !== sessionState.currentSector) {
           SoundEffects.playSound("doorbell", state.muteLevel);
         }
+      }
+    },
+    checkWinner({ state, getters }, sessionState: any) {
+      if (sessionState.currentAction.actionType === "END_GAME") {
+        const maxScore = Math.max(...sessionState.scores.map((score: any) => score.total));
+        let winningScores = sessionState.scores.filter((score: any) => score.total === maxScore);
+        const maxPlanetX = Math.max(...winningScores.map((score: any) => score.planetX));
+        winningScores = winningScores.filter((score: any) => score.planetX === maxPlanetX);
+        const maxLeaderBonus = Math.max(...winningScores.map((score: any) => score.first));
+        winningScores = winningScores.filter((score: any) => score.first === maxLeaderBonus);
+
+        const winningPlayers = winningScores.map((score: any) => getters.playerMap[score.playerID]);
+        const actionText = winningPlayers.map((player: any) => "P" + player.num).join(", ") + " won the game";
+        const text = winningPlayers.map((player: any) => player.name).join(", ") + " won the game with " + maxScore + " points.";
+
+        const actionResult = {
+          actionType: "WINNER",
+          actionName: "Game Over",
+          actionText,
+          text,
+          time: new Date()
+        }
+
+        state.history.push(actionResult);
       }
     },
     survey({ state, dispatch }, { surveyObject, startSector, endSector }) {
@@ -618,8 +643,16 @@ export default createStore({
     },
     lastActionResult(state: any) {
       // Get last action result in history if it exists
-      if (state.history.length) {
-        return state.history[state.history.length - 1];
+      const actionHistory = state.history.filter((action: any) => {
+        return action.actionType === "RESEARCH"
+                || action.actionType === "SURVEY"
+                || action.actionType === "TARGET"
+                || action.actionType === "LOCATE_PLANET_X"
+                || action.actionType === "CONFERENCE";
+      });
+
+      if (actionHistory.length) {
+        return actionHistory[actionHistory.length - 1];
       } else {
         return undefined;
       }
@@ -821,7 +854,7 @@ export default createStore({
       const myPlayerName = getters.playerInfo.name;
 
       for (let i = 0; i < myHistory.length; i++) {
-        if (myHistory[i].actionType === "THEORY_REVEAL") {
+        if (myHistory[i].actionType === "THEORY_REVEAL" || myHistory[i].actionType === "WINNER") {
           history.push(Object.assign({
             mine: true,
             historyIndex: i
@@ -831,7 +864,7 @@ export default createStore({
             mine: true,
             playerNum: myPlayerNum,
             playerName: myPlayerName,
-            playerID: state.session.playerID,
+            playerID: state.playerID,
             historyIndex: i
           }, myHistory[i]));
         }
@@ -844,7 +877,7 @@ export default createStore({
             actionText += ": " + state.game.research[allHistory[i].index].categoryName;
           }
 
-          const action = Object.assign(allHistory[i], {
+          const action = Object.assign({}, allHistory[i], {
             actionType: allHistory[i].turnType,
             actionName: allHistory[i].turnType.split("_").map((word: string) => word.slice(0, 1) + word.slice(1).toLowerCase()).join(" "),
             actionText,

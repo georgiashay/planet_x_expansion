@@ -26,7 +26,10 @@ export default defineComponent({
       }
       let recentHistory = newHistory.slice(oldHistory.length);
       recentHistory = recentHistory.filter((action: any) => {
-        return action.playerID !== undefined && action.playerID !== this.store.state.playerID;
+        return action.playerID === undefined || action.playerID !== this.store.state.playerID;
+      });
+      recentHistory = recentHistory.filter((action: any) => {
+        return action.actionType !== "THEORY_REVEAL";
       });
       recentHistory = recentHistory.map((action: any) => {
         let message;
@@ -44,6 +47,8 @@ export default defineComponent({
           }
         } else if (action.actionType === "THEORY") {
           message = action.playerName + " submitted theories";
+        } else if (action.actionType === "WINNER") {
+          message = action.text;
         }
         return { message };
       });
