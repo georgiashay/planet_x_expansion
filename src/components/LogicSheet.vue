@@ -204,7 +204,7 @@ export default defineComponent({
       const iconImages = await this.iconImages();
       const fullImages = await this.fullImages();
       const heights = iconImages.map((img: any) => img.height * (width/img.width));
-      const padding = (space - heights.reduce((a: number, b: number) => a + b, 0))/iconImages.length;
+      const padding = (space - heights.reduce((a: number, b: number) => a + b, 0))/(iconImages.length - 1);
 
       const radii = [];
       let radius = startRadius;
@@ -418,9 +418,15 @@ export default defineComponent({
       const innerRadius = 450;
       const innerColors = ["#4379d1", "#d14d4d", "#65b85c", "#ccc84b"];
 
-      const iconRadii = await this.getIconRadii(innerRadius + 20, boardRadius - innerRadius - 40, 150);
+      let iconWidth = 150;
+
+      const objectPadding = 50;
+      const maxIconWidth = 2 * Math.tan(sectorAngle/2) * (innerRadius + objectPadding);
+      iconWidth = Math.min(iconWidth, maxIconWidth);
+
+      const iconRadii = await this.getIconRadii(innerRadius + objectPadding, boardRadius - innerRadius - 2 * objectPadding, iconWidth);
       this.iconRadii = iconRadii;
-      this.iconWidth = 150;
+      this.iconWidth = iconWidth;
 
       ctx.beginPath();
       ctx.fillStyle = "#222428";
