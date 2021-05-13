@@ -971,7 +971,7 @@ export default createStore({
                               sector: action.sector,
                               leftObject: action.leftObject,
                               rightObject: action.rightObject,
-                              successful: action.successful
+                              successful: action.success
                             };
                           });
 
