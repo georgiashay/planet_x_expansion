@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" v-if="store.getters.gameReady && store.state.isSession">
     <ion-fab slot="fixed" top right>
       <ion-fab-button
         size="small"
@@ -113,6 +113,9 @@ export default defineComponent({
     }
   },
   computed: {
+    currentSector: function(): any {
+      return this.store.state.session.currentSector;
+    },
     seasonView: function(): any {
       return this.store.state.seasonView;
     },
@@ -151,12 +154,10 @@ export default defineComponent({
         const cancelBox = cancelContainer.getBoundingClientRect();
         const resultsBox = resultsSummary.getBoundingClientRect();
         resultsSummary.style.maxHeight = (resultsBox.bottom - cancelBox.bottom - 10) + "px";
-        console.log(resultsBox);
       } else if (canvas && resultsSummary) {
         const canvasBox = canvas.getBoundingClientRect();
         const resultsBox = resultsSummary.getBoundingClientRect();
         resultsSummary.style.maxHeight = (resultsBox.bottom - canvasBox.bottom - 10) + "px";
-        console.log(resultsBox);
       }
     },
     showNumObjects: async function(e: Event) {
@@ -274,7 +275,7 @@ export default defineComponent({
       }
       event.preventDefault();
     },
-    toggleObjectEqual: function(sector: number, iconRadius: any) {
+    redrawObject(sector: number, iconRadius: any, newStatus: string) {
       const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
 
@@ -284,20 +285,16 @@ export default defineComponent({
       ctx.fillStyle = "#222428";
       ctx.fillRect(-iconRadius.width/2 - 3, -iconRadius.radius - iconRadius.height - 3, iconRadius.width + 6, iconRadius.height + 6);
 
-      if (this.store.state.logicBoard[sector] === undefined) {
+      if (newStatus === "equal") {
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.beginPath();
         ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.strokeStyle = "white";
         ctx.stroke();
-      } else if (this.store.state.logicBoard[sector].equalTo === iconRadius.object) {
+      } else if (newStatus === "none") {
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
-      } else {
-        ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
-        ctx.beginPath();
-        ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
-        ctx.strokeStyle = "white";
-        ctx.stroke();
+      } else if (newStatus === "eliminated"){
+        ctx.drawImage(iconRadius.fullImage, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       }
 
       ctx.restore();
@@ -314,6 +311,11 @@ export default defineComponent({
       ctx.lineTo(x2, y2);
       ctx.strokeStyle = "white";
       ctx.stroke();
+    },
+    toggleObjectEqual: function(sector: number, iconRadius: any) {
+      const nowEqual = this.store.state.logicBoard[sector] === undefined || this.store.state.logicBoard[sector].equalTo !== iconRadius.object;
+
+      this.redrawObject(sector, iconRadius, nowEqual ? "equal" : "none");
 
       this.store.commit("logicToggleEqual", {
         sector,
@@ -321,38 +323,11 @@ export default defineComponent({
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
-      const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
-      const ctx = canvas.getContext("2d");
+      const nowEliminated = this.store.state.logicBoard[sector] === undefined
+                                || (this.store.state.logicBoard[sector].eliminated.indexOf(iconRadius.object) == -1
+                                && this.store.state.logicBoard[sector].equalTo !== iconRadius.object);
 
-      ctx.save();
-      ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
-
-      ctx.fillStyle = "#222428";
-      ctx.fillRect(-iconRadius.width/2 - 3, -iconRadius.radius - iconRadius.height - 3, iconRadius.width + 6, iconRadius.height + 6);
-
-      if (this.store.state.logicBoard[sector] === undefined) {
-        ctx.drawImage(iconRadius.fullImage, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
-      } else if (this.store.state.logicBoard[sector].eliminated.indexOf(iconRadius.object) >= 0
-                  || this.store.state.logicBoard[sector].equalTo === iconRadius.object) {
-        ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
-      } else {
-        ctx.drawImage(iconRadius.fullImage, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
-      }
-
-      ctx.restore();
-
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      const x = (iconRadius.radius + iconRadius.height + 8) * Math.cos(sector * this.sectorAngle);
-      const y = (iconRadius.radius + iconRadius.height + 8) * Math.sin(sector * this.sectorAngle);
-      ctx.lineTo(x, y);
-
-      ctx.moveTo(0, 0);
-      const x2 = (iconRadius.radius + iconRadius.height + 8) * Math.cos((sector + 1) * this.sectorAngle);
-      const y2 = (iconRadius.radius + iconRadius.height + 8) * Math.sin((sector + 1) * this.sectorAngle);
-      ctx.lineTo(x2, y2);
-      ctx.strokeStyle = "white";
-      ctx.stroke();
+      this.redrawObject(sector, iconRadius, nowEliminated ? "eliminated" : "none");
 
       const checkHold = this.store.state.logicBoard[sector] !== undefined
                           && this.store.state.logicBoard[sector].equalTo != iconRadius.object;
@@ -363,6 +338,56 @@ export default defineComponent({
       });
 
       return checkHold;
+    },
+    redrawSky: async function() {
+      const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
+      if (canvas === null) {
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+
+      const skyAngle = this.sectorAngle * this.store.state.session.currentSector;
+
+      const boardRadius = 1400;
+      const outerRadius = 1600;
+      const textRadius = (boardRadius + outerRadius)/2;
+      const textHeight = 150;
+
+      ctx.beginPath();
+      ctx.fillStyle = "#222428";
+      ctx.arc(0, 0, outerRadius, 0, 2*Math.PI, false);
+      ctx.arc(0, 0, boardRadius, 0, 2*Math.PI, true);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.fillStyle = "#575757";
+      ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
+      ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
+      ctx.fill();
+
+      for (let i = 0; i < this.store.state.gameType.sectors; i++) {
+        // Sector line
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        const x = outerRadius * Math.cos(i * this.sectorAngle);
+        const y = outerRadius * Math.sin(i * this.sectorAngle);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+
+        // Sector number label
+        ctx.save();
+
+        ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + i * this.sectorAngle));
+
+        ctx.font = textHeight + "px Roboto";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.textBaseline = "middle";
+        ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
+
+        ctx.restore();
+      }
     },
     computeCanvas: async function() {
       if (!this.store.getters.gameReady || !this.store.state.isSession) {
@@ -383,6 +408,7 @@ export default defineComponent({
       ctx.lineWidth = 4;
 
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
+      const skyAngle = sectorAngle * this.store.state.session.currentSector;
 
       const boardRadius = 1400;
       const outerRadius = 1600;
@@ -402,6 +428,12 @@ export default defineComponent({
       ctx.fill();
 
       ctx.beginPath();
+      ctx.fillStyle = "#575757";
+      ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
+      ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
+      ctx.fill();
+
+      ctx.beginPath();
       ctx.strokeStyle = "white";
       ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
       ctx.stroke();
@@ -417,6 +449,14 @@ export default defineComponent({
       ctx.stroke();
 
       for (let i = 0; i < this.store.state.gameType.sectors; i++) {
+        // Inner sectors
+        ctx.beginPath();
+        ctx.fillStyle = innerColors[i % this.store.state.gameType.logicPatternInterval];
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, innerRadius, i*sectorAngle, (i+1)*sectorAngle);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+
         // Sector line
         ctx.beginPath();
         ctx.moveTo(0, 0);
@@ -425,14 +465,6 @@ export default defineComponent({
         ctx.lineTo(x, y);
         ctx.strokeStyle = "white";
         ctx.stroke();
-
-        // Inner sectors
-        ctx.beginPath();
-        ctx.fillStyle = innerColors[i % this.store.state.gameType.logicPatternInterval];
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, innerRadius, i*sectorAngle, (i+1)*sectorAngle);
-        ctx.lineTo(0, 0);
-        ctx.fill();
 
         // Sector number label
         ctx.save();
@@ -468,11 +500,13 @@ export default defineComponent({
   watch: {
     seasonView: function() {
       this.computeCanvas();
+    },
+    currentSector: function() {
+      this.redrawSky();
     }
   },
   async mounted() {
     this.computeCanvas();
-    window.addEventListener("onload", () => console.log("window loaded"));
 
     const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
     canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
