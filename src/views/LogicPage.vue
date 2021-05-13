@@ -1,8 +1,8 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession"/>
-    <ion-content :fullscreen="true">
-      <logic-sheet />
+    <ion-content>
+      <logic-sheet ref="logicSheet"/>
     </ion-content>
     <game-footer/>
   </ion-page>
@@ -29,6 +29,10 @@ export default defineComponent({
     return {
       store: useStore()
     }
+  },
+  ionViewDidEnter() {
+    const logicSheet = this.$refs.logicSheet as typeof LogicSheet;
+    logicSheet.positionSummary();
   }
 });
 </script>

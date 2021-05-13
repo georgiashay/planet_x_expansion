@@ -1,6 +1,6 @@
 <template>
   <ion-app>
-    <ion-split-pane content-id="main" when="lg" v-if="store.state.isSession && store.getters.gameReady && screenSizeAtLeast('md')">
+    <ion-split-pane content-id="main" when="lg" v-if="showSplitPane">
       <ion-menu content-id="main" side="end" menu-id="menu">
         <ion-router-outlet />
       </ion-menu>
@@ -17,8 +17,8 @@
           </ion-segment>
           <session-header/>
           <ion-content>
-            <board-wheel v-show="whichCircle === 'board'"/>
-            <logic-sheet v-show="whichCircle === 'logic'"/>
+            <board-wheel v-if="whichCircle === 'board'"/>
+            <logic-sheet ref="logicSheet" v-if="whichCircle === 'logic'"/>
           </ion-content>
           <game-footer/>
         </template>
@@ -68,6 +68,9 @@ export default defineComponent({
   computed: {
     showWheel: function(): boolean {
       return this.screenSizeAtLeast('lg') || this.store.getters.playerReady;
+    },
+    showSplitPane: function(): boolean {
+      return this.store.state.isSession && this.store.getters.gameReady && this.screenSizeAtLeast('md');
     }
   }
 });

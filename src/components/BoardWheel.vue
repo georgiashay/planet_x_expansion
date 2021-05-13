@@ -8,7 +8,7 @@
     <div id="scores_container">
       <scores/>
     </div>
-    <div id="cancel_container" v-if="breakpoint !== 'md'">
+    <div id="cancel_container" v-if="screenSizeLessThan('md')">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
   </div>

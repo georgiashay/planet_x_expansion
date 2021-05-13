@@ -1,5 +1,5 @@
 <template>
-  <div id="container" v-if="store.getters.gameReady && store.state.isSession">
+  <div id="container">
     <ion-fab slot="fixed" top right>
       <ion-fab-button
         size="small"
@@ -11,11 +11,11 @@
     <div id="title_container">
       <h3>Logic Sheet</h3>
     </div>
-    <canvas id="logicCanvas" height="3200" width="3200"/>
-    <div id="cancel_container_logic" v-if="breakpoint !== 'md'">
+    <canvas ref="logicCanvas" id="logicCanvas" height="3200" width="3200"/>
+    <div ref="cancelContainer" id="cancel_container_logic" v-if="screenSizeLessThan('md')">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
-    <div id="resultsSummary">
+    <div ref="resultsSummary" id="results-summary">
       <h6 id="summary_title">Results Summary</h6>
       <ion-grid>
         <ion-row>
@@ -143,6 +143,22 @@ export default defineComponent({
     }
   },
   methods: {
+    positionSummary: function() {
+      const resultsSummary = this.$refs.resultsSummary as HTMLElement;
+      const cancelContainer = this.$refs.cancelContainer as HTMLElement;
+      const canvas = this.$refs.logicCanvas as HTMLElement;
+      if (cancelContainer && resultsSummary) {
+        const cancelBox = cancelContainer.getBoundingClientRect();
+        const resultsBox = resultsSummary.getBoundingClientRect();
+        resultsSummary.style.maxHeight = (resultsBox.bottom - cancelBox.bottom - 10) + "px";
+        console.log(resultsBox);
+      } else if (canvas && resultsSummary) {
+        const canvasBox = canvas.getBoundingClientRect();
+        const resultsBox = resultsSummary.getBoundingClientRect();
+        resultsSummary.style.maxHeight = (resultsBox.bottom - canvasBox.bottom - 10) + "px";
+        console.log(resultsBox);
+      }
+    },
     showNumObjects: async function(e: Event) {
       const popover = await popoverController
         .create({
@@ -454,8 +470,10 @@ export default defineComponent({
       this.computeCanvas();
     }
   },
-  mounted() {
+  async mounted() {
     this.computeCanvas();
+    window.addEventListener("onload", () => console.log("window loaded"));
+
     const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
     canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
 
@@ -478,6 +496,13 @@ export default defineComponent({
       clearTimeout(timeout);
     });
 
+    window.addEventListener("resize", this.positionSummary);
+
+    await this.$nextTick();
+    this.positionSummary();
+  },
+  unmounted() {
+    window.removeEventListener("resize", this.positionSummary);
   }
 });
 </script>
@@ -521,7 +546,7 @@ export default defineComponent({
   max-width: 50vh;
 }
 
-#resultsSummary {
+#results-summary {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -529,7 +554,6 @@ export default defineComponent({
   width: 100%;
   border: 1px solid gray;
   overflow: scroll;
-  max-height: 15vh;
 }
 
 .reveal_row {
