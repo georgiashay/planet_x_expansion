@@ -315,6 +315,11 @@ export default defineComponent({
     toggleObjectEqual: function(sector: number, iconRadius: any) {
       const nowEqual = this.store.state.logicBoard[sector] === undefined || this.store.state.logicBoard[sector].equalTo !== iconRadius.object;
 
+      if (nowEqual && this.store.state.logicBoard[sector]?.equalTo !== undefined) {
+          const otherIcon = this.iconRadii.find((ir: any) => ir.object === this.store.state.logicBoard[sector].equalTo);
+          this.redrawObject(sector, otherIcon, "none");
+      }
+
       this.redrawObject(sector, iconRadius, nowEqual ? "equal" : "none");
 
       this.store.commit("logicToggleEqual", {
