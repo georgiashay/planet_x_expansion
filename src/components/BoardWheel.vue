@@ -3,7 +3,7 @@
     <div id="title_container">
       <h3>Current Board</h3>
     </div>
-    <canvas id="boardCanvas" height="3500" width="3500"/>
+    <canvas id="boardCanvas" height="3504" width="3504"/>
     <h4 id="current_scores">Current Scores</h4>
     <div id="scores_container">
       <scores/>
@@ -192,7 +192,7 @@ export default defineComponent({
         ctx.rotate(this.store.state.seasonView.angle);
       }
 
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 8;
 
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
       const skyAngle = sectorAngle * this.store.state.session.currentSector;

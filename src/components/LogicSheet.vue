@@ -11,7 +11,7 @@
     <div id="title_container">
       <h3>Logic Sheet</h3>
     </div>
-    <canvas ref="logicCanvas" id="logicCanvas" height="3200" width="3200"/>
+    <canvas ref="logicCanvas" id="logicCanvas" height="3204" width="3204"/>
     <div ref="cancelContainer" id="cancel_container_logic" v-if="screenSizeLessThan('md')">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
@@ -283,7 +283,7 @@ export default defineComponent({
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
       ctx.fillStyle = "#222428";
-      ctx.fillRect(-iconRadius.width/2 - 13, -iconRadius.radius - iconRadius.height - 13, iconRadius.width + 26, iconRadius.height + 26);
+      ctx.fillRect(-iconRadius.width/2 - 16, -iconRadius.radius - iconRadius.height - 16, iconRadius.width + 32, iconRadius.height + 32);
 
       if (newStatus === "equal") {
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
@@ -410,7 +410,7 @@ export default defineComponent({
         ctx.rotate(this.store.state.seasonView.angle);
       }
 
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 8;
 
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
       const skyAngle = sectorAngle * this.store.state.session.currentSector;
