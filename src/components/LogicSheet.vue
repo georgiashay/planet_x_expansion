@@ -283,12 +283,12 @@ export default defineComponent({
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
       ctx.fillStyle = "#222428";
-      ctx.fillRect(-iconRadius.width/2 - 3, -iconRadius.radius - iconRadius.height - 3, iconRadius.width + 6, iconRadius.height + 6);
+      ctx.fillRect(-iconRadius.width/2 - 13, -iconRadius.radius - iconRadius.height - 13, iconRadius.width + 26, iconRadius.height + 26);
 
       if (newStatus === "equal") {
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.beginPath();
-        ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
+        ctx.rect(-iconRadius.width/2-10, -iconRadius.radius - iconRadius.height - 10, iconRadius.width + 20, iconRadius.height + 20);
         ctx.strokeStyle = "white";
         ctx.stroke();
       } else if (newStatus === "none") {
@@ -490,7 +490,7 @@ export default defineComponent({
             } else if (this.store.state.logicBoard[i] !== undefined && this.store.state.logicBoard[i].equalTo === iconRadii[j].object) {
               ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
-              ctx.rect(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+              ctx.rect(-iconRadii[j].width/2-10, -iconRadii[j].radius - iconRadii[j].height - 10, iconRadii[j].width + 20, iconRadii[j].height + 20);
               ctx.strokeStyle = "white";
               ctx.stroke();
             } else {
