@@ -33,10 +33,15 @@ export default defineComponent({
   data() {
     const store = useStore();
     return {
-      store
+      store,
+      theoryImage: undefined,
+      objectImages: undefined
     }
   },
   computed: {
+    gameType: function(): any {
+      return this.store.state.gameType;
+    },
     session: function(): any {
       return this.store.state.session;
     },
@@ -306,15 +311,7 @@ export default defineComponent({
               ctx.fillStyle = "black";
               ctx.fillRect(-tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
 
-              const img = new Image();
-              img.src = initialToSpaceObject[this.store.state.game.board.objects[i].initial].icon;
-
-              await new Promise((resolve, reject) => {
-                img.onload = function() {
-                  ctx.drawImage(img, -tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
-                  resolve();
-                }
-              });
+              ctx.drawImage(this.objectImages[this.store.state.game.board.objects[i].initial], -tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
             }
           } else {
             if (progress === 0) {
@@ -386,16 +383,7 @@ export default defineComponent({
         ctx.save();
 
         ctx.rotate(Math.PI/2 + (angle));
-
-        const img = new Image();
-        img.src = "/assets/theory.svg";
-
-        await new Promise((resolve, reject) => {
-          img.onload = function() {
-            ctx.drawImage(img, -iconSize/2, -theoryRadius-iconSize, iconSize, iconSize);
-            resolve();
-          }
-        });
+        ctx.drawImage(this.theoryImage, -iconSize/2, -theoryRadius-iconSize, iconSize, iconSize);
 
         ctx.restore();
       }
@@ -421,6 +409,41 @@ export default defineComponent({
 
         ctx.restore();
       }
+    },
+    collectImages: async function() {
+      const timg = new Image();
+      timg.src = "/assets/theory.svg";
+
+      await new Promise((resolve, reject) => {
+        timg.onload = function() {
+          resolve();
+        }
+      });
+
+      this.theoryImage = timg;
+
+      const imagePromises = [];
+      for (const objectInitial of this.store.state.gameType.logicSheetOrder) {
+        const img = new Image();
+        img.src = initialToSpaceObject[objectInitial].icon;
+
+        const imgProm = new Promise((resolve, reject) => {
+          img.onload = function() {
+            resolve(img);
+          }
+        });
+        imagePromises.push(imgProm);
+      }
+
+      const imagesArray = await Promise.all(imagePromises);
+      const imagesMap: {[initial: string]: any} = {};
+      for (let i = 0; i < this.store.state.gameType.logicSheetOrder.length; i++) {
+        const objectInitial: string = this.store.state.gameType.logicSheetOrder[i];
+
+        imagesMap[objectInitial] = imagesArray[i];
+      }
+
+      this.objectImages = imagesMap;
     }
   },
   watch: {
@@ -429,12 +452,16 @@ export default defineComponent({
     },
     seasonView: function() {
       this.computeCanvas();
+    },
+    gameType: function() {
+      this.collectImages();
     }
   },
-  mounted() {
+  async mounted() {
     if (this.breakpoint === "md") {
       menuController.open("menu");
     }
+    await this.collectImages();
     this.computeCanvas();
   }
 });
