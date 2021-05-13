@@ -275,7 +275,7 @@ export default defineComponent({
       }
       event.preventDefault();
     },
-    redrawObject(sector: number, iconRadius: any, newStatus: string) {
+    redrawObject: function(sector: number, iconRadius: any, newStatus: string) {
       const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
 
@@ -509,15 +509,16 @@ export default defineComponent({
     }
   },
   watch: {
-    seasonView: function() {
-      this.computeCanvas();
+    seasonView: async function() {
+      await this.computeCanvas();
     },
     currentSector: function() {
       this.redrawSky();
     }
   },
   async mounted() {
-    this.computeCanvas();
+    await this.$nextTick();
+    await this.computeCanvas();
 
     const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
     canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
@@ -543,7 +544,6 @@ export default defineComponent({
 
     window.addEventListener("resize", this.positionSummary);
 
-    await this.$nextTick();
     this.positionSummary();
   },
   unmounted() {

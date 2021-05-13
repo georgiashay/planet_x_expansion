@@ -1,8 +1,8 @@
 <template>
   <ion-app>
-    <ion-split-pane content-id="main" when="lg" v-if="showSplitPane">
+    <ion-split-pane content-id="main" when="lg" v-show="showSplitPane">
       <ion-menu content-id="main" side="end" menu-id="menu">
-        <ion-router-outlet />
+        <ion-router-outlet v-if="showSplitPane"/>
       </ion-menu>
 
       <ion-page id="main">
@@ -15,8 +15,8 @@
               Logic
             </ion-segment-button>
           </ion-segment>
-          <session-header/>
-          <ion-content>
+          <session-header v-if="showSplitPane"/>
+          <ion-content v-if="showSplitPane">
             <board-wheel v-if="whichCircle === 'board'"/>
             <logic-sheet ref="logicSheet" v-if="whichCircle === 'logic'"/>
           </ion-content>
@@ -25,7 +25,7 @@
         <ion-router-outlet v-else />
       </ion-page>
     </ion-split-pane>
-    <ion-router-outlet v-else/>
+    <ion-router-outlet v-show = "!showSplitPane"/>
   </ion-app>
 </template>
 
@@ -39,6 +39,7 @@ import ScreenSize from "@/mixins/ScreenSize.ts";
 import BoardWheel from "@/components/BoardWheel.vue";
 import LogicSheet from "@/components/LogicSheet.vue";
 import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
 import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
 
@@ -62,6 +63,8 @@ export default defineComponent({
   data() {
     return {
       store: useStore(),
+      route: useRoute(),
+      router: useRouter(),
       whichCircle: "board"
     }
   },
@@ -71,6 +74,16 @@ export default defineComponent({
     },
     showSplitPane: function(): boolean {
       return this.store.state.isSession && this.store.getters.gameReady && this.screenSizeAtLeast('md');
+    },
+    showWheelInSplitPane: function(): boolean {
+      return this.showSplitPane && this.showWheel;
+    }
+  },
+  watch: {
+    showWheelInSplitPane(newValue: boolean) {
+      if (newValue && (this.route.path === "/session/board" || this.route.path === "/session/logic")) {
+        this.router.replace("/session/gamemenu");
+      }
     }
   }
 });

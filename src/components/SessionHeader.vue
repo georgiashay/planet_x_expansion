@@ -75,9 +75,6 @@ export default defineComponent({
     openMenu: function() {
       menuController.toggle("menu");
     }
-  },
-  mounted() {
-    menuController.enable(true, "menu");
   }
 });
 </script>

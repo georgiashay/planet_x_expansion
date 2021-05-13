@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <session-header v-if="store.state.isSession" hide-menu hide-above="md"/>
     <ion-content :fullscreen="true">
       <div id="container">
         <div id="title_container">
@@ -37,6 +38,7 @@
         </div>
       </div>
     </ion-content>
+    <game-footer hide-above="md"/>
   </ion-page>
 </template>
 
@@ -50,6 +52,8 @@ import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import PlayerColors from "@/mixins/PlayerColors.ts";
+import SessionHeader from "@/components/SessionHeader.vue";
+import GameFooter from "@/components/GameFooter.vue";
 
 export default defineComponent({
   name: 'Lobby',
@@ -60,7 +64,9 @@ export default defineComponent({
     IonButton,
     IonNavLink,
     IonIcon,
-    IonItem
+    IonItem,
+    SessionHeader,
+    GameFooter
   },
   mixins: [SoundMixin, PlayerColors],
   props: {

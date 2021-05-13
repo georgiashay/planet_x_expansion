@@ -458,7 +458,7 @@ export default defineComponent({
     }
   },
   async mounted() {
-    if (this.breakpoint === "md") {
+    if (this.breakpoint === "md" && this.store.state.startingFacts === undefined) {
       menuController.open("menu");
     }
     await this.collectImages();
