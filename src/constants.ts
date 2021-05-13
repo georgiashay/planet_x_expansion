@@ -41,7 +41,15 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 2,
     numObjects: {X: 1, E: 2, G: 2, D: 1, A: 4, C: 2},
     logicSheetOrder: ['C', 'A', 'D', 'G', 'E', 'X'],
-    logicPatternInterval: 3
+    logicPatternInterval: 3,
+    constraints: {
+      "C": "Only in prime sectors",
+      "A": "Adjacent to an asteroid",
+      "D": "",
+      "G": "Adjacent to an empty sector",
+      "E": "",
+      "X": "Not adjacent to the dwarf planet"
+    }
   },
   18: {
     name: "Expert",
@@ -78,7 +86,15 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 2,
     numObjects: {X: 1, E: 5, G: 2, D: 4, A: 4, C: 2},
     logicSheetOrder: ['C', 'A', 'D', 'G', 'E', 'X'],
-    logicPatternInterval: 3
+    logicPatternInterval: 3,
+    constraints: {
+      "C": "Only in prime sectors",
+      "A": "Adjacent to an asteroid",
+      "D": "In a band of exactly 6",
+      "G": "Adjacent to an empty sector",
+      "E": "",
+      "X": "Not adjacent to a dwarf planet"
+    }
   },
   24: {
     name: "Ace",
@@ -115,7 +131,16 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 3,
     numObjects: {X: 1, E: 6, G: 3, D: 4, A: 6, C: 3, B: 1},
     logicSheetOrder: ['C', 'A', 'D', 'B', 'G', 'E', 'X'],
-    logicPatternInterval: 4
+    logicPatternInterval: 4,
+    constraints: {
+      "C": "Only in prime sectors",
+      "A": "Adjacent to an asteroid",
+      "D": "In a band of exactly 6",
+      "G": "Adjacent to an empty sector",
+      "E": "Not adjacent to the black hole",
+      "B": "Not adjacent to an empty sector",
+      "X": "Not adjacent to a dwarf planet or the black hole"
+    }
   }
 }
 

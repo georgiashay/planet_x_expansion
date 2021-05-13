@@ -7,11 +7,14 @@
         v-for="(obj, index) in spaceObjects"
         :key="index"
         >
-        <ion-col size="2">
+        <ion-col size="1">
           {{obj.numObject}}
         </ion-col>
-        <ion-col size="10">
+        <ion-col size="4">
           <ion-icon :src="obj.spaceObject.icon"/>&nbsp;{{obj.numObject === 1 ? obj.spaceObject.name : obj.spaceObject.plural}}
+        </ion-col>
+        <ion-col size="7">
+          {{obj.constraint}}
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -44,7 +47,8 @@ export default defineComponent({
         const spaceObject = initialToSpaceObject[initial];
         spaceObjects.push({
           spaceObject,
-          numObject: this.store.state.gameType.numObjects[initial]
+          numObject: this.store.state.gameType.numObjects[initial],
+          constraint: this.store.state.gameType.constraints[initial]
         });
       }
       return spaceObjects;
