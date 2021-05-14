@@ -3,7 +3,7 @@
     <div id="title_container">
       <h3>Current Board</h3>
     </div>
-    <canvas id="boardCanvas" height="3504" width="3504"/>
+    <canvas ref="boardCanvas" id="boardCanvas" height="3504" width="3504"/>
     <h4 id="current_scores">Current Scores</h4>
     <div id="scores_container">
       <scores/>
@@ -180,7 +180,9 @@ export default defineComponent({
       if (!this.store.getters.gameReady || !this.store.state.isSession) {
         return;
       }
-      const canvas = document.getElementById("boardCanvas") as HTMLCanvasElement;
+
+      await this.$nextTick();
+      const canvas = this.$refs.boardCanvas as HTMLCanvasElement;
       if (canvas === null) {
         return;
       }

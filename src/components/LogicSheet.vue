@@ -229,7 +229,7 @@ export default defineComponent({
       }
     },
     getClickedObject: function(event: MouseEvent) {
-      const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
+      const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -275,7 +275,7 @@ export default defineComponent({
       event.preventDefault();
     },
     redrawObject: function(sector: number, iconRadius: any, newStatus: string) {
-      const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
+      const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
 
       ctx.save();
@@ -344,7 +344,7 @@ export default defineComponent({
       return checkHold;
     },
     redrawSky: async function() {
-      const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
+      const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       if (canvas === null) {
         return;
       }
@@ -397,7 +397,7 @@ export default defineComponent({
       if (!this.store.getters.gameReady || !this.store.state.isSession) {
         return;
       }
-      const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
+      const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       if (canvas === null) {
         return;
       }
@@ -519,7 +519,7 @@ export default defineComponent({
     await this.$nextTick();
     await this.computeCanvas();
 
-    const canvas = document.getElementById("logicCanvas") as HTMLCanvasElement;
+    const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
     canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
 
     let timeout: any = undefined;
