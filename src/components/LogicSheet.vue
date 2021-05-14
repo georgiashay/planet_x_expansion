@@ -315,7 +315,7 @@ export default defineComponent({
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.beginPath();
         ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height - SELECTED_BOX_PADDING, iconRadius.width + 2 * SELECTED_BOX_PADDING, iconRadius.height + 2 * SELECTED_BOX_PADDING);
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = this.getCSSVariable("--ion-color-dark");
         ctx.stroke();
       } else if (newStatus === "none") {
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
@@ -361,8 +361,8 @@ export default defineComponent({
 
       this.redrawObject(sector, iconRadius, nowEliminated ? "eliminated" : "none");
 
-      const checkHold = this.store.state.logicBoard[sector] !== undefined
-                          && this.store.state.logicBoard[sector].equalTo != iconRadius.object;
+      const checkHold = this.store.state.logicBoard[sector] === undefined
+                          || this.store.state.logicBoard[sector].equalTo != iconRadius.object;
 
       this.store.commit("logicToggle", {
         sector,
@@ -562,19 +562,24 @@ export default defineComponent({
     let timeout: any = undefined;
 
     canvas.addEventListener("mousedown", (e: Event) => {
+      console.log("mousedown");
       const checkHold = this.handleClick(e);
+      console.log(checkHold);
       if (checkHold) {
         timeout = setTimeout(() => {
+          console.log("hold");
           this.handleRightClick(e);
         }, 350);
       }
     });
 
     canvas.addEventListener("mouseleave", (e: Event) => {
+      console.log("mouseleave");
       clearTimeout(timeout);
     });
 
     canvas.addEventListener("mouseup", (e: Event) => {
+      console.log("mouseup");
       clearTimeout(timeout);
     });
 
