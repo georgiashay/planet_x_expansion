@@ -1,8 +1,11 @@
 <template>
   <ion-app>
-    <ion-split-pane content-id="main" when="lg" v-show="showSplitPane">
-      <ion-menu content-id="main" side="end" menu-id="menu">
-        <ion-router-outlet v-if="showSplitPane"/>
+    <ion-split-pane content-id="main" when="lg" v-if="showSplitPane">
+      <ion-menu
+        content-id="main"
+        side="end"
+        menu-id="menu">
+        <ion-router-outlet />
       </ion-menu>
 
       <ion-page id="main">
@@ -15,8 +18,8 @@
               Logic
             </ion-segment-button>
           </ion-segment>
-          <session-header v-if="showSplitPane"/>
-          <ion-content v-if="showSplitPane">
+          <session-header />
+          <ion-content>
             <board-wheel v-if="whichCircle === 'board'"/>
             <logic-sheet ref="logicSheet" v-if="whichCircle === 'logic'"/>
           </ion-content>
@@ -25,7 +28,7 @@
         <ion-router-outlet v-else />
       </ion-page>
     </ion-split-pane>
-    <ion-router-outlet v-if = "!showSplitPane"/>
+    <ion-router-outlet v-else />
   </ion-app>
 </template>
 

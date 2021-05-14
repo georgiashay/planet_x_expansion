@@ -459,7 +459,8 @@ export default defineComponent({
   },
   async mounted() {
     if (this.breakpoint === "md" && this.store.state.startingFacts === undefined) {
-      menuController.open("menu");
+      const menu = await menuController.get("menu");
+      await menu.open(false);
     }
     await this.collectImages();
     this.computeCanvas();
