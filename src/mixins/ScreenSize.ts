@@ -31,7 +31,8 @@ for (let i = 0; i < breakpoints.length; i++) {
 export default defineComponent({
   data: function() {
     return {
-      myScreenWidth: null
+      myScreenWidth: null,
+      screenWidthTimeout: undefined
     }
   },
   computed: {
@@ -52,6 +53,10 @@ export default defineComponent({
               || document.body.clientWidth;
     },
     handleResize() {
+      clearTimeout(this.screenWidthTimeout);
+      this.screenWidthTimeout = setTimeout(this.setWidth, 300);
+    },
+    setWidth() {
       this.myScreenWidth = this.getScreenWidth();
     },
     screenSizeAtLeast(breakpoint: string): boolean {
