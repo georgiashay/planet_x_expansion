@@ -89,6 +89,9 @@ import { initialToSpaceObject } from "@/constants.ts";
 import ScreenSize from "@/mixins/ScreenSize.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 
+const LINE_WIDTH = 8;
+const SELECTED_BOX_PADDING = 10;
+
 export default defineComponent({
   name: 'LogicSheet',
   components: {
@@ -281,13 +284,14 @@ export default defineComponent({
       ctx.save();
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
+      const clearPadding = SELECTED_BOX_PADDING + LINE_WIDTH/2 + 1;
       ctx.fillStyle = "#222428";
-      ctx.fillRect(-iconRadius.width/2 - 16, -iconRadius.radius - iconRadius.height - 16, iconRadius.width + 32, iconRadius.height + 32);
+      ctx.fillRect(-iconRadius.width/2 - clearPadding, -iconRadius.radius - iconRadius.height - clearPadding, iconRadius.width + 2 * clearPadding, iconRadius.height + 2 * clearPadding);
 
       if (newStatus === "equal") {
         ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.beginPath();
-        ctx.rect(-iconRadius.width/2-10, -iconRadius.radius - iconRadius.height - 10, iconRadius.width + 20, iconRadius.height + 20);
+        ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height - SELECTED_BOX_PADDING, iconRadius.width + 2 * SELECTED_BOX_PADDING, iconRadius.height + 2 * SELECTED_BOX_PADDING);
         ctx.strokeStyle = "white";
         ctx.stroke();
       } else if (newStatus === "none") {
@@ -296,17 +300,18 @@ export default defineComponent({
         ctx.drawImage(iconRadius.fullImage, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       }
 
+      const restorePadding = SELECTED_BOX_PADDING + LINE_WIDTH + 2;
       ctx.restore();
 
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      const x = (iconRadius.radius + iconRadius.height + 8) * Math.cos(sector * this.sectorAngle);
-      const y = (iconRadius.radius + iconRadius.height + 8) * Math.sin(sector * this.sectorAngle);
+      const x = (iconRadius.radius + iconRadius.height + restorePadding) * Math.cos(sector * this.sectorAngle);
+      const y = (iconRadius.radius + iconRadius.height + restorePadding) * Math.sin(sector * this.sectorAngle);
       ctx.lineTo(x, y);
 
       ctx.moveTo(0, 0);
-      const x2 = (iconRadius.radius + iconRadius.height + 8) * Math.cos((sector + 1) * this.sectorAngle);
-      const y2 = (iconRadius.radius + iconRadius.height + 8) * Math.sin((sector + 1) * this.sectorAngle);
+      const x2 = (iconRadius.radius + iconRadius.height + restorePadding) * Math.cos((sector + 1) * this.sectorAngle);
+      const y2 = (iconRadius.radius + iconRadius.height + restorePadding) * Math.sin((sector + 1) * this.sectorAngle);
       ctx.lineTo(x2, y2);
       ctx.strokeStyle = "white";
       ctx.stroke();
@@ -409,7 +414,7 @@ export default defineComponent({
         ctx.rotate(this.store.state.seasonView.angle);
       }
 
-      ctx.lineWidth = 8;
+      ctx.lineWidth = LINE_WIDTH;
 
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
       const skyAngle = sectorAngle * this.store.state.session.currentSector;
