@@ -212,13 +212,15 @@ export default defineComponent({
       const tokenEdgePadding = 32;
       const tokenIncrement = (boardRadius - startTokenRadius - tokenSize - tokenEdgePadding)/3;
 
-      const innerRadius = 550;
-      const innerTextRadius = 500;
-      const innerTextHeight = 80;
+      const innerRadius = startTokenRadius - tokenEdgePadding;
       const sunRadius = 100;
 
-      const iconSize = 80;
-      const theoryRadius = innerTextRadius - innerTextHeight/2 - 10 - iconSize;
+      let iconSize = 200;
+      const tanRatio = 2 * Math.tan(this.sectorAngle/2);
+      const maxIconWidth = (tanRatio * innerRadius)/(1 + tanRatio);
+      iconSize = Math.min(iconSize, maxIconWidth);
+
+      const theoryRadius = innerRadius - 10 - iconSize;
       const conferenceRadius = theoryRadius - iconSize;
 
       ctx.beginPath();
@@ -271,12 +273,6 @@ export default defineComponent({
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
         ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
-
-        ctx.font = innerTextHeight + "px Roboto";
-        ctx.textAlign = "center";
-        ctx.fillStyle = "white";
-        ctx.textBaseline = "middle";
-        ctx.fillText("" + (i+1), 0, -(innerTextRadius-innerTextHeight*0.1));
 
         ctx.restore();
 
@@ -400,10 +396,10 @@ export default defineComponent({
 
         ctx.save();
 
-        ctx.font = "60px Roboto Slab";
+        ctx.font = (iconSize*0.8) + "px Roboto Slab";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
-        ctx.fillStyle = "yellow";
+        ctx.fillStyle = "#47d1ff";
         ctx.textBaseline = "bottom";
         ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
 
