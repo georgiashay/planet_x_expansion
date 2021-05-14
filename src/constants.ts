@@ -3,8 +3,9 @@ export const SERVER_URL = "planetx.shaytech.net";
 const SECURE = true;
 // const SECURE = false;
 const URL_PREFIX = SECURE ? "https://" : "http://";
+const WS_PREFIX = SECURE ? "wss://" : "ws://";
 export const API_URL = URL_PREFIX + SERVER_URL;
-export const WEBSOCKET_URL = "ws://" + SERVER_URL;
+export const WEBSOCKET_URL = WS_PREFIX + SERVER_URL;
 export const GAME_TYPES: {[sector: number]: any} = {
   12: {
     name: "Standard",
