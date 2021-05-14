@@ -19,7 +19,7 @@
       <h6 id="summary_title">Results Summary</h6>
       <ion-grid>
         <ion-row>
-          <ion-col size="4" v-if="resultsSummary.targeted.length > 0">
+          <ion-col size-xs="6" size-sm="4" v-if="resultsSummary.targeted.length > 0">
             <p>Targeted Sectors</p>
             <p
               v-for="(target, index) in resultsSummary.targeted"
@@ -28,7 +28,7 @@
                 {{target.sector+1}}:&nbsp;<ion-icon :src="target.spaceObject.icon"></ion-icon>{{target.spaceObject.name}}&nbsp;
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.conferences.length > 0">
+          <ion-col size-xs="6" size-sm="4" v-if="resultsSummary.conferences.length > 0">
             <p>Conferences</p>
             <p
               v-for="(conference, index) in resultsSummary.conferences"
@@ -37,7 +37,7 @@
                 {{conference.index + 1}}. {{conference.shortText}}
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.revealed.length > 0">
+          <ion-col size-xs="6" size-sm="4" v-if="resultsSummary.revealed.length > 0">
             <p>Revealed Theories</p>
             <p
               v-for="(theory, index) in resultsSummary.revealed"
@@ -46,7 +46,7 @@
                 {{theory.sector + 1}}: {{theory.accurate ? "" : "not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.research.length > 0">
+          <ion-col size-xs="6" size-sm="4" v-if="resultsSummary.research.length > 0">
             <p>Research</p>
             <p
               v-for="(research, index) in resultsSummary.research"
@@ -55,7 +55,7 @@
                 {{research.shortText}}
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.surveyed.length > 0">
+          <ion-col size-xs="6" size-sm="4" v-if="resultsSummary.surveyed.length > 0">
             <p>Surveys</p>
             <p
               v-for="(survey, index) in resultsSummary.surveyed"
@@ -64,7 +64,7 @@
                 {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}<ion-icon :src="survey.spaceObject.icon"></ion-icon>&nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}}
             </p>
           </ion-col>
-          <ion-col size="4" v-if="resultsSummary.located.length > 0">
+          <ion-col size-xs="6" size-sm="4" v-if="resultsSummary.located.length > 0">
             <p>Locate Planet X Attempts</p>
             <p
               v-for="(locate, index) in resultsSummary.located"
