@@ -86,6 +86,11 @@ export default defineComponent({
     showWheelInSplitPane(newValue: boolean) {
       if (newValue && (this.route.path === "/session/board" || this.route.path === "/session/logic")) {
         this.router.replace("/session/gamemenu");
+        if (this.route.path === "/session/board") {
+          this.whichCircle = "board";
+        } else if (this.route.path === "/session/logic") {
+          this.whichCircle = "logic";
+        }
       }
     }
   }
