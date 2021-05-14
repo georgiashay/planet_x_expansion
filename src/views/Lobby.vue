@@ -15,7 +15,7 @@
           <p>{{sessionModeName}}</p>
         </div>
         <div id="players">
-          <ion-item color="dark" v-for="player in store.getters.sessionPlayers" :key="player.num">
+          <ion-item color="light" v-for="player in store.getters.sessionPlayers" :key="player.num">
             <div class="player_circle" :style="playerStyle(player.num)"></div>
             P{{player.num}}: {{player.name}}
           </ion-item>
@@ -27,7 +27,7 @@
         <ion-button
           :disabled = "!sessionCreator && store.state.session.currentAction.actionType == 'START_GAME'"
           expand="block"
-          color="dark"
+          color="light"
           @click="startGame()"
           id="start_button">
           Start Game

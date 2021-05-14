@@ -9,7 +9,7 @@
         <div id="history">
           <ion-button
             expand="block"
-            color="dark"
+            color="light"
             :router-link="'/' + gameType + '/startinginfo'">
             <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
@@ -18,7 +18,7 @@
               v-for="(item, index) in store.getters.selectedHistory"
               :key="index"
               expand="block"
-              color="dark"
+              color="light"
               :disabled = "!item.mine"
               :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
             >
@@ -30,7 +30,7 @@
               v-for="(item, index) in selectedGameHistory"
               :key="index"
               expand="block"
-              color="dark"
+              color="light"
               :router-link="'/' + gameType + '/action/result/' + item.index">
             <span class="ion-text-left">{{item.item.actionText}}</span>
           </ion-button>

@@ -7,7 +7,7 @@
           <h3>Submit Theories</h3>
         </div>
         <div id="theory_selections">
-          <ion-item color="dark">
+          <ion-item color="light">
             <ion-label position="floating">Number of Theories</ion-label>
             <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories"></ion-input>
           </ion-item>
@@ -30,7 +30,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="submitTheories()"
           id="theory_button"
           :disabled="!theoriesReady || !theoriesValid.valid">

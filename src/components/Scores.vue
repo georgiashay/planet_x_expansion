@@ -90,31 +90,30 @@ export default defineComponent({
 #score_table {
   width: 100%;
   max-width: 50vh;
-  background-color: var(--ion-color-dark);
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
   border: 2px solid white;
 }
 
 #score_table td {
-  border: 2px solid white;
+  border: 2px solid var(--ion-color-light-contrast);
   outline: 3px solid var(--player-color);
   outline-offset: -4px;
   padding: 3px;
   text-align: center;
   font-size: 1em;
+  color: var(--ion-color-light-contrast);
 }
 
 #score_table th {
-  border: 2px solid white;
+  border: 2px solid var(--ion-color-light-contrast);
   padding: 3px;
   font-size: 1em;
 }
 
 #score_table th ion-icon {
   font-size: 1.3em;
-}
-
-#score_table table td {
-  border: none;
+  --color: var(--ion-color-light-contrast);
 }
 
 .player_cell {

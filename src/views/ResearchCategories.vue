@@ -27,7 +27,7 @@
         <ion-item-divider/>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           :router-link="'/' + gameType + '/gamemenu'"
           id="continue_button">
           Continue

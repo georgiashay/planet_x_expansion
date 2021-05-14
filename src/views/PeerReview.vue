@@ -20,7 +20,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="peerreview()"
           id="peerreview_button"
           :disabled="selectedSector === undefined || selectedObject === undefined">

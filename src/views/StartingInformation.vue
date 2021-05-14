@@ -26,7 +26,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           :router-link="'/' + gameType + '/researchcategories'"
           id="start_button">
           Start Game

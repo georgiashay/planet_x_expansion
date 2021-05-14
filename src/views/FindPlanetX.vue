@@ -20,7 +20,7 @@
             @input="leftObject = $event"
             :columns="3"
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
-          <ion-item v-if="sector" id="planet_x_spacer" color="dark">
+          <ion-item v-if="sector" id="planet_x_spacer" color="light">
             <ion-label>Sector {{sector}}</ion-label>
             <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;Planet X
           </ion-item>
@@ -34,7 +34,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="locate()"
           id="planet_button"
           :disabled="sector === undefined || leftObject === undefined || rightObject === undefined">

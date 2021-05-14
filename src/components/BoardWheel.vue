@@ -176,6 +176,9 @@ export default defineComponent({
         return locations;
       }
     },
+    getCSSVariable: function(varName: string) {
+      return getComputedStyle(document.body).getPropertyValue(varName);
+    },
     computeCanvas: async function() {
       if (!this.store.getters.gameReady || !this.store.state.isSession) {
         return;
@@ -225,33 +228,38 @@ export default defineComponent({
       const theoryRadius = innerRadius - 10 - iconSize;
       const conferenceRadius = theoryRadius - iconSize;
 
+      const lightColor = this.getCSSVariable("--ion-color-light");
+      const darkColor = this.getCSSVariable("--ion-color-light-contrast");
+
+      const mediumColor = darkColor.trim().toUpperCase() === "#FFFFFF" ? "gray" : "lemonchiffon";
+
       ctx.beginPath();
-      ctx.fillStyle = "#222428";
+      ctx.fillStyle = lightColor;
       ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = "#575757";
+      ctx.fillStyle = mediumColor;
       ctx.arc(0, 0, trackRadius, skyAngle, skyAngle + Math.PI);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
       ctx.stroke();
 
@@ -262,7 +270,7 @@ export default defineComponent({
         const x = trackRadius * Math.cos(i * sectorAngle);
         const y = trackRadius * Math.sin(i * sectorAngle);
         ctx.lineTo(x, y);
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = darkColor;
         ctx.stroke();
 
         // Sector number label
@@ -272,7 +280,7 @@ export default defineComponent({
 
         ctx.font = textHeight + "px Roboto";
         ctx.textAlign = "center";
-        ctx.fillStyle = "white";
+        ctx.fillStyle = darkColor;
         ctx.textBaseline = "middle";
         ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
 
@@ -287,7 +295,7 @@ export default defineComponent({
           ctx.rotate(-Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
 
           ctx.beginPath();
-          ctx.strokeStyle = "white";
+          ctx.strokeStyle = darkColor;
           ctx.rect(-tokenSize/2, radius, tokenSize, tokenSize);
           ctx.stroke();
 
@@ -306,7 +314,7 @@ export default defineComponent({
             ctx.fillRect(-tokenSize/2, radius, tokenSize, tokenSize);
 
             if (progress === 3) {
-              ctx.fillStyle = "black";
+              ctx.fillStyle = lightColor;
               ctx.fillRect(-tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
 
               ctx.drawImage(this.objectImages[this.store.state.game.board.objects[i].initial], -tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
@@ -348,7 +356,7 @@ export default defineComponent({
       }
 
       ctx.beginPath();
-      ctx.fillStyle = "#ebd534";
+      ctx.fillStyle = "#fdfd96";
       ctx.arc(0, 0, sunRadius, 0, 2*Math.PI);
       ctx.fill();
 
@@ -401,37 +409,55 @@ export default defineComponent({
         ctx.font = (iconSize*0.8) + "px Roboto Slab";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
-        ctx.fillStyle = "#47d1ff";
+        ctx.fillStyle = darkColor.trim().toUpperCase() === "#FFFFFF" ? "#47d1ff" : "blue";
         ctx.textBaseline = "bottom";
         ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
 
         ctx.restore();
       }
     },
-    collectImages: async function() {
-      const timg = new Image();
-      timg.src = "/assets/theory.svg";
+    loadSVGWithColor: async function(path: string, color: string) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", path, true);
+
+      const imageData: string = await new Promise((resolve, reject) => {
+        xhr.onload = function (e) {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              let theoryFile = xhr.responseText;
+              theoryFile = theoryFile.replaceAll("currentColor", color);
+              resolve(theoryFile);
+            } else {
+              reject(xhr.statusText);
+            }
+          }
+        };
+
+        xhr.send(null);
+      });
+
+      const img = new Image();
+      img.src = "data:image/svg+xml;base64,"+btoa(imageData);
 
       await new Promise((resolve, reject) => {
-        timg.onload = function() {
+        img.onload = function() {
           resolve();
+        }
+        img.onerror = function(e) {
+          reject(e);
         }
       });
 
-      this.theoryImage = timg;
+      return img;
+    },
+    collectImages: async function() {
+      const isDark = this.getCSSVariable("--ion-color-light-contrast").trim().toUpperCase() === "#FFFFFF";
+      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", isDark ? "orange" : "purple");
 
-      const imagePromises = [];
-      for (const objectInitial of this.store.state.gameType.logicSheetOrder) {
-        const img = new Image();
-        img.src = initialToSpaceObject[objectInitial].icon;
-
-        const imgProm = new Promise((resolve, reject) => {
-          img.onload = function() {
-            resolve(img);
-          }
-        });
-        imagePromises.push(imgProm);
-      }
+      const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
+        const object = initialToSpaceObject[initial];
+        return this.loadSVGWithColor(object.icon, this.getCSSVariable("--ion-color-light-contrast"));
+      });
 
       const imagesArray = await Promise.all(imagePromises);
       const imagesMap: {[initial: string]: any} = {};

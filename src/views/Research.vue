@@ -22,7 +22,7 @@
         <ion-item-divider/>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="research()"
           id="research_button"
           :disabled="selectedResearch === undefined">
@@ -84,7 +84,7 @@ export default defineComponent({
       if (this.selectedResearch == index) {
         return "medium";
       } else {
-        return "dark";
+        return "light";
       }
     },
     research: function() {

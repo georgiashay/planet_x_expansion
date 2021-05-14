@@ -6,13 +6,13 @@
           <h3>Reconnect To Session</h3>
         </div>
         <div id="enter_code">
-          <ion-item color="dark">
+          <ion-item color="light">
             <ion-label position="floating">Enter Session Code</ion-label>
             <ion-input v-model="sessionCode"></ion-input>
           </ion-item>
         </div>
         <div id="enter_num">
-          <ion-item color="dark">
+          <ion-item color="light">
             <ion-label position="floating">Enter Player Number</ion-label>
             <ion-input v-model="playerNum" type="number" min="1"></ion-input>
           </ion-item>
@@ -20,7 +20,7 @@
         <ion-button
           :disabled="sessionCode.length == 0 || playerNum === undefined"
           expand="block"
-          color="dark"
+          color="light"
           @click="reconnectSession()"
           id = "reconnect_session_button">
           Reconnect to Session

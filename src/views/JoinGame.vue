@@ -6,14 +6,14 @@
           <h3>Multiplayer Game</h3>
         </div>
         <div id="enter_code">
-          <ion-item color="dark">
+          <ion-item color="light">
             <ion-label position="floating">Enter Game Code</ion-label>
             <ion-input v-model="gameCode"></ion-input>
           </ion-item>
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="joinGame()"
           id = "join_game_button">
           Join Game

@@ -1,6 +1,6 @@
 <template>
   <ion-header v-if="screenSizeAtMost(hideAbove)">
-    <ion-item id="status_bar" color="dark" v-if="recentActions.length === 0">
+    <ion-item id="status_bar" color="light" v-if="recentActions.length === 0">
       <div id="sky_sectors">
         <ion-icon src="/assets/sun.svg"/>
         &nbsp;Sky: {{store.getters.skyStart + 1}}-{{store.getters.skyEnd + 1}}
@@ -10,7 +10,7 @@
         <ion-icon :icon="menuOutline" />
       </div>
     </ion-item>
-    <ion-item color="light" v-else>
+    <ion-item color="dark" v-else>
       <ion-label class="action_notif">{{recentActions[recentActions.length-1].message}}</ion-label>
     </ion-item>
   </ion-header>

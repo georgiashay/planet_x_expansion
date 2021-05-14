@@ -21,7 +21,7 @@
           <ion-button
             v-if="selectedFacts !== undefined"
             expand="block"
-            color="dark"
+            color="light"
             @click="continueGame()">
             View Starting Information
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -80,7 +80,7 @@ export default defineComponent({
       if (this.selectedFacts == facts) {
         return "medium";
       } else {
-        return "dark";
+        return "light";
       }
     },
     continueGame: function() {

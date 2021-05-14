@@ -3,7 +3,7 @@
     <ion-fab slot="fixed" top right>
       <ion-fab-button
         size="small"
-        color="dark"
+        color="light"
         @click="showNumObjects($event)">
         <ion-icon :src="informationCircleOutline"></ion-icon>
       </ion-fab-button>
@@ -172,34 +172,54 @@ export default defineComponent({
       await popover.present();
       await popover.onDidDismiss();
     },
-    iconImages: async function(): Promise<Array<any>> {
-      const imagePromises = [];
-      for (const objectInitial of this.store.state.gameType.logicSheetOrder) {
-        const img = new Image();
-        img.src = initialToSpaceObject[objectInitial].iconShort;
+    loadSVGWithColor: async function(path: string, color: string) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", path, true);
 
-        const imgProm = new Promise((resolve, reject) => {
-          img.onload = function() {
-            resolve(img);
+      const imageData: string = await new Promise((resolve, reject) => {
+        xhr.onload = function (e) {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              let theoryFile = xhr.responseText;
+              theoryFile = theoryFile.replaceAll("currentColor", color);
+              resolve(theoryFile);
+            } else {
+              reject(xhr.statusText);
+            }
           }
-        });
-        imagePromises.push(imgProm);
-      }
+        };
+
+        xhr.send(null);
+      });
+
+      const img = new Image();
+      img.src = "data:image/svg+xml;base64,"+btoa(imageData);
+
+      await new Promise((resolve, reject) => {
+        img.onload = function() {
+          resolve();
+        }
+        img.onerror = function(e) {
+          reject(e);
+        }
+      });
+
+      return img;
+    },
+    iconImages: async function(): Promise<Array<any>> {
+      const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
+        const object = initialToSpaceObject[initial];
+        return this.loadSVGWithColor(object.iconShort, this.getCSSVariable("--ion-color-light-contrast"));
+      });
+
       return Promise.all(imagePromises);
     },
     fullImages: async function(): Promise<Array<any>> {
-      const imagePromises = [];
-      for (const objectInitial of this.store.state.gameType.logicSheetOrder) {
-        const img = new Image();
-        img.src = initialToSpaceObject[objectInitial].iconFull;
+      const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
+        const object = initialToSpaceObject[initial];
+        return this.loadSVGWithColor(object.iconFull, this.getCSSVariable("--ion-color-light-contrast"));
+      });
 
-        const imgProm = new Promise((resolve, reject) => {
-          img.onload = function() {
-            resolve(img);
-          }
-        });
-        imagePromises.push(imgProm);
-      }
       return Promise.all(imagePromises);
     },
     getIconRadii: async function(startRadius: number, space: number, width: number) {
@@ -277,6 +297,9 @@ export default defineComponent({
       }
       event.preventDefault();
     },
+    getCSSVariable: function(varName: string) {
+      return getComputedStyle(document.body).getPropertyValue(varName);
+    },
     redrawObject: function(sector: number, iconRadius: any, newStatus: string) {
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
@@ -285,7 +308,7 @@ export default defineComponent({
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
       const clearPadding = SELECTED_BOX_PADDING + LINE_WIDTH/2 + 1;
-      ctx.fillStyle = "#222428";
+      ctx.fillStyle = this.getCSSVariable("--ion-color-light");
       ctx.fillRect(-iconRadius.width/2 - clearPadding, -iconRadius.radius - iconRadius.height - clearPadding, iconRadius.width + 2 * clearPadding, iconRadius.height + 2 * clearPadding);
 
       if (newStatus === "equal") {
@@ -313,7 +336,7 @@ export default defineComponent({
       const x2 = (iconRadius.radius + iconRadius.height + restorePadding) * Math.cos((sector + 1) * this.sectorAngle);
       const y2 = (iconRadius.radius + iconRadius.height + restorePadding) * Math.sin((sector + 1) * this.sectorAngle);
       ctx.lineTo(x2, y2);
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = this.getCSSVariable("--ion-color-light-contrast");
       ctx.stroke();
     },
     toggleObjectEqual: function(sector: number, iconRadius: any) {
@@ -362,14 +385,18 @@ export default defineComponent({
       const textRadius = (boardRadius + outerRadius)/2;
       const textHeight = 150;
 
+      const lightColor = this.getCSSVariable("--ion-color-light");
+      const mediumColor = this.getCSSVariable("--ion-color-medium");
+      const darkColor = this.getCSSVariable("--ion-color-light-contrast");
+
       ctx.beginPath();
-      ctx.fillStyle = "#222428";
+      ctx.fillStyle = lightColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI, false);
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI, true);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = "#575757";
+      ctx.fillStyle = mediumColor;
       ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
       ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
       ctx.fill();
@@ -381,7 +408,7 @@ export default defineComponent({
         const x = outerRadius * Math.cos(i * this.sectorAngle);
         const y = outerRadius * Math.sin(i * this.sectorAngle);
         ctx.lineTo(x, y);
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = darkColor;
         ctx.stroke();
 
         // Sector number label
@@ -391,7 +418,7 @@ export default defineComponent({
 
         ctx.font = textHeight + "px Roboto";
         ctx.textAlign = "center";
-        ctx.fillStyle = "white";
+        ctx.fillStyle = darkColor;
         ctx.textBaseline = "middle";
         ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
 
@@ -427,6 +454,11 @@ export default defineComponent({
       const innerRadius = 450;
       const innerColors = ["#4379d1", "#d14d4d", "#65b85c", "#ccc84b"];
 
+      const lightColor = this.getCSSVariable("--ion-color-light");
+      const darkColor = this.getCSSVariable("--ion-color-light-contrast");
+
+      const mediumColor = darkColor.trim().toUpperCase() === "#FFFFFF" ? "gray" : "lemonchiffon";
+
       let iconWidth = 150;
 
       const objectPadding = 50;
@@ -438,28 +470,28 @@ export default defineComponent({
       this.iconWidth = iconWidth;
 
       ctx.beginPath();
-      ctx.fillStyle = "#222428";
+      ctx.fillStyle = lightColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = "#575757";
+      ctx.fillStyle = mediumColor;
       ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
       ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
@@ -478,7 +510,7 @@ export default defineComponent({
         const x = outerRadius * Math.cos(i * sectorAngle);
         const y = outerRadius * Math.sin(i * sectorAngle);
         ctx.lineTo(x, y);
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = darkColor;
         ctx.stroke();
 
         // Sector number label
@@ -488,7 +520,7 @@ export default defineComponent({
 
         ctx.font = textHeight + "px Roboto";
         ctx.textAlign = "center";
-        ctx.fillStyle = "white";
+        ctx.fillStyle = darkColor;
         ctx.textBaseline = "middle";
         ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
 
@@ -500,7 +532,7 @@ export default defineComponent({
               ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
               ctx.rect(-iconRadii[j].width/2-10, -iconRadii[j].radius - iconRadii[j].height - 10, iconRadii[j].width + 20, iconRadii[j].height + 20);
-              ctx.strokeStyle = "white";
+              ctx.strokeStyle = darkColor;
               ctx.stroke();
             } else {
               ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
@@ -599,7 +631,8 @@ export default defineComponent({
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: var(--ion-color-dark);
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
   width: 100%;
   border: 1px solid gray;
   overflow: scroll;

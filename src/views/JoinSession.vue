@@ -6,13 +6,13 @@
           <h3>Join Session</h3>
         </div>
         <div id="enter_code">
-          <ion-item color="dark">
+          <ion-item color="light">
             <ion-label position="floating">Enter Session Code</ion-label>
             <ion-input v-model="sessionCode"></ion-input>
           </ion-item>
         </div>
         <div id="enter_name">
-          <ion-item color="dark">
+          <ion-item color="light">
             <ion-label position="floating">Enter Name</ion-label>
             <ion-input v-model="name"></ion-input>
           </ion-item>
@@ -20,7 +20,7 @@
         <ion-button
           :disabled="sessionCode.length == 0 || name.length == 0"
           expand="block"
-          color="dark"
+          color="light"
           @click="joinSession()"
           id = "join_session_button">
           Join Session

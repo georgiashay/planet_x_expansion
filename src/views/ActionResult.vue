@@ -18,7 +18,7 @@
         <ion-item-divider/>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="continueGame()"
           id="continue_button">
           Continue <ion-icon :icon="arrowForwardOutline"></ion-icon>

@@ -3,7 +3,7 @@
     <h2>{{store.state.gameType.sectors}}-Sector Board</h2>
     <ion-grid>
       <ion-row
-        color="dark"
+        color="light"
         v-for="(obj, index) in spaceObjects"
         :key="index"
         >

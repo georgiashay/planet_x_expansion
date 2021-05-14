@@ -18,7 +18,7 @@
           </ion-button>
           <div id="enter_name" v-if="isSession">
             <p>Enter Name:</p>
-            <ion-item color="dark">
+            <ion-item color="light">
               <ion-input v-model="name"></ion-input>
             </ion-item>
           </div>
@@ -26,7 +26,7 @@
           <ion-button
             v-if="readyToCreate"
             expand="block"
-            color="dark"
+            color="light"
             @click="createGame()">
             Start Game
               <ion-icon :icon="arrowForwardOutline"></ion-icon>
@@ -87,7 +87,7 @@ export default defineComponent({
       if (this.selectedGame == boardType) {
         return "medium";
       } else {
-        return "dark";
+        return "light";
       }
     },
     createGame: function() {

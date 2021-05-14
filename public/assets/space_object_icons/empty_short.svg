@@ -1,111 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="empty.svg"
-   inkscape:version="1.0.1 (c497b03c, 2020-09-10)"
-   id="svg8"
-   version="1.1"
-   viewBox="0 0 16.933333 11.90625"
-   height="45"
-   width="64">
-  <defs
-     id="defs2">
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect6335"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect6331"
-       is_visible="true"
-       lpeversion="1" />
-  </defs>
-  <sodipodi:namedview
-     inkscape:window-maximized="0"
-     inkscape:window-y="25"
-     inkscape:window-x="0"
-     inkscape:window-height="767"
-     inkscape:window-width="1440"
-     inkscape:snap-intersection-paths="true"
-     height="12in"
-     units="px"
-     showgrid="true"
-     inkscape:document-rotation="0"
-     inkscape:current-layer="layer1"
-     inkscape:document-units="mm"
-     inkscape:cy="64.420363"
-     inkscape:cx="-77.18128"
-     inkscape:zoom="1.4774609"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
-     pagecolor="#ffffff"
-     id="base"
-     inkscape:snap-bbox="false"
-     inkscape:bbox-paths="true"
-     inkscape:bbox-nodes="true" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     id="layer1"
-     inkscape:groupmode="layer"
-     inkscape:label="Layer 1">
-    <g
-       transform="translate(7.9999982e-4,-58.464433)"
-       id="g2649" />
-    <g
-       transform="matrix(0.96441112,0.25841318,-0.25841318,0.96441112,421.77036,67.047613)"
-       id="g1543"
-       style="stroke-width:1.00157" />
-    <g
-       transform="translate(3.9687401,10.583333)"
-       id="g1273" />
-    <g
-       style="stroke-width:1.11023"
-       transform="translate(-256.13703,-382.91016)"
-       id="g2649-0" />
-    <g
-       style="stroke:#ffffff;stroke-width:0.980282;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       transform="matrix(0.63694966,0,0,0.63694966,-60.021691,-64.763854)"
-       id="g6898">
-      <path
-         sodipodi:nodetypes="ccc"
-         d="m 98.825541,108.02444 -5e-6,-5.69999 5.700014,-1e-5"
-         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         id="path6868" />
-      <path
-         id="path6888"
-         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         d="m 104.52553,119.72444 -5.69998,-1e-5 -1.4e-5,-5.70001"
-         sodipodi:nodetypes="ccc" />
-      <path
-         sodipodi:nodetypes="ccc"
-         d="m 116.22554,114.02444 -2e-5,5.69997 -5.7,3e-5"
-         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         id="path6890" />
-      <path
-         id="path6892"
-         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.980282;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-         d="m 110.52554,102.32444 5.69995,4e-5 5e-5,5.69999"
-         sodipodi:nodetypes="ccc" />
-    </g>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="45" version="1.1" viewBox="0 0 16.933 11.906" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="matrix(.63695 0 0 .63695 -60.022 -64.764)" fill="none" stroke="currentColor" stroke-width=".98028">
+  <path d="m98.826 108.02-5e-6 -5.7 5.7-1e-5" style="paint-order:markers fill stroke"/>
+  <path d="m104.53 119.72-5.7-1e-5 -1.4e-5 -5.7" style="paint-order:markers fill stroke"/>
+  <path d="m116.23 114.02-2e-5 5.7-5.7 3e-5" style="paint-order:markers fill stroke"/>
+  <path d="m110.53 102.32 5.7 4e-5 5e-5 5.7" style="paint-order:markers fill stroke"/>
+ </g>
 </svg>

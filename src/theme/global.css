@@ -32,21 +32,15 @@ ion-item-divider {
 }
 
 .custom-alert .alert-wrapper {
-  background-color: var(--ion-color-dark);
-  color: var(--ion-color-dark-contrast);
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
 }
 
 .custom-popover .popover-content {
-  background-color: var(--ion-color-dark);
-  color: var(--ion-color-dark-contrast);
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
 }
 
 .split-pane-visible > ion-menu {
   max-width: 36%;
 }
-
-/* ion-button[expand=block] {
-  max-width: var(--max-form-width);
-  margin-right: auto;
-  margin-left: auto;
-} */

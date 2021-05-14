@@ -12,7 +12,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           :router-link="'/' + gameType + '/action/target'"
           id="continue_button">
           Continue

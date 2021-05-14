@@ -16,7 +16,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="target()"
           id="target_button"
           :disabled="!sectorNumber">

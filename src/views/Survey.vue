@@ -36,7 +36,7 @@
         </div>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="survey()"
           id="survey_button"
           :disabled="!surveyReady">

@@ -22,7 +22,7 @@
         <ion-item-divider/>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           @click="conference()"
           id="conference_button"
           :disabled="selectedConference === undefined">
@@ -84,7 +84,7 @@ export default defineComponent({
       if (this.selectedConference == index) {
         return "medium";
       } else {
-        return "dark";
+        return "light";
       }
     },
     conference: function() {

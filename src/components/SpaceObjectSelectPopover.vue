@@ -78,7 +78,8 @@ export default defineComponent({
 table {
   table-layout: fixed;
   width: var(--width);
-  background-color: var(--ion-color-dark);
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
 }
 
 .space_item {
@@ -86,12 +87,12 @@ table {
   font-size: 2em;
   margin: 0px;
   padding: 10px;
-  outline: 1px solid white;
+  outline: 1px solid var(--ion-color-light-contrast);
   outline-offset: -1px;
   text-align: center;
 }
 
 .space_item:hover {
-  background-color: dimgray;
+  background-color: var(--ion-color-medium);
 }
 </style>

@@ -10,7 +10,7 @@
           <ion-button
             :disabled="!store.getters.actionAllowed('SURVEY')"
             expand="block"
-            color="dark"
+            color="light"
             @click="clickSurvey()">
             Survey ({{store.state.gameType.surveyCost.min}}-{{store.state.gameType.surveyCost.max}}
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -19,7 +19,7 @@
           <ion-button
             :disabled="!store.getters.actionAllowed('TARGET')"
             expand="block"
-            color="dark"
+            color="light"
             @click="clickTarget()">
             Target ({{store.state.gameType.targetCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -28,7 +28,7 @@
           <ion-button
             :disabled="!store.getters.actionAllowed('RESEARCH')"
             expand="block"
-            color="dark"
+            color="light"
             :router-link="'/' + gameType + '/action/research'">
             Research ({{store.state.gameType.researchCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -37,7 +37,7 @@
           <ion-button
             :disabled="!store.getters.actionAllowed('LOCATE_PLANET_X')"
             expand="block"
-            color="dark"
+            color="light"
             :router-link="'/' + gameType + '/action/locateplanetx'">
             Locate Planet X ({{store.state.gameType.locatePlanetXCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
@@ -48,21 +48,21 @@
             v-if="store.state.isSession"
             :disabled="!store.getters.actionAllowed('THEORY')"
             expand="block"
-            color="dark"
+            color="light"
             :router-link="'/' + gameType + '/action/submittheories'">
             Submit Theories
           </ion-button>
           <ion-button
             v-if="!store.state.isSession"
             expand="block"
-            color="dark"
+            color="light"
             :router-link="'/' + gameType + '/action/peerreview'">
             Peer Review
           </ion-button>
           <ion-button
             :disabled="!store.getters.actionAllowed('CONFERENCE')"
             expand="block"
-            color="dark"
+            color="light"
             :router-link="'/' + gameType + '/action/planetxconference'">
             Planet X Conference
           </ion-button>
@@ -70,14 +70,14 @@
           <ion-button
             v-if="store.state.isSession && screenSizeLessThan('md')"
             expand="block"
-            color="dark"
+            color="light"
             router-link="/session/board">
             View Board
           </ion-button>
           <ion-button
             v-if="store.state.isSession && screenSizeLessThan('md')"
             expand="block"
-            color="dark"
+            color="light"
             router-link="/session/logic">
             View Logic Sheet
           </ion-button>
@@ -85,14 +85,14 @@
             v-if="store.state.isSession"
             :disabled="store.getters.uniqueRevealedTheories.length === 0"
             expand="block"
-            color="dark"
+            color="light"
             @click="showRevealedTheories()">
             Show Revealed Theories
           </ion-button>
           <ion-button
             :disabled="!store.getters.actionAllowed('END_GAME')"
             expand="block"
-            color="dark"
+            color="light"
             @click="endGame()">
             End Game &amp; Reveal Objects
           </ion-button>

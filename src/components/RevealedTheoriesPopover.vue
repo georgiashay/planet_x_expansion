@@ -1,11 +1,11 @@
 <template>
   <div class="popover_container">
     <h2>Revealed Theories</h2>
-    <ion-item color="dark" v-for="(theory, i) in revealedTheories" :key="i">
+    <ion-item color="light" v-for="(theory, i) in revealedTheories" :key="i">
       Sector {{theory.sector + 1}}: is {{theory.accurate ? "" : "not "}}{{theory.spaceObject.one}}
       &nbsp;<ion-icon :src="theory.spaceObject.icon"/>
     </ion-item>
-    <ion-button color="dark" expand="block" @click="close()">Close</ion-button>
+    <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
 

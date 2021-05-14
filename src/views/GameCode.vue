@@ -19,7 +19,7 @@
         <ion-item-divider/>
         <ion-button
           expand="block"
-          color="dark"
+          color="light"
           router-link="/multiplayer/chooseview"
           id="continue_button">
           Continue

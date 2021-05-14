@@ -1,90 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="PlanetX24GasCloudWhite.svg"
-   inkscape:version="1.0 (4035a4f, 2020-05-01)"
-   id="svg8"
-   version="1.1"
-   viewBox="0 0 16.933333 16.933334"
-   height="64"
-   width="64">
-  <defs
-     id="defs2">
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect6335"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect6331"
-       is_visible="true"
-       lpeversion="1" />
-  </defs>
-  <sodipodi:namedview
-     inkscape:window-maximized="0"
-     inkscape:window-y="23"
-     inkscape:window-x="0"
-     inkscape:window-height="767"
-     inkscape:window-width="1440"
-     inkscape:snap-intersection-paths="true"
-     height="12in"
-     units="px"
-     showgrid="true"
-     inkscape:document-rotation="0"
-     inkscape:current-layer="layer1"
-     inkscape:document-units="mm"
-     inkscape:cy="64.420363"
-     inkscape:cx="-77.18128"
-     inkscape:zoom="1.4774609"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
-     pagecolor="#ffffff"
-     id="base"
-     inkscape:snap-bbox="false"
-     inkscape:bbox-paths="true"
-     inkscape:bbox-nodes="true" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     id="layer1"
-     inkscape:groupmode="layer"
-     inkscape:label="Layer 1">
-    <g
-       transform="translate(7.9999982e-4,-58.464433)"
-       id="g2649" />
-    <g
-       transform="matrix(0.96441112,0.25841318,-0.25841318,0.96441112,421.77036,67.047613)"
-       id="g1543"
-       style="stroke-width:1.00157" />
-    <g
-       transform="translate(3.9687401,10.583333)"
-       id="g1273" />
-    <g
-       style="stroke-width:1.11023"
-       transform="translate(-256.13703,-382.91016)"
-       id="g2649-0" />
-    <path
-       d="m 6.4550947,4.1857203 a 1.929072,2.6245205 74.992739 0 0 -2.1718322,2.3194224 2.010007,2.061068 30.224432 0 0 -0.925159,-7.8e-6 2.010007,2.061068 30.224432 0 0 -1.5592118,2.4625327 2.010007,2.061068 30.224432 0 0 1.7442108,1.5708254 2.4371347,2.5701711 63.346828 0 0 0.011785,0.05822 2.4371347,2.5701711 63.346828 0 0 2.9970341,1.802412 2.4371347,2.5701711 63.346828 0 0 1.1064742,-0.553209 1.929072,2.6245205 74.992739 0 0 2.8112162,0.903625 1.929072,2.6245205 74.992739 0 0 2.180456,-2.321983 2.010007,2.061068 30.224432 0 0 0.925167,8e-6 A 2.010007,2.061068 30.224432 0 0 15.134447,7.9650608 2.010007,2.061068 30.224432 0 0 13.389869,6.3947974 2.4371347,2.5701711 63.346828 0 0 13.378552,6.336651 2.4371347,2.5701711 63.346828 0 0 10.381518,4.5342393 2.4371347,2.5701711 63.346828 0 0 9.2749425,5.0869652 1.929072,2.6245205 74.992739 0 0 6.4638284,4.1838237 a 1.929072,2.6245205 74.992739 0 0 -0.00874,0.00234 z"
-       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.62439;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-       id="path6337" />
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" version="1.1" viewBox="0 0 16.933 16.933" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <path d="m6.4551 4.1857a1.9291 2.6245 74.993 0 0-2.1718 2.3194 2.01 2.0611 30.224 0 0-0.92516-7.8e-6 2.01 2.0611 30.224 0 0-1.5592 2.4625 2.01 2.0611 30.224 0 0 1.7442 1.5708 2.4371 2.5702 63.347 0 0 0.011785 0.05822 2.4371 2.5702 63.347 0 0 2.997 1.8024 2.4371 2.5702 63.347 0 0 1.1065-0.55321 1.9291 2.6245 74.993 0 0 2.8112 0.90362 1.9291 2.6245 74.993 0 0 2.1805-2.322 2.01 2.0611 30.224 0 0 0.92517 8e-6 2.01 2.0611 30.224 0 0 1.5592-2.4625 2.01 2.0611 30.224 0 0-1.7446-1.5703 2.4371 2.5702 63.347 0 0-0.011317-0.058146 2.4371 2.5702 63.347 0 0-2.997-1.8024 2.4371 2.5702 63.347 0 0-1.1066 0.55273 1.9291 2.6245 74.993 0 0-2.8111-0.90314 1.9291 2.6245 74.993 0 0-0.00874 0.00234z" fill="none" stroke="currentColor" stroke-width=".62439" style="paint-order:markers fill stroke"/>
 </svg>

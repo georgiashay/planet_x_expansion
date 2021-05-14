@@ -5,13 +5,13 @@
         content-id="main"
         side="end"
         menu-id="menu">
-        <ion-router-outlet />
+        <ion-router-outlet/>
       </ion-menu>
 
       <ion-page id="main">
         <template v-if="showWheel">
-          <ion-segment v-model="whichCircle" color="dark">
-            <ion-segment-button value="board" color="dark">
+          <ion-segment v-model="whichCircle">
+            <ion-segment-button value="board">
               Board
             </ion-segment-button>
             <ion-segment-button value="logic">

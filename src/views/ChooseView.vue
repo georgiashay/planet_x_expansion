@@ -21,7 +21,7 @@
           <ion-button
             v-if="selectedView !== undefined"
             expand="block"
-            color="dark"
+            color="light"
             @click="continueGame()"
             id="continue_button">
             Continue
@@ -79,7 +79,7 @@ export default defineComponent({
       if (this.selectedView == view) {
         return "medium";
       } else {
-        return "dark";
+        return "light";
       }
     },
     continueGame: function() {
