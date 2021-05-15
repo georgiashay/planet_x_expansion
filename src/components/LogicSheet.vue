@@ -111,7 +111,8 @@ export default defineComponent({
       paths: undefined,
       iconRadii: undefined,
       iconWidth: undefined,
-      informationCircleOutline
+      informationCircleOutline,
+      unsubscribeStore: () => { return; }
     }
   },
   computed: {
@@ -558,7 +559,10 @@ export default defineComponent({
     }
   },
   async mounted() {
-    this.store.subscribe((mutation, state) => {
+    await this.$nextTick();
+    await this.computeCanvas();
+
+    this.unsubscribeStore = this.store.subscribe((mutation, state) => {
       if (mutation.type === "logicEliminate") {
         this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object);
       } else if (mutation.type === "logicUneliminate") {
@@ -569,9 +573,6 @@ export default defineComponent({
         this.drawObjectUnsetEqual(mutation.payload.sector, mutation.payload.object);
       }
     });
-
-    await this.$nextTick();
-    await this.computeCanvas();
 
     const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
     canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
@@ -600,6 +601,7 @@ export default defineComponent({
     this.positionSummary();
   },
   unmounted() {
+    this.unsubscribeStore();
     window.removeEventListener("resize", this.positionSummary);
   }
 });
