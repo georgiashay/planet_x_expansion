@@ -390,8 +390,9 @@ export default defineComponent({
       const textHeight = 150;
 
       const lightColor = this.getCSSVariable("--ion-color-light");
-      const mediumColor = this.getCSSVariable("--ion-color-medium");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
+
+      const mediumColor = darkColor.trim().toUpperCase() === "#FFFFFF" ? "gray" : "lemonchiffon";
 
       ctx.beginPath();
       ctx.fillStyle = lightColor;
