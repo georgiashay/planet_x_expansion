@@ -701,7 +701,7 @@ export default createStore({
           return actionName === "THEORY" || actionName === "LOCATE_PLANET_X";
           break;
         case "PLAYER_TURN": {
-          const researchAllowed = getters.lastTurnResult?.actionType != "RESEARCH";
+          const researchAllowed = getters.lastTurnResult?.actionType != "RESEARCH" && getters.researchLeft;
           const targetAllowed = state.history.filter((action: any) => action.actionType === "TARGET").length < state.gameType.numTargets;
           return actionName === "SURVEY"
                   || actionName === "TARGET" && targetAllowed
@@ -712,6 +712,9 @@ export default createStore({
     },
     researchedAlready: (state: any) => (index: number) => {
       return state.history.filter((action: any) => action.actionType === "RESEARCH" && action.index === index).length > 0;
+    },
+    researchLeft: (state: any, getters: any) => {
+      return state.game.research.filter((rsrch: any, index: number) => !getters.researchedAlready(index)).length > 0;
     },
     skySize(state: any) {
       return Math.floor(state.gameType.sectors/2);
