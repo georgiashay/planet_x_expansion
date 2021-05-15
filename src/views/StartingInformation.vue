@@ -25,6 +25,15 @@
           </ion-grid>
         </div>
         <ion-button
+          v-if="store.state.isSession"
+          expand="block"
+          color="light"
+          @click="exportLogic()"
+          id="export_button">
+          Export to Logic Sheet
+        </ion-button>
+        <ion-item-divider/>
+        <ion-button
           expand="block"
           color="light"
           :router-link="'/' + gameType + '/researchcategories'"
@@ -41,7 +50,8 @@
 <script lang="ts">
 import { IonContent, IonPage,
         IonButton, IonIcon,
-        IonGrid, IonCol, IonRow } from '@ionic/vue';
+        IonGrid, IonCol, IonRow,
+        IonItemDivider } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -59,6 +69,7 @@ export default defineComponent({
     IonGrid,
     IonCol,
     IonRow,
+    IonItemDivider,
     GameFooter,
     SessionHeader
   },
@@ -78,6 +89,17 @@ export default defineComponent({
   },
   ionViewDidEnter() {
     this.playSound("sonar1");
+  },
+  methods: {
+    exportLogic: function() {
+      for (let i = 0; i < this.store.getters.myStartingInformation.length; i++) {
+        const info = this.store.getters.myStartingInformation[i];
+        this.store.commit("logicEliminate", {
+          sector: info.sector,
+          object: info.spaceObject.initial
+        });
+      }
+    }
   }
 });
 </script>
@@ -104,6 +126,10 @@ export default defineComponent({
 
 #starting_info {
   margin-bottom: 10px;
+}
+
+#export_button {
+  text-transform: none;
 }
 
 #start_button {

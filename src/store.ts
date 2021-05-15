@@ -24,7 +24,7 @@ export default createStore({
     webSocketFailures: 0,
     currentWebSocket: undefined,
     muteLevel: 1,
-    logicBoard: {}
+    logicBoard: undefined
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -59,6 +59,7 @@ export default createStore({
       commit('setPlayerNum', response.data.playerNum);
       commit('setPlayerID', response.data.playerID);
       commit('setPlayerName', name);
+      commit('setupLogicBoard', numSectors);
       dispatch('listenSession');
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
@@ -78,6 +79,7 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', name);
+        commit('setupLogicBoard', response.data.game.board.size);
         dispatch('listenSession');
       }
     },
@@ -98,6 +100,7 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', response.data.playerName);
+        commit('setupLogicBoard', response.data.game.board.size);
         dispatch('listenSession');
       }
     },
@@ -425,7 +428,30 @@ export default createStore({
       if (state.isSession) {
         await axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
       }
-    }
+    },
+    logicToggle({state, commit}, { sector, object }) {
+      if (state.logicBoard[sector].eliminated.has(object)) {
+        commit('logicUneliminate', { sector, object });
+      } else if (state.logicBoard[sector].equalTo === object ){
+        commit('logicUnset', { sector, object });
+      } else {
+        commit('logicEliminate', { sector, object });
+      }
+    },
+    logicToggleEqual({ state, commit }, { sector, object }) {
+      if (state.logicBoard[sector].equalTo === object) {
+        commit('logicUnset', { sector, object });
+      } else {
+        if (state.logicBoard[sector].equalTo !== undefined) {
+          commit('logicUnset', {
+            sector,
+            object: state.logicBoard[sector].equalTo
+          });
+        }
+        commit('logicUneliminate', { sector, object });
+        commit('logicSet', { sector, object });
+      }
+    },
   },
   mutations: {
     setGame(state: any, game: object) {
@@ -561,66 +587,27 @@ export default createStore({
         state.history.push(actionResult);
       }
     },
-    logicEliminate(state: any, { sector, object }) {
-      if (state.logicBoard[sector] !== undefined) {
-        state.logicBoard[sector].eliminated.push(object);
-      } else {
-        state.logicBoard[sector] = {
-          eliminated: [object],
+    setupLogicBoard(state: any, sectors: number) {
+      const logicBoard: {[sector: number]: any} = {};
+      for (let i = 0; i < sectors; i++) {
+        logicBoard[i] = {
+          eliminated: new Set(),
           equalTo: undefined
         }
       }
+      state.logicBoard = logicBoard;
+    },
+    logicEliminate(state: any, { sector, object }) {
+      state.logicBoard[sector].eliminated.add(object);
     },
     logicUneliminate(state: any, { sector, object }) {
-      const index = state.logicBoard[sector].eliminated.indexOf(object);
-      if (index >= 0) {
-        state.logicBoard[sector].eliminated.splice(index, 1);
-        state.logicBoard[sector].equalTo = undefined;
-      }
-    },
-    logicToggle(state: any, { sector, object }) {
-      if (state.logicBoard[sector] == undefined) {
-        state.logicBoard[sector] = {
-          eliminated: [object],
-          equalTo: undefined
-        }
-      } else {
-        const index = state.logicBoard[sector].eliminated.indexOf(object);
-        if (index >= 0) {
-          state.logicBoard[sector].eliminated.splice(index, 1);
-          state.logicBoard[sector].equalTo = undefined;
-        } else if (state.logicBoard[sector].equalTo === object) {
-          state.logicBoard[sector].equalTo = undefined;
-        } else {
-          state.logicBoard[sector].eliminated.push(object);
-        }
-      }
+      state.logicBoard[sector].eliminated.delete(object);
     },
     logicSet(state: any, { sector, object }) {
-      if (state.logicBoard[sector] !== undefined) {
-        state.logicBoard[sector].equalTo = object;
-      } else {
-        state.logicBoard[sector] = {
-          eliminated: [],
-          equalTo: object
-        }
-      }
+      state.logicBoard[sector].equalTo = object;
     },
-    logicToggleEqual(state: any, { sector, object }) {
-      if (state.logicBoard[sector] === undefined) {
-        state.logicBoard[sector] = {
-          eliminated: [],
-          equalTo: object
-        }
-      } else if (state.logicBoard[sector].equalTo === object) {
-        state.logicBoard[sector].equalTo = undefined;
-      } else {
-        state.logicBoard[sector].equalTo = object;
-        const index = state.logicBoard[sector].eliminated.indexOf(object);
-        if (index >= 0) {
-          state.logicBoard[sector].eliminated.splice(index, 1);
-        }
-      }
+    logicUnset(state: any, { sector, object }) {
+      state.logicBoard[sector].equalTo = undefined;
     },
     logicResetAll(state: any) {
       state.logicBoard = {};

@@ -339,32 +339,36 @@ export default defineComponent({
       ctx.strokeStyle = this.getCSSVariable("--ion-color-light-contrast");
       ctx.stroke();
     },
+    getIconRadius: function(spaceObject: string) {
+      return this.iconRadii.find((ir: any) => ir.object === spaceObject);
+    },
+    drawObjectEliminated: function(sector: number, spaceObject: string) {
+      const iconRadius = this.getIconRadius(spaceObject);
+      this.redrawObject(sector, iconRadius, "eliminated");
+    },
+    drawObjectEqual: function(sector: number, spaceObject: string) {
+      const iconRadius = this.getIconRadius(spaceObject);
+      this.redrawObject(sector, iconRadius, "equal");
+    },
+    drawObjectUneliminated: function (sector: number, spaceObject: string) {
+      const iconRadius = this.getIconRadius(spaceObject);
+      this.redrawObject(sector, iconRadius, "none");
+
+    },
+    drawObjectUnsetEqual: function (sector: number, spaceObject: string) {
+      const iconRadius = this.getIconRadius(spaceObject);
+      this.redrawObject(sector, iconRadius, "none");
+    },
     toggleObjectEqual: function(sector: number, iconRadius: any) {
-      const nowEqual = this.store.state.logicBoard[sector] === undefined || this.store.state.logicBoard[sector].equalTo !== iconRadius.object;
-
-      if (nowEqual && this.store.state.logicBoard[sector]?.equalTo !== undefined) {
-          const otherIcon = this.iconRadii.find((ir: any) => ir.object === this.store.state.logicBoard[sector].equalTo);
-          this.redrawObject(sector, otherIcon, "none");
-      }
-
-      this.redrawObject(sector, iconRadius, nowEqual ? "equal" : "none");
-
-      this.store.commit("logicToggleEqual", {
+      this.store.dispatch("logicToggleEqual", {
         sector,
         object: iconRadius.object
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
-      const nowEliminated = this.store.state.logicBoard[sector] === undefined
-                                || (this.store.state.logicBoard[sector].eliminated.indexOf(iconRadius.object) == -1
-                                && this.store.state.logicBoard[sector].equalTo !== iconRadius.object);
+      const checkHold = this.store.state.logicBoard[sector].equalTo !== iconRadius.object;
 
-      this.redrawObject(sector, iconRadius, nowEliminated ? "eliminated" : "none");
-
-      const checkHold = this.store.state.logicBoard[sector] === undefined
-                          || this.store.state.logicBoard[sector].equalTo != iconRadius.object;
-
-      this.store.commit("logicToggle", {
+      this.store.dispatch("logicToggle", {
         sector,
         object: iconRadius.object
       });
@@ -526,9 +530,9 @@ export default defineComponent({
 
         for (let j = 0; j < iconRadii.length; j++) {
           if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
-            if (this.store.state.logicBoard[i] !== undefined && this.store.state.logicBoard[i].eliminated.indexOf(iconRadii[j].object) >= 0) {
+            if (this.store.state.logicBoard[i].eliminated.has(iconRadii[j].object)) {
               ctx.drawImage(iconRadii[j].fullImage, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
-            } else if (this.store.state.logicBoard[i] !== undefined && this.store.state.logicBoard[i].equalTo === iconRadii[j].object) {
+            } else if (this.store.state.logicBoard[i].equalTo === iconRadii[j].object) {
               ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
               ctx.rect(-iconRadii[j].width/2-10, -iconRadii[j].radius - iconRadii[j].height - 10, iconRadii[j].width + 20, iconRadii[j].height + 20);
@@ -553,6 +557,18 @@ export default defineComponent({
     }
   },
   async mounted() {
+    this.store.subscribe((mutation, state) => {
+      if (mutation.type === "logicEliminate") {
+        this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object);
+      } else if (mutation.type === "logicUneliminate") {
+        this.drawObjectUneliminated(mutation.payload.sector, mutation.payload.object);
+      } else if (mutation.type === "logicSet") {
+        this.drawObjectEqual(mutation.payload.sector, mutation.payload.object);
+      } else if (mutation.type === "logicUnset") {
+        this.drawObjectUnsetEqual(mutation.payload.sector, mutation.payload.object);
+      }
+    });
+
     await this.$nextTick();
     await this.computeCanvas();
 
@@ -562,24 +578,19 @@ export default defineComponent({
     let timeout: any = undefined;
 
     canvas.addEventListener("mousedown", (e: Event) => {
-      console.log("mousedown");
       const checkHold = this.handleClick(e);
-      console.log(checkHold);
       if (checkHold) {
         timeout = setTimeout(() => {
-          console.log("hold");
           this.handleRightClick(e);
         }, 350);
       }
     });
 
     canvas.addEventListener("mouseleave", (e: Event) => {
-      console.log("mouseleave");
       clearTimeout(timeout);
     });
 
     canvas.addEventListener("mouseup", (e: Event) => {
-      console.log("mouseup");
       clearTimeout(timeout);
     });
 
