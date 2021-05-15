@@ -911,6 +911,7 @@ export default createStore({
       return history;
     },
     visibleTheories(state: any, getters: any) {
+      const isEndGame = state.session.currentAction.actionType === "END_GAME";
       const allTheories = state.session.theories.slice();
       const theories = [];
       for (let i = 0; i < allTheories.length; i++) {
@@ -920,7 +921,13 @@ export default createStore({
             theories.push(theory);
           }
         } else if (theory.progress < 3) {
-          theories.push(theory);
+          if (isEndGame) {
+            if (theory.accurate) {
+              theories.push(Object.assign({}, theory, { revealed: true}));
+            }
+          } else {
+            theories.push(theory);
+          }
         }
       }
 
