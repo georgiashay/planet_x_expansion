@@ -46,10 +46,10 @@ export default createStore({
     async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
-      console.log(response.data);
+      // console.log(response.data);
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-      console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-      console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+      // console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+      // console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
       commit('setGame', response.data.game);
       commit('setIsSession', true);
       commit('setSessionState', response.data.state);
@@ -66,10 +66,10 @@ export default createStore({
       // Join existing session
       const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode + "?name=" + name);
       if (response.data.found) {
-        console.log(response.data);
+        // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-        console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        // console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        // console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -87,10 +87,10 @@ export default createStore({
       // Reconnect to existing session
       const response: any = await axios.get(API_URL + "/reconnectSession/" + sessionCode + "/?playerNum=" + playerNum);
       if (response.data.found) {
-        console.log(response.data);
+        // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-        console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        // console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        // console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -114,9 +114,9 @@ export default createStore({
       const ws = new WebSocket(WEBSOCKET_URL + "/" + state.sessionID);
       ws.onopen = () => console.log("Listening for updates to state");
       ws.onmessage = (message) => {
-        console.log("Received update to session");
+        // console.log("Received update to session");
         const sessionState = JSON.parse(message.data);
-        console.log(sessionState);
+        // console.log(sessionState);
         commit('getNewlyRevealedTheories', sessionState);
         dispatch('checkMyTurn', sessionState);
         dispatch('checkWinner', sessionState);

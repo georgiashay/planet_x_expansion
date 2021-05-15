@@ -301,6 +301,14 @@ export default defineComponent({
     getCSSVariable: function(varName: string) {
       return getComputedStyle(document.body).getPropertyValue(varName);
     },
+    isDarkMode: function() {
+      if (window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     redrawObject: function(sector: number, iconRadius: any, newStatus: string) {
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
@@ -393,7 +401,7 @@ export default defineComponent({
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
-      const mediumColor = darkColor.trim().toUpperCase() === "#FFFFFF" ? "gray" : "lemonchiffon";
+      const mediumColor = this.isDarkMode() ? "gray" : "lemonchiffon";
 
       ctx.beginPath();
       ctx.fillStyle = lightColor;
@@ -463,7 +471,7 @@ export default defineComponent({
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
-      const mediumColor = darkColor.trim().toUpperCase() === "#FFFFFF" ? "gray" : "lemonchiffon";
+      const mediumColor = this.isDarkMode() ? "gray" : "lemonchiffon";
 
       let iconWidth = 150;
 

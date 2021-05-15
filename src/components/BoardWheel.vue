@@ -179,6 +179,14 @@ export default defineComponent({
     getCSSVariable: function(varName: string) {
       return getComputedStyle(document.body).getPropertyValue(varName);
     },
+    isDarkMode: function() {
+      if (window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     computeCanvas: async function() {
       if (!this.store.getters.gameReady || !this.store.state.isSession) {
         return;
@@ -230,8 +238,7 @@ export default defineComponent({
 
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
-
-      const mediumColor = darkColor.trim().toUpperCase() === "#FFFFFF" ? "gray" : "lemonchiffon";
+      const mediumColor = this.isDarkMode() ? "gray" : "lemonchiffon";
 
       ctx.beginPath();
       ctx.fillStyle = lightColor;
@@ -409,7 +416,7 @@ export default defineComponent({
         ctx.font = (iconSize*0.8) + "px Roboto Slab";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
-        ctx.fillStyle = darkColor.trim().toUpperCase() === "#FFFFFF" ? "#47d1ff" : "blue";
+        ctx.fillStyle = this.isDarkMode() ? "#47d1ff" : "blue";
         ctx.textBaseline = "bottom";
         ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
 
@@ -451,8 +458,7 @@ export default defineComponent({
       return img;
     },
     collectImages: async function() {
-      const isDark = this.getCSSVariable("--ion-color-light-contrast").trim().toUpperCase() === "#FFFFFF";
-      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", isDark ? "orange" : "purple");
+      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", this.isDarkMode() ? "orange" : "purple");
 
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
