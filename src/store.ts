@@ -48,8 +48,8 @@ export default createStore({
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
       // console.log(response.data);
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-      // console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-      // console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+      console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+      console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
       commit('setGame', response.data.game);
       commit('setIsSession', true);
       commit('setSessionState', response.data.state);
@@ -68,8 +68,8 @@ export default createStore({
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        // console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-        // console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -89,8 +89,8 @@ export default createStore({
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        // console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-        // console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -912,22 +912,15 @@ export default createStore({
     },
     visibleTheories(state: any, getters: any) {
       const allTheories = state.session.theories.slice();
-      const revealedSectors = new Set(allTheories.filter((theory: any) => theory.revealed && theory.accurate).map((theory: any) => theory.sector));
       const theories = [];
       for (let i = 0; i < allTheories.length; i++) {
         const theory = allTheories[i];
-        if (revealedSectors.has(theory.sector)) {
+        if (theory.revealed) {
           if (theory.accurate) {
-            if (theory.revealed) {
-              theories.push(theory);
-            } else {
-              theories.push(Object.assign(theory, { boardProgress: 3}));
-            }
-          }
-        } else {
-          if (theory.boardProgress < 3) {
             theories.push(theory);
           }
+        } else if (theory.progress < 3) {
+          theories.push(theory);
         }
       }
 

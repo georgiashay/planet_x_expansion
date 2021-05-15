@@ -67,7 +67,7 @@ export default defineComponent({
       const sectors = Array.from(Array(this.store.state.gameType.sectors)).map(() => Array.from(Array(4)).map(() => []));
       for (let i = 0; i < this.store.getters.visibleTheories.length; i++) {
         const theory = this.store.getters.visibleTheories[i];
-        sectors[theory.sector][theory.boardProgress].push(theory);
+        sectors[theory.sector][theory.progress].push(theory);
       }
       return sectors;
     },
@@ -320,7 +320,7 @@ export default defineComponent({
             ctx.fillStyle = gradient;
             ctx.fillRect(-tokenSize/2, radius, tokenSize, tokenSize);
 
-            if (progress === 3) {
+            if (this.theorySlots[i][progress][0].revealed) {
               ctx.fillStyle = lightColor;
               ctx.fillRect(-tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
 
