@@ -99,6 +99,7 @@ import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
 import ScreenSize from "@/mixins/ScreenSize.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
+import DarkMode from "@/mixins/DarkMode.ts";
 
 const LINE_WIDTH = 8;
 const SELECTED_BOX_PADDING = 10;
@@ -114,7 +115,7 @@ export default defineComponent({
     IonFab,
     IonFabButton
   },
-  mixins: [ScreenSize],
+  mixins: [ScreenSize, DarkMode],
   data() {
     const store = useStore();
     return {
@@ -312,14 +313,6 @@ export default defineComponent({
     getCSSVariable: function(varName: string) {
       return getComputedStyle(document.body).getPropertyValue(varName);
     },
-    isDarkMode: function() {
-      if (window.matchMedia &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return true;
-      } else {
-        return false;
-      }
-    },
     redrawObject: function(sector: number, iconRadius: any, newStatus: string) {
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
@@ -412,16 +405,17 @@ export default defineComponent({
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
-      const mediumColor = this.isDarkMode() ? "gray" : "lemonchiffon";
+      const baseColor = lightColor;
+      const skyColor = this.isDarkMode() ? "#585858" : "#FFFFCC";
 
       ctx.beginPath();
-      ctx.fillStyle = lightColor;
+      ctx.fillStyle = baseColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI, false);
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI, true);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = mediumColor;
+      ctx.fillStyle = skyColor;
       ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
       ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
       ctx.fill();
@@ -482,8 +476,8 @@ export default defineComponent({
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
-      const baseColor = this.isDarkMode() ? "#585858" : lightColor;
-      const skyColor = this.isDarkMode() ? lightColor : "#FFFFCC";
+      const baseColor = lightColor;
+      const skyColor = this.isDarkMode() ? "#585858" : "#FFFFCC";
 
       let iconWidth = 150;
 
@@ -525,7 +519,7 @@ export default defineComponent({
         ctx.lineTo(0, 0);
         ctx.fill();
       }
-      
+
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);

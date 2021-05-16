@@ -122,6 +122,9 @@ export default defineComponent({
       await popover.present();
       await popover.onDidDismiss();
     }
+  },
+  mounted() {
+    document.body.classList.add("dark");
   }
 });
 </script>

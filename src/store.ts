@@ -25,7 +25,8 @@ export default createStore({
     currentWebSocket: undefined,
     logicBoard: undefined,
     settings: {
-      muteLevel: 1
+      muteLevel: 1,
+      darkMode: true
     }
   },
   actions: {
@@ -509,6 +510,9 @@ export default createStore({
     },
     setMuteLevel(state: any, level: number) {
       state.settings.muteLevel = level;
+    },
+    setDarkMode(state: any, mode: boolean) {
+      state.settings.darkMode = mode;
     },
     peerReview(state: any, { spaceObject, sector }) {
       // Check if theory object is correct

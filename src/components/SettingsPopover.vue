@@ -14,15 +14,19 @@
         </ion-row>
       </ion-grid>
     </ion-item>
+    <ion-item color="light">
+      <ion-label>Dark Mode</ion-label>
+      <ion-toggle v-model="darkMode" @ionChange="changeDarkMode()"></ion-toggle>
+    </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { popoverController, IonSelect,
-        IonSelectOption, IonItem, IonLabel,
-        IonButton, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import { popoverController, IonItem, IonLabel,
+        IonButton, IonGrid, IonRow, IonCol,
+        IonToggle } from '@ionic/vue';
 import { useStore } from 'vuex';
 
 export default defineComponent({
@@ -33,13 +37,15 @@ export default defineComponent({
     IonButton,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonToggle
   },
   data() {
     const store = useStore();
     return {
       store: store,
       muteLevel: store.state.settings.muteLevel,
+      darkMode: store.state.settings.darkMode,
       muteLevelNames: ["None", "Some", "All"]
     }
   },
@@ -49,14 +55,22 @@ export default defineComponent({
     },
     buttonColor: function(i: number) {
       if (i === this.muteLevel) {
-        return "medium";
-      } else {
         return "dark";
+      } else {
+        return "medium";
       }
     },
     changeMuteLevel: function(level: number) {
       this.muteLevel = level;
       this.store.commit("setMuteLevel", level);
+    },
+    changeDarkMode: function() {
+      this.store.commit("setDarkMode", this.darkMode);
+      if (this.darkMode) {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
     }
   }
 });
@@ -74,5 +88,12 @@ ion-button {
 
 ion-col {
   padding: 0;
+}
+
+ion-toggle {
+  --background: var(--ion-color-light-shade);
+  --handle-background: var(--ion-color-light);
+  --background-checked: var(--ion-color-dark-tint);
+  --handle-background-checked: var(--ion-color-dark);
 }
 </style>

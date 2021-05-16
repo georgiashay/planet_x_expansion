@@ -22,6 +22,7 @@ import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
 import { initialToSpaceObject } from "@/constants.ts";
 import ScreenSize from "@/mixins/ScreenSize.ts";
+import DarkMode from "@/mixins/DarkMode.ts";
 
 export default defineComponent({
   name: 'BoardWheel',
@@ -29,7 +30,7 @@ export default defineComponent({
     IonNavLink,
     Scores
   },
-  mixins: [PlayerColors, ScreenSize],
+  mixins: [PlayerColors, ScreenSize, DarkMode],
   data() {
     const store = useStore();
     return {
@@ -178,14 +179,6 @@ export default defineComponent({
     },
     getCSSVariable: function(varName: string) {
       return getComputedStyle(document.body).getPropertyValue(varName);
-    },
-    isDarkMode: function() {
-      if (window.matchMedia &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return true;
-      } else {
-        return false;
-      }
     },
     computeCanvas: async function() {
       if (!this.store.getters.gameReady || !this.store.state.isSession) {
