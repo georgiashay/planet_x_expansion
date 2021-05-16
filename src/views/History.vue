@@ -10,7 +10,8 @@
           <ion-button
             expand="block"
             color="light"
-            :router-link="'/' + gameType + '/startinginfo'">
+            :router-link="'/' + gameType + '/startinginfo'"
+            class="history-item">
             <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
           <template v-if="store.state.isSession">
@@ -21,8 +22,9 @@
               color="light"
               :disabled = "!item.mine"
               :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
+              class="history-item"
             >
-              <span v-if="item.playerName !== undefined">{{item.playerName}}:&nbsp;</span><span class="ion-text-left">{{item.actionText}}</span>
+              <span class = "ion-text-left"><span v-if="item.playerName !== undefined">{{item.playerName}}:&nbsp;</span>{{item.actionText}}</span>
             </ion-button>
           </template>
           <template v-else>
@@ -31,7 +33,8 @@
               :key="index"
               expand="block"
               color="light"
-              :router-link="'/' + gameType + '/action/result/' + item.index">
+              :router-link="'/' + gameType + '/action/result/' + item.index"
+              class="history-item">
             <span class="ion-text-left">{{item.item.actionText}}</span>
           </ion-button>
           </template>
@@ -142,5 +145,8 @@ export default defineComponent({
 
 .ion-text-left {
   margin-right: auto;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em;
 }
 </style>
