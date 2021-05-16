@@ -6,20 +6,35 @@
         <div id="title_container">
           <h3>History</h3>
         </div>
+        <ion-item color="light" v-if="store.state.isSession && store.state.session.players.length > 1">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-button class="player_button" :color="buttonColor(0)" expand="block" @click="filterNum = 0;">All</ion-button>
+              </ion-col>
+              <ion-col
+                v-for="(player, index) in players"
+                :key="index">
+                <ion-button class="player_button" :color="buttonColor(player.num)" expand="block" @click="filterNum = player.num;">{{player.name}}</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
         <div id="history">
           <ion-button
             expand="block"
             color="light"
             :router-link="'/' + gameType + '/startinginfo'"
-            class="history-item">
+            class="history-item"
+            v-if="!store.state.isSession || filterNum === 0 || filterNum === store.getters.playerInfo.num">
             <span class="ion-text-left">Starting Information, {{store.state.seasonView.name }} {{ store.state.seasonView.viewType }}</span>
           </ion-button>
           <template v-if="store.state.isSession">
             <ion-button
-              v-for="(item, index) in store.getters.selectedHistory"
+              v-for="(item, index) in filteredHistory"
               :key="index"
               expand="block"
-              color="light"
+              :color="item.mine ? 'light' : 'medium'"
               :disabled = "!item.mine"
               :router-link="'/' + gameType + '/action/result/' + item.historyIndex"
               class="history-item"
@@ -51,7 +66,8 @@
 
 <script lang="ts">
 import { IonContent, IonPage,
-        IonButton, IonNavLink } from '@ionic/vue';
+        IonButton, IonNavLink, IonItem,
+        IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -66,6 +82,10 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonButton,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonItem,
     Stripe,
     IonNavLink,
     GameFooter,
@@ -83,10 +103,14 @@ export default defineComponent({
     const router = useRouter();
     return {
       store,
-      router
+      router,
+      filterNum: 0
     }
   },
   computed: {
+    players: function(): Array<any> {
+      return this.store.state.session.players.slice().sort((a: any, b: any) => a.num - b.num);
+    },
     selectedGameHistory: function(): Array<any> {
       return this.store.state.history.map((item: any, index: number) => {
         return { item, index };
@@ -94,7 +118,25 @@ export default defineComponent({
         // Don't display peer reviews in history
         return item.item.actionType != "peerreview";
       });
+    },
+    filteredHistory: function(): Array<any> {
+      const history = this.store.getters.selectedHistory;
+
+      if (this.filterNum === 0) {
+        return history;
+      } else {
+        return history.filter((action: any) => action.playerNum === this.filterNum || action.playerNum === undefined);
+      }
     }
+  },
+  methods: {
+    buttonColor: function(i: number) {
+      if (i === this.filterNum) {
+        return "dark";
+      } else {
+        return "medium";
+      }
+    },
   },
   ionViewDidEnter() {
     this.playSound("sonar1");
@@ -127,7 +169,6 @@ export default defineComponent({
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10vh;
 }
 
 #history ion-button {
@@ -148,5 +189,13 @@ export default defineComponent({
   overflow-x: hidden;
   text-overflow: ellipsis;
   line-height: 1.2em;
+}
+
+.player_button {
+  text-transform: none;
+}
+
+.button-disabled {
+  opacity: 1;
 }
 </style>
