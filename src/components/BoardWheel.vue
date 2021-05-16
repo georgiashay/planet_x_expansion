@@ -238,15 +238,17 @@ export default defineComponent({
 
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
-      const mediumColor = this.isDarkMode() ? "gray" : "lemonchiffon";
+
+      const skyColor = this.isDarkMode() ? "#585858" : lightColor;
+      const baseColor = this.isDarkMode() ? lightColor : "silver";
 
       ctx.beginPath();
-      ctx.fillStyle = lightColor;
+      ctx.fillStyle = baseColor;
       ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = mediumColor;
+      ctx.fillStyle = skyColor;
       ctx.arc(0, 0, trackRadius, skyAngle, skyAngle + Math.PI);
       ctx.fill();
 
@@ -321,7 +323,11 @@ export default defineComponent({
             ctx.fillRect(-tokenSize/2, radius, tokenSize, tokenSize);
 
             if (this.theorySlots[i][progress][0].revealed) {
-              ctx.fillStyle = lightColor;
+              if (this.store.getters.skySectors.indexOf(i) >= 0) {
+                ctx.fillStyle = skyColor;
+              } else {
+                ctx.fillStyle = baseColor;
+              }
               ctx.fillRect(-tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
 
               ctx.drawImage(this.objectImages[this.store.state.game.board.objects[i].initial], -tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
@@ -363,7 +369,7 @@ export default defineComponent({
       }
 
       ctx.beginPath();
-      ctx.fillStyle = "#fdfd96";
+      ctx.fillStyle = skyColor;
       ctx.arc(0, 0, sunRadius, 0, 2*Math.PI);
       ctx.fill();
 

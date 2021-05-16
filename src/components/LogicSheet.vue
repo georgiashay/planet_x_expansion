@@ -471,7 +471,8 @@ export default defineComponent({
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
-      const mediumColor = this.isDarkMode() ? "gray" : "lemonchiffon";
+      const baseColor = this.isDarkMode() ? "#585858" : lightColor;
+      const skyColor = this.isDarkMode() ? lightColor : "#FFFFCC";
 
       let iconWidth = 150;
 
@@ -484,12 +485,12 @@ export default defineComponent({
       this.iconWidth = iconWidth;
 
       ctx.beginPath();
-      ctx.fillStyle = lightColor;
+      ctx.fillStyle = baseColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = mediumColor;
+      ctx.fillStyle = skyColor;
       ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
       ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
       ctx.fill();
