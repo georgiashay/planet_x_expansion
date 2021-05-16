@@ -11,8 +11,9 @@
           <stripe/>
           <ion-button expand="block" color="light" router-link = "/multiplayer/create">Start New Game</ion-button>
           <ion-button expand="block" color="light" router-link = "/multiplayer/join">Enter Game Code</ion-button>
-          <ion-button expand="block" color="light" router-link = "/session/create">Start New Session</ion-button>
-          <ion-button expand="block" color="light" router-link = "/session/join">Enter Session Code</ion-button>
+          <spacer/>
+          <ion-button expand="block" color="light" router-link = "/session/create">Start New Multiplayer Session</ion-button>
+          <ion-button expand="block" color="light" router-link = "/session/join">Enter Multiplayer Session Code</ion-button>
           <ion-button expand="block" color="light" router-link = "/session/reconnect">Reconnect to Session</ion-button>
           <stripe/>
         </div>
@@ -27,6 +28,7 @@ import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
+import Spacer from "@/components/Spacer.vue";
 
 export default defineComponent({
   name: 'Home',
@@ -34,7 +36,8 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonButton,
-    Stripe
+    Stripe,
+    Spacer
   },
   mixins: [SoundMixin],
   data() {
