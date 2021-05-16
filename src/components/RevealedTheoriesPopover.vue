@@ -5,6 +5,7 @@
       Sector {{theory.sector + 1}}: is {{theory.accurate ? "" : "not "}}{{theory.spaceObject.one}}
       &nbsp;<ion-icon :src="theory.spaceObject.icon"/>
     </ion-item>
+    <ion-button color="light" expand="block" @click="exportRevealed()">Export to Logic Sheet</ion-button>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
@@ -12,6 +13,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { popoverController, IonIcon, IonItem, IonButton } from '@ionic/vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   name: 'RevealedTheoriesPopover',
@@ -20,10 +22,40 @@ export default defineComponent({
     IonItem,
     IonButton
   },
+  data() {
+    return {
+      store: useStore()
+    }
+  },
   props: ['revealedTheories'],
   methods: {
     close: async function(obj: any) {
       await popoverController.dismiss();
+    },
+    exportRevealed: function() {
+      for (let i = 0; i < this.revealedTheories.length; i++) {
+        const theory = this.revealedTheories[i];
+        if (theory.accurate) {
+          for (const initial of this.store.state.gameType.logicSheetOrder) {
+            if (theory.spaceObject.initial === initial) {
+              this.store.commit("logicSet", {
+                sector: theory.sector,
+                object: initial
+              });
+            } else {
+              this.store.commit("logicEliminate", {
+                sector: theory.sector,
+                object: initial
+              });
+            }
+          }
+        } else {
+          this.store.commit("logicEliminate", {
+            sector: theory.sector,
+            object: theory.spaceObject.initial
+          });
+        }
+      }
     }
   }
 });
@@ -32,5 +64,9 @@ export default defineComponent({
 <style scoped>
 .popover_container {
   padding: 1em;
+}
+
+ion-button {
+  text-transform: none;
 }
 </style>
