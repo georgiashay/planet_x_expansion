@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <session-header v-if="store.state.isSession" hide-above="sm"/>
+    <session-header v-if="store.state.isSession" hide-at="md"/>
     <ion-content :fullscreen="true">
       <div id="container" v-if="store.getters.playerReady">
         <div id="title_container">
@@ -68,14 +68,14 @@
           </ion-button>
           <stripe/>
           <ion-button
-            v-if="store.state.isSession && screenSizeLessThan('md')"
+            v-if="store.state.isSession && !matchMedia.md"
             expand="block"
             color="light"
             router-link="/session/board">
             View Board
           </ion-button>
           <ion-button
-            v-if="store.state.isSession && screenSizeLessThan('md')"
+            v-if="store.state.isSession && !matchMedia.md"
             expand="block"
             color="light"
             router-link="/session/logic">
@@ -99,7 +99,7 @@
         </div>
       </div>
     </ion-content>
-    <game-footer hide-above="sm"/>
+    <game-footer hide-at="md"/>
   </ion-page>
 </template>
 
@@ -115,8 +115,8 @@ import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
-import ScreenSize from "@/mixins/ScreenSize.ts";
 import Stripe from "@/components/Stripe.vue";
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 export default defineComponent({
   name: 'GameMenu',
@@ -129,7 +129,7 @@ export default defineComponent({
     GameFooter,
     SessionHeader
   },
-  mixins: [SoundMixin, ScreenSize],
+  mixins: [SoundMixin],
   props: {
     gameType: {
       required: true,
@@ -142,7 +142,8 @@ export default defineComponent({
     return {
       store,
       timeOutline,
-      router
+      router,
+      matchMedia: useMatchMedia()
     }
   },
   methods: {

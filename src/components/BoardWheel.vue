@@ -8,7 +8,7 @@
     <div id="scores_container">
       <scores/>
     </div>
-    <div id="cancel_container" v-if="screenSizeLessThan('md')">
+    <div id="cancel_container" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
   </div>
@@ -21,8 +21,8 @@ import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
 import { initialToSpaceObject } from "@/constants.ts";
-import ScreenSize from "@/mixins/ScreenSize.ts";
 import DarkMode from "@/mixins/DarkMode.ts";
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 export default defineComponent({
   name: 'BoardWheel',
@@ -30,11 +30,12 @@ export default defineComponent({
     IonNavLink,
     Scores
   },
-  mixins: [PlayerColors, ScreenSize, DarkMode],
+  mixins: [PlayerColors, DarkMode],
   data() {
     const store = useStore();
     return {
       store,
+      matchMedia: useMatchMedia(),
       theoryImage: undefined,
       objectImages: undefined
     }
@@ -232,8 +233,8 @@ export default defineComponent({
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
-      const skyColor = this.isDarkMode() ? "#585858" : lightColor;
-      const baseColor = this.isDarkMode() ? lightColor : "silver";
+      const skyColor = this.isDarkMode ? "#585858" : lightColor;
+      const baseColor = this.isDarkMode ? lightColor : "silver";
 
       ctx.beginPath();
       ctx.fillStyle = baseColor;
@@ -415,7 +416,7 @@ export default defineComponent({
         ctx.font = (iconSize*0.8) + "px Roboto Slab";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
-        ctx.fillStyle = this.isDarkMode() ? "#47d1ff" : "blue";
+        ctx.fillStyle = this.isDarkMode ? "#47d1ff" : "blue";
         ctx.textBaseline = "bottom";
         ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
 
@@ -457,7 +458,7 @@ export default defineComponent({
       return img;
     },
     collectImages: async function() {
-      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", this.isDarkMode() ? "orange" : "purple");
+      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", this.isDarkMode ? "orange" : "purple");
 
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
@@ -477,17 +478,26 @@ export default defineComponent({
   },
   watch: {
     session: function() {
-      this.computeCanvas();
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
     },
     seasonView: function() {
-      this.computeCanvas();
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
     },
     gameType: function() {
       this.collectImages();
+    },
+    isDarkMode: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
     }
   },
   async mounted() {
-    if (this.breakpoint === "md" && this.store.state.startingFacts === undefined) {
+    if (this.matchMedia.md && !this.matchMedia.lg && this.store.state.startingFacts === undefined) {
       const menu = await menuController.get("menu");
       await menu.open(false);
     }

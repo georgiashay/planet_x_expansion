@@ -47,7 +47,6 @@ import { IonApp, IonRouterOutlet, IonSplitPane,
         menuController, IonFab, IonFabButton,
         IonIcon, popoverController } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import ScreenSize from "@/mixins/ScreenSize.ts";
 import BoardWheel from "@/components/BoardWheel.vue";
 import LogicSheet from "@/components/LogicSheet.vue";
 import { useStore } from "vuex";
@@ -56,6 +55,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
 import { settingsOutline } from "ionicons/icons";
 import SettingsPopover from "@/components/SettingsPopover.vue";
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 export default defineComponent({
   name: 'App',
@@ -76,28 +76,28 @@ export default defineComponent({
     IonFabButton,
     IonIcon
   },
-  mixins: [ScreenSize],
   data() {
     return {
       store: useStore(),
       route: useRoute(),
       router: useRouter(),
       whichCircle: "board",
-      settingsOutline
+      settingsOutline,
+      matchMedia: useMatchMedia()
     }
   },
   computed: {
     showWheel: function(): boolean {
-      return this.screenSizeAtLeast('lg') || this.store.getters.playerReady;
+      return this.matchMedia.lg || this.store.getters.playerReady;
     },
     showSplitPane: function(): boolean {
-      return this.store.state.isSession && this.store.getters.gameReady && this.screenSizeAtLeast('md');
+      return this.store.state.isSession && this.store.getters.gameReady && this.matchMedia.md;
     },
     showWheelInSplitPane: function(): boolean {
       return this.showSplitPane && this.showWheel;
     },
     showFloatingSettings: function(): boolean {
-      return !this.store.state.isSession || (this.showSplitPane && this.screenSizeAtLeast("lg"));
+      return !this.store.state.isSession || (this.showSplitPane && this.matchMedia.lg);
     }
   },
   watch: {

@@ -12,7 +12,7 @@
       <h3>Logic Sheet</h3>
     </div>
     <canvas ref="logicCanvas" id="logicCanvas" height="3204" width="3204"/>
-    <div ref="cancelContainer" id="cancel_container_logic" v-if="screenSizeLessThan('md')">
+    <div ref="cancelContainer" id="cancel_container_logic" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
     <div ref="resultsSummary" id="results-summary">
@@ -118,9 +118,9 @@ import { informationCircleOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
-import ScreenSize from "@/mixins/ScreenSize.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 import DarkMode from "@/mixins/DarkMode.ts";
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 const LINE_WIDTH = 8;
 const SELECTED_BOX_PADDING = 10;
@@ -137,11 +137,12 @@ export default defineComponent({
     IonFabButton,
     IonCheckbox
   },
-  mixins: [ScreenSize, DarkMode],
+  mixins: [DarkMode],
   data() {
     const store = useStore();
     return {
       store,
+      matchMedia: useMatchMedia(),
       paths: undefined,
       iconRadii: undefined,
       iconWidth: undefined,
@@ -449,7 +450,7 @@ export default defineComponent({
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
       const baseColor = lightColor;
-      const skyColor = this.isDarkMode() ? "#585858" : "#FFFFCC";
+      const skyColor = this.isDarkMode ? "#585858" : "#FFFFCC";
 
       ctx.beginPath();
       ctx.fillStyle = baseColor;
@@ -520,7 +521,7 @@ export default defineComponent({
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
       const baseColor = lightColor;
-      const skyColor = this.isDarkMode() ? "#585858" : "#FFFFCC";
+      const skyColor = this.isDarkMode ? "#585858" : "#FFFFCC";
 
       let iconWidth = 150;
 
@@ -618,6 +619,11 @@ export default defineComponent({
     currentSector: function(currentSector: number | undefined) {
       if (currentSector !== undefined) {
         this.redrawSky();
+      }
+    },
+    isDarkMode: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
       }
     }
   },

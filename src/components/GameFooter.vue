@@ -1,5 +1,5 @@
 <template>
-  <ion-footer v-if="screenSizeAtMost(hideAbove)">
+  <ion-footer v-if="showFooter">
     <ion-toolbar color="light">
       <ion-title id="game_code" v-if="!store.state.isSession">Game Code: {{ store.state.gameCode }}</ion-title>
       <ion-title id="game_code" v-else>Session Code: {{ store.state.sessionCode }}</ion-title>
@@ -14,7 +14,7 @@ import { IonFooter, IonToolbar,
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import ScreenSize from "@/mixins/ScreenSize.ts";
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 export default defineComponent({
   name: "GameFooter",
@@ -24,32 +24,39 @@ export default defineComponent({
     IonTitle,
     IonNavLink
   },
-  mixins: [ScreenSize],
   props: {
     showHistoryLink: {
       type: Boolean,
       default: true
     },
-    hideAbove: {
+    hideAt: {
       type: String,
-      default: "xl"
+      default: ""
     }
   },
   data: function() {
     return {
       store: useStore(),
-      router: useRouter()
+      router: useRouter(),
+      matchMedia: useMatchMedia()
     }
   },
   computed: {
     historyLink: function(): string {
       return this.store.state.isSession ? "/session/history" : "/multiplayer/history";
+    },
+    showFooter: function(): boolean {
+      if (this.hideAt === "") {
+        return true;
+      } else {
+        return !this.matchMedia[this.hideAt as string];
+      }
     }
   },
   methods: {
     clickHistory: function() {
       this.router.push(this.historyLink);
-      if (this.breakpoint === "md") {
+      if (this.matchMedia.md && !this.matchMedia.lg) {
         menuController.open("menu");
       }
     }

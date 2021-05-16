@@ -1,20 +1,17 @@
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 export default defineComponent({
   data: function() {
     return {
-      store: useStore()
+      store: useStore(),
+      matchMedia: useMatchMedia()
     }
   },
-  methods: {
-    isDarkMode: function() {
-      if (window.matchMedia &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return true;
-      } else {
-        return this.store.state.settings.darkMode;
-      }
+  computed: {
+    isDarkMode: function(): boolean {
+      return this.matchMedia.dark || this.store.state.settings.darkMode;
     }
   }
 });

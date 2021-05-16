@@ -1,5 +1,5 @@
 <template>
-  <ion-header v-if="screenSizeAtMost(hideAbove)">
+  <ion-header v-if="showHeader">
     <ion-item id="status_bar" color="light" v-if="recentActions.length === 0">
       <div id="sky_sectors">
         <ion-icon src="/assets/sun.svg"/>
@@ -7,10 +7,10 @@
       </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
       <div id="right_icons">
-        <div id="settings_icon" @click="openSettings()" v-if="screenSizeAtMost('md') || !store.state.isSession">
+        <div id="settings_icon" @click="openSettings()" v-if="!matchMedia.lg || !store.state.isSession">
           <ion-icon :src="settingsOutline"></ion-icon>
         </div>
-        <div id="menu_icon" @click="openMenu()" v-if="!hideMenu && screenSizeAtLeast('md') && screenSizeAtMost('md')">
+        <div id="menu_icon" @click="openMenu()" v-if="!hideMenu && matchMedia.md && !matchMedia.lg">
           <ion-icon :icon="menuOutline" />
         </div>
       </div>
@@ -29,8 +29,8 @@ import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import RecentActions from "@/mixins/RecentActions.ts";
 import { menuOutline, settingsOutline } from "ionicons/icons";
-import ScreenSize from "@/mixins/ScreenSize.ts";
 import SettingsPopover from "@/components/SettingsPopover.vue";
+import { useMatchMedia } from '@cwist/vue-match-media';
 
 export default defineComponent({
   name: "GameFooter",
@@ -42,9 +42,9 @@ export default defineComponent({
     IonIcon
   },
   props: {
-    hideAbove: {
+    hideAt: {
       type: String,
-      default: "xl"
+      default: ""
     },
     hideMenu: {
       type: Boolean,
@@ -54,11 +54,12 @@ export default defineComponent({
   data: function() {
     return {
       store: useStore(),
+      matchMedia: useMatchMedia(),
       settingsOutline,
       menuOutline
     }
   },
-  mixins: [RecentActions, ScreenSize],
+  mixins: [RecentActions],
   computed: {
     phaseName: function(): string {
       const actionName = this.store.state.session.currentAction.actionType.split("_").map((word: string)=>word.slice(0,1) + word.slice(1).toLowerCase()).join(" ");
@@ -75,6 +76,13 @@ export default defineComponent({
         name = playerName + " Turn";
       }
       return name;
+    },
+    showHeader: function(): boolean {
+      if (this.hideAt === "") {
+        return true;
+      } else {
+        return !this.matchMedia[this.hideAt as string];
+      }
     }
   },
   methods: {

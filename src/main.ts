@@ -3,7 +3,22 @@ import App from './App.vue'
 import router from './router';
 import store from './store';
 
+import { createVueMatchMediaPlugin } from "@cwist/vue-match-media";
+const VueMatchMediaPlugin = createVueMatchMediaPlugin({
+  breakpoints: {
+    dark: {
+      prefersColorScheme: "dark"
+    },
+    xs: "0px",
+    sm: "576px",
+    md: "768px",
+    lg: "992px",
+    xl: "1200px"
+  }
+});
+
 import { IonicVue } from '@ionic/vue';
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -27,7 +42,10 @@ import './theme/global.css';
 const app = createApp(App)
   .use(IonicVue)
   .use(store)
-  .use(router);
+  .use(router)
+  .use(VueMatchMediaPlugin);
+
+console.log(app);
 
 router.isReady().then(() => {
   app.mount('#app');
