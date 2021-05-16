@@ -159,5 +159,8 @@ export default defineComponent({
 
 .ion-text-left {
   margin-right: auto;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em;
 }
 </style>
