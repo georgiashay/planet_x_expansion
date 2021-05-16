@@ -171,7 +171,7 @@ export default createStore({
         winningScores = winningScores.filter((score: any) => score.first === maxLeaderBonus);
 
         const winningPlayers = winningScores.map((score: any) => getters.playerMap[score.playerID]);
-        const actionText = winningPlayers.map((player: any) => "P" + player.num).join(", ") + " won the game";
+        const actionText = winningPlayers.map((player: any) => player.name).join(", ") + " won the game";
         const text = winningPlayers.map((player: any) => player.name).join(", ") + " won the game with " + maxScore + " points.";
 
         const actionResult = {

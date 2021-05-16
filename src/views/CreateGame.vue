@@ -19,7 +19,7 @@
           <div id="enter_name" v-if="isSession">
             <p>Enter Name:</p>
             <ion-item color="light">
-              <ion-input v-model="name"></ion-input>
+              <ion-input v-model="name" maxlength="12"></ion-input>
             </ion-item>
           </div>
           <stripe/>

@@ -14,7 +14,7 @@
         <div id="enter_name">
           <ion-item color="light">
             <ion-label position="floating">Enter Name</ion-label>
-            <ion-input v-model="name"></ion-input>
+            <ion-input v-model="name" maxlength="12"></ion-input>
           </ion-item>
         </div>
         <ion-button
