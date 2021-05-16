@@ -26,7 +26,13 @@
             v-for="(conference, index) in resultsSummary.allConferences"
             :key="index"
             :class="['reveal_row', conference.researched ? '' : 'not_researched']">
-              {{conference.index + 1}}. {{conference.shortText}}
+            <ion-checkbox
+              :disabled="!conference.researched"
+              @ionChange="conferenceUsedChanged(index, $event)"
+              :checked="store.state.logic.conferenceUsed.has(index)"
+              color="light">
+            </ion-checkbox>
+            &nbsp;<span :class="store.state.logic.conferenceUsed.has(index) ? 'used_clue' : 'unused_clue'">{{conference.index + 1}}. {{conference.shortText}}</span>
           </ion-col>
         </ion-row>
         <ion-row class="title_row">
@@ -37,7 +43,13 @@
             v-for="(research, index) in resultsSummary.allResearch"
             :key="index"
             :class="['reveal_row', research.researched ? '' : 'not_researched']">
-              {{research.shortText}}
+              <ion-checkbox
+                :disabled="!research.researched"
+                @ionChange="researchUsedChanged(index, $event)"
+                :checked="store.state.logic.researchUsed.has(index)"
+                color="light">
+              </ion-checkbox>
+              &nbsp;<span :class="store.state.logic.researchUsed.has(index) ? 'used_clue' : 'unused_clue'">{{research.shortText}}</span>
           </ion-col>
         </ion-row>
         <ion-row v-if="resultsSummary.located.length > 0" class="title_row">
@@ -59,7 +71,16 @@
             v-for="(survey, index) in resultsSummary.surveyed"
             :key="index"
             class="reveal_row">
-              {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}<ion-icon :src="survey.spaceObject.icon"></ion-icon>&nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}}
+            <ion-checkbox
+              @ionChange="surveyUsedChanged(index, $event)"
+              :checked="store.state.logic.surveyUsed.has(index)"
+              color="light">
+            </ion-checkbox>
+            &nbsp;<span :class="store.state.logic.surveyUsed.has(index) ? 'used_clue' : 'unused_clue'">
+              {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}{{survey.spaceObject.initial}}{{survey.spaceObject.initial === "E" ? "?" : ""}}
+              <!-- <ion-icon :src="survey.spaceObject.icon"></ion-icon> -->
+              <!-- &nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}} -->
+            </span>
           </ion-col>
         </ion-row>
         <ion-row v-if="resultsSummary.targeted.length > 0" class="title_row">
@@ -81,7 +102,7 @@
             v-for="(theory, index) in resultsSummary.revealed"
             :key="index"
             class="reveal_row">
-              {{theory.sector + 1}}: {{theory.accurate ? "" : "not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
+              {{theory.sector + 1}}:{{theory.accurate ? "" : " not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -92,7 +113,7 @@
 <script lang="ts">
 import { IonNavLink, IonGrid, IonRow, IonCol,
           IonIcon, IonFab, IonFabButton,
-          popoverController } from '@ionic/vue';
+          popoverController, IonCheckbox } from '@ionic/vue';
 import { informationCircleOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
@@ -113,7 +134,8 @@ export default defineComponent({
     IonCol,
     IonIcon,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonCheckbox
   },
   mixins: [ScreenSize, DarkMode],
   data() {
@@ -129,7 +151,7 @@ export default defineComponent({
   },
   computed: {
     currentSector: function(): any {
-      return this.store.state.session.currentSector;
+      return this.store.state.session?.currentSector;
     },
     seasonView: function(): any {
       return this.store.state.seasonView;
@@ -140,8 +162,8 @@ export default defineComponent({
     sectorAngle: function(): number {
       return 2 * Math.PI/this.store.state.gameType.sectors;
     },
-    logicBoard: function(): number {
-      return this.store.state.logicBoard;
+    logicBoard: function(): any {
+      return this.store.state.logic.board;
     },
     primes: function(): Array<number> {
       const primes = [];
@@ -161,6 +183,27 @@ export default defineComponent({
     }
   },
   methods: {
+    conferenceUsedChanged: function(index: number, e: CustomEvent) {
+      if (e.detail.checked) {
+        this.store.commit("setConferenceUsed", { index });
+      } else {
+        this.store.commit("setConferenceUnused", { index });
+      }
+    },
+    researchUsedChanged: function(index: number, e: CustomEvent) {
+      if (e.detail.checked) {
+        this.store.commit("setResearchUsed", { index });
+      } else {
+        this.store.commit("setResearchUnused", { index });
+      }
+    },
+    surveyUsedChanged: function(index: number, e: CustomEvent) {
+      if (e.detail.checked) {
+        this.store.commit("setSurveyUsed", { index });
+      } else {
+        this.store.commit("setSurveyUnused", { index });
+      }
+    },
     positionSummary: function() {
       const resultsSummary = this.$refs.resultsSummary as HTMLElement;
       const cancelContainer = this.$refs.cancelContainer as HTMLElement;
@@ -379,7 +422,7 @@ export default defineComponent({
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
-      const checkHold = this.store.state.logicBoard[sector].equalTo !== iconRadius.object;
+      const checkHold = this.store.state.logic.board[sector].equalTo !== iconRadius.object;
 
       this.store.dispatch("logicToggle", {
         sector,
@@ -548,9 +591,9 @@ export default defineComponent({
 
         for (let j = 0; j < iconRadii.length; j++) {
           if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
-            if (this.store.state.logicBoard[i].eliminated.has(iconRadii[j].object)) {
+            if (this.store.state.logic.board[i].eliminated.has(iconRadii[j].object)) {
               ctx.drawImage(iconRadii[j].fullImage, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
-            } else if (this.store.state.logicBoard[i].equalTo === iconRadii[j].object) {
+            } else if (this.store.state.logic.board[i].equalTo === iconRadii[j].object) {
               ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
               ctx.rect(-iconRadii[j].width/2-10, -iconRadii[j].radius - iconRadii[j].height - 10, iconRadii[j].width + 20, iconRadii[j].height + 20);
@@ -567,11 +610,15 @@ export default defineComponent({
     }
   },
   watch: {
-    seasonView: async function() {
-      await this.computeCanvas();
+    seasonView: async function(seasonView: any) {
+      if (seasonView) {
+        await this.computeCanvas();
+      }
     },
-    currentSector: function() {
-      this.redrawSky();
+    currentSector: function(currentSector: number | undefined) {
+      if (currentSector !== undefined) {
+        this.redrawSky();
+      }
     }
   },
   async mounted() {
@@ -680,6 +727,12 @@ export default defineComponent({
   align-items: center;
 }
 
+.reveal_row span {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
 .reveal_row ion-icon {
   font-size: 1.2em;
 }
@@ -702,5 +755,9 @@ ion-col {
 .title_row {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+.used_clue {
+  text-decoration: line-through;
 }
 </style>

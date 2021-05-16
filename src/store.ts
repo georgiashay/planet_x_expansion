@@ -23,7 +23,12 @@ export default createStore({
     playerName: undefined,
     webSocketFailures: 0,
     currentWebSocket: undefined,
-    logicBoard: undefined,
+    logic: {
+      board: undefined,
+      researchUsed: undefined,
+      conferenceUsed: undefined,
+      surveyUsed: undefined
+    },
     settings: {
       muteLevel: 1,
       darkMode: true
@@ -62,7 +67,7 @@ export default createStore({
       commit('setPlayerNum', response.data.playerNum);
       commit('setPlayerID', response.data.playerID);
       commit('setPlayerName', name);
-      commit('setupLogicBoard', numSectors);
+      commit('setupLogic', numSectors);
       dispatch('listenSession');
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
@@ -82,7 +87,7 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', name);
-        commit('setupLogicBoard', response.data.game.board.size);
+        commit('setupLogic', response.data.game.board.size);
         dispatch('listenSession');
       }
     },
@@ -103,7 +108,7 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', response.data.playerName);
-        commit('setupLogicBoard', response.data.game.board.size);
+        commit('setupLogic', response.data.game.board.size);
         dispatch('listenSession');
       }
     },
@@ -433,22 +438,22 @@ export default createStore({
       }
     },
     logicToggle({state, commit}, { sector, object }) {
-      if (state.logicBoard[sector].eliminated.has(object)) {
+      if (state.logic.board[sector].eliminated.has(object)) {
         commit('logicUneliminate', { sector, object });
-      } else if (state.logicBoard[sector].equalTo === object ){
+      } else if (state.logic.board[sector].equalTo === object ){
         commit('logicUnset', { sector, object });
       } else {
         commit('logicEliminate', { sector, object });
       }
     },
     logicToggleEqual({ state, commit }, { sector, object }) {
-      if (state.logicBoard[sector].equalTo === object) {
+      if (state.logic.board[sector].equalTo === object) {
         commit('logicUnset', { sector, object });
       } else {
-        if (state.logicBoard[sector].equalTo !== undefined) {
+        if (state.logic.board[sector].equalTo !== undefined) {
           commit('logicUnset', {
             sector,
-            object: state.logicBoard[sector].equalTo
+            object: state.logic.board[sector].equalTo
           });
         }
         commit('logicUneliminate', { sector, object });
@@ -503,7 +508,12 @@ export default createStore({
       state.seasonView = undefined;
       state.startingFacts = undefined;
       state.history = [];
-      state.logicBoard = {};
+      state.logic = {
+        board: undefined,
+        researchUsed: undefined,
+        conferenceUsed: undefined,
+        surveyUsed: undefined
+      };
     },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
@@ -596,7 +606,7 @@ export default createStore({
         state.history.push(actionResult);
       }
     },
-    setupLogicBoard(state: any, sectors: number) {
+    setupLogic(state: any, sectors: number) {
       const logicBoard: {[sector: number]: any} = {};
       for (let i = 0; i < sectors; i++) {
         logicBoard[i] = {
@@ -604,22 +614,43 @@ export default createStore({
           equalTo: undefined
         }
       }
-      state.logicBoard = logicBoard;
+      state.logic.board = logicBoard;
+      state.logic.researchUsed = new Set();
+      state.logic.conferenceUsed = new Set();
+      state.logic.surveyUsed = new Set();
     },
     logicEliminate(state: any, { sector, object }) {
-      state.logicBoard[sector].eliminated.add(object);
+      state.logic.board[sector].eliminated.add(object);
     },
     logicUneliminate(state: any, { sector, object }) {
-      state.logicBoard[sector].eliminated.delete(object);
+      state.logic.board[sector].eliminated.delete(object);
     },
     logicSet(state: any, { sector, object }) {
-      state.logicBoard[sector].equalTo = object;
+      state.logic.board[sector].equalTo = object;
     },
     logicUnset(state: any, { sector, object }) {
-      state.logicBoard[sector].equalTo = undefined;
+      state.logic.board[sector].equalTo = undefined;
     },
     logicResetAll(state: any) {
-      state.logicBoard = {};
+      state.logic.board = {};
+    },
+    setResearchUsed(state: any, { index }) {
+      state.logic.researchUsed.add(index);
+    },
+    setResearchUnused(state: any, { index }) {
+      state.logic.researchUsed.delete(index);
+    },
+    setConferenceUsed(state: any, { index }) {
+      state.logic.conferenceUsed.add(index);
+    },
+    setConferenceUnused(state: any, { index }) {
+      state.logic.conferenceUsed.delete(index);
+    },
+    setSurveyUsed(state: any, { index }) {
+      state.logic.surveyUsed.add(index);
+    },
+    setSurveyUnused(state: any, { index }) {
+      state.logic.surveyUsed.delete(index);
     }
   },
   getters: {
