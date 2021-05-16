@@ -11,7 +11,7 @@ export default defineComponent({
   },
   methods: {
     playSound: async function(name: string) {
-      await SoundEffects.playSound(name, this.store.state.muteLevel);
+      await SoundEffects.playSound(name, this.store.state.settings.muteLevel);
     }
   }
 });

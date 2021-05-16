@@ -1,5 +1,13 @@
 <template>
   <ion-app>
+    <ion-fab slot="fixed" vertical="top" horizontal="end" v-if="showFloatingSettings">
+      <ion-fab-button
+        size="small"
+        color="light"
+        @click="openSettings()">
+        <ion-icon :src="settingsOutline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
     <ion-split-pane content-id="main" when="lg" v-if="showSplitPane">
       <ion-menu
         content-id="main"
@@ -36,7 +44,8 @@
 import { IonApp, IonRouterOutlet, IonSplitPane,
         IonMenu, IonPage, IonSegment,
         IonSegmentButton, IonContent,
-        menuController } from '@ionic/vue';
+        menuController, IonFab, IonFabButton,
+        IonIcon, popoverController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import ScreenSize from "@/mixins/ScreenSize.ts";
 import BoardWheel from "@/components/BoardWheel.vue";
@@ -45,6 +54,8 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
+import { settingsOutline } from "ionicons/icons";
+import SettingsPopover from "@/components/SettingsPopover.vue";
 
 export default defineComponent({
   name: 'App',
@@ -60,7 +71,10 @@ export default defineComponent({
     IonSegmentButton,
     IonContent,
     SessionHeader,
-    GameFooter
+    GameFooter,
+    IonFab,
+    IonFabButton,
+    IonIcon
   },
   mixins: [ScreenSize],
   data() {
@@ -68,7 +82,8 @@ export default defineComponent({
       store: useStore(),
       route: useRoute(),
       router: useRouter(),
-      whichCircle: "board"
+      whichCircle: "board",
+      settingsOutline
     }
   },
   computed: {
@@ -80,6 +95,9 @@ export default defineComponent({
     },
     showWheelInSplitPane: function(): boolean {
       return this.showSplitPane && this.showWheel;
+    },
+    showFloatingSettings: function(): boolean {
+      return !this.store.state.isSession || (this.showSplitPane && this.screenSizeAtLeast("lg"));
     }
   },
   watch: {
@@ -92,6 +110,17 @@ export default defineComponent({
           this.whichCircle = "logic";
         }
       }
+    }
+  },
+  methods: {
+    openSettings: async function() {
+      const popover = await popoverController
+        .create({
+          component: SettingsPopover,
+          cssClass: "custom-popover"
+        });
+      await popover.present();
+      await popover.onDidDismiss();
     }
   }
 });

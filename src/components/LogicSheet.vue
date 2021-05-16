@@ -62,6 +62,17 @@
               {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}<ion-icon :src="survey.spaceObject.icon"></ion-icon>&nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}}
           </ion-col>
         </ion-row>
+        <ion-row v-if="resultsSummary.targeted.length > 0" class="title_row">
+          <b>Targets</b>
+        </ion-row>
+        <ion-row v-if="resultsSummary.targeted.length > 0">
+          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+            v-for="(target, index) in resultsSummary.targeted"
+            :key="index"
+            class="reveal_row">
+              {{target.sector + 1}}:&nbsp;<ion-icon :src="target.spaceObject.icon"></ion-icon>&nbsp;{{target.spaceObject.name}}{{target.spaceObject.initial === "E" ? "?" : ""}}
+          </ion-col>
+        </ion-row>
         <ion-row v-if="resultsSummary.revealed.length > 0" class="title_row">
           <b>Revealed Theories</b>
         </ion-row>
@@ -619,6 +630,7 @@ export default defineComponent({
 <style scoped>
 #container {
   padding: 10px;
+  color: white;
 }
 
 #title_container {

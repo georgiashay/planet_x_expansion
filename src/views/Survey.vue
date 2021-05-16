@@ -222,6 +222,7 @@ export default defineComponent({
   max-width: var(--max-form-width);
   margin-left: auto;
   margin-right: auto;
+  color: white;
 }
 
 #title_container {

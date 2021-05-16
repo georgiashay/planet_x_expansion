@@ -6,8 +6,13 @@
         &nbsp;Sky: {{store.getters.skyStart + 1}}-{{store.getters.skyEnd + 1}}
       </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
-      <div id="menu_icon" @click="openMenu()" v-if="!hideMenu && screenSizeAtLeast('md') && screenSizeAtMost('md')">
-        <ion-icon :icon="menuOutline" />
+      <div id="right_icons">
+        <div id="settings_icon" @click="openSettings()" v-if="screenSizeAtMost('md') || !store.state.isSession">
+          <ion-icon :src="settingsOutline"></ion-icon>
+        </div>
+        <div id="menu_icon" @click="openMenu()" v-if="!hideMenu && screenSizeAtLeast('md') && screenSizeAtMost('md')">
+          <ion-icon :icon="menuOutline" />
+        </div>
       </div>
     </ion-item>
     <ion-item color="dark" v-else>
@@ -19,12 +24,13 @@
 <script lang="ts">
 import { IonHeader, IonTitle, IonItem,
         IonItemDivider, IonLabel, IonIcon,
-        menuController } from '@ionic/vue';
+        menuController, popoverController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import RecentActions from "@/mixins/RecentActions.ts";
-import { gameControllerOutline, menuOutline } from "ionicons/icons";
+import { menuOutline, settingsOutline } from "ionicons/icons";
 import ScreenSize from "@/mixins/ScreenSize.ts";
+import SettingsPopover from "@/components/SettingsPopover.vue";
 
 export default defineComponent({
   name: "GameFooter",
@@ -48,7 +54,7 @@ export default defineComponent({
   data: function() {
     return {
       store: useStore(),
-      gameControllerOutline,
+      settingsOutline,
       menuOutline
     }
   },
@@ -74,6 +80,15 @@ export default defineComponent({
   methods: {
     openMenu: function() {
       menuController.toggle("menu");
+    },
+    openSettings: async function() {
+      const popover = await popoverController
+        .create({
+          component: SettingsPopover,
+          cssClass: "custom-popover"
+        });
+      await popover.present();
+      await popover.onDidDismiss();
     }
   }
 });
@@ -92,7 +107,7 @@ export default defineComponent({
   position: absolute;
 }
 
-#menu_icon {
+#right_icons {
   display: flex;
   align-items: center;
   align-content: center;
@@ -100,6 +115,10 @@ export default defineComponent({
   position: absolute;
   right: 0;
   margin-right: 0.5em;
+}
+
+#right_icons ion-icon {
+  margin: 0.2em;
 }
 
 .action_notif {

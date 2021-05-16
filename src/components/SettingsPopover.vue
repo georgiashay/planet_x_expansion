@@ -1,0 +1,78 @@
+<template>
+  <div class="popover_container">
+    <h2>Settings</h2>
+    <ion-item color="light">
+      <ion-label>Sound Effects</ion-label>
+      <ion-grid>
+        <ion-row>
+          <ion-col
+            v-for="i in 3"
+            :key="i"
+            size="4">
+            <ion-button :color="buttonColor(i-1)" expand="block" @click="changeMuteLevel(i-1)">{{muteLevelNames[i-1]}}</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-button color="light" expand="block" @click="close()">Close</ion-button>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { popoverController, IonSelect,
+        IonSelectOption, IonItem, IonLabel,
+        IonButton, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import { useStore } from 'vuex';
+
+export default defineComponent({
+  name: 'SettingsPopover',
+  components: {
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonGrid,
+    IonRow,
+    IonCol
+  },
+  data() {
+    const store = useStore();
+    return {
+      store: store,
+      muteLevel: store.state.settings.muteLevel,
+      muteLevelNames: ["None", "Some", "All"]
+    }
+  },
+  methods: {
+    close: async function() {
+      await popoverController.dismiss();
+    },
+    buttonColor: function(i: number) {
+      if (i === this.muteLevel) {
+        return "medium";
+      } else {
+        return "dark";
+      }
+    },
+    changeMuteLevel: function(level: number) {
+      this.muteLevel = level;
+      this.store.commit("setMuteLevel", level);
+    }
+  }
+});
+</script>
+
+<style scoped>
+.popover_container {
+  padding: 1em;
+}
+
+ion-button {
+  text-transform: none;
+  margin: 0;
+}
+
+ion-col {
+  padding: 0;
+}
+</style>

@@ -23,8 +23,10 @@ export default createStore({
     playerName: undefined,
     webSocketFailures: 0,
     currentWebSocket: undefined,
-    muteLevel: 1,
-    logicBoard: undefined
+    logicBoard: undefined,
+    settings: {
+      muteLevel: 1
+    }
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -152,12 +154,12 @@ export default createStore({
         if (state.session.currentAction.playerID !== state.playerID
           || state.session.currentAction.actionType !== sessionState.currentAction.actionType
           || state.session.currentSector !== sessionState.currenSector) {
-          SoundEffects.playSound("doorbell", state.muteLevel);
+          SoundEffects.playSound("doorbell", state.settings.muteLevel);
         }
       } else if (sessionState.currentAction.playerID === null) {
         if (state.session.currentAction.actionType !== sessionState.currentAction.actionType
             || state.session.currentSector !== sessionState.currentSector) {
-          SoundEffects.playSound("doorbell", state.muteLevel);
+          SoundEffects.playSound("doorbell", state.settings.muteLevel);
         }
       }
     },
@@ -504,6 +506,9 @@ export default createStore({
     },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
+    },
+    setMuteLevel(state: any, level: number) {
+      state.settings.muteLevel = level;
     },
     peerReview(state: any, { spaceObject, sector }) {
       // Check if theory object is correct

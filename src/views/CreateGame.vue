@@ -129,6 +129,7 @@ export default defineComponent({
 <style scoped>
 #container {
   padding: 20px;
+  color: white;
 }
 
 #title_container {

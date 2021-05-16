@@ -105,6 +105,7 @@ export default defineComponent({
   max-width: var(--max-form-width);
   margin-right: auto;
   margin-left: auto;
+  color: white
 }
 
 #title_container {

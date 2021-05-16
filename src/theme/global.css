@@ -14,7 +14,6 @@
 
 :root {
   --ion-font-family: "Roboto";
-  --ion-text-color: white;
   --max-form-width: 500px;
   --stripe-color: white;
 }
@@ -35,11 +34,13 @@ ion-item-divider {
 .custom-alert .alert-wrapper {
   background-color: var(--ion-color-light);
   color: var(--ion-color-light-contrast);
+  --ion-text-color: var(--ion-color-light-contrast);
 }
 
 .custom-popover .popover-content {
   background-color: var(--ion-color-light);
   color: var(--ion-color-light-contrast);
+  --ion-text-color: var(--ion-color-light-contrast);
 }
 
 .split-pane-visible > ion-menu {

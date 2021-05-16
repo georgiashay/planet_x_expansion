@@ -507,6 +507,7 @@ export default defineComponent({
 <style scoped>
 #container {
   padding: 10px;
+  color: white;
 }
 
 #title_container {
