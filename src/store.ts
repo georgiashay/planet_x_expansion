@@ -950,16 +950,20 @@ export default createStore({
       const targeted: any[] = [];
       const surveyed: any[] = [];
       const research: any[] = [];
+      const allResearch: any[] = [];
       const conferences: any[] = [];
+      const allConferences: any[] = [];
       const located: any[] = [];
 
       const summary = {
         revealed: getters.revealedTheories,
         targeted: targeted,
         surveyed: surveyed,
+        located: located,
         research: research,
+        allResearch: allResearch,
         conferences: conferences,
-        located: located
+        allConferences: allConferences
       }
 
       summary.targeted = state.history.filter((action: any) => action.actionType === "TARGET")
@@ -985,18 +989,50 @@ export default createStore({
                             return {
                               index: action.index,
                               text: action.text,
-                              shortText: action.shortText
+                              shortText: action.shortText,
+                              researched: true
                             };
                           }).sort((a: any, b: any) => a.index - b.index);
+
+      let j = 0;
+      for (let i = 0; i < state.game.research.length; i++) {
+        if (j < summary.research.length && summary.research[j].index === i) {
+          summary.allResearch.push(summary.research[j]);
+          j++;
+        } else {
+          summary.allResearch.push({
+            index: i,
+            text: "",
+            shortText: String.fromCharCode(i+65) + ". " + state.game.research[i].shortCategory,
+            researched: false
+          });
+        }
+      }
 
       summary.conferences = state.history.filter((action: any) => action.actionType === "CONFERENCE")
                             .map((action: any) => {
                               return {
                                 index: action.index,
                                 text: action.text,
-                                shortText: action.shortText
+                                shortText: action.shortText,
+                                researched: true
                               };
                             }).sort((a: any, b: any) => a.index - b.index);
+
+      j = 0;
+      for (let i = 0; i < state.game.conference.length; i++) {
+        if (j < summary.conferences.length && summary.conferences[j].index === i) {
+          summary.allConferences.push(summary.conferences[j]);
+          j++;
+        } else {
+          summary.allConferences.push({
+            index: i,
+            text: "",
+            shortText: state.game.conference[i].shortCategory,
+            researched: false
+          });
+        }
+      }
 
       summary.located = state.history.filter((action: any) => action.actionType === "LOCATE_PLANET_X")
                           .map((action: any) => {

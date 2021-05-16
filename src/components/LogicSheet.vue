@@ -18,25 +18,25 @@
     <div ref="resultsSummary" id="results-summary">
       <h5 id="summary_title">Results Summary</h5>
       <ion-grid>
-        <ion-row v-if="resultsSummary.conferences.length > 0" class="title_row">
+        <ion-row class="title_row">
           <b>Conferences</b>
         </ion-row>
-        <ion-row v-if="resultsSummary.conferences.length > 0">
+        <ion-row >
           <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(conference, index) in resultsSummary.conferences"
+            v-for="(conference, index) in resultsSummary.allConferences"
             :key="index"
-            class="reveal_row">
+            :class="['reveal_row', conference.researched ? '' : 'not_researched']">
               {{conference.index + 1}}. {{conference.shortText}}
           </ion-col>
         </ion-row>
-        <ion-row v-if="resultsSummary.research.length > 0" class="title_row">
+        <ion-row class="title_row">
           <b>Research</b>
         </ion-row>
-        <ion-row v-if="resultsSummary.research.length > 0">
+        <ion-row >
           <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(research, index) in resultsSummary.research"
+            v-for="(research, index) in resultsSummary.allResearch"
             :key="index"
-            class="reveal_row">
+            :class="['reveal_row', research.researched ? '' : 'not_researched']">
               {{research.shortText}}
           </ion-col>
         </ion-row>
@@ -682,6 +682,11 @@ export default defineComponent({
 
 .reveal_row ion-icon {
   font-size: 1.2em;
+}
+
+.reveal_row.not_researched {
+  background-color: var(--ion-color-dark);
+  color: var(--ion-color-dark-contrast);
 }
 
 #summary_title {
