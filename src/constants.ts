@@ -46,10 +46,16 @@ export const GAME_TYPES: {[sector: number]: any} = {
     constraints: {
       "C": "Only in prime sectors",
       "A": "Adjacent to an asteroid",
-      "D": "",
+      "D": "Not adjacent to Planet X",
       "G": "Adjacent to an empty sector",
-      "E": "",
-      "X": "Not adjacent to the dwarf planet"
+      "E": "Remember, Planet X appears empty",
+      "X": "Not adjacent to the dwarf planet, appears empty"
+    },
+    points: {
+      "A": 2,
+      "C": 3,
+      "G": 4,
+      "D": 4
     }
   },
   18: {
@@ -91,10 +97,16 @@ export const GAME_TYPES: {[sector: number]: any} = {
     constraints: {
       "C": "Only in prime sectors",
       "A": "Adjacent to an asteroid",
-      "D": "In a band of exactly 6",
+      "D": "In a band of exactly 6, not adjacent to Planet X",
       "G": "Adjacent to an empty sector",
-      "E": "",
-      "X": "Not adjacent to a dwarf planet"
+      "E": "Remember, Planet X appears empty",
+      "X": "Not adjacent to a dwarf planet, appears empty"
+    },
+    points: {
+      "A": 2,
+      "C": 3,
+      "G": 4,
+      "D": 2
     }
   },
   24: {
@@ -136,11 +148,18 @@ export const GAME_TYPES: {[sector: number]: any} = {
     constraints: {
       "C": "Only in prime sectors",
       "A": "Adjacent to an asteroid",
-      "D": "In a band of exactly 6",
+      "D": "In a band of exactly 6, not adjacent to Planet X",
       "G": "Adjacent to an empty sector",
-      "E": "Not adjacent to the black hole",
-      "B": "Not adjacent to an empty sector",
-      "X": "Not adjacent to a dwarf planet or the black hole"
+      "E": "Not adjacent to the black hole. Remember, Planet X appears empty",
+      "B": "Not adjacent to an empty sector or Planet X",
+      "X": "Not adjacent to a dwarf planet or the black hole, appears empty"
+    },
+    points: {
+      "A": 2,
+      "D": 2,
+      "C": 3,
+      "G": 4,
+      "B": 5
     }
   }
 }

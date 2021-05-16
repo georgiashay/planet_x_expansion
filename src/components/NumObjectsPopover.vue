@@ -11,7 +11,8 @@
           {{obj.numObject}}
         </ion-col>
         <ion-col size="4">
-          <ion-icon :src="obj.spaceObject.icon"/>&nbsp;{{obj.numObject === 1 ? obj.spaceObject.name : obj.spaceObject.plural}}
+          <ion-icon :src="obj.spaceObject.icon"/>
+          <p>{{obj.numObject === 1 ? obj.spaceObject.name : obj.spaceObject.plural}}</p>
         </ion-col>
         <ion-col size="7">
           {{obj.constraint}}
@@ -67,6 +68,12 @@ ion-col {
   display: flex;
   align-content: center;
   align-items: center;
+  border: 0.01em solid gray;
+}
+
+ion-col p {
+  padding-left: 0.5em;
+  margin: 0;
 }
 
 ion-icon {

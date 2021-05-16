@@ -7,11 +7,22 @@
         :key="index"
         >
         <ion-icon :src="header[1]"/>
+        <sub>({{points[index]}})</sub>
       </th>
       <th>
         Total
       </th>
     </tr>
+    <!-- <tr id="points_row">
+      <td>Points</td>
+      <td
+        v-for="(points, index) in pointsRow"
+        :key="index"
+        >
+        {{points}}
+      </td>
+      <td></td>
+    </tr> -->
     <tr
       v-for="(row, index) in scoreTable"
       :key="index"
@@ -59,6 +70,21 @@ export default defineComponent({
       }
       headers.push(["planetX", SpaceObject.PLANET_X.icon]);
       return headers;
+    },
+    points: function(): Array<number | string> {
+      const points = [];
+      for (const [key] of this.scoreHeaders) {
+        if (key === "first") {
+          points.push(1);
+        } else if(key === "planetX") {
+          points.push("2-8");
+        } else if (key in this.store.state.gameType.points) {
+          points.push(this.store.state.gameType.points[key]);
+        } else {
+          points.push("");
+        }
+      }
+      return points;
     },
     scoreTable: function(): Array<Array<string | number>> {
       const table = [];
@@ -111,8 +137,12 @@ export default defineComponent({
   font-size: 1em;
 }
 
+#score_table th sub {
+  font-size: 0.5em;
+}
+
 #score_table th ion-icon {
-  font-size: 1.3em;
+  font-size: 1.2em;
   --color: var(--ion-color-light-contrast);
 }
 
