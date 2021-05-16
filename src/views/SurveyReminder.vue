@@ -18,7 +18,7 @@
           Continue
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
-        <ion-item-divider/>
+        <stripe/>
         <div id="cancel_container">
           <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
@@ -29,13 +29,14 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'SurveyReminder',
@@ -44,7 +45,7 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonItemDivider,
+    Stripe,
     IonNavLink,
     GameFooter,
     SessionHeader

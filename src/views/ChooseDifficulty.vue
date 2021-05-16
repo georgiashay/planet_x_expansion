@@ -17,7 +17,7 @@
             >
             {{difficulty.name}} ({{difficulty.facts}} facts)
           </ion-button>
-          <ion-item-divider/>
+          <stripe/>
           <ion-button
             v-if="selectedFacts !== undefined"
             expand="block"
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
@@ -46,13 +46,14 @@ import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'ChooseDifficulty',
   components: {
     IonContent,
     IonPage,
-    IonItemDivider,
+    Stripe,
     IonButton,
     IonIcon,
     IonNavLink,

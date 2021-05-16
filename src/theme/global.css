@@ -16,6 +16,7 @@
   --ion-font-family: "Roboto";
   --ion-text-color: white;
   --max-form-width: 500px;
+  --stripe-color: white;
 }
 
 ion-content {
@@ -28,7 +29,7 @@ ion-content {
 
 ion-item-divider {
   --background: unset;
-  --color: white;
+  --ion-item-border-color: var(--ion-color-light);
 }
 
 .custom-alert .alert-wrapper {

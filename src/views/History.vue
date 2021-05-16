@@ -36,7 +36,7 @@
           </ion-button>
           </template>
         </div>
-        <ion-item-divider/>
+        <stripe/>
         <div id="cancel_container">
           <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Close History</ion-nav-link>
         </div>
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
@@ -55,6 +55,7 @@ import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'History',
@@ -62,7 +63,7 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonButton,
-    IonItemDivider,
+    Stripe,
     IonNavLink,
     GameFooter,
     SessionHeader

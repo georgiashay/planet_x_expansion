@@ -16,7 +16,7 @@
         <div>
           <p v-if="gameCreator">Verify that all player devices are using the game code, and then press the continue button below to start.</p>
         </div>
-        <ion-item-divider/>
+        <stripe/>
         <ion-button
           expand="block"
           color="light"
@@ -34,20 +34,21 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonNavLink, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'GameCode',
   components: {
     IonContent,
     IonPage,
-    IonItemDivider,
+    Stripe,
     IonButton,
     IonNavLink,
     IonIcon

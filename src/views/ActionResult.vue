@@ -15,7 +15,7 @@
           {{arrowString}}
         </p>
         <p>{{actionResult.text}}</p>
-        <ion-item-divider/>
+        <stripe/>
         <ion-button
           expand="block"
           color="light"
@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
@@ -39,6 +39,7 @@ import { useRoute, useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 function isString(obj: any): obj is string {
   return typeof obj === "string";
@@ -51,7 +52,7 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonItemDivider,
+    Stripe,
     GameFooter,
     SessionHeader
   },

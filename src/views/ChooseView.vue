@@ -17,7 +17,7 @@
             >
             <ion-icon :src="view.icon"></ion-icon>&nbsp; {{ view.name }} {{ view.viewType }}
           </ion-button>
-          <ion-item-divider/>
+          <stripe/>
           <ion-button
             v-if="selectedView !== undefined"
             expand="block"
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
@@ -45,13 +45,14 @@ import { SeasonView } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'ChooseView',
   components: {
     IonContent,
     IonPage,
-    IonItemDivider,
+    Stripe,
     IonButton,
     IonIcon,
     GameFooter,

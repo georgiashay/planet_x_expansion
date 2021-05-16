@@ -7,7 +7,7 @@
           <h3>Research &amp; Conferences</h3>
         </div>
         <p>The following research items and conferences are available this game. We encourage players to record these titles on their note sheets.</p>
-        <ion-item-divider/>
+        <stripe/>
         <div id="research">
           <b>Research</b>
           <p
@@ -24,7 +24,7 @@
             X{{index + 1}}. {{conference.categoryName}}
           </p>
         </div>
-        <ion-item-divider/>
+        <stripe/>
         <ion-button
           expand="block"
           color="light"
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
@@ -48,6 +48,7 @@ import { useStore } from 'vuex';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'ResearchCategories',
@@ -56,7 +57,7 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonItemDivider,
+    Stripe,
     GameFooter,
     SessionHeader
   },

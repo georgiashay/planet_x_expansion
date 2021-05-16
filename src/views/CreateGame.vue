@@ -22,7 +22,7 @@
               <ion-input v-model="name"></ion-input>
             </ion-item>
           </div>
-          <ion-item-divider/>
+          <stripe/>
           <ion-button
             v-if="readyToCreate"
             expand="block"
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonNavLink, IonIcon,
         IonItem, IonInput } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -50,13 +50,14 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { GAME_TYPES } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'CreateGame',
   components: {
     IonContent,
     IonPage,
-    IonItemDivider,
+    Stripe,
     IonButton,
     IonNavLink,
     IonIcon,

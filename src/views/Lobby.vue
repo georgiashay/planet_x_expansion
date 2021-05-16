@@ -23,7 +23,7 @@
         <div>
           <p v-if="sessionCreator">Verify that all player have joined the session, and then press the start button below to start the game.</p>
         </div>
-        <ion-item-divider/>
+        <stripe/>
         <ion-button
           :disabled = "!sessionCreator && store.state.session.currentAction.actionType == 'START_GAME'"
           expand="block"
@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonNavLink, IonIcon,
         IonItem } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -54,13 +54,14 @@ import SoundMixin from "@/mixins/SoundMixin.ts";
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'Lobby',
   components: {
     IonContent,
     IonPage,
-    IonItemDivider,
+    Stripe,
     IonButton,
     IonNavLink,
     IonIcon,

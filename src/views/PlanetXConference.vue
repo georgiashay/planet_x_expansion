@@ -19,7 +19,7 @@
             <span class="ion-text-left">X{{index + 1}}. {{conference.categoryName}}</span>
           </ion-button>
         </div>
-        <ion-item-divider/>
+        <stripe/>
         <ion-button
           expand="block"
           color="light"
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
@@ -48,6 +48,7 @@ import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'PlanetXConference',
@@ -56,7 +57,7 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonItemDivider,
+    Stripe,
     IonNavLink,
     GameFooter,
     SessionHeader

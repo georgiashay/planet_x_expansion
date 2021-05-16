@@ -11,7 +11,7 @@
             <ion-label position="floating">Number of Theories</ion-label>
             <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories"></ion-input>
           </ion-item>
-          <ion-item-divider/>
+          <spacer/>
           <template v-for="(theory, i) in theories.slice(0, numTheories)" :key="i">
             <ion-item-divider v-if="i>0"/>
             <sector-select
@@ -37,7 +37,7 @@
           Submit Theories
         </ion-button>
         <p id="invalid_theories" v-if="!theoriesValid.valid">{{theoriesValid.message}}</p>
-        <ion-item-divider/>
+        <stripe/>
         <div id="cancel_container">
           <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
@@ -61,6 +61,8 @@ import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
+import Spacer from "@/components/Spacer.vue";
 
 export default defineComponent({
   name: 'Survey',
@@ -69,6 +71,8 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonItemDivider,
+    Spacer,
+    Stripe,
     IonNavLink,
     SpaceObjectSelect,
     SectorSelect,

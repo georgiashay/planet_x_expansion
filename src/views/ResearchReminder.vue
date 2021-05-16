@@ -9,7 +9,7 @@
         <div id="reminder">
         <p>Reminder: You must choose a different action on your next turn; you cannot take the research action twice in a row.</p>
         </div>
-        <ion-item-divider/>
+        <stripe/>
         <ion-button
           expand="block"
           color="light"
@@ -25,13 +25,14 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonItemDivider,
+import { IonContent, IonPage,
         IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'ResearchReminder',
@@ -40,7 +41,7 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonItemDivider,
+    Stripe,
     GameFooter,
     SessionHeader
   },

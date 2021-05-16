@@ -8,13 +8,13 @@
           <h5>Unofficial Expansion</h5>
         </div>
         <div id="start_game_buttons">
-          <ion-item-divider/>
+          <stripe/>
           <ion-button expand="block" color="light" router-link = "/multiplayer/create">Start New Game</ion-button>
           <ion-button expand="block" color="light" router-link = "/multiplayer/join">Enter Game Code</ion-button>
           <ion-button expand="block" color="light" router-link = "/session/create">Start New Session</ion-button>
           <ion-button expand="block" color="light" router-link = "/session/join">Enter Session Code</ion-button>
           <ion-button expand="block" color="light" router-link = "/session/reconnect">Reconnect to Session</ion-button>
-          <ion-item-divider/>
+          <stripe/>
         </div>
       </div>
     </ion-content>
@@ -22,10 +22,11 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonButton, IonItemDivider } from '@ionic/vue';
+import { IonContent, IonPage, IonButton } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'Home',
@@ -33,7 +34,7 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonButton,
-    IonItemDivider
+    Stripe
   },
   mixins: [SoundMixin],
   data() {

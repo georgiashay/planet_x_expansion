@@ -32,7 +32,7 @@
           id="export_button">
           Export to Logic Sheet
         </ion-button>
-        <ion-item-divider/>
+        <spacer v-if="store.state.isSession"/>
         <ion-button
           expand="block"
           color="light"
@@ -50,14 +50,14 @@
 <script lang="ts">
 import { IonContent, IonPage,
         IonButton, IonIcon,
-        IonGrid, IonCol, IonRow,
-        IonItemDivider } from '@ionic/vue';
+        IonGrid, IonCol, IonRow } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
+import Spacer from "@/components/Spacer.vue";
 
 export default defineComponent({
   name: 'StartingInformation',
@@ -69,7 +69,7 @@ export default defineComponent({
     IonGrid,
     IonCol,
     IonRow,
-    IonItemDivider,
+    Spacer,
     GameFooter,
     SessionHeader
   },

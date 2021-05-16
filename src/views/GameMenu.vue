@@ -43,7 +43,7 @@
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
-          <ion-item-divider/>
+          <stripe/>
           <ion-button
             v-if="store.state.isSession"
             :disabled="!store.getters.actionAllowed('THEORY')"
@@ -66,7 +66,7 @@
             :router-link="'/' + gameType + '/action/planetxconference'">
             Planet X Conference
           </ion-button>
-          <ion-item-divider/>
+          <stripe/>
           <ion-button
             v-if="store.state.isSession && screenSizeLessThan('md')"
             expand="block"
@@ -104,7 +104,7 @@
 </template>
 
 <script lang="ts">
-import { IonItemDivider, IonPage, IonContent,
+import { IonPage, IonContent,
         IonButton, IonIcon, alertController,
         popoverController } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -116,6 +116,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
 import ScreenSize from "@/mixins/ScreenSize.ts";
+import Stripe from "@/components/Stripe.vue";
 
 export default defineComponent({
   name: 'GameMenu',
@@ -124,7 +125,7 @@ export default defineComponent({
     IonPage,
     IonButton,
     IonIcon,
-    IonItemDivider,
+    Stripe,
     GameFooter,
     SessionHeader
   },
