@@ -617,14 +617,13 @@ export default defineComponent({
 
 <style scoped>
 #container {
-  padding: 20px;
+  padding: 10px;
 }
 
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 5vh;
 }
 
 #title_container h1 {
