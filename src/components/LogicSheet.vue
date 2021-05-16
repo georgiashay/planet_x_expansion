@@ -508,11 +508,6 @@ export default defineComponent({
 
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
-      ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
       ctx.stroke();
 
@@ -529,7 +524,14 @@ export default defineComponent({
         ctx.arc(0, 0, innerRadius, i*sectorAngle, (i+1)*sectorAngle);
         ctx.lineTo(0, 0);
         ctx.fill();
+      }
+      
+      ctx.beginPath();
+      ctx.strokeStyle = darkColor;
+      ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
+      ctx.stroke();
 
+      for (let i = 0; i < this.store.state.gameType.sectors; i++) {
         // Sector line
         ctx.beginPath();
         ctx.moveTo(0, 0);
