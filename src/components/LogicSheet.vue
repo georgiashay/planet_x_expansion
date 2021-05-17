@@ -308,12 +308,23 @@ export default defineComponent({
         y: cos * y - sin * x
       }
     },
-    getClickedObject: function(event: MouseEvent) {
+    getClickedObject: function(event: MouseEvent | TouchEvent) {
+      let clientX;
+      let clientY;
+
+      if (event instanceof TouchEvent) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      } else if (event instanceof MouseEvent) {
+        clientX = event.clientX;
+        clientY = event.clientY;
+      }
+
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
       const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
       const cx = x * canvas.width/canvas.offsetWidth - canvas.width/2;
       const cy = y *  canvas.height/canvas.offsetHeight - canvas.height/2;
       const angle = Math.atan2(cy, cx);
@@ -657,11 +668,26 @@ export default defineComponent({
       }
     });
 
+    canvas.addEventListener("touchstart", (e: Event) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const checkHold = this.handleClick(e);
+      if (checkHold) {
+        timeout = setTimeout(() => {
+          this.handleRightClick(e);
+        }, 350);
+      }
+    });
+
     canvas.addEventListener("mouseleave", (e: Event) => {
       clearTimeout(timeout);
     });
 
     canvas.addEventListener("mouseup", (e: Event) => {
+      clearTimeout(timeout);
+    });
+
+    canvas.addEventListener("touchend", (e: Event) => {
       clearTimeout(timeout);
     });
 
@@ -710,8 +736,9 @@ export default defineComponent({
   margin-left: auto;
   margin-right: auto;
   display: block;
-  width: calc(min(50vh, 50vw));
-  height: calc(min(50vh, 50vw));
+  width: 100%;
+  height: 100%;
+  max-width: 50vh;
 }
 
 #results-summary {
