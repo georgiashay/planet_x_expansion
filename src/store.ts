@@ -92,7 +92,7 @@ export default createStore({
         dispatch('listenSession');
       }
     },
-    async reconnectSession({ commit, dispatch }, { sessionCode, playerNum }) {
+    async reconnectSession({ state, commit, dispatch }, { sessionCode, playerNum }) {
       // Reconnect to existing session
       const response: any = await axios.get(API_URL + "/reconnectSession/" + sessionCode + "/?playerNum=" + playerNum);
       if (response.data.found) {
@@ -111,6 +111,7 @@ export default createStore({
         commit('setPlayerName', response.data.playerName);
         commit('setupLogic', response.data.game.board.size);
         commit('refillHistory');
+        dispatch('checkWinner', state.session);
         dispatch('listenSession');
       }
     },
