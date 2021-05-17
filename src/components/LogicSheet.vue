@@ -1,5 +1,5 @@
 <template>
-  <div id="container" v-if="store.getters.gameReady && store.state.isSession">
+  <div ref="container" id="container" v-if="store.getters.gameReady && store.state.isSession">
     <ion-fab slot="fixed" top right>
       <ion-fab-button
         size="small"
@@ -710,9 +710,8 @@ export default defineComponent({
   margin-left: auto;
   margin-right: auto;
   display: block;
-  width: 100%;
-  height: 100%;
-  max-width: 50vh;
+  width: calc(min(50vh, 50vw));
+  height: calc(min(50vh, 50vw));
 }
 
 #results-summary {
@@ -725,6 +724,7 @@ export default defineComponent({
   border: 1px solid gray;
   overflow: scroll;
   padding: 5px;
+  max-height: 0;
 }
 
 .reveal_row {
