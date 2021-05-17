@@ -43,10 +43,12 @@ export default defineComponent({
                 object: initial
               });
             } else {
-              this.store.commit("logicEliminate", {
-                sector: theory.sector,
-                object: initial
-              });
+              if (initial !== "C" || [2,3,5,7,11,13,17,19,23].indexOf(theory.sector+1) >= 0) {
+                this.store.commit("logicEliminate", {
+                  sector: theory.sector,
+                  object: initial
+                });
+              }
             }
           }
         } else {
