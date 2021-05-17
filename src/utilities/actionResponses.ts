@@ -1,7 +1,7 @@
 import { SpaceObject, initialToSpaceObject } from "@/constants.ts";
 
 export default {
-  survey(game: any, surveyObject: any, startSector: number, endSector: number) {
+  survey(game: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
     let sectors;
 
     // Get slice of only sectors being surveyed
@@ -65,16 +65,17 @@ export default {
       actionText,
       text,
       timeCost,
-      time: new Date(),
       spaceObject: surveyObject,
       startSector: startSector,
       endSector: endSector,
-      numObject
+      numObject,
+      turn,
+      time
     }
 
     return actionResult;
   },
-  target(game: any, sectorNumber: number) {
+  target(game: any, turn: number, time: Date, sectorNumber: number) {
     // Check what is in that sector
     let foundObject = game.board.objects[sectorNumber];
     foundObject = initialToSpaceObject[foundObject.initial];
@@ -101,14 +102,15 @@ export default {
       actionText,
       text,
       timeCost: 4,
-      time: new Date(),
       sector: sectorNumber,
-      spaceObject: foundObject
+      spaceObject: foundObject,
+      turn,
+      time
     }
 
     return actionResult;
   },
-  research(game: any, index: number) {
+  research(game: any, turn: number, time: Date, index: number) {
     // Get research at specific index
     const actionResult = {
       actionType: "RESEARCH",
@@ -116,28 +118,30 @@ export default {
       actionText: "Research " + String.fromCharCode(index+65) + ": " + game.research[index].categoryName,
       text: String.fromCharCode(index+65) + ". " + game.research[index].text,
       timeCost: 1,
-      time: new Date(),
       index,
-      shortText: String.fromCharCode(index+65) + ". " + game.research[index].shortText
+      shortText: String.fromCharCode(index+65) + ". " + game.research[index].shortText,
+      turn,
+      time
     }
 
     return actionResult;
   },
-  conference(game: any, index: number) {
+  conference(game: any, turn: number, time: Date, index: number) {
     // Get conference at specific index
     const actionResult = {
       actionType: "CONFERENCE",
       actionName: "Planet X Conference",
       actionText: "Conference X" + (index+1) + ": " + game.conference[index].categoryName,
       text: "X" + (index + 1) + ". " + game.conference[index].text,
-      time: new Date(),
       index,
-      shortText: game.conference[index].shortText
+      shortText: game.conference[index].shortText,
+      turn,
+      time
     }
 
     return actionResult;
   },
-  locatePlanetX(game: any, sector: number, leftObject: any, rightObject: any) {
+  locatePlanetX(game: any, turn: number, time: Date, sector: number, leftObject: any, rightObject: any) {
     const numSectors = game.board.objects.length;
     const leftSector = (sector == 0) ? numSectors - 1 : sector - 1;
     const rightSector = (sector == numSectors - 1) ? 0 : sector + 1;
@@ -171,15 +175,16 @@ export default {
       upperText,
       success: found,
       timeCost: 5,
-      time: new Date(),
       sector,
       leftObject,
-      rightObject
+      rightObject,
+      turn,
+      time
     }
 
     return actionResult;
   },
-  peerReview(game: any, sector: number, spaceObject: any) {
+  peerReview(game: any, turn: number, time: Date, sector: number, spaceObject: any) {
     // Check if theory object is correct
     const realObject = game.board.objects[sector];
     let text;
@@ -193,12 +198,13 @@ export default {
       actionType: "PEER_REVIEW",
       actionName: "Peer Review",
       text,
-      time: new Date()
+      turn,
+      time
     }
 
     return actionResult;
   },
-  theories(theories: Array<any>) {
+  theories(turn: number, time: Date, theories: Array<any>) {
     const actionText = "Submit Theories, " + theories.map((theory: any) => (theory.sector+1) + theory.spaceObject.initial).join(" ");
     const text = "Submitted theories: " + theories.map((theory: any) => {
       const spaceObject = initialToSpaceObject[theory.spaceObject.initial];
@@ -210,9 +216,27 @@ export default {
       actionName: "Submit Theories",
       actionText,
       text,
-      time: new Date()
+      turn,
+      time
     }
 
     return actionResult;
+  },
+  theoryReveal(turn: number, time: Date, theories: Array<any>) {
+    const actionText = "Revealed Theories, " + theories.map((theory: any) => (theory.sector + 1) + (theory.spaceObject.initial) + ":" + (theory.accurate ? "✓" : "X")).join(" ");
+    const text = "Revealed theories: " + theories.map((theory: any) => {
+      return "Sector " + (theory.sector + 1) + " is " + (theory.accurate ? "" : "not ") + theory.spaceObject.one;
+    }).join("; ") + ".";
+
+    const actionResult = {
+      actionType: "THEORY_REVEAL",
+      actionName: "Revealed Theories",
+      actionText,
+      text,
+      time,
+      turn
+    }
+
+    return actionResult
   }
 };

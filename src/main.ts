@@ -45,8 +45,6 @@ const app = createApp(App)
   .use(router)
   .use(VueMatchMediaPlugin);
 
-console.log(app);
-
 router.isReady().then(() => {
   app.mount('#app');
 });

@@ -4,6 +4,20 @@ import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
 
+const historySortOrder = (a: any, b: any) => {
+  if (a.turn === b.turn) {
+    if (a.actionType === "THEORY_REVEAL") {
+      return 1;
+    } else if (b.actionType === "THEORY_REVEAL") {
+      return -1;
+    } else {
+      return a.time - b.time;
+    }
+  } else {
+    return a.turn - b.turn;
+  }
+};
+
 //
 // @see https://github.com/vuejs/vuex/tree/v4.0.0-rc.1
 //
@@ -190,14 +204,15 @@ export default createStore({
           actionName: "Game Over",
           actionText,
           text,
-          time: new Date()
+          time: new Date(),
+          turn: sessionState.currentAction.turn
         }
 
         state.history.push(actionResult);
       }
     },
-    survey({ state, dispatch }, { surveyObject, startSector, endSector }) {
-      const actionResult = actionResponses.survey(state.game, surveyObject, startSector-1, endSector-1);
+    survey({ state, getters, dispatch }, { surveyObject, startSector, endSector }) {
+      const actionResult = actionResponses.survey(state.game, getters.currentTurn, new Date(), surveyObject, startSector-1, endSector-1);
 
       state.history.push(actionResult);
 
@@ -212,8 +227,8 @@ export default createStore({
         dispatch('makeSessionMove', moveData);
       }
     },
-    target({ state, dispatch }, { sectorNumber }) {
-      const actionResult = actionResponses.target(state.game, sectorNumber-1);
+    target({ state, getters, dispatch }, { sectorNumber }) {
+      const actionResult = actionResponses.target(state.game, getters.currentTurn, new Date(), sectorNumber-1);
 
       state.history.push(actionResult);
 
@@ -227,8 +242,8 @@ export default createStore({
         dispatch('makeSessionMove', moveData);
       }
     },
-    research({ state, dispatch }, { index }) {
-      const actionResult = actionResponses.research(state.game, index);
+    research({ state, getters, dispatch }, { index }) {
+      const actionResult = actionResponses.research(state.game, getters.currentTurn, new Date(), index);
 
       state.history.push(actionResult);
 
@@ -242,8 +257,8 @@ export default createStore({
         dispatch('makeSessionMove', moveData);
       }
     },
-    locatePlanetX({ state, dispatch }, { sector, leftObject, rightObject }) {
-      const actionResult = actionResponses.locatePlanetX(state.game, sector-1, leftObject, rightObject);
+    locatePlanetX({ state, getters, dispatch }, { sector, leftObject, rightObject }) {
+      const actionResult = actionResponses.locatePlanetX(state.game, getters.currentTurn, new Date(), sector-1, leftObject, rightObject);
 
       state.history.push(actionResult);
 
@@ -260,18 +275,18 @@ export default createStore({
         dispatch('makeSessionMove', moveData);
       }
     },
-    async submitTheories({ state }, theories) {
+    async submitTheories({ state, getters }, theories) {
       const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
       const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories});
 
       if (response.data.allowed) {
-        const actionResult = actionResponses.theories(response.data.successfulTheories);
+        const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
 
         state.history.push(actionResult);
       }
     },
-    async conference({ state }, { index }) {
-      const actionResult = actionResponses.conference(state.game, index);
+    async conference({ state, getters }, { index }) {
+      const actionResult = actionResponses.conference(state.game, getters.currentTurn, new Date(), index);
 
       state.history.push(actionResult);
 
@@ -279,8 +294,8 @@ export default createStore({
         await axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
       }
     },
-    peerReview({ state }, { spaceObject, sector }) {
-      const actionResult = actionResponses.peerReview(state.game, sector-1, spaceObject);
+    peerReview({ state, getters }, { spaceObject, sector }) {
+      const actionResult = actionResponses.peerReview(state.game, getters.currentTurn, new Date(), sector-1, spaceObject);
 
       state.history.push(actionResult);
     },
@@ -369,26 +384,58 @@ export default createStore({
         if (action.playerID === state.playerID) {
           switch(action.turnType) {
             case("SURVEY"):
-              history.push(actionResponses.survey(state.game, initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
+              history.push(actionResponses.survey(state.game, action.turn, new Date(action.time), initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
               break;
             case("TARGET"):
-              history.push(actionResponses.target(state.game, action.sector));
+              history.push(actionResponses.target(state.game, action.turn, new Date(action.time), action.sector));
               break;
             case("RESEARCH"):
-              history.push(actionResponses.research(state.game, action.index));
+              history.push(actionResponses.research(state.game, action.turn, new Date(action.time), action.index));
               break;
             case("LOCATE_PLANET_X"):
-              history.push(actionResponses.locatePlanetX(state.game, action.sector, initialToSpaceObject[action.leftObject.initial], initialToSpaceObject[action.rightObject.initial]));
+              history.push(actionResponses.locatePlanetX(state.game, action.turn, new Date(action.time), action.sector, initialToSpaceObject[action.leftObject.initial], initialToSpaceObject[action.rightObject.initial]));
               break;
             case("THEORY"):
-              history.push(actionResponses.theories(action.theories));
+              history.push(actionResponses.theories(action.turn, new Date(action.time), action.theories));
               break;
             case("CONFERENCE"):
-              history.push(actionResponses.conference(state.game, action.index));
+              history.push(actionResponses.conference(state.game, action.turn, new Date(action.time), action.index));
           }
         }
       }
-      // TODO: calculate theory reveals (possibly just provide in history)
+
+      const theoryTurnSet: Set<number> = new Set(state.session.history.filter((action: any) => action.turnType === "THEORY").map((action: any) => action.turn));
+      const theoryTurns: Array<number> = Array.from(theoryTurnSet).sort((a: any, b: any) => a - b);
+
+      const theoryReveals: any = {};
+      for (let i = 0; i < state.session.theories.length; i++) {
+        const theory = state.session.theories[i];
+        if (theory.revealed) {
+          const createdTurn = theoryTurns.indexOf(theory.turn);
+          const revealedTurnIndex = createdTurn + theory.progress - 1;
+          let revealTurn;
+          if (revealedTurnIndex < theoryTurns.length) {
+            revealTurn = theoryTurns[revealedTurnIndex];
+          } else {
+            revealTurn = theoryTurns[theoryTurns.length-1] + revealedTurnIndex - (theoryTurns.length - 1);
+          }
+          const newTheory = Object.assign({}, theory, { spaceObject: initialToSpaceObject[theory.spaceObject.initial] });
+
+          if (theoryReveals[revealTurn] !== undefined) {
+            theoryReveals[revealTurn].push(newTheory);
+          } else {
+            theoryReveals[revealTurn] = [newTheory];
+          }
+        }
+      }
+
+      for (const revealTurn in theoryReveals) {
+        const revealAction = actionResponses.theoryReveal(parseInt(revealTurn), null, theoryReveals[revealTurn]);
+        history.push(revealAction);
+      }
+
+      history.sort(historySortOrder);
+
       state.history = history;
     },
     setNumFacts(state: any, facts: number) {
@@ -447,18 +494,8 @@ export default createStore({
       state.newlyRevealedTheories = newlyRevealed;
 
       if (newlyRevealed.length > 0) {
-        const actionText = "Revealed Theories, " + newlyRevealed.map((theory: any) => (theory.sector + 1) + (theory.spaceObject.initial) + ":" + (theory.accurate ? "✓" : "X")).join(" ");
-        const text = "Revealed theories: " + newlyRevealed.map((theory: any) => {
-          return "Sector " + (theory.sector + 1) + " is " + (theory.accurate ? "" : "not ") + theory.spaceObject.one;
-        }).join("; ") + ".";
-
-        const actionResult = {
-          actionType: "THEORY_REVEAL",
-          actionName: "Revealed Theories",
-          actionText,
-          text,
-          time: new Date()
-        }
+        const actionResult = actionResponses.theoryReveal(state.session.currentAction.turn, new Date(), newlyRevealed);
+        actionResult.turn = state.session.currentAction.turn;
 
         state.history.push(actionResult);
       }
@@ -737,7 +774,7 @@ export default createStore({
       const myHistory = state.history.slice();
       const allHistory = state.session.history
         .map((action: any) => Object.assign({}, action, {time: new Date(action.time)}))
-        .sort((action: any) => action.time)
+        .sort(historySortOrder)
         .filter((action: any) => action.turnType !== "CONFERENCE");
 
       const history = [];
@@ -782,7 +819,7 @@ export default createStore({
         }
       }
 
-      history.sort((a, b) => a.time - b.time);
+      history.sort(historySortOrder);
 
       return history;
     },
@@ -937,6 +974,13 @@ export default createStore({
                           });
 
       return summary;
+    },
+    currentTurn(state: any) {
+      if (state.isSession) {
+        return state.session.currentAction.turn;
+      } else {
+        return state.history.length;
+      }
     }
   }
 });
