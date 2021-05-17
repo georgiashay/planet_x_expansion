@@ -193,7 +193,7 @@ export default defineComponent({
       this.router.push('/' + this.gameType + '/gamemenu');
     },
     clearSelections: function() {
-      this.numTheories = this.maxTheories;
+      this.numTheories = 0;
       this.theories = Array.from(Array(this.maxTheories)).map(() => {return {};});
     }
   },

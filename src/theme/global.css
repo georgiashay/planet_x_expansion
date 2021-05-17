@@ -46,3 +46,7 @@ ion-item-divider {
 .split-pane-visible > ion-menu {
   max-width: 36%;
 }
+
+ion-input input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+}
