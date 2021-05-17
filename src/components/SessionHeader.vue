@@ -7,6 +7,9 @@
       </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
       <div id="right_icons">
+        <div id="home_icon" @click="openHome()">
+          <ion-icon :src="homeOutline" />
+        </div>
         <div id="settings_icon" @click="openSettings()" v-if="!matchMedia.lg || !store.state.isSession">
           <ion-icon :src="settingsOutline"></ion-icon>
         </div>
@@ -24,11 +27,13 @@
 <script lang="ts">
 import { IonHeader, IonTitle, IonItem,
         IonItemDivider, IonLabel, IonIcon,
-        menuController, popoverController } from '@ionic/vue';
+        menuController, popoverController,
+        alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import RecentActions from "@/mixins/RecentActions.ts";
-import { menuOutline, settingsOutline } from "ionicons/icons";
+import { menuOutline, settingsOutline, homeOutline } from "ionicons/icons";
 import SettingsPopover from "@/components/SettingsPopover.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
 
@@ -54,9 +59,11 @@ export default defineComponent({
   data: function() {
     return {
       store: useStore(),
+      router: useRouter(),
       matchMedia: useMatchMedia(),
       settingsOutline,
-      menuOutline
+      menuOutline,
+      homeOutline
     }
   },
   mixins: [RecentActions],
@@ -97,6 +104,29 @@ export default defineComponent({
         });
       await popover.present();
       await popover.onDidDismiss();
+    },
+    openHome: async function() {
+      const alert = await alertController.create({
+        cssClass: 'custom-alert',
+        header: 'Home',
+        message: 'Are you sure you want to leave the game and navigate home?',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+          }, {
+            text: 'Yes',
+            role: 'okay'
+          }
+        ]
+      });
+
+      await alert.present();
+
+      const { role } = await alert.onDidDismiss();
+      if (role === "okay") {
+        this.router.push("/home");
+      }
     }
   }
 });

@@ -4,8 +4,17 @@
       <ion-fab-button
         size="small"
         color="light"
-        @click="openSettings()">
+        @click="openSettings()"
+        side="start">
         <ion-icon :src="settingsOutline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button
+        size="small"
+        color="light"
+        @click="openHome()"
+        side="end"
+        v-if="!store.state.isSession && route.path !== '/home'">
+        <ion-icon :src="homeOutline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
     <ion-split-pane content-id="main" when="lg" v-if="showSplitPane">
@@ -45,7 +54,7 @@ import { IonApp, IonRouterOutlet, IonSplitPane,
         IonMenu, IonPage, IonSegment,
         IonSegmentButton, IonContent,
         menuController, IonFab, IonFabButton,
-        IonIcon, popoverController } from '@ionic/vue';
+        IonIcon, popoverController, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import BoardWheel from "@/components/BoardWheel.vue";
 import LogicSheet from "@/components/LogicSheet.vue";
@@ -53,7 +62,7 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
-import { settingsOutline } from "ionicons/icons";
+import { settingsOutline, homeOutline } from "ionicons/icons";
 import SettingsPopover from "@/components/SettingsPopover.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
 
@@ -83,6 +92,7 @@ export default defineComponent({
       router: useRouter(),
       whichCircle: "board",
       settingsOutline,
+      homeOutline,
       matchMedia: useMatchMedia()
     }
   },
@@ -121,6 +131,29 @@ export default defineComponent({
         });
       await popover.present();
       await popover.onDidDismiss();
+    },
+    openHome: async function() {
+      const alert = await alertController.create({
+        cssClass: 'custom-alert',
+        header: 'Home',
+        message: 'Are you sure you want to leave the game and navigate home?',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+          }, {
+            text: 'Yes',
+            role: 'okay'
+          }
+        ]
+      });
+
+      await alert.present();
+
+      const { role } = await alert.onDidDismiss();
+      if (role === "okay") {
+        this.router.push("/home");
+      }
     }
   },
   mounted() {
