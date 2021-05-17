@@ -86,7 +86,7 @@ export default defineComponent({
   },
   methods: {
     peerreview: function() {
-      this.store.commit('peerReview', {
+      this.store.dispatch('peerReview', {
         spaceObject: this.selectedObject,
         sector: this.selectedSector
       });

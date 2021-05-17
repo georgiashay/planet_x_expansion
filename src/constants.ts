@@ -1,4 +1,4 @@
-// export const SERVER_URL = "planetx.shaytech.net";
+// export const SERVER_URL = "planetx.shaytech.net/api";
 export const SERVER_URL = "localhost:8000";
 // const SECURE = true;
 const SECURE = false;

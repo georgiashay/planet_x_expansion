@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
+import actionResponses from '@/utilities/actionResponses.ts';
 
 //
 // @see https://github.com/vuejs/vuex/tree/v4.0.0-rc.1
@@ -109,6 +110,7 @@ export default createStore({
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', response.data.playerName);
         commit('setupLogic', response.data.game.board.size);
+        commit('refillHistory');
         dispatch('listenSession');
       }
     },
@@ -194,75 +196,7 @@ export default createStore({
       }
     },
     survey({ state, dispatch }, { surveyObject, startSector, endSector }) {
-      let sectors;
-
-      // Get slice of only sectors being surveyed
-      if (endSector >= startSector) {
-        sectors = state.game.board.objects.slice(startSector-1, endSector);
-      } else {
-        sectors = state.game.board.objects.slice(0, endSector)
-                    .concat(state.game.board.objects.slice(startSector-1));
-      }
-
-      // Find the number of the object being surveyed
-      const numObject = sectors.filter((obj: any) => {
-        // If the object is an empty sector, include Planet X in the count
-        if (surveyObject.initial === SpaceObject.EMPTY.initial) {
-          return obj.initial === surveyObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
-        } else {
-          return obj.initial === surveyObject.initial;
-        }
-      }).length;
-
-      // Construct text for result
-      let text;
-      if (startSector !== endSector) {
-        text = (numObject == 1) ? "There is " : "There are ";
-        text += (numObject == 0) ? "no " : numObject + " ";
-        if (surveyObject.initial === SpaceObject.EMPTY.initial) {
-          text += (numObject == 1) ? "sector " : "sectors ";
-          text += "that ";
-          text += (numObject == 1) ? "appears " : "appear ";
-          text += "empty in sectors " + startSector + "-" + endSector + ".";
-          text += (numObject == 1) ? "\nIt may be truly empty, or it may be Planet X." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
-        } else {
-          text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
-          text += " in sectors " + startSector + "-" + endSector + ".";
-        }
-      } else {
-        text = "Sector " + endSector + " ";
-        if (surveyObject.initial === SpaceObject.EMPTY.initial) {
-          if (numObject == 0) {
-            text += " does not appear empty.";
-          } else {
-            text += " appears empty. It may be truly empty, or it may be Planet X.";
-          }
-        } else {
-          if (numObject == 0) {
-            text += " is not " + surveyObject.one + ".";
-          } else {
-            text += " is " + surveyObject.one + ".";
-          }
-        }
-      }
-
-      // Text to be displayed in history
-      const actionText = "Survey, " + surveyObject.proper + ", " + startSector + "-" + endSector;
-      // Calculate time cost for survey
-      const timeCost = 5 - Math.ceil(sectors.length/4);
-
-      const actionResult = {
-        actionType: "SURVEY",
-        actionName: "Survey",
-        actionText,
-        text,
-        timeCost,
-        time: new Date(),
-        spaceObject: surveyObject,
-        startSector: startSector - 1,
-        endSector: endSector - 1,
-        numObject
-      }
+      const actionResult = actionResponses.survey(state.game, surveyObject, startSector-1, endSector-1);
 
       state.history.push(actionResult);
 
@@ -271,50 +205,21 @@ export default createStore({
           turnType: "SURVEY",
           spaceObject: surveyObject.initial,
           sectors: [startSector-1, endSector-1],
-          timeCost
+          timeCost: actionResult.timeCost
         };
 
         dispatch('makeSessionMove', moveData);
       }
     },
     target({ state, dispatch }, { sectorNumber }) {
-      // Check what is in that sector
-      let foundObject = state.game.board.objects[sectorNumber-1];
-      foundObject = initialToSpaceObject[foundObject.initial];
-
-      // If it is Planet X, show that it appears empty
-      if (foundObject.initial === SpaceObject.PLANET_X.initial) {
-        foundObject = SpaceObject.EMPTY;
-      }
-
-      // Construct text for the result
-      let text;
-      if (foundObject.initial == SpaceObject.EMPTY.initial) {
-        text = "Sector " + sectorNumber + " appears empty.\nRemember, Planet X appears empty.";
-      } else {
-        text = "There is " + foundObject.one + " in sector " + sectorNumber + ".";
-      }
-
-      // Text to be displayed in history
-      const actionText = "Target, Sector " + sectorNumber;
-
-      const actionResult = {
-        actionType: "TARGET",
-        actionName: "Target",
-        actionText,
-        text,
-        timeCost: 4,
-        time: new Date(),
-        sector: sectorNumber-1,
-        spaceObject: foundObject
-      }
+      const actionResult = actionResponses.target(state.game, sectorNumber-1);
 
       state.history.push(actionResult);
 
       if (state.isSession) {
         const moveData = {
           turnType: "TARGET",
-          sector: sectorNumber - 1,
+          sector: sectorNumber-1,
           timeCost: 4
         };
 
@@ -322,17 +227,7 @@ export default createStore({
       }
     },
     research({ state, dispatch }, { index }) {
-      // Get research at specific index
-      const actionResult = {
-        actionType: "RESEARCH",
-        actionName: "Research",
-        actionText: "Research " + String.fromCharCode(index+65) + ": " + state.game.research[index].categoryName,
-        text: String.fromCharCode(index+65) + ". " + state.game.research[index].text,
-        timeCost: 1,
-        time: new Date(),
-        index,
-        shortText: String.fromCharCode(index+65) + ". " + state.game.research[index].shortText
-      }
+      const actionResult = actionResponses.research(state.game, index);
 
       state.history.push(actionResult);
 
@@ -347,50 +242,17 @@ export default createStore({
       }
     },
     locatePlanetX({ state, dispatch }, { sector, leftObject, rightObject }) {
-      const leftSector = (sector == 1) ? state.gameType.sectors : sector - 1;
-      const rightSector = (sector == state.gameType.sectors) ? 1 : sector + 1;
-
-      // Check if objects are all correct
-      const found = state.game.board.objects[sector-1].initial === SpaceObject.PLANET_X.initial &&
-                    state.game.board.objects[leftSector-1].initial === leftObject.initial &&
-                    state.game.board.objects[rightSector-1].initial === rightObject.initial;
-
-      // Construct text depending on success or failure
-      let text;
-      let upperText;
-      let actionText;
-
-      const locationText = leftObject.initial + "-" + sector + "-" + rightObject.initial;
-      if (found) {
-        text = "Congratulations! You found Planet X!";
-        upperText = "If you are the first to find Planet X,";
-        actionText = "Locate Planet X, " + locationText + ", Success";
-      } else {
-        text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
-        upperText = "If no one has yet found Planet X,";
-        actionText = "Locate Planet X, " + locationText + ", Fail";
-      }
-
-      const actionResult = {
-        actionType: "LOCATE_PLANET_X",
-        actionName: "Locate Planet X",
-        actionText,
-        text,
-        upperText,
-        success: found,
-        timeCost: 5,
-        time: new Date(),
-        sector: sector - 1,
-        leftObject,
-        rightObject
-      }
+      const actionResult = actionResponses.locatePlanetX(state.game, sector-1, leftObject, rightObject);
 
       state.history.push(actionResult);
 
       if (state.isSession) {
         const moveData = {
           turnType: "LOCATE_PLANET_X",
-          successful: found,
+          successful: actionResult.success,
+          sector: sector - 1,
+          leftObject: leftObject.initial,
+          rightObject: rightObject.initial,
           timeCost: 5
         };
 
@@ -402,40 +264,24 @@ export default createStore({
       const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories});
 
       if (response.data.allowed) {
-        const actionText = "Submit Theories, " + response.data.successfulTheories.map((theory: any) => (theory.sector+1) + theory.spaceObject.initial).join(" ");
-        const text = "Submitted theories: " + response.data.successfulTheories.map((theory: any) => {
-          const spaceObject = initialToSpaceObject[theory.spaceObject.initial];
-          return "Sector " + (theory.sector+1) + " is " + spaceObject.one;
-        }).join("; ") + ".";
-
-        const actionResult = {
-          actionType: "THEORY",
-          actionName: "Submit Theories",
-          actionText,
-          text,
-          time: new Date()
-        }
+        const actionResult = actionResponses.theories(response.data.successfulTheories);
 
         state.history.push(actionResult);
       }
     },
     async conference({ state }, { index }) {
-      // Get conference at specific index
-      const actionResult = {
-        actionType: "CONFERENCE",
-        actionName: "Planet X Conference",
-        actionText: "Conference X" + (index+1) + ": " + state.game.conference[index].categoryName,
-        text: "X" + (index + 1) + ". " + state.game.conference[index].text,
-        time: new Date(),
-        index,
-        shortText: state.game.conference[index].shortText
-      }
+      const actionResult = actionResponses.conference(state.game, index);
 
       state.history.push(actionResult);
 
       if (state.isSession) {
         await axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
       }
+    },
+    peerReview({ state }, { spaceObject, sector }) {
+      const actionResult = actionResponses.peerReview(state.game, sector-1, spaceObject);
+
+      state.history.push(actionResult);
     },
     logicToggle({state, commit}, { sector, object }) {
       if (state.logic.board[sector].eliminated.has(object)) {
@@ -515,6 +361,35 @@ export default createStore({
         surveyUsed: undefined
       };
     },
+    refillHistory(state: any) {
+      const history = [];
+      for (let i = 0; i < state.session.history.length; i++) {
+        const action = state.session.history[i];
+        if (action.playerID === state.playerID) {
+          switch(action.turnType) {
+            case("SURVEY"):
+              history.push(actionResponses.survey(state.game, initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
+              break;
+            case("TARGET"):
+              history.push(actionResponses.target(state.game, action.sector));
+              break;
+            case("RESEARCH"):
+              history.push(actionResponses.research(state.game, action.index));
+              break;
+            case("LOCATE_PLANET_X"):
+              history.push(actionResponses.locatePlanetX(state.game, action.sector, initialToSpaceObject[action.leftObject.initial], initialToSpaceObject[action.rightObject.initial]));
+              break;
+            case("THEORY"):
+              history.push(actionResponses.theories(action.theories));
+              break;
+            case("CONFERENCE"):
+              history.push(actionResponses.conference(state.game, action.index));
+          }
+        }
+      }
+      // TODO: calculate theory reveals (possibly just provide in history)
+      state.history = history;
+    },
     setNumFacts(state: any, facts: number) {
       state.startingFacts = facts;
     },
@@ -523,25 +398,6 @@ export default createStore({
     },
     setDarkMode(state: any, mode: boolean) {
       state.settings.darkMode = mode;
-    },
-    peerReview(state: any, { spaceObject, sector }) {
-      // Check if theory object is correct
-      const realObject = state.game.board.objects[sector - 1];
-      let text;
-      if (realObject.initial === spaceObject.initial) {
-        text = "Correct. Sector " + sector + " has " + spaceObject.one + ".";
-      } else {
-        text = "Incorrect. Sector " + sector + " does not have " + spaceObject.one + ".";
-      }
-
-      const actionResult = {
-        actionType: "PEER_REVIEW",
-        actionName: "Peer Review",
-        text,
-        time: new Date()
-      }
-
-      state.history.push(actionResult);
     },
     getNewlyRevealedTheories(state: any, sessionState: any) {
       let newlyRevealed: Array<any> = [];
@@ -676,7 +532,8 @@ export default createStore({
                 || action.actionType === "SURVEY"
                 || action.actionType === "TARGET"
                 || action.actionType === "LOCATE_PLANET_X"
-                || action.actionType === "CONFERENCE";
+                || action.actionType === "CONFERENCE"
+                || action.actionType === "PEER_REVIEW"
       });
 
       if (actionHistory.length) {
@@ -877,7 +734,10 @@ export default createStore({
     },
     fullHistory(state: any, getters: any) {
       const myHistory = state.history.slice();
-      const allHistory = state.session.history.map((action: any) => Object.assign({}, action, {time: new Date(action.time)})).sort((action: any) => action.time);
+      const allHistory = state.session.history
+        .map((action: any) => Object.assign({}, action, {time: new Date(action.time)}))
+        .sort((action: any) => action.time)
+        .filter((action: any) => action.turnType !== "CONFERENCE");
 
       const history = [];
 
@@ -885,7 +745,7 @@ export default createStore({
       const myPlayerName = getters.playerInfo.name;
 
       for (let i = 0; i < myHistory.length; i++) {
-        if (myHistory[i].actionType === "THEORY_REVEAL" || myHistory[i].actionType === "WINNER") {
+        if (myHistory[i].actionType === "THEORY_REVEAL" || myHistory[i].actionType === "WINNER" ||  myHistory[i].actionType === "CONFERENCE") {
           history.push(Object.assign({
             mine: true,
             historyIndex: i

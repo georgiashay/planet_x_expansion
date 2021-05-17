@@ -116,7 +116,7 @@ export default defineComponent({
         return { item, index };
       }).filter((item: any) => {
         // Don't display peer reviews in history
-        return item.item.actionType != "peerreview";
+        return item.item.actionType != "PEER_REVIEW";
       });
     },
     filteredHistory: function(): Array<any> {
