@@ -29,7 +29,7 @@ export default defineComponent({
         return action.playerID === undefined || action.playerID !== this.store.state.playerID;
       });
       recentHistory = recentHistory.filter((action: any) => {
-        return action.actionType !== "THEORY_REVEAL";
+        return action.actionType !== "THEORY_REVEAL" && action.actionType !== "CONFERENCE";
       });
       recentHistory = recentHistory.map((action: any) => {
         let message;
