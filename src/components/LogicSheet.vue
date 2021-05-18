@@ -205,20 +205,6 @@ export default defineComponent({
         this.store.commit("setSurveyUnused", { index });
       }
     },
-    positionSummary: function() {
-      const resultsSummary = this.$refs.resultsSummary as HTMLElement;
-      const cancelContainer = this.$refs.cancelContainer as HTMLElement;
-      const canvas = this.$refs.logicCanvas as HTMLElement;
-      if (cancelContainer && resultsSummary) {
-        const cancelBox = cancelContainer.getBoundingClientRect();
-        const resultsBox = resultsSummary.getBoundingClientRect();
-        resultsSummary.style.maxHeight = (resultsBox.bottom - cancelBox.bottom - 10) + "px";
-      } else if (canvas && resultsSummary) {
-        const canvasBox = canvas.getBoundingClientRect();
-        const resultsBox = resultsSummary.getBoundingClientRect();
-        resultsSummary.style.maxHeight = (resultsBox.bottom - canvasBox.bottom - 10) + "px";
-      }
-    },
     showNumObjects: async function(e: Event) {
       const popover = await popoverController
         .create({
@@ -690,14 +676,9 @@ export default defineComponent({
     canvas.addEventListener("touchend", (e: Event) => {
       clearTimeout(timeout);
     });
-
-    window.addEventListener("resize", this.positionSummary);
-
-    this.positionSummary();
   },
   unmounted() {
     this.unsubscribeStore();
-    window.removeEventListener("resize", this.positionSummary);
   }
 });
 </script>
@@ -706,6 +687,11 @@ export default defineComponent({
 #container {
   padding: 10px;
   color: white;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #title_container {
@@ -739,19 +725,21 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   max-width: 50vh;
+  max-height: 50vh;
 }
 
 #results-summary {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   background-color: var(--ion-color-light);
   color: var(--ion-color-light-contrast);
-  width: 100%;
+  width: calc(100% + 20px);
   border: 1px solid gray;
-  overflow: scroll;
   padding: 5px;
-  max-height: 0;
+  overflow-y: auto;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: -10px;
+  margin-top: 10px;
+  height: 100%;
 }
 
 .reveal_row {
