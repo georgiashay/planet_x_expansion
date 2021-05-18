@@ -14,11 +14,19 @@
           <h1>{{store.state.sessionCode || "Loading..."}}</h1>
           <p>{{sessionModeName}}</p>
         </div>
-        <div id="players">
-          <ion-item color="light" v-for="player in store.getters.sessionPlayers" :key="player.num">
-            <div class="player_circle" :style="playerStyle(player.num)"></div>
-            P{{player.num}}: {{player.name}}
-          </ion-item>
+        <div id="players" v-if="store.state.session">
+          <table>
+            <tr v-for="(row, i) in playerGrid" :key="i">
+              <td
+                v-for="(player, j) in row"
+                :key="j"
+                :class="player === null ? 'unselected_color' : 'selected_color'"
+                :style="playerStyle(i*5 + j)"
+                @click="changeColor(i*5 + j)">
+                <span v-if="player !== null">{{player.name}}</span>
+              </td>
+            </tr>
+          </table>
         </div>
         <div>
           <p v-if="sessionCreator">Verify that all player have joined the session, and then press the start button below to start the game.</p>
@@ -44,8 +52,7 @@
 
 <script lang="ts">
 import { IonContent, IonPage,
-        IonButton, IonNavLink, IonIcon,
-        IonItem } from '@ionic/vue';
+        IonButton, IonNavLink, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -65,7 +72,6 @@ export default defineComponent({
     IonButton,
     IonNavLink,
     IonIcon,
-    IonItem,
     SessionHeader,
     GameFooter
   },
@@ -95,6 +101,21 @@ export default defineComponent({
         return this.store.state.gameType.name + " Mode (" +
          this.store.state.gameType.sectors + " sectors)";
       }
+    },
+    playerGrid(): Array<Array<any>> {
+      const colors = Array.from(Array(this.numColors())).map(() => null);
+      for (let i = 0; i < this.store.getters.sessionPlayers.length; i++) {
+        const player = this.store.getters.sessionPlayers[i];
+        colors[player.color] = player;
+      }
+      const grid: Array<Array<any>> = [[]];
+      for (let i = 0; i < colors.length; i++) {
+        grid[grid.length-1].push(colors[i]);
+        if (grid[grid.length - 1].length === 5) {
+          grid.push([]);
+        }
+      }
+      return grid;
     }
   },
   methods: {
@@ -106,9 +127,42 @@ export default defineComponent({
         this.router.push("/session/chooseview");
       }
     },
+    changeColor(newColor: number) {
+      this.store.dispatch('changeColor', newColor);
+    },
+    handleKeypress(e: KeyboardEvent) {
+      const color = this.store.getters.playerInfo.color;
+      if (e.keyCode === 37) {
+        // Left
+        if (color % 5 !== 0) {
+          this.changeColor(color - 1);
+        }
+      } else if (e.keyCode === 38) {
+        // Up
+        if (color >= 5) {
+          this.changeColor(color - 5);
+        }
+      } else if (e.keyCode === 39) {
+        // Right
+        if (color % 5 !== 4) {
+          this.changeColor(color + 1);
+        }
+      } else if (e.keyCode === 40) {
+        // Down
+        const newColor = color + 5;
+        if (newColor < this.numColors()) {
+          this.changeColor(newColor);
+        }
+      }
+    }
   },
   ionViewDidEnter() {
     this.playSound("sonar1");
+
+    window.addEventListener("keydown", this.handleKeypress);
+  },
+  ionViewWillLeave() {
+    window.removeEventListener("keydown", this.handleKeypress);
   }
 });
 </script>
@@ -126,7 +180,6 @@ export default defineComponent({
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
 }
 
 #title_container h1 {
@@ -176,5 +229,48 @@ export default defineComponent({
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
   transform: scale(1);
   animation: pulse 1.6s infinite;
+}
+
+.unselected_color {
+  background-color: var(--player-color);
+}
+
+.selected_color {
+  background-color: var(--player-color);
+}
+
+#players {
+    width: 100%;
+}
+
+table {
+  width: 100%;
+  max-width: 40vh;
+  margin: 0 auto;
+}
+
+td {
+  width: 20%;
+  height: 0;
+  padding-bottom: 10%;
+  padding-top: 10%;
+  position: relative;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+}
+
+td span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.2em;
+  border-radius: 0.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 </style>

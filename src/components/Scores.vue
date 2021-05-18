@@ -13,16 +13,6 @@
         Total
       </th>
     </tr>
-    <!-- <tr id="points_row">
-      <td>Points</td>
-      <td
-        v-for="(points, index) in pointsRow"
-        :key="index"
-        >
-        {{points}}
-      </td>
-      <td></td>
-    </tr> -->
     <tr
       v-for="(row, index) in scoreTable"
       :key="index"
@@ -105,7 +95,7 @@ export default defineComponent({
     players: function(): Array<Array<any>> {
       return this.store.state.session.scores.map((score: any) => {
         const player = this.store.getters.playerMap[score.playerID];
-        return ["P" + player.num + ": " + player.name, this.playerStyle(player.num)];
+        return ["P" + player.num + ": " + player.name, this.playerStyle(player.color)];
       });
     }
   }

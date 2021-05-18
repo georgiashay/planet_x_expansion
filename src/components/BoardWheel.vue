@@ -61,7 +61,7 @@ export default defineComponent({
         while (sectorMap[sector].length < players[i].arrival) {
           sectorMap[sector].push(null);
         }
-        sectorMap[sector][players[i].arrival-1] = players[i].num;
+        sectorMap[sector][players[i].arrival-1] = players[i].color;
       }
       return sectorMap;
     },
@@ -307,8 +307,8 @@ export default defineComponent({
             const part = 1/(this.theorySlots[i][progress].length);
             for (let k = 0; k < this.theorySlots[i][progress].length; k++) {
               const theory = this.theorySlots[i][progress][k];
-              const playerNum = this.store.getters.playerMap[theory.playerID].num;
-              const color = this.playerColor(playerNum);
+              const colorNum = this.store.getters.playerMap[theory.playerID].color;
+              const color = this.playerColor(colorNum);
 
               gradient.addColorStop(k*part, color);
               gradient.addColorStop((k+1)*part, color);

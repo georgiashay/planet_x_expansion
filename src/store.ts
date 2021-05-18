@@ -69,7 +69,6 @@ export default createStore({
     async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
-      // console.log(response.data);
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
       console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
@@ -172,16 +171,16 @@ export default createStore({
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
       console.log(response.data);
     },
+    async changeColor({ state }, newColor) {
+      await axios.post(API_URL + "/setColor/?playerID=" + state.playerID + "&color=" + newColor);
+    },
     checkMyTurn({ state }, sessionState) {
       if (sessionState.currentAction.playerID === state.playerID) {
-        if (state.session.currentAction.playerID !== state.playerID
-          || state.session.currentAction.actionType !== sessionState.currentAction.actionType
-          || state.session.currentSector !== sessionState.currenSector) {
+        if (state.session.currentAction.turn !== sessionState.currentAction.turn) {
           SoundEffects.playSound("doorbell", state.settings.muteLevel);
         }
       } else if (sessionState.currentAction.playerID === null) {
-        if (state.session.currentAction.actionType !== sessionState.currentAction.actionType
-            || state.session.currentSector !== sessionState.currentSector) {
+        if (state.session.currentAction.turn !== sessionState.currentAction.turn) {
           SoundEffects.playSound("doorbell", state.settings.muteLevel);
         }
       }

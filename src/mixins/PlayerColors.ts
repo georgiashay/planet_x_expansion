@@ -23,13 +23,16 @@ const distinctColors = [
 
 export default {
   methods: {
-    playerColor: function (playerNum: number): string {
-      return distinctColors[(playerNum-1) % distinctColors.length];
+    playerColor: function (color: number): string {
+      return distinctColors[color % distinctColors.length];
     },
-    playerStyle: function(playerNum: number): any {
+    playerStyle: function(color: number): any {
       return {
-        "--player-color": this.playerColor(playerNum)
+        "--player-color": this.playerColor(color)
       }
+    },
+    numColors: function() {
+      return distinctColors.length;
     }
   }
 };
