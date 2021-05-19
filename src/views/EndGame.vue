@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <div id="container" v-if="store.getters.playerReady">
+    <ion-content>
+      <adaptable-container v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Game Over</h3>
           <h5 v-if="!store.state.isSession">Game Code: {{store.state.gameCode}}</h5>
@@ -30,7 +30,7 @@
           router-link="/home">
           Return to Start Screen
         </ion-button>
-      </div>
+      </adaptable-container>
     </ion-content>
   </ion-page>
 </template>
@@ -43,6 +43,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { initialToSpaceObject } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
+import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
 export default defineComponent({
   name: 'EndGame',
@@ -53,7 +54,8 @@ export default defineComponent({
     IonCol,
     IonRow,
     IonIcon,
-    IonButton
+    IonButton,
+    AdaptableContainer
   },
   mixins: [SoundMixin],
   data() {
@@ -78,19 +80,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
 }
 
 #title_container h1 {

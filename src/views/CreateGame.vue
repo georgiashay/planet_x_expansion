@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <div id="container">
+    <ion-content>
+      <adaptable-container>
         <div id="title_container">
           <h3>Multiplayer {{isSession ? "Online " : ""}}Game</h3>
         </div>
@@ -35,7 +35,7 @@
             <ion-nav-link router-link="/home">Cancel</ion-nav-link>
           </div>
         </div>
-      </div>
+      </adaptable-container>
     </ion-content>
   </ion-page>
 </template>
@@ -51,6 +51,7 @@ import { useRouter } from 'vue-router';
 import { GAME_TYPES } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
+import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
 export default defineComponent({
   name: 'CreateGame',
@@ -62,7 +63,8 @@ export default defineComponent({
     IonNavLink,
     IonIcon,
     IonItem,
-    IonInput
+    IonInput,
+    AdaptableContainer
   },
   mixins: [SoundMixin],
   data() {
@@ -127,16 +129,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
 }
 
 #title_container h1 {
@@ -148,7 +144,7 @@ export default defineComponent({
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10vh;
+  margin-top: 2em;
   max-width: var(--max-form-width);
 }
 

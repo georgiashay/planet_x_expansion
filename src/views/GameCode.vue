@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <div id="container">
+    <ion-content>
+      <adaptable-container>
         <div id="title_container">
           <h3>Game Code</h3>
         </div>
@@ -28,7 +28,7 @@
         <div id="cancel_container">
           <ion-nav-link router-link="/home">Cancel</ion-nav-link>
         </div>
-      </div>
+      </adaptable-container>
     </ion-content>
   </ion-page>
 </template>
@@ -42,6 +42,7 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
+import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
 export default defineComponent({
   name: 'GameCode',
@@ -51,7 +52,8 @@ export default defineComponent({
     Stripe,
     IonButton,
     IonNavLink,
-    IonIcon
+    IonIcon,
+    AdaptableContainer
   },
   mixins: [SoundMixin],
   props: {
@@ -86,19 +88,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
+  margin-bottom: 2em;
 }
 
 #title_container h1 {

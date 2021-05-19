@@ -700,9 +700,9 @@ export default defineComponent({
   text-align: center;
 }
 
-#title_container h1 {
-  font-size: 50px;
-  line-height: 56px;
+#title_container h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #cancel_container_logic {

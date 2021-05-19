@@ -1,8 +1,8 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession" hide-at="md"/>
-    <ion-content :fullscreen="true">
-      <div id="container" v-if="store.getters.playerReady">
+    <ion-content>
+      <centered-container v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Game Menu</h3>
         </div>
@@ -97,7 +97,7 @@
             End Game &amp; Reveal Objects
           </ion-button>
         </div>
-      </div>
+      </centered-container>
     </ion-content>
     <game-footer hide-at="md"/>
   </ion-page>
@@ -117,6 +117,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
 import Stripe from "@/components/Stripe.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
+import CenteredContainer from "@/components/CenteredContainer.vue";
 
 export default defineComponent({
   name: 'GameMenu',
@@ -127,7 +128,8 @@ export default defineComponent({
     IonIcon,
     Stripe,
     GameFooter,
-    SessionHeader
+    SessionHeader,
+    CenteredContainer
   },
   mixins: [SoundMixin],
   props: {
@@ -225,14 +227,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
@@ -248,7 +242,7 @@ export default defineComponent({
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10vh;
+  margin-top: 2em;
 }
 
 #action_buttons ion-button {

@@ -16,6 +16,11 @@
   --ion-font-family: "Roboto";
   --max-form-width: 500px;
   --stripe-color: white;
+  --max-container-width: var(--max-form-width);
+  --container-color: white;
+  --container-padding: 20px;
+  --default-content-position: 15%;
+  --reduce-gap-after-centered: 1;
 }
 
 ion-content {

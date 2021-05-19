@@ -1,8 +1,8 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession" hide-at="md"/>
-    <ion-content :fullscreen="true">
-      <div id="container" v-if="store.getters.gameReady && actionResult !== undefined">
+    <ion-content>
+      <adaptable-container v-if="store.getters.gameReady && actionResult !== undefined">
         <div id="title_container">
           <h3>Current Action: {{actionResult.actionName}}</h3>
         </div>
@@ -23,7 +23,7 @@
           id="continue_button">
           Continue <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
-      </div>
+      </adaptable-container>
     </ion-content>
     <game-footer hide-at="md"/>
   </ion-page>
@@ -40,6 +40,7 @@ import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
+import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
 function isString(obj: any): obj is string {
   return typeof obj === "string";
@@ -54,7 +55,8 @@ export default defineComponent({
     IonIcon,
     Stripe,
     GameFooter,
-    SessionHeader
+    SessionHeader,
+    AdaptableContainer
   },
   mixins: [SoundMixin],
   props: {
@@ -146,19 +148,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
+  margin-bottom: 2em;
 }
 
 #title_container h1 {

@@ -1,5 +1,5 @@
 <template>
-  <div id="container" v-if="store.getters.gameReady && store.state.isSession">
+  <centered-container id="container" v-if="store.getters.gameReady && store.state.isSession">
     <div id="title_container">
       <h3>Current Board</h3>
     </div>
@@ -11,7 +11,7 @@
     <div id="cancel_container" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
-  </div>
+  </centered-container>
 </template>
 
 <script lang="ts">
@@ -23,12 +23,14 @@ import Scores from "@/components/Scores.vue";
 import { initialToSpaceObject } from "@/constants.ts";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
+import CenteredContainer from "@/components/CenteredContainer.vue";
 
 export default defineComponent({
   name: 'BoardWheel',
   components: {
     IonNavLink,
-    Scores
+    Scores,
+    CenteredContainer
   },
   mixins: [PlayerColors, DarkMode],
   data() {
@@ -509,8 +511,7 @@ export default defineComponent({
 
 <style scoped>
 #container {
-  padding: 10px;
-  color: white;
+  --container-padding: 10px;
 }
 
 #title_container {
@@ -519,9 +520,9 @@ export default defineComponent({
   text-align: center;
 }
 
-#title_container h1 {
-  font-size: 50px;
-  line-height: 56px;
+#title_container h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #cancel_container {

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession"/>
-    <ion-content :fullscreen="true">
+    <ion-content>
       <board-wheel />
     </ion-content>
     <game-footer/>

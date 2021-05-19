@@ -1,8 +1,8 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession" hide-at="md"/>
-    <ion-content :fullscreen="true">
-      <div id="container" v-if="store.getters.playerReady">
+    <ion-content>
+      <adaptable-container v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Current Action: Survey</h3>
         </div>
@@ -48,7 +48,7 @@
         <div id="cancel_container">
           <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
-      </div>
+      </adaptable-container>
     </ion-content>
     <game-footer hide-at="md"/>
   </ion-page>
@@ -68,6 +68,7 @@ import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
+import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
 export default defineComponent({
   name: 'Survey',
@@ -81,7 +82,8 @@ export default defineComponent({
     SpaceObjectSelect,
     SectorMultiSelect,
     GameFooter,
-    SessionHeader
+    SessionHeader,
+    AdaptableContainer
   },
   mixins: [SoundMixin],
   props: {
@@ -217,19 +219,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
+  margin-bottom: 2em;
 }
 
 #title_container h1 {

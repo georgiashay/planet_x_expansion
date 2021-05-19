@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <div id="container">
+    <ion-content>
+      <centered-container>
         <div id="title_container">
           <h2>The Search For</h2>
           <h1><b>Planet X</b></h1>
@@ -17,7 +17,7 @@
           <ion-button expand="block" color="light" router-link = "/session/reconnect">Reconnect to Session</ion-button>
           <stripe/>
         </div>
-      </div>
+      </centered-container>
     </ion-content>
   </ion-page>
 </template>
@@ -29,6 +29,7 @@ import { useStore } from 'vuex';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
 import Spacer from "@/components/Spacer.vue";
+import CenteredContainer from "@/components/CenteredContainer.vue";
 
 export default defineComponent({
   name: 'Home',
@@ -37,7 +38,8 @@ export default defineComponent({
     IonPage,
     IonButton,
     Stripe,
-    Spacer
+    Spacer,
+    CenteredContainer
   },
   mixins: [SoundMixin],
   data() {
@@ -54,19 +56,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
-  margin-top: 15vh;
 }
 
 #title_container h1 {
@@ -78,7 +71,7 @@ export default defineComponent({
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10vh;
+  margin-top: 3em;
 }
 
 #start_game_buttons ion-button {

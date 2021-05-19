@@ -1,7 +1,6 @@
-// export const SERVER_URL = "planetx.shaytech.net/api";
-export const SERVER_URL = "localhost:8000";
-// const SECURE = true;
-const SECURE = false;
+const IS_PROD = process.env.NODE_ENV === "production";
+const SERVER_URL = IS_PROD ? "planetx.shaytech.net/api" : "localhost:8000";
+const SECURE = IS_PROD;
 const URL_PREFIX = SECURE ? "https://" : "http://";
 const WS_PREFIX = SECURE ? "wss://" : "ws://";
 export const API_URL = URL_PREFIX + SERVER_URL;

@@ -1,50 +1,52 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession" hide-menu hide-at="lg"/>
-    <ion-content :fullscreen="true">
-      <div id="container">
-        <div id="title_container">
-          <h3>Lobby</h3>
+    <ion-content>
+      <adaptable-container>
+        <div id="content">
+          <div id="title_container">
+            <h3>Lobby</h3>
+          </div>
+          <div>
+            <p v-if="sessionCreator">Your session has been created. Please have the other players enter the following session code:</p>
+            <p v-else>You have joined the game. Please double-check that the session code is the same as the one created for this game.</p>
+          </div>
+          <div id="session_code">
+            <h1>{{store.state.sessionCode || "Loading..."}}</h1>
+            <p>{{sessionModeName}}</p>
+          </div>
+          <div id="players" v-if="store.state.session">
+            <table>
+              <tr v-for="(row, i) in playerGrid" :key="i">
+                <td
+                  v-for="(player, j) in row"
+                  :key="j"
+                  :class="player === null ? 'unselected_color' : 'selected_color'"
+                  :style="playerStyle(i*5 + j)"
+                  @click="changeColor(i*5 + j)">
+                  <span v-if="player !== null">{{player.name}}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div>
+            <p v-if="sessionCreator">Verify that all player have joined the session, and then press the start button below to start the game.</p>
+          </div>
+          <stripe/>
+          <ion-button
+            :disabled = "!sessionCreator && store.state.session.currentAction.actionType == 'START_GAME'"
+            expand="block"
+            color="light"
+            @click="startGame()"
+            id="start_button">
+            Start Game
+              <ion-icon :icon="arrowForwardOutline"></ion-icon>
+          </ion-button>
+          <div id="cancel_container">
+            <ion-nav-link router-link="/home">Cancel</ion-nav-link>
+          </div>
         </div>
-        <div>
-          <p v-if="sessionCreator">Your session has been created. Please have the other players enter the following session code:</p>
-          <p v-else>You have joined the game. Please double-check that the session code is the same as the one created for this game.</p>
-        </div>
-        <div id="session_code">
-          <h1>{{store.state.sessionCode || "Loading..."}}</h1>
-          <p>{{sessionModeName}}</p>
-        </div>
-        <div id="players" v-if="store.state.session">
-          <table>
-            <tr v-for="(row, i) in playerGrid" :key="i">
-              <td
-                v-for="(player, j) in row"
-                :key="j"
-                :class="player === null ? 'unselected_color' : 'selected_color'"
-                :style="playerStyle(i*5 + j)"
-                @click="changeColor(i*5 + j)">
-                <span v-if="player !== null">{{player.name}}</span>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div>
-          <p v-if="sessionCreator">Verify that all player have joined the session, and then press the start button below to start the game.</p>
-        </div>
-        <stripe/>
-        <ion-button
-          :disabled = "!sessionCreator && store.state.session.currentAction.actionType == 'START_GAME'"
-          expand="block"
-          color="light"
-          @click="startGame()"
-          id="start_button">
-          Start Game
-            <ion-icon :icon="arrowForwardOutline"></ion-icon>
-        </ion-button>
-        <div id="cancel_container">
-          <ion-nav-link router-link="/home">Cancel</ion-nav-link>
-        </div>
-      </div>
+      </adaptable-container>
     </ion-content>
     <game-footer hide-at="lg"/>
   </ion-page>
@@ -62,6 +64,7 @@ import PlayerColors from "@/mixins/PlayerColors.ts";
 import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
 import Stripe from "@/components/Stripe.vue";
+import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
 export default defineComponent({
   name: 'Lobby',
@@ -73,7 +76,8 @@ export default defineComponent({
     IonNavLink,
     IonIcon,
     SessionHeader,
-    GameFooter
+    GameFooter,
+    AdaptableContainer
   },
   mixins: [SoundMixin, PlayerColors],
   props: {
@@ -168,14 +172,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#container {
-  padding: 20px;
-  max-width: var(--max-form-width);
-  margin-right: auto;
-  margin-left: auto;
-  color: white;
-}
-
 #title_container {
   font-family: "Roboto Slab";
   text-transform: uppercase;
