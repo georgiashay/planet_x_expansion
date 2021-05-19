@@ -29,10 +29,6 @@ export default defineComponent({
     return {
       store: useStore()
     }
-  },
-  ionViewDidEnter() {
-    const logicSheet = this.$refs.logicSheet as typeof LogicSheet;
-    logicSheet.positionSummary();
   }
 });
 </script>

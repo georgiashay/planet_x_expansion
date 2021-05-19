@@ -151,6 +151,7 @@ export default defineComponent({
   font-family: "Roboto Slab";
   text-transform: uppercase;
   text-align: center;
+  margin-bottom: 2em;
 }
 
 #title_container h1 {
