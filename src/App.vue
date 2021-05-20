@@ -65,6 +65,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import { settingsOutline, homeOutline } from "ionicons/icons";
 import SettingsPopover from "@/components/SettingsPopover.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
+import KickListener from "@/mixins/KickListener.ts";
 
 export default defineComponent({
   name: 'App',
@@ -96,6 +97,7 @@ export default defineComponent({
       matchMedia: useMatchMedia()
     }
   },
+  mixins: [KickListener],
   computed: {
     showWheel: function(): boolean {
       return this.matchMedia.lg || this.store.getters.playerReady;

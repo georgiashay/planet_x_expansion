@@ -8,7 +8,7 @@
             <h3>Lobby</h3>
           </div>
           <div>
-            <p v-if="sessionCreator">Your session has been created. Please have the other players enter the following session code:</p>
+            <p v-if="store.getters.isHost"><span v-if="sessionCreator">Your session has been created.</span> Please have the other players enter the following session code:</p>
             <p v-else>You have joined the game. Please double-check that the session code is the same as the one created for this game.</p>
           </div>
           <div id="session_code">
@@ -30,11 +30,11 @@
             </table>
           </div>
           <div>
-            <p v-if="sessionCreator">Verify that all player have joined the session, and then press the start button below to start the game.</p>
+            <p v-if="store.getters.isHost">Verify that all player have joined the session, and then press the start button below to start the game.</p>
           </div>
           <stripe/>
           <ion-button
-            :disabled = "!sessionCreator && store.state.session.currentAction.actionType == 'START_GAME'"
+            :disabled = "!store.getters.isHost && store.state.session.currentAction.actionType == 'START_GAME'"
             expand="block"
             color="light"
             @click="startGame()"
@@ -124,7 +124,7 @@ export default defineComponent({
   },
   methods: {
     async startGame() {
-      if (this.sessionCreator) {
+      if (this.store.getters.isHost) {
         await this.store.dispatch("startSession");
         this.router.push("/session/chooseview");
       } else {

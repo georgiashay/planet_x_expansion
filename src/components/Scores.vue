@@ -1,6 +1,7 @@
 <template>
   <table id="score_table">
     <tr>
+      <th class="kick_header" v-if="store.state.session.players.length > 1"/>
       <th>Player</th>
       <th
         v-for="(header, index) in scoreHeaders"
@@ -17,12 +18,16 @@
       v-for="(row, index) in scoreTable"
       :key="index"
        :style="players[index][1]">
+      <td :class="players[index][2].id == store.state.playerID ? [] : store.getters.kickedPlayerState(players[index][2].id) ? ['kick_cell', 'kicked'] : ['kick_cell', 'unkicked']" @click="kickPlayer(index)" v-if="store.state.session.players.length > 1">
+        <ion-icon src="/assets/kick.svg" v-if="players[index][2].id !== store.state.playerID"/>
+      </td>
       <td class="player_cell">
         {{players[index][0]}}
       </td>
       <td
         v-for="(value, j) in row"
-        :key="j">
+        :key="j"
+        class="player_points_cell">
         {{ value }}
       </td>
     </tr>
@@ -30,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { IonIcon } from '@ionic/vue';
+import { IonIcon, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
@@ -95,8 +100,39 @@ export default defineComponent({
     players: function(): Array<Array<any>> {
       return this.store.state.session.scores.map((score: any) => {
         const player = this.store.getters.playerMap[score.playerID];
-        return ["P" + player.num + ": " + player.name, this.playerStyle(player.color)];
+        return ["P" + player.num + ": " + player.name, this.playerStyle(player.color), player];
       });
+    }
+  },
+  methods: {
+    kickPlayer: async function(index: number) {
+      const player = this.players[index][2];
+
+      if (!this.store.state.session.kickVotes.some((kickVote: any) => kickVote.kickPlayerID === player.id)) {
+        const alert = await alertController.create({
+          cssClass: 'custom-alert',
+          header: 'Kick ' + player.name,
+          message: 'Are you sure you want start a vote to kick ' + player.name + '?',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+            }, {
+              text: 'Yes',
+              role: 'okay'
+            }
+          ]
+        });
+
+        await alert.present();
+
+        const { role } = await alert.onDidDismiss();
+        if (role === "okay") {
+          this.store.dispatch("toggleKickPlayer", player.id);
+        }
+      } else {
+        this.store.dispatch("toggleKickPlayer", player.id);
+      }
     }
   }
 });
@@ -105,13 +141,13 @@ export default defineComponent({
 <style scoped>
 #score_table {
   width: 100%;
-  max-width: 50vh;
+  max-width: 75vh;
   background-color: var(--ion-color-light);
   color: var(--ion-color-light-contrast);
   border: 2px solid white;
 }
 
-#score_table td {
+#score_table .player_cell, .player_points_cell {
   border: 2px solid var(--ion-color-light-contrast);
   outline: 3px solid var(--player-color);
   outline-offset: -4px;
@@ -119,6 +155,26 @@ export default defineComponent({
   text-align: center;
   font-size: 1em;
   color: var(--ion-color-light-contrast);
+}
+
+#score_table .kick_cell {
+  padding: 3px;
+  text-align: center;
+}
+
+#score_table .kick_cell.unkicked:hover {
+  color: black;
+  background-color: red;
+}
+
+#score_table .kick_cell.kicked {
+  color: white;
+  background-color: darkred;
+}
+
+#score_table .kick_cell.kicked:hover {
+  color: white;
+  background-color: green;
 }
 
 #score_table th {

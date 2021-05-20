@@ -321,6 +321,21 @@ export default createStore({
         commit('logicSet', { sector, object });
       }
     },
+    async toggleKickPlayer({ state, getters }, kickPlayerID) {
+      const currentVote = getters.kickedPlayerState(kickPlayerID);
+      const newVote = !currentVote;
+
+      await axios.post(API_URL + "/castKickVote/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {
+        kickPlayerID,
+        vote: newVote
+      });
+    },
+    async castKickPlayer({ state, getters }, { kickPlayerID, vote }) {
+      await axios.post(API_URL + "/castKickVote/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {
+        kickPlayerID,
+        vote
+      });
+    }
   },
   mutations: {
     setGame(state: any, game: object) {
@@ -672,7 +687,7 @@ export default createStore({
       return sectors;
     },
     playerInfo(state: any) {
-      const players = state.session.players;
+      const players = state.session.players.concat(state.session.kickedPlayers);
       const me = players.filter((p: any) => p.id === state.playerID);
       if (me.length == 0) {
         return null;
@@ -762,9 +777,10 @@ export default createStore({
       return uniqueRevealed;
     },
     playerMap(state: any) {
+      const players = state.session.players.concat(state.session.kickedPlayers);
       const playerMap: {[playerID: string]: any} = {};
-      for (let i = 0; i < state.session.players.length; i++) {
-        const player = state.session.players[i];
+      for (let i = 0; i < players.length; i++) {
+        const player = players[i];
         playerMap[player.id] = player;
       }
       return playerMap;
@@ -980,6 +996,17 @@ export default createStore({
       } else {
         return state.history.length;
       }
+    },
+    kickedPlayerState: (state: any) => (kickPlayerID: number) => {
+      const kickVote = state.session.kickVotes.find((kickVote: any) => kickVote.kickPlayerID === kickPlayerID && kickVote.votePlayerID === state.playerID);
+      if (kickVote === undefined) {
+        return false;
+      } else {
+        return kickVote.vote;
+      }
+    },
+    isHost(state: any) {
+      return state.session.currentAction.actionType === "START_GAME" && state.session.currentAction.playerID === state.playerID;
     }
   }
 });

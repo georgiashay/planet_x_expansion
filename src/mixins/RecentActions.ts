@@ -17,6 +17,26 @@ export default defineComponent({
       } else {
         return this.store.getters.fullHistory;
       }
+    },
+    kickedPlayers: function(): Array<any> {
+      if (!this.store.state.isSession) {
+        return [];
+      } else {
+        return this.store.state.session.kickedPlayers;
+      }
+    }
+  },
+  methods: {
+    addMessages(messages: Array<{ message: string}>) {
+      for (let i = 0; i < messages.length; i++) {
+        setTimeout(() => {
+          this.recentActions.push(messages[i]);
+        }, i * 1500);
+        setTimeout(() => {
+          const j = this.recentActions.indexOf(messages[i]);
+          this.recentActions.splice(j, 1);
+        }, i * 1500 + 4000);
+      }
     }
   },
   watch: {
@@ -52,15 +72,22 @@ export default defineComponent({
         }
         return { message };
       });
-      for (let i = 0; i < recentHistory.length; i++) {
-        setTimeout(() => {
-          this.recentActions.push(recentHistory[i]);
-        }, i * 1500);
-        setTimeout(() => {
-          const j = this.recentActions.indexOf(recentHistory[i]);
-          this.recentActions.splice(j, 1);
-        }, i * 1500 + 4000);
+
+      this.addMessages(recentHistory);
+    },
+    kickedPlayers(newKicked: Array<any>, oldKicked: Array<any>) {
+      if (!this.store.state.session) {
+        return;
       }
+
+      let recentlyKicked = newKicked.slice(oldKicked.length);
+      recentlyKicked = recentlyKicked.map((player: any) => {
+        return {
+          message: player.name + " was kicked from the game"
+        }
+      });
+
+      this.addMessages(recentlyKicked);
     }
   }
 });

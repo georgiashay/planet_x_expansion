@@ -65,6 +65,9 @@ export default defineComponent({
         }
         sectorMap[sector][players[i].arrival-1] = players[i].color;
       }
+      for (const sector in sectorMap) {
+        sectorMap[sector] = sectorMap[sector].filter((player: any) => player !== null);
+      }
       return sectorMap;
     },
     theorySlots: function(): Array<Array<Array<any>>> {
