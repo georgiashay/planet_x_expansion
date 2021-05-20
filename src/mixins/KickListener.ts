@@ -75,7 +75,9 @@ export default defineComponent({
         return;
       }
 
-      if (newPlayers.find((player: any) => player.id === this.store.state.playerID)) {
+      const recentlyKicked = newPlayers.slice(oldPlayers.length);
+
+      if (recentlyKicked.find((player: any) => player.id === this.store.state.playerID)) {
         const alert = await alertController.create({
           cssClass: 'custom-alert',
           header: 'Kicked',
