@@ -96,7 +96,7 @@ export default defineComponent({
     exportLogic: function() {
       for (let i = 0; i < this.store.getters.myStartingInformation.length; i++) {
         const info = this.store.getters.myStartingInformation[i];
-        this.store.commit("logicEliminate", {
+        this.store.dispatch("logicEliminateLevel", {
           sector: info.sector,
           object: info.spaceObject.initial
         });

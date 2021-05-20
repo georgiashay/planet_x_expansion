@@ -1,12 +1,18 @@
 <template>
   <div ref="container" id="container" v-if="store.getters.gameReady && store.state.isSession">
-    <ion-fab slot="fixed" top right>
+    <ion-fab slot="fixed" vertical="top" horizontal="start">
       <ion-fab-button
         size="small"
         color="light"
         @click="showNumObjects($event)">
         <ion-icon :src="informationCircleOutline"></ion-icon>
       </ion-fab-button>
+    </ion-fab>
+    <ion-fab slot="fixed" vertical="top" horizontal="end">
+      <ion-item>
+        <ion-label>Certain</ion-label>
+        <ion-toggle v-model="certaintyLevel"></ion-toggle>
+      </ion-item>
     </ion-fab>
     <div id="title_container">
       <h3>Logic Sheet</h3>
@@ -113,7 +119,8 @@
 <script lang="ts">
 import { IonNavLink, IonGrid, IonRow, IonCol,
           IonIcon, IonFab, IonFabButton,
-          popoverController, IonCheckbox } from '@ionic/vue';
+          popoverController, IonCheckbox,
+          IonToggle, IonItem, IonLabel } from '@ionic/vue';
 import { informationCircleOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
@@ -121,6 +128,7 @@ import { initialToSpaceObject } from "@/constants.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
+import { SUSPICION_LEVELS } from "@/constants.ts";
 
 const LINE_WIDTH = 8;
 const SELECTED_BOX_PADDING = 10;
@@ -135,7 +143,10 @@ export default defineComponent({
     IonIcon,
     IonFab,
     IonFabButton,
-    IonCheckbox
+    IonCheckbox,
+    IonToggle,
+    IonItem,
+    IonLabel
   },
   mixins: [DarkMode],
   data() {
@@ -147,7 +158,8 @@ export default defineComponent({
       iconRadii: undefined,
       iconWidth: undefined,
       informationCircleOutline,
-      unsubscribeStore: () => { return; }
+      unsubscribeStore: () => { return; },
+      certaintyLevel: 1
     }
   },
   computed: {
@@ -252,7 +264,12 @@ export default defineComponent({
     iconImages: async function(): Promise<Array<any>> {
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
-        return this.loadSVGWithColor(object.iconShort, this.getCSSVariable("--ion-color-light-contrast"));
+
+        const levelPromises = SUSPICION_LEVELS.map((level) => {
+          return this.loadSVGWithColor(object.iconShort, this.getCSSVariable(level.color));
+        });
+
+        return Promise.all(levelPromises);
       });
 
       return Promise.all(imagePromises);
@@ -260,7 +277,12 @@ export default defineComponent({
     fullImages: async function(): Promise<Array<any>> {
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
-        return this.loadSVGWithColor(object.iconFull, this.getCSSVariable("--ion-color-light-contrast"));
+
+        const levelPromises = SUSPICION_LEVELS.map((level) => {
+          return this.loadSVGWithColor(object.iconFull, this.getCSSVariable(level.color));
+        });
+
+        return Promise.all(levelPromises);
       });
 
       return Promise.all(imagePromises);
@@ -268,7 +290,7 @@ export default defineComponent({
     getIconRadii: async function(startRadius: number, space: number, width: number) {
       const iconImages = await this.iconImages();
       const fullImages = await this.fullImages();
-      const heights = iconImages.map((img: any) => img.height * (width/img.width));
+      const heights = iconImages.map((imgs: any) => imgs[0].height * (width/imgs[0].width));
       const padding = (space - heights.reduce((a: number, b: number) => a + b, 0))/(iconImages.length - 1);
 
       const radii = [];
@@ -354,7 +376,7 @@ export default defineComponent({
     getCSSVariable: function(varName: string) {
       return getComputedStyle(document.body).getPropertyValue(varName);
     },
-    redrawObject: function(sector: number, iconRadius: any, newStatus: string) {
+    redrawObject: function(sector: number, iconRadius: any, level: number, newStatus: string) {
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
 
@@ -366,15 +388,15 @@ export default defineComponent({
       ctx.fillRect(-iconRadius.width/2 - clearPadding, -iconRadius.radius - iconRadius.height - clearPadding, iconRadius.width + 2 * clearPadding, iconRadius.height + 2 * clearPadding);
 
       if (newStatus === "equal") {
-        ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+        ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.beginPath();
         ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height - SELECTED_BOX_PADDING, iconRadius.width + 2 * SELECTED_BOX_PADDING, iconRadius.height + 2 * SELECTED_BOX_PADDING);
-        ctx.strokeStyle = this.getCSSVariable("--ion-color-dark");
+        ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
         ctx.stroke();
       } else if (newStatus === "none") {
-        ctx.drawImage(iconRadius.image, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+        ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       } else if (newStatus === "eliminated"){
-        ctx.drawImage(iconRadius.fullImage, -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+        ctx.drawImage(iconRadius.fullImage[level], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       }
 
       const restorePadding = SELECTED_BOX_PADDING + LINE_WIDTH + 2;
@@ -396,27 +418,26 @@ export default defineComponent({
     getIconRadius: function(spaceObject: string) {
       return this.iconRadii.find((ir: any) => ir.object === spaceObject);
     },
-    drawObjectEliminated: function(sector: number, spaceObject: string) {
+    drawObjectEliminated: function(sector: number, spaceObject: string, level: number) {
+      console.log("Eliminated: ", sector, spaceObject, level);
       const iconRadius = this.getIconRadius(spaceObject);
-      this.redrawObject(sector, iconRadius, "eliminated");
+      this.redrawObject(sector, iconRadius, level, "eliminated");
     },
-    drawObjectEqual: function(sector: number, spaceObject: string) {
+    drawObjectEqual: function(sector: number, spaceObject: string, level: number) {
+      console.log("Equal: ", sector, spaceObject, level);
       const iconRadius = this.getIconRadius(spaceObject);
-      this.redrawObject(sector, iconRadius, "equal");
+      this.redrawObject(sector, iconRadius, level, "equal");
     },
-    drawObjectUneliminated: function (sector: number, spaceObject: string) {
+    drawObjectUnset: function (sector: number, spaceObject: string) {
+      console.log("Unset: ", sector, spaceObject);
       const iconRadius = this.getIconRadius(spaceObject);
-      this.redrawObject(sector, iconRadius, "none");
-
-    },
-    drawObjectUnsetEqual: function (sector: number, spaceObject: string) {
-      const iconRadius = this.getIconRadius(spaceObject);
-      this.redrawObject(sector, iconRadius, "none");
+      this.redrawObject(sector, iconRadius, 0, "none");
     },
     toggleObjectEqual: function(sector: number, iconRadius: any) {
       this.store.dispatch("logicToggleEqual", {
         sector,
-        object: iconRadius.object
+        object: iconRadius.object,
+        level: +!this.certaintyLevel
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
@@ -424,7 +445,8 @@ export default defineComponent({
 
       this.store.dispatch("logicToggle", {
         sector,
-        object: iconRadius.object
+        object: iconRadius.object,
+        level: +!this.certaintyLevel
       });
 
       return checkHold;
@@ -589,16 +611,17 @@ export default defineComponent({
 
         for (let j = 0; j < iconRadii.length; j++) {
           if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
-            if (this.store.state.logic.board[i].eliminated.has(iconRadii[j].object)) {
-              ctx.drawImage(iconRadii[j].fullImage, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
-            } else if (this.store.state.logic.board[i].equalTo === iconRadii[j].object) {
-              ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+            const { state, level } = this.store.state.logic.board[i][iconRadii[j].object];
+            if (state === "eliminated") {
+              ctx.drawImage(iconRadii[j].fullImage[level], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+            } else if (state === "equal") {
+              ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
               ctx.rect(-iconRadii[j].width/2-10, -iconRadii[j].radius - iconRadii[j].height - 10, iconRadii[j].width + 20, iconRadii[j].height + 20);
-              ctx.strokeStyle = darkColor;
+              ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
               ctx.stroke();
             } else {
-              ctx.drawImage(iconRadii[j].image, -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+              ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
             }
           }
         }
@@ -630,13 +653,11 @@ export default defineComponent({
 
     this.unsubscribeStore = this.store.subscribe((mutation, state) => {
       if (mutation.type === "logicEliminate") {
-        this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object);
-      } else if (mutation.type === "logicUneliminate") {
-        this.drawObjectUneliminated(mutation.payload.sector, mutation.payload.object);
+        this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
       } else if (mutation.type === "logicSet") {
-        this.drawObjectEqual(mutation.payload.sector, mutation.payload.object);
+        this.drawObjectEqual(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
       } else if (mutation.type === "logicUnset") {
-        this.drawObjectUnsetEqual(mutation.payload.sector, mutation.payload.object);
+        this.drawObjectUnset(mutation.payload.sector, mutation.payload.object);
       }
     });
 

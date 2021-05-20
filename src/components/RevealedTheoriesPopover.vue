@@ -38,13 +38,13 @@ export default defineComponent({
         if (theory.accurate) {
           for (const initial of this.store.state.gameType.logicSheetOrder) {
             if (theory.spaceObject.initial === initial) {
-              this.store.commit("logicSet", {
+              this.store.dispatch("logicSetLevel", {
                 sector: theory.sector,
                 object: initial
               });
             } else {
               if (initial !== "C" || [2,3,5,7,11,13,17,19,23].indexOf(theory.sector+1) >= 0) {
-                this.store.commit("logicEliminate", {
+                this.store.dispatch("logicEliminateLevel", {
                   sector: theory.sector,
                   object: initial
                 });
@@ -52,7 +52,7 @@ export default defineComponent({
             }
           }
         } else {
-          this.store.commit("logicEliminate", {
+          this.store.dispatch("logicEliminateLevel", {
             sector: theory.sector,
             object: theory.spaceObject.initial
           });

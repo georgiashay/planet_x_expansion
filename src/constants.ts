@@ -282,3 +282,22 @@ export const initialToSpaceObject: {[initial: string]: any} = {};
 for (const code in SpaceObject) {
   initialToSpaceObject[SpaceObject[code].initial] = SpaceObject[code];
 }
+
+interface SuspicionLevel {
+  level: number;
+  name: string;
+  color: string;
+}
+
+export const SUSPICION_LEVELS: Array<SuspicionLevel> = [
+  {
+    level: 0,
+    name: "Certain",
+    color: "--ion-color-light-contrast"
+  },
+  {
+    level: 1,
+    name: "Uncertain",
+    color: "--ion-color-tertiary"
+  }
+];

@@ -34,7 +34,7 @@
           </div>
           <stripe/>
           <ion-button
-            :disabled = "!store.getters.isHost && store.state.session.currentAction.actionType == 'START_GAME'"
+            :disabled = "!store.state.isSession || (!store.getters.isHost && store.state.session.currentAction.actionType == 'START_GAME')"
             expand="block"
             color="light"
             @click="startGame()"

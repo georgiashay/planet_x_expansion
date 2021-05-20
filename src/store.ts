@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject } from "@/constants";
+import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject, SUSPICION_LEVELS } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
@@ -298,27 +298,38 @@ export default createStore({
 
       state.history.push(actionResult);
     },
-    logicToggle({state, commit}, { sector, object }) {
-      if (state.logic.board[sector].eliminated.has(object)) {
-        commit('logicUneliminate', { sector, object });
-      } else if (state.logic.board[sector].equalTo === object ){
-        commit('logicUnset', { sector, object });
-      } else {
-        commit('logicEliminate', { sector, object });
-      }
+    logicEliminateLevel({ state, commit }, { sector, object, level=0 }) {
+      commit('logicEliminate', { sector, object, level });
     },
-    logicToggleEqual({ state, commit }, { sector, object }) {
-      if (state.logic.board[sector].equalTo === object) {
-        commit('logicUnset', { sector, object });
-      } else {
-        if (state.logic.board[sector].equalTo !== undefined) {
+    logicUnsetLevel({ state, commit }, { sector, object, level=0 }) {
+      commit('logicUnset', { sector, object });
+    },
+    logicSetLevel({ state, commit }, { sector, object, level=0 }) {
+      for (const [obj, sts] of Object.entries(state.logic.board[sector])) {
+        const status: any = sts;
+        if (status.state === "equal" && status.level >= level) {
           commit('logicUnset', {
-            sector,
-            object: state.logic.board[sector].equalTo
+            object: obj,
+            sector
           });
         }
-        commit('logicUneliminate', { sector, object });
-        commit('logicSet', { sector, object });
+      }
+      commit('logicSet', { sector, object, level });
+    },
+    logicToggle({ state, commit, dispatch }, { sector, object, level=0 }) {
+      if (state.logic.board[sector][object].state === "eliminated") {
+        dispatch('logicUnsetLevel', { sector, object, level });
+      } else if (state.logic.board[sector][object].state === "equal" ){
+        dispatch('logicUnsetLevel', { sector, object, level });
+      } else {
+        dispatch('logicEliminateLevel', { sector, object, level });
+      }
+    },
+    logicToggleEqual({ state, commit, dispatch }, { sector, object, level=0 }) {
+      if (state.logic.board[sector][object].state === "equal") {
+        dispatch('logicUnsetLevel', { sector, object, level });
+      } else {
+        dispatch('logicSetLevel', { sector, object, level });
       }
     },
     async toggleKickPlayer({ state, getters }, kickPlayerID) {
@@ -517,9 +528,12 @@ export default createStore({
     setupLogic(state: any, sectors: number) {
       const logicBoard: {[sector: number]: any} = {};
       for (let i = 0; i < sectors; i++) {
-        logicBoard[i] = {
-          eliminated: new Set(),
-          equalTo: undefined
+        logicBoard[i] = {};
+        for (const obj of Object.values(SpaceObject)) {
+          logicBoard[i][obj.initial] = {
+            state: "none",
+            level: 0
+          };
         }
       }
       state.logic.board = logicBoard;
@@ -527,17 +541,23 @@ export default createStore({
       state.logic.conferenceUsed = new Set();
       state.logic.surveyUsed = new Set();
     },
-    logicEliminate(state: any, { sector, object }) {
-      state.logic.board[sector].eliminated.add(object);
+    logicEliminate(state: any, { sector, object, level=0 }) {
+      state.logic.board[sector][object] = {
+        state: "eliminated",
+        level
+      }
     },
-    logicUneliminate(state: any, { sector, object }) {
-      state.logic.board[sector].eliminated.delete(object);
-    },
-    logicSet(state: any, { sector, object }) {
-      state.logic.board[sector].equalTo = object;
+    logicSet(state: any, { sector, object, level=0 }) {
+      state.logic.board[sector][object] = {
+        state: "equal",
+        level
+      }
     },
     logicUnset(state: any, { sector, object }) {
-      state.logic.board[sector].equalTo = undefined;
+      state.logic.board[sector][object] = {
+        state: "none",
+        level: 0
+      }
     },
     logicResetAll(state: any) {
       state.logic.board = {};
@@ -1006,7 +1026,7 @@ export default createStore({
       }
     },
     isHost(state: any) {
-      return state.session.currentAction.actionType === "START_GAME" && state.session.currentAction.playerID === state.playerID;
+      return state.isSession && state.session.currentAction.actionType === "START_GAME" && state.session.currentAction.playerID === state.playerID;
     }
   }
 });
