@@ -2,15 +2,15 @@
   <table id="score_table">
     <tr>
       <th class="kick_header" v-if="store.state.session.players.length > 1"/>
-      <th>Player</th>
+      <th class="player_header">Player</th>
       <th
         v-for="(header, index) in scoreHeaders"
         :key="index"
+        class="score_icon_header"
         >
-        <ion-icon :src="header[1]"/>
-        <sub>({{points[index]}})</sub>
+        <ion-icon :src="header[1]"/><sub>({{points[index]}})</sub>
       </th>
-      <th>
+      <th class="total_header">
         Total
       </th>
     </tr>
@@ -195,5 +195,10 @@ export default defineComponent({
 .player_cell {
   border-color: var(--player-color);
   color: white;
+}
+
+.score_icon_header {
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>
