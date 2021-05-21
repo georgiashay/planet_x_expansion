@@ -21,6 +21,7 @@
   --container-padding: 20px;
   --default-content-position: 15%;
   --reduce-gap-after-centered: 1;
+  --use-spacer: 1;
 }
 
 ion-content {

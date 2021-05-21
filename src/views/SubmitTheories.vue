@@ -2,7 +2,7 @@
   <ion-page>
     <session-header v-if="store.state.isSession" hide-at="md"/>
     <ion-content>
-      <adaptable-container v-if="store.getters.playerReady">
+      <adaptable-container :style="{'--use-spacer': 0}" v-if="store.getters.playerReady">
         <div id="title_container">
           <h3>Submit Theories</h3>
         </div>
@@ -41,6 +41,34 @@
         <div id="cancel_container">
           <ion-nav-link :router-link="'/' + gameType + '/gamemenu'">Cancel</ion-nav-link>
         </div>
+        <div id="previous">
+          <p>Theory Tokens Remaining</p>
+          <table>
+            <tr v-for="(row, i) in tokenGrid" :key="i">
+              <td
+                v-for="(obj, j) in row"
+                :key="j"
+                class="theory_token"
+                :style="playerStyle(store.getters.playerInfo.color)">
+                <div class="inner_token">
+                  <ion-icon :src="obj.icon"></ion-icon>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <p>Previously Submitted Theories</p>
+          <ion-grid>
+            <ion-row>
+              <ion-col
+                v-for="(theory, index) in submittedTheories"
+                :key="index"
+                size="2"
+                class="previous_theory">
+                {{theory.sector+1}}:&nbsp;<ion-icon :src="initialToSpaceObject[theory.spaceObject.initial].icon"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
       </adaptable-container>
     </ion-content>
     <game-footer hide-at="md"/>
@@ -50,7 +78,8 @@
 <script lang="ts">
 import { IonContent, IonPage, IonItemDivider,
         IonButton, IonNavLink,
-        IonInput, IonItem, IonLabel } from '@ionic/vue';
+        IonInput, IonItem, IonLabel,
+        IonIcon, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -64,6 +93,8 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import Spacer from "@/components/Spacer.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { initialToSpaceObject } from "@/constants.ts";
+import PlayerColors from "@/mixins/PlayerColors.ts";
 
 export default defineComponent({
   name: 'Survey',
@@ -82,9 +113,13 @@ export default defineComponent({
     IonInput,
     IonItem,
     IonLabel,
-    AdaptableContainer
+    AdaptableContainer,
+    IonIcon,
+    IonGrid,
+    IonRow,
+    IonCol
   },
-  mixins: [SoundMixin],
+  mixins: [SoundMixin, PlayerColors],
   props: {
     gameType: {
       required: true,
@@ -102,6 +137,7 @@ export default defineComponent({
       numTheories: 0,
       theories: [],
       router,
+      initialToSpaceObject
     }
   },
   computed: {
@@ -128,15 +164,47 @@ export default defineComponent({
       }
       return true;
     },
-    theoriesValid: function(): any {
+    tokensLeft: function(): any {
       const numObjects = this.store.state.game.board.numObjects;
       const existingTheories = this.store.state.session.theories.filter((theory: any) => theory.playerID === this.store.state.playerID);
 
       const tokensLeft = Object.assign({}, numObjects);
+      delete tokensLeft.X;
+      delete tokensLeft.E;
       for (let i = 0; i < existingTheories.length; i++) {
         const theory = existingTheories[i];
         tokensLeft[theory.spaceObject.initial] -= 1;
       }
+
+      return tokensLeft;
+    },
+    tokenGrid: function(): Array<Array<any>> {
+      const tokens = [];
+      for (const initial of this.store.state.gameType.logicSheetOrder) {
+        if (initial in this.tokensLeft) {
+          const obj = initialToSpaceObject[initial];
+          for (let i = 0; i < this.tokensLeft[initial]; i++) {
+            tokens.push(obj);
+          }
+        }
+      }
+
+      const grid: Array<Array<any>> = [[]];
+      for (let i = 0; i < tokens.length; i++) {
+        grid[grid.length-1].push(tokens[i]);
+        if (grid[grid.length - 1].length === 6) {
+          grid.push([]);
+        }
+      }
+      return grid;
+    },
+    submittedTheories: function(): Array<any> {
+      return this.store.state.session.theories.filter((theory: any) => theory.playerID === this.store.state.playerID);
+    },
+    theoriesValid: function(): any {
+      const existingTheories = this.store.state.session.theories.filter((theory: any) => theory.playerID === this.store.state.playerID);
+
+      const tokensLeft = Object.assign({}, this.tokensLeft);
 
       const revealedSectors = new Set(this.store.getters.revealedTheories.filter((theory: any) => theory.accurate).map((theory: any) => theory.sector));
       const sectors = new Set();
@@ -256,9 +324,57 @@ export default defineComponent({
   width: 100%;
   margin-top: 10px;
   text-decoration: underline;
+  margin-bottom: 2em;
 }
 
 #invalid_theories {
   text-align: center;
+}
+
+table {
+  width: 100%;
+  margin: 0 auto;
+  border-spacing: 10px;
+}
+
+td.theory_token {
+  width: 16%;
+  background-color: var(--player-color);
+  border: 1px solid var(--ion-color-light);
+  margin: 0.2em;
+  align-items: center;
+  text-align: center;
+  padding-top: 8%;
+  padding-bottom: 8%;
+  position: relative;
+}
+
+td.theory_token .inner_token {
+  width: 75%;
+  height: 75%;
+  background-color: solid var(--player-color);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+td.theory_token ion-icon {
+  font-size: 2em;
+}
+
+.previous_theory {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.previous_theory ion-icon {
+  font-size: 1.2em;
 }
 </style>

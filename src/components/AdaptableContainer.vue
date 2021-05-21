@@ -1,15 +1,15 @@
 <template>
-  <div id="container">
-    <div id="top_spacer"></div>
-    <div id="content">
+  <div class="container">
+    <div class="top_spacer"></div>
+    <div class="content">
       <slot></slot>
     </div>
-    <div id="bottom_spacer"></div>
+    <div class="bottom_spacer"></div>
   </div>
 </template>
 
 <style scoped>
-#container {
+.container {
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -20,15 +20,15 @@
   margin-left: auto;
 }
 
-#top_spacer {
-  flex-basis: calc(var(--default-content-position) - var(--container-padding));
+.top_spacer {
+  flex-basis: calc((var(--default-content-position) - var(--container-padding)) * var(--use-spacer));
 }
 
-#bottom_spacer {
+.bottom_spacer {
   flex-basis: calc((var(--default-content-position) - var(--container-padding)) * var(--reduce-gap-after-centered));
 }
 
-#content {
+.content {
   margin: 0;
   padding: var(--container-padding);
 }
