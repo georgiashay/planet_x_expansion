@@ -49,7 +49,8 @@ export default createStore({
       muteLevel: 1,
       darkMode: true
     },
-    storage: new Storage()
+    storage: new Storage(),
+    storageRead: false
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -349,7 +350,7 @@ export default createStore({
         vote
       });
     },
-    async initializeStorage({ state }) {
+    async initializeStorage({ state, commit }) {
       await state.storage.create();
     },
     async restoreSettingsFromStorage({ state }) {
@@ -358,8 +359,9 @@ export default createStore({
         state.settings = JSON.parse(settings);
       }
     },
-    async restoreFromStorage({ dispatch }) {
-      dispatch("restoreSettingsFromStorage");
+    async restoreFromStorage({ commit, dispatch }) {
+      await dispatch("restoreSettingsFromStorage");
+      commit("setStorageRead");
     }
   },
   mutations: {
@@ -487,6 +489,9 @@ export default createStore({
     setDarkMode(state: any, mode: boolean) {
       state.settings.darkMode = mode;
       state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setStorageRead(state: any) {
+      state.storageRead = true;
     },
     getNewlyRevealedTheories(state: any, sessionState: any) {
       let newlyRevealed: Array<any> = [];

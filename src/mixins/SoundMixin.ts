@@ -11,7 +11,19 @@ export default defineComponent({
   },
   methods: {
     playSound: async function(name: string) {
-      await SoundEffects.playSound(name, this.store.state.settings.muteLevel);
+      if (this.store.state.storageRead) {
+        await SoundEffects.playSound(name, this.store.state.settings.muteLevel);
+      } else {
+        return new Promise((resolve) => {
+          const unsubscribe = this.store.subscribe(async (mutation, state) => {
+            if (mutation.type === "setStorageRead") {
+              unsubscribe();
+              await SoundEffects.playSound(name, this.store.state.settings.muteLevel);
+              resolve();
+            }
+          });
+        });
+      }
     }
   }
 });
