@@ -441,17 +441,14 @@ export default defineComponent({
       return this.iconRadii.find((ir: any) => ir.object === spaceObject);
     },
     drawObjectEliminated: function(sector: number, spaceObject: string, level: number) {
-      console.log("Eliminated: ", sector, spaceObject, level);
       const iconRadius = this.getIconRadius(spaceObject);
       this.redrawObject(sector, iconRadius, level, "eliminated");
     },
     drawObjectEqual: function(sector: number, spaceObject: string, level: number) {
-      console.log("Equal: ", sector, spaceObject, level);
       const iconRadius = this.getIconRadius(spaceObject);
       this.redrawObject(sector, iconRadius, level, "equal");
     },
     drawObjectUnset: function (sector: number, spaceObject: string) {
-      console.log("Unset: ", sector, spaceObject);
       const iconRadius = this.getIconRadius(spaceObject);
       this.redrawObject(sector, iconRadius, 0, "none");
     },
