@@ -3,6 +3,7 @@ import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject, 
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
+import { Storage } from '@ionic/storage';
 
 const historySortOrder = (a: any, b: any) => {
   if (a.turn === b.turn) {
@@ -47,7 +48,8 @@ export default createStore({
     settings: {
       muteLevel: 1,
       darkMode: true
-    }
+    },
+    storage: new Storage()
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -346,6 +348,18 @@ export default createStore({
         kickPlayerID,
         vote
       });
+    },
+    async initializeStorage({ state }) {
+      await state.storage.create();
+    },
+    async restoreSettingsFromStorage({ state }) {
+      const settings = await state.storage.get("settings");
+      if (settings !== null) {
+        state.settings = JSON.parse(settings);
+      }
+    },
+    async restoreFromStorage({ dispatch }) {
+      dispatch("restoreSettingsFromStorage");
     }
   },
   mutations: {
@@ -468,9 +482,11 @@ export default createStore({
     },
     setMuteLevel(state: any, level: number) {
       state.settings.muteLevel = level;
+      state.storage.set("settings", JSON.stringify(state.settings));
     },
     setDarkMode(state: any, mode: boolean) {
       state.settings.darkMode = mode;
+      state.storage.set("settings", JSON.stringify(state.settings));
     },
     getNewlyRevealedTheories(state: any, sessionState: any) {
       let newlyRevealed: Array<any> = [];

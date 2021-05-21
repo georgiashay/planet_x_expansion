@@ -110,6 +110,9 @@ export default defineComponent({
     },
     showFloatingSettings: function(): boolean {
       return !this.store.state.isSession || (this.showSplitPane && this.matchMedia.lg);
+    },
+    darkSetting: function(): boolean {
+      return this.store.state.settings.darkMode;
     }
   },
   watch: {
@@ -121,6 +124,13 @@ export default defineComponent({
         } else if (this.route.path === "/session/logic") {
           this.whichCircle = "logic";
         }
+      }
+    },
+    darkSetting(newValue: boolean) {
+      if (newValue) {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
       }
     }
   },
@@ -158,8 +168,10 @@ export default defineComponent({
       }
     }
   },
-  mounted() {
+  async mounted() {
     document.body.classList.add("dark");
+    await this.store.dispatch("initializeStorage");
+    await this.store.dispatch("restoreFromStorage");
   }
 });
 </script>

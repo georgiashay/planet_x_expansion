@@ -66,11 +66,6 @@ export default defineComponent({
     },
     changeDarkMode: function() {
       this.store.commit("setDarkMode", this.darkMode);
-      if (this.darkMode) {
-        document.body.classList.add("dark");
-      } else {
-        document.body.classList.remove("dark");
-      }
     }
   }
 });
