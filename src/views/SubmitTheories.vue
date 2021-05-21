@@ -48,9 +48,9 @@
               <td
                 v-for="(obj, j) in row"
                 :key="j"
-                class="theory_token"
+                :class="obj !== null ? 'theory_token' : ''"
                 :style="playerStyle(store.getters.playerInfo.color)">
-                <div class="inner_token">
+                <div class="inner_token" v-if="obj !== null">
                   <ion-icon :src="obj.icon"></ion-icon>
                 </div>
               </td>
@@ -192,7 +192,12 @@ export default defineComponent({
       const grid: Array<Array<any>> = [[]];
       for (let i = 0; i < tokens.length; i++) {
         grid[grid.length-1].push(tokens[i]);
-        if (grid[grid.length - 1].length === 6) {
+        if (i === tokens.length - 1) {
+          for (let j = 0; j < (8 - grid[grid.length-1].length); j++) {
+            grid[grid.length-1].push(null);
+          }
+          grid[grid.length-1]
+        } else if (grid[grid.length - 1].length === 8) {
           grid.push([]);
         }
       }
@@ -338,14 +343,14 @@ table {
 }
 
 td.theory_token {
-  width: 16%;
+  width: 12.5%;
   background-color: var(--player-color);
   border: 1px solid var(--ion-color-light);
   margin: 0.2em;
   align-items: center;
   text-align: center;
-  padding-top: 8%;
-  padding-bottom: 8%;
+  padding-top: 6.25%;
+  padding-bottom: 6.25%;
   position: relative;
 }
 
