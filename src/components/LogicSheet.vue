@@ -1,6 +1,6 @@
 <template>
   <div ref="container" id="container" v-if="store.getters.gameReady && store.state.isSession">
-    <ion-fab slot="fixed" vertical="top" horizontal="start">
+    <ion-fab slot="fixed" vertical="top" horizontal="start" v-if="matchMedia.sm">
       <ion-fab-button
         size="small"
         color="light"
@@ -8,7 +8,7 @@
         <ion-icon :src="informationCircleOutline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab slot="fixed" vertical="top" horizontal="end">
+    <ion-fab slot="fixed" vertical="top" horizontal="end" v-if="matchMedia.sm">
       <ion-item>
         <ion-label>Certain</ion-label>
         <ion-toggle v-model="certaintyLevel"></ion-toggle>
@@ -17,7 +17,29 @@
     <div id="title_container">
       <h3>Logic Sheet</h3>
     </div>
-    <canvas ref="logicCanvas" id="logicCanvas" height="3204" width="3204"/>
+    <div id="button-container" v-if="!matchMedia.sm">
+      <ion-row>
+        <ion-col>
+          <ion-item style="--background: rgba(0,0,0,0); --border-color: rgba(0,0,0,0)">
+            <ion-button
+              color="light"
+              @click="showNumObjects($event)"
+              expand="full">
+              <ion-icon :src="informationCircleOutline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Certain</ion-label>
+            <ion-toggle v-model="certaintyLevel"></ion-toggle>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div id="canvas-container">
+      <canvas ref="logicCanvas" id="logicCanvas" height="3204" width="3204"/>
+    </div>
     <div ref="cancelContainer" id="cancel_container_logic" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
@@ -723,7 +745,7 @@ export default defineComponent({
 
 #title_container h3 {
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 #cancel_container_logic {
@@ -733,8 +755,12 @@ export default defineComponent({
   text-decoration: underline;
 }
 
-#canvas-container_logic {
-  width: 100%;
+#button-container {
+  margin-top: 0.5em;
+}
+
+#canvas-container {
+  margin-top: 0.5em;
 }
 
 #logicCanvas {

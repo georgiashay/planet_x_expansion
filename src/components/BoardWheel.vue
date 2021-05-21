@@ -548,6 +548,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   max-width: 50vh;
+  max-height: 50vh;
 }
 
 #scores_container table {
