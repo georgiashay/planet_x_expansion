@@ -689,6 +689,8 @@ export default defineComponent({
     let timeout: any = undefined;
 
     canvas.addEventListener("mousedown", (e: Event) => {
+      e.stopPropagation();
+      e.preventDefault();
       const checkHold = this.handleClick(e);
       if (checkHold) {
         timeout = setTimeout(() => {
