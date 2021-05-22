@@ -47,7 +47,8 @@ export default createStore({
     },
     settings: {
       muteLevel: 1,
-      darkMode: true
+      darkMode: true,
+      scratchOut: false
     },
     storage: new Storage(),
     storageRead: false
@@ -488,6 +489,10 @@ export default createStore({
     },
     setDarkMode(state: any, mode: boolean) {
       state.settings.darkMode = mode;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setScratchOut(state: any, scratchOut: boolean) {
+      state.settings.scratchOut = scratchOut;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setStorageRead(state: any) {

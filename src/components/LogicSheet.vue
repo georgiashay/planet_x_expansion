@@ -1,4 +1,4 @@
-<template>
+iconRadii[j]<template>
   <div ref="container" id="container" v-if="store.getters.gameReady && store.state.isSession">
     <ion-fab slot="fixed" vertical="top" horizontal="start" v-if="matchMedia.sm">
       <ion-fab-button
@@ -215,6 +215,9 @@ export default defineComponent({
         }
       }
       return primes;
+    },
+    scratchOut: function(): boolean {
+      return this.store.state.settings.scratchOut;
     }
   },
   methods: {
@@ -406,6 +409,7 @@ export default defineComponent({
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
       const clearPadding = SELECTED_BOX_PADDING + LINE_WIDTH/2 + 1;
+      const scratchThickness = Math.min(iconRadius.width/4, iconRadius.height);
       ctx.fillStyle = this.getCSSVariable("--ion-color-light");
       ctx.fillRect(-iconRadius.width/2 - clearPadding, -iconRadius.radius - iconRadius.height - clearPadding, iconRadius.width + 2 * clearPadding, iconRadius.height + 2 * clearPadding);
 
@@ -418,7 +422,15 @@ export default defineComponent({
       } else if (newStatus === "none") {
         ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       } else if (newStatus === "eliminated"){
-        ctx.drawImage(iconRadius.fullImage[level], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+        if (this.scratchOut) {
+          ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+          ctx.beginPath();
+          ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height/2 - scratchThickness/2, iconRadius.width + 2 * SELECTED_BOX_PADDING, scratchThickness);
+          ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+          ctx.fill();
+        } else {
+          ctx.drawImage(iconRadius.fullImage[level], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+        }
       }
 
       const restorePadding = SELECTED_BOX_PADDING + LINE_WIDTH + 2;
@@ -628,15 +640,25 @@ export default defineComponent({
         ctx.textBaseline = "middle";
         ctx.fillText("" + (i+1), 0, -(textRadius-textHeight*0.1));
 
+
         for (let j = 0; j < iconRadii.length; j++) {
+          const scratchThickness = Math.min(iconRadii[j].width/4, iconRadii[j].height);
           if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
             const { state, level } = this.store.state.logic.board[i][iconRadii[j].object];
             if (state === "eliminated") {
-              ctx.drawImage(iconRadii[j].fullImage[level], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+              if (this.scratchOut) {
+                ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+                ctx.beginPath();
+                ctx.rect(-iconRadii[j].width/2 - SELECTED_BOX_PADDING, -iconRadii[j].radius - iconRadii[j].height/2 - scratchThickness/2, iconRadii[j].width + 2 * SELECTED_BOX_PADDING, scratchThickness);
+                ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+                ctx.fill();
+              } else {
+                ctx.drawImage(iconRadii[j].fullImage[level], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+              }
             } else if (state === "equal") {
               ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
-              ctx.rect(-iconRadii[j].width/2-10, -iconRadii[j].radius - iconRadii[j].height - 10, iconRadii[j].width + 20, iconRadii[j].height + 20);
+              ctx.rect(-iconRadii[j].width/2 - SELECTED_BOX_PADDING, -iconRadii[j].radius - iconRadii[j].height - SELECTED_BOX_PADDING, iconRadii[j].width + 2 * SELECTED_BOX_PADDING, iconRadii[j].height + 2 * SELECTED_BOX_PADDING);
               ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
               ctx.stroke();
             } else {
@@ -661,6 +683,11 @@ export default defineComponent({
       }
     },
     isDarkMode: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
+    },
+    scratchOut: function() {
       if (this.store.state.isSession) {
         this.computeCanvas();
       }

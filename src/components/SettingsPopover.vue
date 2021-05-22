@@ -18,6 +18,10 @@
       <ion-label>Dark Mode</ion-label>
       <ion-toggle v-model="darkMode" @ionChange="changeDarkMode()"></ion-toggle>
     </ion-item>
+    <ion-item color="light">
+      <ion-label>Eliminate With Scratch Mark</ion-label>
+      <ion-toggle v-model="scratchOut" @ionChange="changeScratchOut()"></ion-toggle>
+    </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
@@ -46,6 +50,7 @@ export default defineComponent({
       store: store,
       muteLevel: store.state.settings.muteLevel,
       darkMode: store.state.settings.darkMode,
+      scratchOut: store.state.settings.scratchOut,
       muteLevelNames: ["None", "Some", "All"]
     }
   },
@@ -66,6 +71,9 @@ export default defineComponent({
     },
     changeDarkMode: function() {
       this.store.commit("setDarkMode", this.darkMode);
+    },
+    changeScratchOut: function() {
+      this.store.commit("setScratchOut", this.scratchOut);
     }
   }
 });
