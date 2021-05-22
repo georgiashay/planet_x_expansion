@@ -1,7 +1,7 @@
 <template>
   <table id="score_table">
     <tr>
-      <th class="kick_header" v-if="store.state.session.players.length > 1"/>
+      <th class="kick_header" v-if="anyKickAllowed"/>
       <th class="player_header">Player</th>
       <th
         v-for="(header, index) in scoreHeaders"
@@ -18,8 +18,11 @@
       v-for="(row, index) in scoreTable"
       :key="index"
        :style="players[index][1]">
-      <td :class="players[index][2].id == store.state.playerID ? [] : store.getters.kickedPlayerState(players[index][2].id) ? ['kick_cell', 'kicked'] : ['kick_cell', 'unkicked']" @click="kickPlayer(index)" v-if="store.state.session.players.length > 1">
-        <ion-icon src="/assets/kick.svg" v-if="players[index][2].id !== store.state.playerID"/>
+      <td
+        :class="players[index][2].id == store.state.playerID ? [] : store.getters.kickedPlayerState(players[index][2].id) ? ['kick_cell', 'kicked'] : ['kick_cell', 'unkicked']"
+        @click="kickPlayer(index)"
+        v-if="anyKickAllowed">
+        <ion-icon src="/assets/kick.svg" v-if="kickAllowed(players[index][2].id)"/>
       </td>
       <td class="player_cell">
         {{players[index][0]}}
@@ -102,9 +105,23 @@ export default defineComponent({
         const player = this.store.getters.playerMap[score.playerID];
         return ["P" + player.num + ": " + player.name, this.playerStyle(player.color), player];
       });
+    },
+    anyKickAllowed: function(): boolean {
+      return this.players.some((row) => this.kickAllowed(row[2].id));
     }
   },
   methods: {
+    kickAllowed: function(playerID: any): boolean {
+      if (playerID === this.store.state.playerID) {
+        return false;
+      } else if (this.store.state.session.currentAction.actionType === "LAST_ACTION") {
+        return this.store.state.session.actions.some((action: any) => action.playerID === playerID);
+      } else if (this.store.state.session.currentAction.actionType === "END_GAME") {
+        return false;
+      } else {
+        return true;
+      }
+    },
     kickPlayer: async function(index: number) {
       const player = this.players[index][2];
 
