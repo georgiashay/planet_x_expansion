@@ -2,11 +2,61 @@ import { useStore } from "vuex";
 import { initialToSpaceObject } from "@/constants.ts";
 import { defineComponent } from 'vue';
 
+class SpacedMessageTimer {
+  space: number;
+  timeVisible: number;
+  queue: Array<{ message: string }>;
+  messages: Array<{ message: string }>;
+  timeout: undefined | number;
+
+  constructor(space: number, timeVisible: number, messages: Array<{ message: string }> =[]) {
+    this.space = space;
+    this.timeVisible = timeVisible;
+    this.queue = [];
+    this.messages = messages;
+    this.timeout = undefined;
+  }
+
+  push(message: string) {
+    const msg = { message };
+    if (this.timeout === undefined) {
+      this.messages.push(msg);
+      setTimeout(() => {
+        const i = this.messages.indexOf(msg);
+        this.messages.splice(i, 1);
+      }, this.timeVisible);
+      this.timeout = setTimeout(() => {
+        this.take();
+      }, this.space);
+    } else {
+      this.queue.push(msg);
+    }
+  }
+
+  take() {
+    if (this.queue.length === 0) {
+      this.timeout = undefined;
+    } else {
+      const [msg] = this.queue.splice(0, 1);
+      this.messages.push(msg);
+      setTimeout(() => {
+        const i = this.messages.indexOf(msg);
+        this.messages.splice(i, 1);
+      }, this.timeVisible);
+      this.timeout = setTimeout(() => {
+        this.take();
+      }, this.space);
+    }
+  }
+}
+
 export default defineComponent({
   data: function() {
     const recentActions: Array<any> = [];
+    const messageTimer = new SpacedMessageTimer(1500, 4000, recentActions);
     return {
       recentActions,
+      messageTimer,
       store: useStore()
     }
   },
@@ -27,15 +77,9 @@ export default defineComponent({
     }
   },
   methods: {
-    addMessages(messages: Array<{ message: string}>) {
+    addMessages(messages: Array<string>) {
       for (let i = 0; i < messages.length; i++) {
-        setTimeout(() => {
-          this.recentActions.push(messages[i]);
-        }, i * 1500);
-        setTimeout(() => {
-          const j = this.recentActions.indexOf(messages[i]);
-          this.recentActions.splice(j, 1);
-        }, i * 1500 + 4000);
+        this.messageTimer.push(messages[i]);
       }
     }
   },
@@ -52,25 +96,23 @@ export default defineComponent({
         return action.actionType !== "THEORY_REVEAL" && action.actionType !== "CONFERENCE";
       });
       recentHistory = recentHistory.map((action: any) => {
-        let message;
         if (action.actionType === "SURVEY") {
-          message = action.playerName + " surveyed for " + initialToSpaceObject[action.spaceObject.initial].plural + " in sectors " + action.sectors.map((s: number) => s+1).join("-");
+          return action.playerName + " surveyed for " + initialToSpaceObject[action.spaceObject.initial].plural + " in sectors " + action.sectors.map((s: number) => s+1).join("-");
         } else if (action.actionType === "TARGET") {
-          message = action.playerName + " targeted sector " + (action.sector + 1);
+          return action.playerName + " targeted sector " + (action.sector + 1);
         } else if (action.actionType === "RESEARCH") {
-          message = action.playerName + " researched " + this.store.state.game.research[action.index].categoryName;
+          return action.playerName + " researched " + this.store.state.game.research[action.index].categoryName;
         } else if (action.actionType === "LOCATE_PLANET_X") {
           if (action.successful) {
-            message = action.playerName + " found Planet X";
+            return action.playerName + " found Planet X";
           } else {
-            message = action.playerName + " did not find Planet X";
+            return action.playerName + " did not find Planet X";
           }
         } else if (action.actionType === "THEORY") {
-          message = action.playerName + " submitted theories";
+          return action.playerName + " submitted theories";
         } else if (action.actionType === "WINNER") {
-          message = action.text;
+          return action.text;
         }
-        return { message };
       });
 
       this.addMessages(recentHistory);
@@ -82,9 +124,7 @@ export default defineComponent({
 
       let recentlyKicked = newKicked.slice(oldKicked.length);
       recentlyKicked = recentlyKicked.map((player: any) => {
-        return {
-          message: player.name + " was kicked from the game"
-        }
+        return player.name + " was kicked from the game";
       });
 
       this.addMessages(recentlyKicked);
