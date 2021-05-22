@@ -94,7 +94,7 @@ export default defineComponent({
         const alert = await alertController
                         .create({
                           header: 'Alert',
-                          message: 'That session code could not be found. Please try again.',
+                          message: 'That session does not exist or could not be joined. Please try again.',
                           buttons: ['OK'],
                           cssClass: 'custom-alert'
                         });
