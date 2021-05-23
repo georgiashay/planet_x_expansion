@@ -101,17 +101,4 @@ ion-button {
 ion-col {
   padding: 0;
 }
-
-ion-toggle {
-  --background: var(--ion-color-light-shade);
-  --handle-background: var(--ion-color-light);
-  --background-checked: var(--ion-color-dark-tint);
-  --handle-background-checked: var(--ion-color-dark);
-}
-
-ion-range {
-  --bar-background: var(--ion-color-light-shade);
-  --knob-background: var(--ion-color-dark);
-  --bar-background-active: var(--ion-color-dark-tint);
-}
 </style>
