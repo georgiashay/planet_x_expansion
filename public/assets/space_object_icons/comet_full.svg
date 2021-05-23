@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="64" height="50" version="1.1" viewBox="0 0 16.933 13.229" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<svg width="43" height="43" version="1.1" viewBox="0 0 11.377 11.377" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <metadata>
   <rdf:RDF>
    <cc:Work rdf:about="">
@@ -9,7 +9,7 @@
    </cc:Work>
   </rdf:RDF>
  </metadata>
- <g transform="matrix(.55821 .55816 -.55821 .55816 52.472 -99.57)" fill="currentColor" stroke="currentColor" stroke-linecap="round">
+ <g transform="matrix(.48443 .48439 -.48443 .48439 43.878 -86.462)" stroke="currentColor" fill="currentColor" stroke-linecap="round">
   <path transform="matrix(.26458 0 0 .26458 -325.67 -37.296)" d="m1441 613.46-6.9721 30.239-4.0873-7.8982c-0.4496 10.131-5.9845 20.645-6.065 30.205 1e-4 9.8106 7.9531 17.764 17.764 17.764 9.8106-1e-4 17.764-7.9531 17.764-17.764-0.076-12.494-7.2099-17.106-9.7966-35.66l-4.4121 9.3145z" stroke-miterlimit="5.4" stroke-width="2.9895" style="paint-order:markers fill stroke"/>
   <circle cx="55.754" cy="138.92" r="2.7" stroke-width=".59323" style="paint-order:markers fill stroke"/>
  </g>

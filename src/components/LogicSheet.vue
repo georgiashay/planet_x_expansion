@@ -312,10 +312,23 @@ export default defineComponent({
 
       return Promise.all(imagePromises);
     },
-    getIconRadii: async function(startRadius: number, space: number, width: number) {
+    getIconRadii: async function(startRadius: number, space: number, width: number, minPadding: number) {
       const iconImages = await this.iconImages();
       const fullImages = await this.fullImages();
-      const heights = iconImages.map((imgs: any) => imgs[0].height * (width/imgs[0].width));
+      const numImages = iconImages.length;
+      const imageSpace = space - minPadding * (numImages - 1);
+
+      const firstWidth = iconImages[0][0].width;
+      let sizingFactor = width/firstWidth;
+
+      let heights = iconImages.map((imgs: any) => imgs[0].height * sizingFactor);
+      const totalHeight = heights.reduce((a: number, b: number) => a + b, 0);
+      if (totalHeight > imageSpace) {
+        sizingFactor = sizingFactor * imageSpace/totalHeight;
+        heights = iconImages.map((imgs: any) => imgs[0].height * sizingFactor);
+      }
+
+      const widths = iconImages.map((imgs: any) => imgs[0].width * sizingFactor);
       const padding = (space - heights.reduce((a: number, b: number) => a + b, 0))/(iconImages.length - 1);
 
       const radii = [];
@@ -326,7 +339,7 @@ export default defineComponent({
           image: iconImages[i],
           fullImage: fullImages[i],
           height: heights[i],
-          width,
+          width: widths[i],
           object: this.store.state.gameType.logicSheetOrder[i]
         });
         radius += heights[i] + padding;
@@ -576,10 +589,11 @@ export default defineComponent({
       let iconWidth = 150;
 
       const objectPadding = 50;
+      const minPadding = LINE_WIDTH + 2 * SELECTED_BOX_PADDING;
       const maxIconWidth = 2 * Math.tan(sectorAngle/2) * (innerRadius + objectPadding);
-      iconWidth = Math.min(iconWidth, maxIconWidth);
+      iconWidth = Math.min(iconWidth, maxIconWidth - LINE_WIDTH - 2 * SELECTED_BOX_PADDING);
 
-      const iconRadii = await this.getIconRadii(innerRadius + objectPadding, boardRadius - innerRadius - 2 * objectPadding, iconWidth);
+      const iconRadii = await this.getIconRadii(innerRadius + objectPadding, boardRadius - innerRadius - 2 * objectPadding, iconWidth, minPadding);
       this.iconRadii = iconRadii;
       this.iconWidth = iconWidth;
 
