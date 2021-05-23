@@ -219,6 +219,9 @@ export default defineComponent({
     },
     scratchOut: function(): boolean {
       return this.store.state.settings.scratchOut;
+    },
+    iconSize: function(): number {
+      return this.store.state.settings.logicIconSize;
     }
   },
   methods: {
@@ -589,7 +592,8 @@ export default defineComponent({
       let iconWidth = 150;
 
       const objectPadding = 50;
-      const minPadding = LINE_WIDTH + 2 * SELECTED_BOX_PADDING;
+      const absoluteMinPadding = LINE_WIDTH + 2 * SELECTED_BOX_PADDING;
+      const minPadding = (1 - this.iconSize) * (objectPadding - absoluteMinPadding) + absoluteMinPadding;
       const maxIconWidth = 2 * Math.tan(sectorAngle/2) * (innerRadius + objectPadding);
       iconWidth = Math.min(iconWidth, maxIconWidth - LINE_WIDTH - 2 * SELECTED_BOX_PADDING);
 
@@ -701,6 +705,11 @@ export default defineComponent({
       }
     },
     scratchOut: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
+    },
+    iconSize: function() {
       if (this.store.state.isSession) {
         this.computeCanvas();
       }

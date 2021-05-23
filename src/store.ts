@@ -48,7 +48,8 @@ export default createStore({
     settings: {
       muteLevel: 1,
       darkMode: true,
-      scratchOut: false
+      scratchOut: false,
+      logicIconSize: 1
     },
     storage: new Storage(),
     storageRead: false
@@ -493,6 +494,10 @@ export default createStore({
     },
     setScratchOut(state: any, scratchOut: boolean) {
       state.settings.scratchOut = scratchOut;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setLogicIconSize(state: any, iconSize: number) {
+      state.settings.logicIconSize = iconSize;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setStorageRead(state: any) {

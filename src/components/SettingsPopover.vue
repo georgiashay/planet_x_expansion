@@ -22,6 +22,10 @@
       <ion-label>Eliminate with Rectangle</ion-label>
       <ion-toggle v-model="scratchOut" @ionChange="changeScratchOut()"></ion-toggle>
     </ion-item>
+    <ion-item color="light">
+      <ion-label position="floating">Logic Icon Size</ion-label>
+      <ion-range v-model="iconSize" :min="0" :max="1" :step="0.01" @ionChange="changeIconSize()"></ion-range>
+    </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
@@ -30,7 +34,7 @@
 import { defineComponent } from 'vue';
 import { popoverController, IonItem, IonLabel,
         IonButton, IonGrid, IonRow, IonCol,
-        IonToggle } from '@ionic/vue';
+        IonToggle, IonRange } from '@ionic/vue';
 import { useStore } from 'vuex';
 
 export default defineComponent({
@@ -42,7 +46,8 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-    IonToggle
+    IonToggle,
+    IonRange
   },
   data() {
     const store = useStore();
@@ -51,7 +56,8 @@ export default defineComponent({
       muteLevel: store.state.settings.muteLevel,
       darkMode: store.state.settings.darkMode,
       scratchOut: store.state.settings.scratchOut,
-      muteLevelNames: ["None", "Some", "All"]
+      muteLevelNames: ["None", "Some", "All"],
+      iconSize: store.state.settings.logicIconSize
     }
   },
   methods: {
@@ -74,6 +80,9 @@ export default defineComponent({
     },
     changeScratchOut: function() {
       this.store.commit("setScratchOut", this.scratchOut);
+    },
+    changeIconSize: function() {
+      this.store.commit("setLogicIconSize", this.iconSize);
     }
   }
 });
@@ -98,5 +107,11 @@ ion-toggle {
   --handle-background: var(--ion-color-light);
   --background-checked: var(--ion-color-dark-tint);
   --handle-background-checked: var(--ion-color-dark);
+}
+
+ion-range {
+  --bar-background: var(--ion-color-light-shade);
+  --knob-background: var(--ion-color-dark);
+  --bar-background-active: var(--ion-color-dark-tint);
 }
 </style>
