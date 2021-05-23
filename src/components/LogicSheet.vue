@@ -516,7 +516,7 @@ export default defineComponent({
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
       const baseColor = lightColor;
-      const skyColor = this.isDarkMode ? "#585858" : "#FFFFCC";
+      const skyColor = this.isDarkMode ? "#585858" : "silver";
 
       ctx.beginPath();
       ctx.fillStyle = baseColor;
@@ -526,8 +526,8 @@ export default defineComponent({
 
       ctx.beginPath();
       ctx.fillStyle = skyColor;
-      ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
-      ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
+      ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, !this.isDarkMode);
+      ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, this.isDarkMode);
       ctx.fill();
 
       for (let i = 0; i < this.store.state.gameType.sectors; i++) {
@@ -587,7 +587,7 @@ export default defineComponent({
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
 
       const baseColor = lightColor;
-      const skyColor = this.isDarkMode ? "#585858" : "#FFFFCC";
+      const skyColor = this.isDarkMode ? "#585858" : "silver";
 
       let iconWidth = 150;
 
@@ -608,8 +608,8 @@ export default defineComponent({
 
       ctx.beginPath();
       ctx.fillStyle = skyColor;
-      ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, false);
-      ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, true);
+      ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, !this.isDarkMode);
+      ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, this.isDarkMode);
       ctx.fill();
 
       ctx.beginPath();
