@@ -142,7 +142,7 @@ iconRadii[j]<template>
 import { IonNavLink, IonGrid, IonRow, IonCol,
           IonIcon, IonFab, IonFabButton,
           popoverController, IonCheckbox,
-          IonToggle, IonItem, IonLabel } from '@ionic/vue';
+          IonToggle, IonItem, IonLabel, IonButton } from '@ionic/vue';
 import { informationCircleOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
@@ -168,7 +168,8 @@ export default defineComponent({
     IonCheckbox,
     IonToggle,
     IonItem,
-    IonLabel
+    IonLabel,
+    IonButton
   },
   mixins: [DarkMode],
   data() {
@@ -422,7 +423,6 @@ export default defineComponent({
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
       const clearPadding = SELECTED_BOX_PADDING + LINE_WIDTH/2 + 1;
-      const scratchThickness = Math.min(iconRadius.width/4, iconRadius.height);
       ctx.fillStyle = this.getCSSVariable("--ion-color-light");
       ctx.fillRect(-iconRadius.width/2 - clearPadding, -iconRadius.radius - iconRadius.height - clearPadding, iconRadius.width + 2 * clearPadding, iconRadius.height + 2 * clearPadding);
 
@@ -438,7 +438,7 @@ export default defineComponent({
         if (this.scratchOut) {
           ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
           ctx.beginPath();
-          ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height/2 - scratchThickness/2, iconRadius.width + 2 * SELECTED_BOX_PADDING, scratchThickness);
+          ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
           ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
           ctx.fill();
         } else {
@@ -656,14 +656,13 @@ export default defineComponent({
 
 
         for (let j = 0; j < iconRadii.length; j++) {
-          const scratchThickness = Math.min(iconRadii[j].width/4, iconRadii[j].height);
           if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
             const { state, level } = this.store.state.logic.board[i][iconRadii[j].object];
             if (state === "eliminated") {
               if (this.scratchOut) {
                 ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
                 ctx.beginPath();
-                ctx.rect(-iconRadii[j].width/2 - SELECTED_BOX_PADDING, -iconRadii[j].radius - iconRadii[j].height/2 - scratchThickness/2, iconRadii[j].width + 2 * SELECTED_BOX_PADDING, scratchThickness);
+                ctx.rect(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
                 ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
                 ctx.fill();
               } else {

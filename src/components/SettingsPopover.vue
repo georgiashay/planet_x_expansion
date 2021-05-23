@@ -19,7 +19,7 @@
       <ion-toggle v-model="darkMode" @ionChange="changeDarkMode()"></ion-toggle>
     </ion-item>
     <ion-item color="light">
-      <ion-label>Eliminate With Scratch Mark</ion-label>
+      <ion-label>Eliminate with Rectangle</ion-label>
       <ion-toggle v-model="scratchOut" @ionChange="changeScratchOut()"></ion-toggle>
     </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
