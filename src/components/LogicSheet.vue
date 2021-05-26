@@ -1,5 +1,5 @@
-iconRadii[j]<template>
-  <div ref="container" id="container" v-if="store.getters.gameReady && store.state.isSession">
+<template>
+  <div ref="container" id="container" v-if="showLogicSheet">
     <ion-fab slot="fixed" vertical="top" horizontal="start" v-if="matchMedia.sm">
       <ion-fab-button
         size="small"
@@ -222,6 +222,9 @@ export default defineComponent({
     },
     iconSize: function(): number {
       return this.store.state.settings.logicIconSize;
+    },
+    showLogicSheet: function(): boolean {
+      return this.store.getters.gameReady && this.store.state.isSession;
     }
   },
   methods: {
@@ -686,6 +689,56 @@ export default defineComponent({
 
         ctx.restore();
       }
+    },
+    attachListeners: function() {
+      this.unsubscribeStore = this.store.subscribe((mutation, state) => {
+        if (mutation.type === "logicEliminate") {
+          this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
+        } else if (mutation.type === "logicSet") {
+          this.drawObjectEqual(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
+        } else if (mutation.type === "logicUnset") {
+          this.drawObjectUnset(mutation.payload.sector, mutation.payload.object);
+        }
+      });
+
+      const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
+      canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
+
+      let timeout: any = undefined;
+
+      canvas.addEventListener("mousedown", (e: Event) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const checkHold = this.handleClick(e);
+        if (checkHold) {
+          timeout = setTimeout(() => {
+            this.handleRightClick(e);
+          }, 350);
+        }
+      });
+
+      canvas.addEventListener("touchstart", (e: Event) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const checkHold = this.handleClick(e);
+        if (checkHold) {
+          timeout = setTimeout(() => {
+            this.handleRightClick(e);
+          }, 350);
+        }
+      });
+
+      canvas.addEventListener("mouseleave", (e: Event) => {
+        clearTimeout(timeout);
+      });
+
+      canvas.addEventListener("mouseup", (e: Event) => {
+        clearTimeout(timeout);
+      });
+
+      canvas.addEventListener("touchend", (e: Event) => {
+        clearTimeout(timeout);
+      });
     }
   },
   watch: {
@@ -713,60 +766,18 @@ export default defineComponent({
       if (this.store.state.isSession) {
         this.computeCanvas();
       }
+    },
+    showLogicSheet: async function(showSheet: boolean) {
+      if (showSheet) {
+        await this.$nextTick();
+        this.attachListeners();
+      }
     }
   },
   async mounted() {
     await this.$nextTick();
     await this.computeCanvas();
-
-    this.unsubscribeStore = this.store.subscribe((mutation, state) => {
-      if (mutation.type === "logicEliminate") {
-        this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
-      } else if (mutation.type === "logicSet") {
-        this.drawObjectEqual(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
-      } else if (mutation.type === "logicUnset") {
-        this.drawObjectUnset(mutation.payload.sector, mutation.payload.object);
-      }
-    });
-
-    const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
-    canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
-
-    let timeout: any = undefined;
-
-    canvas.addEventListener("mousedown", (e: Event) => {
-      e.stopPropagation();
-      e.preventDefault();
-      const checkHold = this.handleClick(e);
-      if (checkHold) {
-        timeout = setTimeout(() => {
-          this.handleRightClick(e);
-        }, 350);
-      }
-    });
-
-    canvas.addEventListener("touchstart", (e: Event) => {
-      e.stopPropagation();
-      e.preventDefault();
-      const checkHold = this.handleClick(e);
-      if (checkHold) {
-        timeout = setTimeout(() => {
-          this.handleRightClick(e);
-        }, 350);
-      }
-    });
-
-    canvas.addEventListener("mouseleave", (e: Event) => {
-      clearTimeout(timeout);
-    });
-
-    canvas.addEventListener("mouseup", (e: Event) => {
-      clearTimeout(timeout);
-    });
-
-    canvas.addEventListener("touchend", (e: Event) => {
-      clearTimeout(timeout);
-    });
+    this.attachListeners();
   },
   unmounted() {
     this.unsubscribeStore();
