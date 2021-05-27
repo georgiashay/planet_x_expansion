@@ -86,8 +86,10 @@ export default createStore({
       commit('setPlayerNum', response.data.playerNum);
       commit('setPlayerID', response.data.playerID);
       commit('setPlayerName', name);
-      dispatch('setupLogic', numSectors);
       dispatch('listenSession');
+      await dispatch('setupLogic', numSectors);
+      console.log("Going to listen sessino");
+      console.log("listened");
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
       // Join existing session
@@ -106,8 +108,8 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', name);
-        dispatch('setupLogic', response.data.game.board.size);
         dispatch('listenSession');
+        await dispatch('setupLogic', response.data.game.board.size);
       }
     },
     async reconnectSession({ state, commit, dispatch }, { sessionCode, playerNum }) {
@@ -128,9 +130,9 @@ export default createStore({
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', response.data.playerName);
         commit('refillHistory');
-        dispatch('setupLogic', response.data.game.board.size);
-        dispatch('checkWinner', state.session);
         dispatch('listenSession');
+        await dispatch('setupLogic', response.data.game.board.size);
+        await dispatch('checkWinner', state.session);
       }
     },
     async startSession({ state }) {
@@ -416,10 +418,25 @@ export default createStore({
       commit("setStorageRead");
     },
     async setupLogic({ state }, sectors: number) {
+      const logicBoard: {[sector: number]: any} = {};
+      for (let i = 0; i < sectors; i++) {
+        logicBoard[i] = {};
+        for (const obj of Object.values(SpaceObject)) {
+          logicBoard[i][obj.initial] = {
+            state: "none",
+            level: 0
+          };
+        }
+      }
+      state.logic.board = logicBoard;
+      state.logic.researchUsed = new Set();
+      state.logic.conferenceUsed = new Set();
+      state.logic.surveyUsed = new Set();
+
       const storedLogicStr: string = await state.storage.get("logic");
+
       let storedLogic: any = undefined;
 
-      console.log(storedLogicStr);
       if (storedLogicStr !== null) {
         const allLogic = JSON.parse(storedLogicStr);
         const now = new Date();
@@ -437,8 +454,6 @@ export default createStore({
         await state.storage.set("logic", JSON.stringify(allLogic));
       }
 
-      console.log(storedLogic);
-
       if (storedLogic !== undefined) {
         delete storedLogic.expires;
         storedLogic.researchUsed = new Set(storedLogic.researchUsed);
@@ -447,23 +462,6 @@ export default createStore({
         state.logic = storedLogic;
         return;
       }
-
-      const logicBoard: {[sector: number]: any} = {};
-      for (let i = 0; i < sectors; i++) {
-        logicBoard[i] = {};
-        for (const obj of Object.values(SpaceObject)) {
-          logicBoard[i][obj.initial] = {
-            state: "none",
-            level: 0
-          };
-        }
-      }
-      state.logic.board = logicBoard;
-      state.logic.researchUsed = new Set();
-      state.logic.conferenceUsed = new Set();
-      state.logic.surveyUsed = new Set();
-
-      console.log(state.logic);
     },
   },
   mutations: {

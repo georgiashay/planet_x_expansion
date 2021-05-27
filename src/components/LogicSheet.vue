@@ -225,6 +225,9 @@ export default defineComponent({
     },
     showLogicSheet: function(): boolean {
       return this.store.getters.gameReady && this.store.state.isSession;
+    },
+    logic: function(): any {
+      return this.store.state.logic;
     }
   },
   methods: {
@@ -771,6 +774,11 @@ export default defineComponent({
       if (showSheet) {
         await this.$nextTick();
         this.attachListeners();
+      }
+    },
+    logic: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
       }
     }
   },
