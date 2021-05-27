@@ -87,7 +87,8 @@ export default createStore({
       commit('setPlayerID', response.data.playerID);
       commit('setPlayerName', name);
       dispatch('listenSession');
-      await dispatch('setupLogic', numSectors);
+      commit('setupLogic', numSectors);
+      dispatch('restoreLogic');
       console.log("Going to listen sessino");
       console.log("listened");
     },
@@ -109,7 +110,8 @@ export default createStore({
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', name);
         dispatch('listenSession');
-        await dispatch('setupLogic', response.data.game.board.size);
+        commit('setupLogic', response.data.game.board.size);
+        dispatch('restoreLogic');
       }
     },
     async reconnectSession({ state, commit, dispatch }, { sessionCode, playerNum }) {
@@ -131,7 +133,8 @@ export default createStore({
         commit('setPlayerName', response.data.playerName);
         commit('refillHistory');
         dispatch('listenSession');
-        await dispatch('setupLogic', response.data.game.board.size);
+        commit('setupLogic', response.data.game.board.size);
+        dispatch('restoreLogic');
         await dispatch('checkWinner', state.session);
       }
     },
@@ -417,22 +420,7 @@ export default createStore({
       await dispatch("restoreSettingsFromStorage");
       commit("setStorageRead");
     },
-    async setupLogic({ state }, sectors: number) {
-      const logicBoard: {[sector: number]: any} = {};
-      for (let i = 0; i < sectors; i++) {
-        logicBoard[i] = {};
-        for (const obj of Object.values(SpaceObject)) {
-          logicBoard[i][obj.initial] = {
-            state: "none",
-            level: 0
-          };
-        }
-      }
-      state.logic.board = logicBoard;
-      state.logic.researchUsed = new Set();
-      state.logic.conferenceUsed = new Set();
-      state.logic.surveyUsed = new Set();
-
+    async restoreLogic({ state }) {
       const storedLogicStr: string = await state.storage.get("logic");
 
       let storedLogic: any = undefined;
@@ -462,7 +450,7 @@ export default createStore({
         state.logic = storedLogic;
         return;
       }
-    },
+    }
   },
   mutations: {
     setGame(state: any, game: object) {
@@ -497,6 +485,22 @@ export default createStore({
     },
     setSeasonView(state: any, seasonView: string) {
       state.seasonView = seasonView;
+    },
+    setupLogic(state: any, sectors: number) {
+      const logicBoard: {[sector: number]: any} = {};
+      for (let i = 0; i < sectors; i++) {
+        logicBoard[i] = {};
+        for (const obj of Object.values(SpaceObject)) {
+          logicBoard[i][obj.initial] = {
+            state: "none",
+            level: 0
+          };
+        }
+      }
+      state.logic.board = logicBoard;
+      state.logic.researchUsed = new Set();
+      state.logic.conferenceUsed = new Set();
+      state.logic.surveyUsed = new Set();
     },
     resetGame(state: any) {
       state.game = undefined;
