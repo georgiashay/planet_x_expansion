@@ -86,7 +86,7 @@ export default createStore({
       commit('setPlayerNum', response.data.playerNum);
       commit('setPlayerID', response.data.playerID);
       commit('setPlayerName', name);
-      commit('setupLogic', numSectors);
+      dispatch('setupLogic', numSectors);
       dispatch('listenSession');
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
@@ -106,7 +106,7 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', name);
-        commit('setupLogic', response.data.game.board.size);
+        dispatch('setupLogic', response.data.game.board.size);
         dispatch('listenSession');
       }
     },
@@ -127,8 +127,8 @@ export default createStore({
         commit('setPlayerNum', response.data.playerNum);
         commit('setPlayerID', response.data.playerID);
         commit('setPlayerName', response.data.playerName);
-        commit('setupLogic', response.data.game.board.size);
         commit('refillHistory');
+        dispatch('setupLogic', response.data.game.board.size);
         dispatch('checkWinner', state.session);
         dispatch('listenSession');
       }
@@ -304,13 +304,61 @@ export default createStore({
 
       state.history.push(actionResult);
     },
-    logicEliminateLevel({ state, commit }, { sector, object, level=0 }) {
+    async storeLogic({ state }) {
+      const currentLogicStr: string = await state.storage.get("logic");
+      let currentLogic: {[sessionID: string]: any} = {};
+
+      if (currentLogicStr !== null) {
+        currentLogic = JSON.parse(currentLogicStr);
+      }
+
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 3);
+
+      const augmentedLogic = Object.assign({
+        expires: expirationDate
+      }, state.logic);
+
+      augmentedLogic.researchUsed = Array.from(augmentedLogic.researchUsed);
+      augmentedLogic.conferenceUsed = Array.from(augmentedLogic.conferenceUsed);
+      augmentedLogic.surveyUsed = Array.from(augmentedLogic.surveyUsed);
+
+      currentLogic[state.sessionID] = augmentedLogic;
+      await state.storage.set("logic", JSON.stringify(currentLogic));
+    },
+    setResearchUsed({state, dispatch}, { index }) {
+      state.logic.researchUsed.add(index);
+      dispatch('storeLogic');
+    },
+    setResearchUnused({state, dispatch}, { index }) {
+      state.logic.researchUsed.delete(index);
+      dispatch('storeLogic');
+    },
+    setConferenceUsed({state, dispatch}, { index }) {
+      state.logic.conferenceUsed.add(index);
+      dispatch('storeLogic');
+    },
+    setConferenceUnused({state, dispatch}, { index }) {
+      state.logic.conferenceUsed.delete(index);
+      dispatch('storeLogic');
+    },
+    setSurveyUsed({state, dispatch}, { index }) {
+      state.logic.surveyUsed.add(index);
+      dispatch('storeLogic');
+    },
+    setSurveyUnused({state, dispatch}, { index }) {
+      state.logic.surveyUsed.delete(index);
+      dispatch('storeLogic');
+    },
+    logicEliminateLevel({ state, commit, dispatch }, { sector, object, level=0 }) {
       commit('logicEliminate', { sector, object, level });
+      dispatch('storeLogic');
     },
-    logicUnsetLevel({ state, commit }, { sector, object, level=0 }) {
+    logicUnsetLevel({ state, commit, dispatch }, { sector, object, level=0 }) {
       commit('logicUnset', { sector, object });
+      dispatch('storeLogic');
     },
-    logicSetLevel({ state, commit }, { sector, object, level=0 }) {
+    logicSetLevel({ state, commit, dispatch }, { sector, object, level=0 }) {
       for (const [obj, sts] of Object.entries(state.logic.board[sector])) {
         const status: any = sts;
         if (status.state === "equal" && status.level >= level) {
@@ -321,6 +369,7 @@ export default createStore({
         }
       }
       commit('logicSet', { sector, object, level });
+      dispatch('storeLogic');
     },
     logicToggle({ state, commit, dispatch }, { sector, object, level=0 }) {
       if (state.logic.board[sector][object].state === "eliminated") {
@@ -365,7 +414,57 @@ export default createStore({
     async restoreFromStorage({ commit, dispatch }) {
       await dispatch("restoreSettingsFromStorage");
       commit("setStorageRead");
-    }
+    },
+    async setupLogic({ state }, sectors: number) {
+      const storedLogicStr: string = await state.storage.get("logic");
+      let storedLogic: any = undefined;
+
+      console.log(storedLogicStr);
+      if (storedLogicStr !== null) {
+        const allLogic = JSON.parse(storedLogicStr);
+        const now = new Date();
+        for (const sessionID in allLogic) {
+          if (allLogic[sessionID].expires <= now) {
+            delete allLogic[sessionID];
+          }
+        }
+        if (Object.prototype.hasOwnProperty.call(allLogic, state.sessionID)) {
+          storedLogic = allLogic[state.sessionID];
+          const newExpirationDate = new Date();
+          newExpirationDate.setDate(newExpirationDate.getDate() + 3);
+          storedLogic.expires = newExpirationDate;
+        }
+        await state.storage.set("logic", JSON.stringify(allLogic));
+      }
+
+      console.log(storedLogic);
+
+      if (storedLogic !== undefined) {
+        delete storedLogic.expires;
+        storedLogic.researchUsed = new Set(storedLogic.researchUsed);
+        storedLogic.conferenceUsed = new Set(storedLogic.conferenceUsed);
+        storedLogic.surveyUsed = new Set(storedLogic.surveyUsed);
+        state.logic = storedLogic;
+        return;
+      }
+
+      const logicBoard: {[sector: number]: any} = {};
+      for (let i = 0; i < sectors; i++) {
+        logicBoard[i] = {};
+        for (const obj of Object.values(SpaceObject)) {
+          logicBoard[i][obj.initial] = {
+            state: "none",
+            level: 0
+          };
+        }
+      }
+      state.logic.board = logicBoard;
+      state.logic.researchUsed = new Set();
+      state.logic.conferenceUsed = new Set();
+      state.logic.surveyUsed = new Set();
+
+      console.log(state.logic);
+    },
   },
   mutations: {
     setGame(state: any, game: object) {
@@ -557,22 +656,6 @@ export default createStore({
         state.history.push(actionResult);
       }
     },
-    setupLogic(state: any, sectors: number) {
-      const logicBoard: {[sector: number]: any} = {};
-      for (let i = 0; i < sectors; i++) {
-        logicBoard[i] = {};
-        for (const obj of Object.values(SpaceObject)) {
-          logicBoard[i][obj.initial] = {
-            state: "none",
-            level: 0
-          };
-        }
-      }
-      state.logic.board = logicBoard;
-      state.logic.researchUsed = new Set();
-      state.logic.conferenceUsed = new Set();
-      state.logic.surveyUsed = new Set();
-    },
     logicEliminate(state: any, { sector, object, level=0 }) {
       state.logic.board[sector][object] = {
         state: "eliminated",
@@ -593,24 +676,6 @@ export default createStore({
     },
     logicResetAll(state: any) {
       state.logic.board = {};
-    },
-    setResearchUsed(state: any, { index }) {
-      state.logic.researchUsed.add(index);
-    },
-    setResearchUnused(state: any, { index }) {
-      state.logic.researchUsed.delete(index);
-    },
-    setConferenceUsed(state: any, { index }) {
-      state.logic.conferenceUsed.add(index);
-    },
-    setConferenceUnused(state: any, { index }) {
-      state.logic.conferenceUsed.delete(index);
-    },
-    setSurveyUsed(state: any, { index }) {
-      state.logic.surveyUsed.add(index);
-    },
-    setSurveyUnused(state: any, { index }) {
-      state.logic.surveyUsed.delete(index);
     }
   },
   getters: {

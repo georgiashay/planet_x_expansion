@@ -230,23 +230,23 @@ export default defineComponent({
   methods: {
     conferenceUsedChanged: function(index: number, e: CustomEvent) {
       if (e.detail.checked) {
-        this.store.commit("setConferenceUsed", { index });
+        this.store.dispatch("setConferenceUsed", { index });
       } else {
-        this.store.commit("setConferenceUnused", { index });
+        this.store.dispatch("setConferenceUnused", { index });
       }
     },
     researchUsedChanged: function(index: number, e: CustomEvent) {
       if (e.detail.checked) {
-        this.store.commit("setResearchUsed", { index });
+        this.store.dispatch("setResearchUsed", { index });
       } else {
-        this.store.commit("setResearchUnused", { index });
+        this.store.dispatch("setResearchUnused", { index });
       }
     },
     surveyUsedChanged: function(index: number, e: CustomEvent) {
       if (e.detail.checked) {
-        this.store.commit("setSurveyUsed", { index });
+        this.store.dispatch("setSurveyUsed", { index });
       } else {
-        this.store.commit("setSurveyUnused", { index });
+        this.store.dispatch("setSurveyUnused", { index });
       }
     },
     showNumObjects: async function(e: Event) {
