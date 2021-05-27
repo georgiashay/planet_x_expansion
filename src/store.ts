@@ -157,6 +157,7 @@ export default createStore({
         if (state.webSocketFailures < 10) {
           dispatch('listenSession');
         } else {
+          state.currentWebSocket = undefined;
           console.log("10 consecutive failures. Not reconnecting.");
         }
         setTimeout(() => {
@@ -1058,6 +1059,9 @@ export default createStore({
     },
     isHost(state: any) {
       return state.isSession && state.session.currentAction.actionType === "START_GAME" && state.session.currentAction.playerID === state.playerID;
+    },
+    websocketDisconnected(state: any) {
+      return state.isSession && state.currentWebSocket === undefined;
     }
   }
 });

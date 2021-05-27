@@ -113,6 +113,9 @@ export default defineComponent({
     },
     darkSetting: function(): boolean {
       return this.store.state.settings.darkMode;
+    },
+    websocketDisconnected: function(): boolean {
+      return this.store.getters.websocketDisconnected;
     }
   },
   watch: {
@@ -131,6 +134,34 @@ export default defineComponent({
         document.body.classList.add("dark");
       } else {
         document.body.classList.remove("dark");
+      }
+    },
+    async websocketDisconnected(disconnected: boolean) {
+      if (disconnected) {
+        const alert = await alertController.create({
+          cssClass: 'custom-alert',
+          header: 'Disconnected',
+          message: 'You have been disconnected. Would you like to try to reconnect?',
+          buttons: [
+            {
+              text: 'Leave Game',
+              role: 'leave',
+            }, {
+              text: 'Reconnect',
+              role: 'reconnect'
+            }
+          ],
+          backdropDismiss: false
+        });
+
+        await alert.present();
+
+        const { role } = await alert.onDidDismiss();
+        if (role === "leave") {
+          this.router.push("/home");
+        } else if (role === "reconnect") {
+          this.store.dispatch("listenSession");
+        }
       }
     }
   },
