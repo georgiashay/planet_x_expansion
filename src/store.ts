@@ -185,7 +185,9 @@ export default createStore({
       }
       state.currentWebSocket = undefined;
     },
-    async makeSessionMove({ state }, moveData) {
+    async makeSessionMove({ state, getters }, moveData) {
+      const turn = getters.myNextAction.turn;
+      moveData = Object.assign({ turn }, moveData);
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
       console.log(response.data);
     },
@@ -294,7 +296,8 @@ export default createStore({
     },
     async submitTheories({ state, getters }, theories) {
       const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
-      const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories});
+      const turn = getters.myNextAction.turn;
+      const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories, turn });
 
       if (response.data.allowed) {
         const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
