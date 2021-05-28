@@ -301,3 +301,5 @@ export const SUSPICION_LEVELS: Array<SuspicionLevel> = [
     color: "--ion-color-tertiary"
   }
 ];
+
+export const INNER_WHEEL_COLORS = ["#4379d1", "#d14d4d", "#65b85c", "#ccc84b"];

@@ -150,7 +150,7 @@ import { initialToSpaceObject } from "@/constants.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
-import { SUSPICION_LEVELS } from "@/constants.ts";
+import { INNER_WHEEL_COLORS } from "@/constants.ts";
 
 const LINE_WIDTH = 8;
 const SELECTED_BOX_PADDING = 10;
@@ -231,6 +231,9 @@ export default defineComponent({
     },
     logic: function(): any {
       return this.store.state.logic;
+    },
+    uncertainColor: function(): string {
+      return this.store.state.settings.levelColors[1];
     }
   },
   methods: {
@@ -303,8 +306,8 @@ export default defineComponent({
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
 
-        const levelPromises = SUSPICION_LEVELS.map((level) => {
-          return this.loadSVGWithColor(object.iconShort, this.getCSSVariable(level.color));
+        const levelPromises = this.store.state.settings.levelColors.map((color: string) => {
+          return this.loadSVGWithColor(object.iconShort, this.getCSSVariable(color));
         });
 
         return Promise.all(levelPromises);
@@ -316,8 +319,8 @@ export default defineComponent({
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
 
-        const levelPromises = SUSPICION_LEVELS.map((level) => {
-          return this.loadSVGWithColor(object.iconFull, this.getCSSVariable(level.color));
+        const levelPromises = this.store.state.settings.levelColors.map((color: string) => {
+          return this.loadSVGWithColor(object.iconFull, this.getCSSVariable(color));
         });
 
         return Promise.all(levelPromises);
@@ -425,7 +428,7 @@ export default defineComponent({
       event.preventDefault();
     },
     getCSSVariable: function(varName: string) {
-      return getComputedStyle(document.body).getPropertyValue(varName);
+      return getComputedStyle(document.body).getPropertyValue(varName) || varName;
     },
     redrawObject: function(sector: number, iconRadius: any, level: number, newStatus: string) {
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
@@ -442,7 +445,7 @@ export default defineComponent({
         ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         ctx.beginPath();
         ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height - SELECTED_BOX_PADDING, iconRadius.width + 2 * SELECTED_BOX_PADDING, iconRadius.height + 2 * SELECTED_BOX_PADDING);
-        ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+        ctx.strokeStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
         ctx.stroke();
       } else if (newStatus === "none") {
         ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
@@ -453,13 +456,13 @@ export default defineComponent({
           ctx.lineWidth = LINE_WIDTH * 3;
           ctx.moveTo(-iconRadius.width/2, -iconRadius.radius - iconRadius.height);
           ctx.lineTo(iconRadius.width/2, -iconRadius.radius);
-          ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+          ctx.strokeStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
           ctx.stroke();
           ctx.lineWidth = LINE_WIDTH;
         } else if (this.rectangleEliminate) {
           ctx.beginPath();
           ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
-          ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+          ctx.fillStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
           ctx.fill();
         } else {
           ctx.drawImage(iconRadius.fullImage[level], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
@@ -598,7 +601,7 @@ export default defineComponent({
       const textHeight = 150;
 
       const innerRadius = 450;
-      const innerColors = ["#4379d1", "#d14d4d", "#65b85c", "#ccc84b"];
+      const innerColors = INNER_WHEEL_COLORS;
 
       const lightColor = this.getCSSVariable("--ion-color-light");
       const darkColor = this.getCSSVariable("--ion-color-light-contrast");
@@ -686,14 +689,14 @@ export default defineComponent({
                 ctx.lineWidth = LINE_WIDTH * 3;
                 ctx.moveTo(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height);
                 ctx.lineTo(iconRadii[j].width/2, -iconRadii[j].radius);
-                ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+                ctx.strokeStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
                 ctx.stroke();
                 ctx.lineWidth = LINE_WIDTH;
               } else if (this.rectangleEliminate) {
                 ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
                 ctx.beginPath();
                 ctx.rect(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
-                ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+                ctx.fillStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
                 ctx.fill();
               } else {
                 ctx.drawImage(iconRadii[j].fullImage[level], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
@@ -702,7 +705,7 @@ export default defineComponent({
               ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               ctx.beginPath();
               ctx.rect(-iconRadii[j].width/2 - SELECTED_BOX_PADDING, -iconRadii[j].radius - iconRadii[j].height - SELECTED_BOX_PADDING, iconRadii[j].width + 2 * SELECTED_BOX_PADDING, iconRadii[j].height + 2 * SELECTED_BOX_PADDING);
-              ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+              ctx.strokeStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
               ctx.stroke();
             } else {
               ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
@@ -802,6 +805,11 @@ export default defineComponent({
       }
     },
     logic: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
+    },
+    uncertainColor: function() {
       if (this.store.state.isSession) {
         this.computeCanvas();
       }

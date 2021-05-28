@@ -50,7 +50,8 @@ export default createStore({
       darkMode: true,
       rectangleEliminate: false,
       scratchUncertain: false,
-      logicIconSize: 1
+      logicIconSize: 1,
+      levelColors: ["--ion-color-light-contrast", "#5260ff"]
     },
     storage: new Storage(),
     storageRead: false,
@@ -441,7 +442,7 @@ export default createStore({
     async restoreSettingsFromStorage({ state }) {
       const settings = await state.storage.get("settings");
       if (settings !== null) {
-        state.settings = JSON.parse(settings);
+        Object.assign(state.settings, JSON.parse(settings));
       }
     },
     async restoreFromStorage({ commit, dispatch }) {
@@ -633,6 +634,10 @@ export default createStore({
     },
     setLogicIconSize(state: any, iconSize: number) {
       state.settings.logicIconSize = iconSize;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setLevelColor(state: any, { color, level }) {
+      state.settings.levelColors[level] = color;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setStorageRead(state: any) {

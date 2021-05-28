@@ -24,7 +24,10 @@
     "axios": "^0.21.1",
     "cordova-plugin-nativeaudio": "^3.0.9",
     "core-js": "^3.6.5",
+    "install": "^0.13.0",
+    "npm": "^7.15.0",
     "vue": "^3.0.0-0",
+    "vue-color": "^2.8.1",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0",
     "ws": "^7.4.5"
