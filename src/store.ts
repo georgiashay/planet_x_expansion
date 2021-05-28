@@ -56,7 +56,8 @@ export default createStore({
     },
     storage: new Storage(),
     storageRead: false,
-    recentSessions: []
+    recentSessions: [],
+    awaitingTurnSubmission: false
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -188,7 +189,9 @@ export default createStore({
     async makeSessionMove({ state, getters }, moveData) {
       const turn = getters.myNextAction.turn;
       moveData = Object.assign({ turn }, moveData);
+      state.awaitingTurnSubmission = true;
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
+      state.awaitingTurnSubmission = false;
       console.log(response.data);
     },
     async changeColor({ state }, newColor) {
@@ -297,7 +300,10 @@ export default createStore({
     async submitTheories({ state, getters }, theories) {
       const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
       const turn = getters.myNextAction.turn;
+
+      state.awaitingTurnSubmission = true;
       const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories, turn });
+      state.awaitingTurnSubmission = false;
 
       if (response.data.allowed) {
         const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
@@ -311,7 +317,9 @@ export default createStore({
       state.history.push(actionResult);
 
       if (state.isSession) {
+        state.awaitingTurnSubmission = true;
         await axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+        state.awaitingTurnSubmission = false;
       }
     },
     peerReview({ state, getters }, { spaceObject, sector }) {
@@ -830,6 +838,10 @@ export default createStore({
     actionAllowed: (state: any, getters: any) => (actionName: string): boolean => {
       if (!state.isSession) {
         return true;
+      }
+
+      if (state.awaitingTurnSubmission) {
+        return false;
       }
 
       const action = getters.myNextAction;
