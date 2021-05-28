@@ -20,7 +20,11 @@
     </ion-item>
     <ion-item color="light">
       <ion-label>Eliminate with Rectangle</ion-label>
-      <ion-toggle v-model="scratchOut" @ionChange="changeScratchOut()"></ion-toggle>
+      <ion-toggle v-model="rectangleEliminate" @ionChange="changeRectangleEliminate()"></ion-toggle>
+    </ion-item>
+    <ion-item color="light">
+      <ion-label>Scratch out Uncertain</ion-label>
+      <ion-toggle v-model="scratchUncertain" @ionChange="changeScratchUncertain()"></ion-toggle>
     </ion-item>
     <ion-item color="light">
       <ion-label position="floating">Logic Icon Size</ion-label>
@@ -55,7 +59,8 @@ export default defineComponent({
       store: store,
       muteLevel: store.state.settings.muteLevel,
       darkMode: store.state.settings.darkMode,
-      scratchOut: store.state.settings.scratchOut,
+      rectangleEliminate: store.state.settings.rectangleEliminate,
+      scratchUncertain: store.state.settings.scratchUncertain,
       muteLevelNames: ["None", "Some", "All"],
       iconSize: store.state.settings.logicIconSize
     }
@@ -78,8 +83,11 @@ export default defineComponent({
     changeDarkMode: function() {
       this.store.commit("setDarkMode", this.darkMode);
     },
-    changeScratchOut: function() {
-      this.store.commit("setScratchOut", this.scratchOut);
+    changeRectangleEliminate: function() {
+      this.store.commit("setRectangleEliminate", this.rectangleEliminate);
+    },
+    changeScratchUncertain: function() {
+      this.store.commit("setScratchUncertain", this.scratchUncertain);
     },
     changeIconSize: function() {
       this.store.commit("setLogicIconSize", this.iconSize);

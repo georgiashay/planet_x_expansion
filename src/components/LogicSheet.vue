@@ -217,8 +217,11 @@ export default defineComponent({
       }
       return primes;
     },
-    scratchOut: function(): boolean {
-      return this.store.state.settings.scratchOut;
+    rectangleEliminate: function(): boolean {
+      return this.store.state.settings.rectangleEliminate;
+    },
+    scratchUncertain: function(): boolean {
+      return this.store.state.settings.scratchUncertain;
     },
     iconSize: function(): number {
       return this.store.state.settings.logicIconSize;
@@ -444,8 +447,16 @@ export default defineComponent({
       } else if (newStatus === "none") {
         ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       } else if (newStatus === "eliminated"){
-        if (this.scratchOut) {
+        if (level > 0 && this.scratchUncertain) {
           ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+          ctx.beginPath();
+          ctx.lineWidth = LINE_WIDTH * 3;
+          ctx.moveTo(-iconRadius.width/2, -iconRadius.radius - iconRadius.height);
+          ctx.lineTo(iconRadius.width/2, -iconRadius.radius);
+          ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+          ctx.stroke();
+          ctx.lineWidth = LINE_WIDTH;
+        } else if (this.rectangleEliminate) {
           ctx.beginPath();
           ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
           ctx.fillStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
@@ -669,7 +680,16 @@ export default defineComponent({
           if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
             const { state, level } = this.store.state.logic.board[i][iconRadii[j].object];
             if (state === "eliminated") {
-              if (this.scratchOut) {
+              if (level > 0 && this.scratchUncertain) {
+                ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+                ctx.beginPath();
+                ctx.lineWidth = LINE_WIDTH * 3;
+                ctx.moveTo(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height);
+                ctx.lineTo(iconRadii[j].width/2, -iconRadii[j].radius);
+                ctx.strokeStyle = this.getCSSVariable(SUSPICION_LEVELS[level].color);
+                ctx.stroke();
+                ctx.lineWidth = LINE_WIDTH;
+              } else if (this.rectangleEliminate) {
                 ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
                 ctx.beginPath();
                 ctx.rect(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
@@ -760,7 +780,12 @@ export default defineComponent({
         this.computeCanvas();
       }
     },
-    scratchOut: function() {
+    rectangleEliminate: function() {
+      if (this.store.state.isSession) {
+        this.computeCanvas();
+      }
+    },
+    scratchUncertain: function() {
       if (this.store.state.isSession) {
         this.computeCanvas();
       }

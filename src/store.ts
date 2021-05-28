@@ -48,7 +48,8 @@ export default createStore({
     settings: {
       muteLevel: 1,
       darkMode: true,
-      scratchOut: false,
+      rectangleEliminate: false,
+      scratchUncertain: false,
       logicIconSize: 1
     },
     storage: new Storage(),
@@ -622,8 +623,12 @@ export default createStore({
       state.settings.darkMode = mode;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
-    setScratchOut(state: any, scratchOut: boolean) {
-      state.settings.scratchOut = scratchOut;
+    setRectangleEliminate(state: any, rectangleEliminate: boolean) {
+      state.settings.rectangleEliminate = rectangleEliminate;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setScratchUncertain(state: any, scratchUncertain: boolean) {
+      state.settings.scratchUncertain = scratchUncertain;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setLogicIconSize(state: any, iconSize: number) {
