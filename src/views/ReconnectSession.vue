@@ -30,6 +30,15 @@
         <div id="cancel_container">
           <ion-nav-link router-link="/home">Cancel</ion-nav-link>
         </div>
+        <div id="recent_sessions" v-if="store.state.recentSessions.length > 0">
+          <h4>Recent Sessions</h4>
+          <ion-item
+            v-for="(item, index) in store.state.recentSessions"
+            :key="index"
+            @click="sessionCode = item.sessionCode; playerNum = item.playerNum;">
+            {{item.sessionCode}}
+          </ion-item>
+        </div>
       </adaptable-container>
     </ion-content>
   </ion-page>

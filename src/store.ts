@@ -52,7 +52,8 @@ export default createStore({
       logicIconSize: 1
     },
     storage: new Storage(),
-    storageRead: false
+    storageRead: false,
+    recentSessions: []
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -89,6 +90,7 @@ export default createStore({
       dispatch('listenSession');
       commit('setupLogic', numSectors);
       dispatch('restoreLogic');
+      dispatch('storeRecentSession');
       console.log("Going to listen sessino");
       console.log("listened");
     },
@@ -112,6 +114,7 @@ export default createStore({
         dispatch('listenSession');
         commit('setupLogic', response.data.game.board.size);
         dispatch('restoreLogic');
+        dispatch('storeRecentSession');
       }
     },
     async reconnectSession({ state, commit, dispatch }, { sessionCode, playerNum }) {
@@ -331,6 +334,24 @@ export default createStore({
       currentLogic[state.sessionID] = augmentedLogic;
       await state.storage.set("logic", JSON.stringify(currentLogic));
     },
+    async storeRecentSession({state}) {
+      const recentSessionStr: string = await state.storage.get("recentSessions");
+      let recentSessions = [];
+
+      if (recentSessionStr !== null) {
+        recentSessions = JSON.parse(recentSessionStr);
+      }
+
+      recentSessions.splice(0, 0, {
+        sessionCode: state.sessionCode,
+        playerNum: state.playerNum
+      });
+
+      recentSessions = recentSessions.slice(0, 10);
+      state.recentSessions = recentSessions;
+
+      await state.storage.set("recentSessions", JSON.stringify(recentSessions));
+    },
     setResearchUsed({state, dispatch}, { index }) {
       state.logic.researchUsed.add(index);
       dispatch('storeLogic');
@@ -410,6 +431,12 @@ export default createStore({
     async initializeStorage({ state, commit }) {
       await state.storage.create();
     },
+    async restoreRecentSessionsFromStorage({ state }) {
+      const recentSessions = await state.storage.get("recentSessions");
+      if (recentSessions !== null) {
+        state.recentSessions = JSON.parse(recentSessions);
+      }
+    },
     async restoreSettingsFromStorage({ state }) {
       const settings = await state.storage.get("settings");
       if (settings !== null) {
@@ -418,6 +445,7 @@ export default createStore({
     },
     async restoreFromStorage({ commit, dispatch }) {
       await dispatch("restoreSettingsFromStorage");
+      await dispatch("restoreRecentSessionsFromStorage");
       commit("setStorageRead");
     },
     async restoreLogic({ state }) {
