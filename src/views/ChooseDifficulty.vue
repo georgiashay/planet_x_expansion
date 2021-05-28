@@ -87,7 +87,7 @@ export default defineComponent({
       }
     },
     continueGame: function() {
-      this.store.commit("setNumFacts", this.selectedFacts);
+      this.store.dispatch("setNumFacts", this.selectedFacts);
       this.router.push("/" + this.gameType + "/startinginfo");
     },
     clearSelections: function() {

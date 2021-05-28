@@ -86,7 +86,7 @@ export default defineComponent({
       }
     },
     continueGame: function() {
-      this.store.commit("setSeasonView", this.selectedView);
+      this.store.dispatch("setSeasonView", this.selectedView);
       this.router.push("/" + this.gameType + "/choosedifficulty");
     },
     clearSelections: function() {

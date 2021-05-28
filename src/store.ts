@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
-import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject, initialToSpaceObject, SUSPICION_LEVELS } from "@/constants";
+import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject,
+        initialToSpaceObject, SUSPICION_LEVELS, SeasonView } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
@@ -140,6 +141,7 @@ export default createStore({
         dispatch('listenSession');
         commit('setupLogic', response.data.game.board.size);
         dispatch('restoreLogic');
+        await dispatch('restoreStartingInfo');
         await dispatch('checkWinner', state.session);
       }
     },
@@ -336,6 +338,26 @@ export default createStore({
       currentLogic[state.sessionID] = augmentedLogic;
       await state.storage.set("logic", JSON.stringify(currentLogic));
     },
+    async storeStartingInfo({ state }) {
+      const currentInfoStr: string = await state.storage.get("startingInformation");
+      let currentInfo: {[sessionID: string]: any} = {};
+
+      if (currentInfoStr !== null) {
+        currentInfo = JSON.parse(currentInfoStr);
+      }
+
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 3);
+
+      const augmentedInfo = {
+        expires: expirationDate,
+        facts: state.startingFacts,
+        view: state.seasonView.name.toUpperCase()
+      }
+
+      currentInfo[state.sessionID] = augmentedInfo;
+      await state.storage.set("startingInformation", JSON.stringify(currentInfo));
+    },
     async storeRecentSession({state}) {
       const recentSessionStr: string = await state.storage.get("recentSessions");
       let recentSessions = [];
@@ -480,6 +502,35 @@ export default createStore({
         state.logic = storedLogic;
         return;
       }
+    },
+    async restoreStartingInfo({ state }) {
+      const startingInfoStr: string = await state.storage.get("startingInformation");
+      if (startingInfoStr !== null) {
+        const startingInfo = JSON.parse(startingInfoStr);
+        const now = new Date();
+        for (const sessionID in startingInfo) {
+          if (startingInfo[sessionID].expires <= now) {
+            delete startingInfo[sessionID];
+          }
+        }
+        if (Object.prototype.hasOwnProperty.call(startingInfo, state.sessionID)) {
+          const info = startingInfo[state.sessionID];
+          const newExpirationDate = new Date();
+          newExpirationDate.setDate(newExpirationDate.getDate() + 3);
+          info.expires = newExpirationDate;
+          state.startingFacts = info.facts;
+          state.seasonView = SeasonView[info.view];
+        }
+        await state.storage.set("startingInformation", JSON.stringify(startingInfo));
+      }
+    },
+    setSeasonView({state, dispatch}, seasonView: string) {
+      state.seasonView = seasonView;
+      dispatch("storeStartingInfo");
+    },
+    setNumFacts({state, dispatch}, facts: number) {
+      state.startingFacts = facts;
+      dispatch("storeStartingInfo");
     }
   },
   mutations: {
@@ -512,9 +563,6 @@ export default createStore({
     },
     setPlayerName(state: any, name: string) {
       state.playerName = name;
-    },
-    setSeasonView(state: any, seasonView: string) {
-      state.seasonView = seasonView;
     },
     setupLogic(state: any, sectors: number) {
       const logicBoard: {[sector: number]: any} = {};
@@ -612,9 +660,6 @@ export default createStore({
       history.sort(historySortOrder);
 
       state.history = history;
-    },
-    setNumFacts(state: any, facts: number) {
-      state.startingFacts = facts;
     },
     setMuteLevel(state: any, level: number) {
       state.settings.muteLevel = level;

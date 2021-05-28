@@ -97,7 +97,11 @@ export default defineComponent({
 
       if (this.store.state.session !== undefined) {
         // Start session
-        this.router.push("/session/lobby/join");
+        if (this.store.state.seasonView !== undefined && this.store.state.startingFacts !== undefined) {
+          this.router.push("/session/gamemenu");
+        } else {
+          this.router.push("/session/lobby/join");
+        }
       } else {
         // Session code or player number incorrect, show alert
         const alert = await alertController
