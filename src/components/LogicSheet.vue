@@ -7,6 +7,20 @@
         @click="showNumObjects($event)">
         <ion-icon :src="informationCircleOutline"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button
+        size="small"
+        color="light"
+        @click="undoLogic()"
+        :disabled="store.state.logic.undoQueue.length === 0">
+        <ion-icon :src="arrowUndoOutline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button
+        size="small"
+        color="light"
+        @click="redoLogic()"
+        :disabled="store.state.logic.redoQueue.length === 0">
+        <ion-icon :src="arrowRedoOutline"></ion-icon>
+      </ion-fab-button>
     </ion-fab>
     <ion-fab slot="fixed" vertical="top" horizontal="end" v-if="matchMedia.sm">
       <ion-item>
@@ -26,6 +40,20 @@
               @click="showNumObjects($event)"
               expand="full">
               <ion-icon :src="informationCircleOutline"></ion-icon>
+            </ion-button>
+            <ion-button
+              color="light"
+              expand="full"
+              @click="undoLogic()"
+              :disabled="store.state.logic.undoQueue.length === 0">
+              <ion-icon :src="arrowUndoOutline"></ion-icon>
+            </ion-button>
+            <ion-button
+              color="light"
+              expand="full"
+              @click="redoLogic()"
+              :disabled="store.state.logic.redoQueue.length === 0">
+              <ion-icon :src="arrowRedoOutline"></ion-icon>
             </ion-button>
           </ion-item>
         </ion-col>
@@ -143,7 +171,8 @@ import { IonNavLink, IonGrid, IonRow, IonCol,
           IonIcon, IonFab, IonFabButton,
           popoverController, IonCheckbox,
           IonToggle, IonItem, IonLabel, IonButton } from '@ionic/vue';
-import { informationCircleOutline } from "ionicons/icons";
+import { informationCircleOutline, arrowUndoOutline,
+        arrowRedoOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
@@ -181,6 +210,8 @@ export default defineComponent({
       iconRadii: undefined,
       iconWidth: undefined,
       informationCircleOutline,
+      arrowUndoOutline,
+      arrowRedoOutline,
       unsubscribeStore: () => { return; },
       certaintyLevel: 1
     }
@@ -237,6 +268,12 @@ export default defineComponent({
     }
   },
   methods: {
+    undoLogic: function() {
+      this.store.dispatch("undoLogic");
+    },
+    redoLogic: function() {
+      this.store.dispatch("redoLogic");
+    },
     conferenceUsedChanged: function(index: number, e: CustomEvent) {
       if (e.detail.checked) {
         this.store.dispatch("setConferenceUsed", { index });
@@ -414,19 +451,6 @@ export default defineComponent({
 
       return { sector: undefined, iconRadius: undefined };
     },
-    handleClick: function(event: Event) {
-      const { sector, iconRadius } = this.getClickedObject(event as MouseEvent | TouchEvent);
-      if (sector !== undefined) {
-        return this.toggleObject(sector, iconRadius);
-      }
-    },
-    handleRightClick: function(event: Event) {
-      const { sector, iconRadius } = this.getClickedObject(event as MouseEvent | TouchEvent);
-      if (sector !== undefined) {
-        this.toggleObjectEqual(sector, iconRadius);
-      }
-      event.preventDefault();
-    },
     getCSSVariable: function(varName: string) {
       return getComputedStyle(document.body).getPropertyValue(varName) || varName;
     },
@@ -508,15 +532,19 @@ export default defineComponent({
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
-      const checkHold = this.store.state.logic.board[sector].equalTo !== iconRadius.object;
-
       this.store.dispatch("logicToggle", {
         sector,
         object: iconRadius.object,
         level: +!this.certaintyLevel
       });
-
-      return checkHold;
+    },
+    checkClick: function(e: Event) {
+      const { sector, iconRadius } = this.getClickedObject(event as MouseEvent | TouchEvent);
+      let checkHold = false;
+      if (sector !== undefined) {
+        checkHold = this.store.state.logic.board[sector][iconRadius.object].state !== "equal";
+      }
+      return { sector, iconRadius, checkHold };
     },
     redrawSky: async function() {
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
@@ -738,42 +766,83 @@ export default defineComponent({
       });
 
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
-      canvas.addEventListener("contextmenu", (e: Event) => this.handleRightClick(e));
+      canvas.addEventListener("contextmenu", (e: Event) => {
+        console.log("Context menu");
+        // e.stopPropagation();
+        e.preventDefault();
+        const { sector, iconRadius } = this.getClickedObject(e as MouseEvent | TouchEvent);
+        this.toggleObjectEqual(sector, iconRadius);
+      });
 
       let timeout: any = undefined;
+      let clickEvent: any = undefined;
+      let clickSector: number = undefined;
+      let clickIconRadius: any = undefined;
 
-      canvas.addEventListener("mousedown", (e: Event) => {
+      canvas.addEventListener("mousedown", (e: MouseEvent) => {
+        if (e.button === 2 || e.which === 3) {
+          // Context menu
+          return;
+        }
         e.stopPropagation();
         e.preventDefault();
-        const checkHold = this.handleClick(e);
+        clickEvent = e;
+        const { sector, iconRadius, checkHold } = this.checkClick(e);
+        clickSector = sector;
+        clickIconRadius = iconRadius;
         if (checkHold) {
+          this.redrawObject(sector, iconRadius, +!this.certaintyLevel, "eliminated")
           timeout = setTimeout(() => {
-            this.handleRightClick(e);
+            this.toggleObjectEqual(sector, iconRadius);
+            clickEvent = undefined;
+            timeout = undefined;
           }, 350);
+        } else {
+          this.toggleObject(sector, iconRadius);
         }
       });
 
-      canvas.addEventListener("touchstart", (e: Event) => {
+      canvas.addEventListener("touchstart", (e: TouchEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        const checkHold = this.handleClick(e);
+        clickEvent = e;
+        const { sector, iconRadius, checkHold } = this.checkClick(e);
+        clickSector = sector;
+        clickIconRadius = iconRadius;
         if (checkHold) {
+          this.redrawObject(sector, iconRadius, +!this.certaintyLevel, "eliminated");
           timeout = setTimeout(() => {
-            this.handleRightClick(e);
+            this.toggleObjectEqual(sector, iconRadius);
+            clickEvent = undefined;
+            timeout = undefined;
           }, 350);
+        } else {
+          this.toggleObject(sector, iconRadius);
         }
       });
 
       canvas.addEventListener("mouseleave", (e: Event) => {
-        clearTimeout(timeout);
+        if (timeout !== undefined) {
+          clearTimeout(timeout);
+          timeout = undefined;
+          this.toggleObject(clickSector, clickIconRadius);
+        }
       });
 
       canvas.addEventListener("mouseup", (e: Event) => {
-        clearTimeout(timeout);
+        if (timeout !== undefined) {
+          clearTimeout(timeout);
+          timeout = undefined;
+          this.toggleObject(clickSector, clickIconRadius);
+        }
       });
 
       canvas.addEventListener("touchend", (e: Event) => {
-        clearTimeout(timeout);
+        if (timeout !== undefined) {
+          clearTimeout(timeout);
+          timeout = undefined;
+          this.toggleObject(clickSector, clickIconRadius);
+        }
       });
     }
   },

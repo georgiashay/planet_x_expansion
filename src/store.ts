@@ -44,7 +44,9 @@ export default createStore({
       board: undefined,
       researchUsed: undefined,
       conferenceUsed: undefined,
-      surveyUsed: undefined
+      surveyUsed: undefined,
+      undoQueue: undefined,
+      redoQueue: undefined
     },
     settings: {
       muteLevel: 1,
@@ -411,24 +413,141 @@ export default createStore({
       state.logic.surveyUsed.delete(index);
       dispatch('storeLogic');
     },
-    logicEliminateLevel({ state, commit, dispatch }, { sector, object, level=0 }) {
+    removeLastUndo({ state }) {
+      state.logic.undoQueue.pop();
+    },
+    addToQueue({ state }, { action, queue }) {
+      let actionQueue;
+      switch(queue) {
+        case "undo": actionQueue = state.logic.undoQueue; break;
+        case "redo": actionQueue = state.logic.redoQueue; break;
+        default: return;
+      }
+      actionQueue.push([action]);
+    },
+    newPacket({ state }, { queue }) {
+      let actionQueue;
+      switch(queue) {
+        case "undo": actionQueue = state.logic.undoQueue; break;
+        case "redo": actionQueue = state.logic.redoQueue; break;
+        default: return;
+      }
+      actionQueue.push([]);
+    },
+    addToLastPacket({ state }, { action, queue }) {
+      let actionQueue;
+      switch(queue) {
+        case "undo": actionQueue = state.logic.undoQueue; break;
+        case "redo": actionQueue = state.logic.redoQueue; break;
+        default: return;
+      }
+      actionQueue[actionQueue.length - 1].push(action);
+    },
+    async swapPacketQueue({ state, dispatch }, { queue }) {
+      let originQueue;
+      let destQueueName;
+      switch(queue) {
+        case "undo":
+          originQueue = state.logic.undoQueue;
+          destQueueName = "redo";
+          break;
+        case "redo":
+          originQueue = state.logic.redoQueue;
+          destQueueName = "undo";
+          break;
+        default:
+          return;
+      }
+      const packet = originQueue.pop();
+      await dispatch('newPacket', { queue: destQueueName });
+      for (let i = 0; i < packet.length; i++) {
+        const { action, sector, object, level } = packet[i];
+        let oppositeAction;
+        if (state.logic.board[sector][object].state === "eliminated") {
+          oppositeAction = { action: "eliminate", sector, object, level: state.logic.board[sector][object].level };
+        } else if (state.logic.board[sector][object].state === "equal") {
+          oppositeAction = { action: "equal", sector, object, level: state.logic.board[sector][object].level };
+        } else if (state.logic.board[sector][object].state === "none") {
+          oppositeAction = { action: "none", sector, object };
+        }
+        await dispatch('addToLastPacket', { action: oppositeAction, queue: destQueueName });
+      }
+      return packet;
+    },
+    async undoLogic({ state, commit, dispatch }) {
+      if (state.logic.undoQueue.length > 0) {
+        const packet = await dispatch('swapPacketQueue', { queue: "undo" });
+        for (let i = packet.length - 1; i >= 0; i--) {
+          const { action, sector, object, level }: { action: string; sector: number; object: string; level: number | undefined } = packet[i];
+          if (action === "eliminate") {
+            commit('logicEliminate', { sector, object, level });
+          } else if (action === "equal") {
+            commit('logicSet', { sector, object, level });
+          } else if (action === "none") {
+            commit('logicUnset', { sector, object });
+          }
+        }
+
+      }
+    },
+    async redoLogic({ state, commit, dispatch }) {
+      const packet = await dispatch('swapPacketQueue', { queue: "redo" });
+      for (let i = packet.length - 1; i >= 0; i--) {
+        const { action, sector, object, level }: { action: string; sector: number; object: string; level: number | undefined } = packet[i];
+        if (action === "eliminate") {
+          commit('logicEliminate', { sector, object, level });
+        } else if (action === "equal") {
+          commit('logicSet', { sector, object, level });
+        } else if (action === "none") {
+          commit('logicUnset', { sector, object });
+        }
+      }
+    },
+    addStateToUndoPacket({ state, dispatch }, { sector, object }) {
+      let action;
+      if (state.logic.board[sector][object].state === "eliminated") {
+        action = { action: "eliminate", sector, object, level: state.logic.board[sector][object].level };
+      } else if (state.logic.board[sector][object].state === "equal") {
+        action = { action: "equal", sector, object, level: state.logic.board[sector][object].level };
+      } else if (state.logic.board[sector][object].state === "none") {
+        action = { action: "none", sector, object };
+      }
+      dispatch('addToLastPacket', { queue: 'undo', action });
+    },
+    async logicEliminateLevel({ state, commit, dispatch }, { sector, object, level=0, newPacket=true }: { sector: number; object: number; level: number | undefined; newPacket: boolean }) {
+      if (newPacket) {
+        await dispatch('newPacket', { queue: 'undo' });
+      }
+      await dispatch('addStateToUndoPacket', { sector, object });
+      state.logic.redoQueue = [];
       commit('logicEliminate', { sector, object, level });
       dispatch('storeLogic');
     },
-    logicUnsetLevel({ state, commit, dispatch }, { sector, object, level=0 }) {
+    async logicUnsetLevel({ state, commit, dispatch }, { sector, object, level=0, newPacket=true }: { sector: number; object: number; level: number | undefined; newPacket: boolean }) {
+      if (newPacket) {
+        await dispatch('newPacket', { queue: 'undo' });
+      }
+      await dispatch('addStateToUndoPacket', { sector, object });
+      state.logic.redoQueue = [];
       commit('logicUnset', { sector, object });
       dispatch('storeLogic');
     },
-    logicSetLevel({ state, commit, dispatch }, { sector, object, level=0 }) {
+    async logicSetLevel({ state, commit, dispatch }, { sector, object, level=0, newPacket=true }: { sector: number; object: number; level: number | undefined; newPacket: boolean }) {
+      if (newPacket) {
+        await dispatch('newPacket', { queue: 'undo' });
+      }
       for (const [obj, sts] of Object.entries(state.logic.board[sector])) {
         const status: any = sts;
         if (status.state === "equal" && status.level >= level) {
+          await dispatch('addStateToUndoPacket', { sector, object: obj });
           commit('logicUnset', {
             object: obj,
             sector
           });
         }
       }
+      await dispatch('addStateToUndoPacket', { sector, object });
+      state.logic.redoQueue = [];
       commit('logicSet', { sector, object, level });
       dispatch('storeLogic');
     },
@@ -590,6 +709,8 @@ export default createStore({
       state.logic.researchUsed = new Set();
       state.logic.conferenceUsed = new Set();
       state.logic.surveyUsed = new Set();
+      state.logic.undoQueue = [];
+      state.logic.redoQueue = [];
     },
     resetGame(state: any) {
       state.game = undefined;

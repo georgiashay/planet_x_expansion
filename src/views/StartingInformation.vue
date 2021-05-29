@@ -93,12 +93,14 @@ export default defineComponent({
     this.playSound("sonar1");
   },
   methods: {
-    exportLogic: function() {
+    exportLogic: async function() {
+      await this.store.dispatch('newPacket', { queue: 'undo' });
       for (let i = 0; i < this.store.getters.myStartingInformation.length; i++) {
         const info = this.store.getters.myStartingInformation[i];
-        this.store.dispatch("logicEliminateLevel", {
+        await this.store.dispatch("logicEliminateLevel", {
           sector: info.sector,
-          object: info.spaceObject.initial
+          object: info.spaceObject.initial,
+          newPacket: false
         });
       }
     }

@@ -32,29 +32,33 @@ export default defineComponent({
     close: async function(obj: any) {
       await popoverController.dismiss();
     },
-    exportRevealed: function() {
+    exportRevealed: async function() {
+      await this.store.dispatch('newPacket', { queue: 'undo' });
       for (let i = 0; i < this.revealedTheories.length; i++) {
         const theory = this.revealedTheories[i];
         if (theory.accurate) {
           for (const initial of this.store.state.gameType.logicSheetOrder) {
             if (theory.spaceObject.initial === initial) {
-              this.store.dispatch("logicSetLevel", {
+              await this.store.dispatch("logicSetLevel", {
                 sector: theory.sector,
-                object: initial
+                object: initial,
+                newPacket: false
               });
             } else {
               if (initial !== "C" || [2,3,5,7,11,13,17,19,23].indexOf(theory.sector+1) >= 0) {
-                this.store.dispatch("logicEliminateLevel", {
+                await this.store.dispatch("logicEliminateLevel", {
                   sector: theory.sector,
-                  object: initial
+                  object: initial,
+                  newPacket: false
                 });
               }
             }
           }
         } else {
-          this.store.dispatch("logicEliminateLevel", {
+          await this.store.dispatch("logicEliminateLevel", {
             sector: theory.sector,
-            object: theory.spaceObject.initial
+            object: theory.spaceObject.initial,
+            newPacket: false
           });
         }
       }
