@@ -3,7 +3,7 @@
     <ion-content>
       <adaptable-container>
         <div id="title_container">
-          <h3>Multiplayer Game</h3>
+          <h3>Offline Game</h3>
         </div>
         <div id="enter_code">
           <ion-item color="light">

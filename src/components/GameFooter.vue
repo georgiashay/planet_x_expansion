@@ -2,7 +2,7 @@
   <ion-footer v-if="showFooter">
     <ion-toolbar color="light">
       <ion-title id="game_code" v-if="!store.state.isSession">Game Code: {{ store.state.gameCode }}</ion-title>
-      <ion-title id="game_code" v-else>Session Code: {{ store.state.sessionCode }}</ion-title>
+      <ion-title id="game_code" v-else>Game Code: {{ store.state.sessionCode }}</ion-title>
       <ion-nav-link id="history_link" v-if="allowedHistoryLink" @click="clickHistory()">History</ion-nav-link>
     </ion-toolbar>
   </ion-footer>

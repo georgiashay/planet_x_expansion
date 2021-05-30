@@ -3,7 +3,7 @@
     <ion-content>
       <adaptable-container>
         <div id="title_container">
-          <h3>Multiplayer {{isSession ? "Online " : ""}}Game</h3>
+          <h3>{{isSession ? "Online" : "Offline"}} Game</h3>
         </div>
         <div id="create_game_buttons">
           <p>Select Game Mode:</p>

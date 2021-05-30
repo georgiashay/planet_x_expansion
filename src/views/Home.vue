@@ -9,12 +9,12 @@
         </div>
         <div id="start_game_buttons">
           <stripe/>
-          <ion-button expand="block" color="light" router-link = "/multiplayer/create">Start New Game</ion-button>
-          <ion-button expand="block" color="light" router-link = "/multiplayer/join">Enter Game Code</ion-button>
+          <ion-button expand="block" color="light" router-link = "/multiplayer/create">Start New Offline Game</ion-button>
+          <ion-button expand="block" color="light" router-link = "/multiplayer/join">Enter Offline Game Code</ion-button>
           <spacer/>
-          <ion-button expand="block" color="light" router-link = "/session/create">Start New Multiplayer Session</ion-button>
-          <ion-button expand="block" color="light" router-link = "/session/join">Enter Multiplayer Session Code</ion-button>
-          <ion-button expand="block" color="light" router-link = "/session/reconnect">Reconnect to Session</ion-button>
+          <ion-button expand="block" color="light" router-link = "/session/create">Start New Online Game</ion-button>
+          <ion-button expand="block" color="light" router-link = "/session/join">Enter Online Game Code</ion-button>
+          <ion-button expand="block" color="light" router-link = "/session/reconnect">Reconnect to Game</ion-button>
           <stripe/>
         </div>
       </centered-container>

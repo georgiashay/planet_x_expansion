@@ -3,11 +3,11 @@
     <ion-content>
       <adaptable-container>
         <div id="title_container">
-          <h3>Join Session</h3>
+          <h3>Join Online Game</h3>
         </div>
         <div id="enter_code">
           <ion-item color="light">
-            <ion-label position="floating">Enter Session Code</ion-label>
+            <ion-label position="floating">Enter Game Code</ion-label>
             <ion-input v-model="sessionCode"></ion-input>
           </ion-item>
         </div>
@@ -23,10 +23,10 @@
           color="light"
           @click="joinSession()"
           id = "join_session_button">
-          Join Session
+          Join Game
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
-        <p id="fetching" v-if="fetchingSession">Fetching Session...</p>
+        <p id="fetching" v-if="fetchingSession">Fetching Game...</p>
         <div id="cancel_container">
           <ion-nav-link router-link="/home">Cancel</ion-nav-link>
         </div>
