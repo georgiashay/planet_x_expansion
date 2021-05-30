@@ -59,7 +59,7 @@ export default defineComponent({
   computed: {
     scoreHeaders: function(): Array<Array<string>> {
       const headers = [["first", "/assets/first.svg"]];
-      for (const obj in this.store.state.gameType.numObjects) {
+      for (const obj of this.store.state.gameType.pointsOrder) {
         if (obj !== "X" && obj !== "E") {
           const key = obj;
           const icon = initialToSpaceObject[obj].icon;
@@ -75,7 +75,7 @@ export default defineComponent({
         if (key === "first") {
           points.push(1);
         } else if(key === "planetX") {
-          points.push("2-8");
+          points.push("2-10");
         } else if (key in this.store.state.gameType.points) {
           points.push(this.store.state.gameType.points[key]);
         } else {

@@ -43,14 +43,16 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 2,
     numObjects: {X: 1, E: 2, G: 2, D: 1, A: 4, C: 2},
     logicSheetOrder: ['C', 'A', 'D', 'G', 'E', 'X'],
+    pointsOrder: ['A', 'C', 'G', 'D', 'X'],
+    constraintOrder: ['C', 'A', 'D', 'G', 'X', 'E'],
     logicPatternInterval: 3,
     constraints: {
       "C": "Only in prime sectors",
-      "A": "Adjacent to an asteroid",
+      "A": "Adjacent to at least 1 other asteroid",
       "D": "Not adjacent to Planet X",
-      "G": "Adjacent to an empty sector",
-      "E": "Remember, Planet X appears empty",
-      "X": "Not adjacent to the dwarf planet, appears empty"
+      "G": "Adjacent to at least 1 empty sector",
+      "X": "Not adjacent to the dwarf planet, appears empty",
+      "E": "Remember, Planet X appears empty"
     },
     points: {
       "A": 2,
@@ -94,14 +96,16 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 2,
     numObjects: {X: 1, E: 5, G: 2, D: 4, A: 4, C: 2},
     logicSheetOrder: ['C', 'A', 'D', 'G', 'E', 'X'],
+    pointsOrder: ['A', 'C', 'G', 'D', 'X'],
+    constraintOrder: ['C', 'A', 'D', 'G', 'X', 'E'],
     logicPatternInterval: 3,
     constraints: {
       "C": "Only in prime sectors",
-      "A": "Adjacent to an asteroid",
+      "A": "Adjacent to at least 1 other asteroid",
       "D": "In a band of exactly 6, not adjacent to Planet X",
-      "G": "Adjacent to an empty sector",
+      "G": "Adjacent to at least 1 empty sector",
+      "X": "Not adjacent to a dwarf planet, appears empty",
       "E": "Remember, Planet X appears empty",
-      "X": "Not adjacent to a dwarf planet, appears empty"
     },
     points: {
       "A": 2,
@@ -145,15 +149,17 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 3,
     numObjects: {X: 1, E: 6, G: 3, D: 4, A: 6, C: 3, B: 1},
     logicSheetOrder: ['C', 'A', 'D', 'B', 'G', 'E', 'X'],
+    pointsOrder: ['A', 'C', 'G', 'D', 'B', 'X'],
+    constraintOrder: ['C', 'A', 'D', 'G', 'B', 'X', 'E'],
     logicPatternInterval: 4,
     constraints: {
       "C": "Only in prime sectors",
-      "A": "Adjacent to an asteroid",
+      "A": "Adjacent to at least 1 other asteroid",
       "D": "In a band of exactly 6, not adjacent to Planet X",
-      "G": "Adjacent to an empty sector",
-      "E": "Not adjacent to the black hole. Remember, Planet X appears empty",
+      "G": "Adjacent to at least 1 empty sector",
       "B": "Not adjacent to an empty sector or Planet X",
-      "X": "Not adjacent to a dwarf planet or the black hole, appears empty"
+      "X": "Not adjacent to a dwarf planet or the black hole, appears empty",
+      "E": "Remember, Planet X appears empty",
     },
     points: {
       "A": 2,

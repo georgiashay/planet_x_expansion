@@ -44,7 +44,7 @@ export default defineComponent({
   computed: {
     spaceObjects: function(): Array<any> {
       const spaceObjects = [];
-      for (const initial in this.store.state.gameType.numObjects) {
+      for (const initial of this.store.state.gameType.constraintOrder) {
         const spaceObject = initialToSpaceObject[initial];
         spaceObjects.push({
           spaceObject,
