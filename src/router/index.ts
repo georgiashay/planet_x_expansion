@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
     component: JoinGame
   },
   {
-    path: '/session/join',
+    path: '/session/join/:sessionCode?',
     name: 'Join Session',
     component: JoinSession
   },

@@ -15,6 +15,9 @@
             <h1>{{store.state.sessionCode || "Loading..."}}</h1>
             <p>{{sessionModeName}}</p>
           </div>
+          <div id="game_link" v-if="sessionCreator && store.state.sessionCode !== undefined">
+            <p @click="copyGameLink()">Copy Game Link <ion-icon :src="clipboardOutline" id="clipboard"/></p>
+          </div>
           <div id="players" v-if="store.state.session">
             <table>
               <tr v-for="(row, i) in playerGrid" :key="i">
@@ -56,7 +59,7 @@
 import { IonContent, IonPage,
         IonButton, IonNavLink, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { arrowForwardOutline } from 'ionicons/icons';
+import { arrowForwardOutline, clipboardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -65,6 +68,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { MY_URL } from "@/constants.ts";
 
 export default defineComponent({
   name: 'Lobby',
@@ -93,6 +97,7 @@ export default defineComponent({
     return {
       store,
       arrowForwardOutline,
+      clipboardOutline,
       route,
       router
     }
@@ -158,6 +163,15 @@ export default defineComponent({
           this.changeColor(newColor);
         }
       }
+    },
+    copyGameLink() {
+      const tmp = document.createElement("input") as HTMLInputElement;
+      tmp.setAttribute("style", "position: absolute; left: -1000px; top:-1000px;");
+      tmp.value = MY_URL + "/session/join/" + this.store.state.sessionCode;
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand("copy");
+      document.body.removeChild(tmp);
     }
   },
   ionViewDidEnter() {
@@ -190,6 +204,10 @@ export default defineComponent({
 #session_code h1 {
   font-size: 50px;
   line-height: 56px;
+}
+
+#game_link {
+  text-align: center;
 }
 
 #cancel_container {
@@ -268,5 +286,9 @@ td span {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100%;
+}
+
+#clipboard {
+  cursor: pointer;
 }
 </style>

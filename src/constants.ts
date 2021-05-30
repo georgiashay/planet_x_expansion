@@ -1,10 +1,12 @@
 const IS_PROD = process.env.NODE_ENV === "production";
 const SERVER_URL = IS_PROD ? "planetx.shaytech.net/api" : "localhost:8000";
+const SELF_URL = IS_PROD ? "planetx.shaytech.net" : "localhost:8100";
 const SECURE = IS_PROD;
 const URL_PREFIX = SECURE ? "https://" : "http://";
 const WS_PREFIX = SECURE ? "wss://" : "ws://";
 export const API_URL = URL_PREFIX + SERVER_URL;
 export const WEBSOCKET_URL = WS_PREFIX + SERVER_URL;
+export const MY_URL = URL_PREFIX + SELF_URL;
 export const GAME_TYPES: {[sector: number]: any} = {
   12: {
     name: "Standard",

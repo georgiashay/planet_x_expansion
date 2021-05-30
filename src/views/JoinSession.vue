@@ -43,9 +43,13 @@ import { IonContent, IonPage,
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+
+function isString(obj: any): obj is string {
+  return typeof obj === "string";
+}
 
 export default defineComponent({
   name: 'JoinGame',
@@ -64,11 +68,13 @@ export default defineComponent({
   data() {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     return {
       selectedGame: undefined,
       arrowForwardOutline,
       store,
       router,
+      route,
       sessionCode: "",
       name: "",
       fetchingSession: false
@@ -106,6 +112,11 @@ export default defineComponent({
   ionViewWillEnter: function() {
     this.sessionCode = "";
     this.name = "";
+    if (this.route.params.sessionCode) {
+      if (isString(this.route.params.sessionCode)) {
+        this.sessionCode = this.route.params.sessionCode;
+      }
+    }
   },
   ionViewDidEnter() {
     this.playSound("sonar1");
