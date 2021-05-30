@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject,
-        initialToSpaceObject, SUSPICION_LEVELS, SeasonView } from "@/constants";
+        initialToSpaceObject, SUSPICION_LEVELS, SeasonView,
+        IS_PROD } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
@@ -19,6 +20,12 @@ const historySortOrder = (a: any, b: any) => {
     return a.turn - b.turn;
   }
 };
+
+const log = function(...args: Array<any>) {
+  if (!IS_PROD) {
+    console.log(...args);
+  }
+}
 
 //
 // @see https://github.com/vuejs/vuex/tree/v4.0.0-rc.1
@@ -82,8 +89,8 @@ export default createStore({
       // Start new session
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-      console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-      console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+      log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+      log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
       commit('setGame', response.data.game);
       commit('setIsSession', true);
       commit('setSessionState', response.data.state);
@@ -97,8 +104,8 @@ export default createStore({
       commit('setupLogic', numSectors);
       dispatch('restoreLogic');
       dispatch('storeRecentSession');
-      console.log("Going to listen sessino");
-      console.log("listened");
+      log("Going to listen sessino");
+      log("listened");
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
       // Join existing session
@@ -106,8 +113,8 @@ export default createStore({
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-        console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -129,8 +136,8 @@ export default createStore({
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
-        console.log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
-        console.log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
+        log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -151,7 +158,7 @@ export default createStore({
     async startSession({ state }) {
       // Start session (when all players have joined)
       const response = await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
-      console.log(response);
+      log(response);
     },
     listenSession({ state, dispatch, commit }) {
       // Listen for updates to the session
@@ -194,7 +201,7 @@ export default createStore({
       state.awaitingTurnSubmission = true;
       const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
       state.awaitingTurnSubmission = false;
-      console.log(response.data);
+      log(response.data);
     },
     async changeColor({ state }, newColor) {
       await axios.post(API_URL + "/setColor/?playerID=" + state.playerID + "&color=" + newColor);
