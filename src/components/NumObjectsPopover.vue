@@ -10,11 +10,11 @@
         <ion-col size="1">
           {{obj.numObject}}
         </ion-col>
-        <ion-col size="4">
+        <ion-col size="3">
           <ion-icon :src="obj.spaceObject.icon"/>
-          <p>{{obj.numObject === 1 ? obj.spaceObject.name : obj.spaceObject.plural}}</p>
+          <p>{{obj.numObject === 1 ? obj.spaceObject.proper : obj.spaceObject.properPlural}}</p>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size="8">
           {{obj.constraint}}
         </ion-col>
       </ion-row>
