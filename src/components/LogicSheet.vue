@@ -788,6 +788,9 @@ export default defineComponent({
         e.preventDefault();
         clickEvent = e;
         const { sector, iconRadius, checkHold } = this.checkClick(e);
+        if (sector === undefined) {
+          return;
+        }
         clickSector = sector;
         clickIconRadius = iconRadius;
         if (checkHold) {
@@ -809,6 +812,9 @@ export default defineComponent({
         const { sector, iconRadius, checkHold } = this.checkClick(e);
         clickSector = sector;
         clickIconRadius = iconRadius;
+        if (sector === undefined) {
+          return;
+        }
         if (checkHold) {
           this.redrawObject(sector, iconRadius, +!this.certaintyLevel, "eliminated");
           timeout = setTimeout(() => {
