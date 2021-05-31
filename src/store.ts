@@ -1292,7 +1292,7 @@ export default createStore({
           summary.allResearch.push({
             index: i,
             text: "",
-            shortText: String.fromCharCode(i+65) + ". " + state.game.research[i].shortCategory,
+            shortText: state.game.research[i].shortCategory,
             researched: false
           });
         }

@@ -119,7 +119,7 @@ export default {
       text: String.fromCharCode(index+65) + ". " + game.research[index].text,
       timeCost: 1,
       index,
-      shortText: String.fromCharCode(index+65) + ". " + game.research[index].shortText,
+      shortText: game.research[index].shortText,
       turn,
       time
     }

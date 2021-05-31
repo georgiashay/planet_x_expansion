@@ -88,7 +88,7 @@
               :checked="store.state.logic.conferenceUsed.has(index)"
               color="light">
             </ion-checkbox>
-            &nbsp;<span :class="store.state.logic.conferenceUsed.has(index) ? 'used_clue' : 'unused_clue'">{{conference.index + 1}}. {{conference.shortText}}</span>
+            &nbsp;<span :class="store.state.logic.conferenceUsed.has(index) ? 'used_clue' : 'unused_clue'">{{conference.index + 1}}.&nbsp;<span class="category_name">{{conference.shortText}}</span></span>
           </ion-col>
         </ion-row>
         <ion-row class="title_row">
@@ -105,7 +105,7 @@
                 :checked="store.state.logic.researchUsed.has(index)"
                 color="light">
               </ion-checkbox>
-              &nbsp;<span :class="store.state.logic.researchUsed.has(index) ? 'used_clue' : 'unused_clue'">{{research.shortText}}</span>
+              &nbsp;<span :class="store.state.logic.researchUsed.has(index) ? 'used_clue' : 'unused_clue'">{{String.fromCharCode(65+research.index)}}.&nbsp;<span class="category_name">{{research.shortText}}</span></span>
           </ion-col>
         </ion-row>
         <ion-row v-if="resultsSummary.located.length > 0" class="title_row">
@@ -984,7 +984,7 @@ export default defineComponent({
   font-size: 1.2em;
 }
 
-.reveal_row.not_researched {
+.reveal_row.not_researched span.category_name {
   background-color: var(--ion-color-dark);
   color: var(--ion-color-dark-contrast);
 }
