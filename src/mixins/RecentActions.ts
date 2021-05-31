@@ -109,7 +109,7 @@ export default defineComponent({
             return action.playerName + " did not find Planet X";
           }
         } else if (action.actionType === "THEORY") {
-          return action.playerName + " submitted theories";
+          return action.playerName + " finalized theories";
         } else if (action.actionType === "WINNER") {
           return action.text;
         }
