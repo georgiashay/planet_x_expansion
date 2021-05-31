@@ -495,8 +495,9 @@ export default defineComponent({
     gameType: function() {
       this.collectImages();
     },
-    isDarkMode: function() {
+    isDarkMode: async function() {
       if (this.store.state.isSession) {
+        await this.collectImages();
         this.computeCanvas();
       }
     }
