@@ -161,7 +161,7 @@ export default defineComponent({
   max-width: 75vh;
   background-color: var(--ion-color-light);
   color: var(--ion-color-light-contrast);
-  border: 2px solid white;
+  border: 2px solid var(--ion-color-light-contrast);
 }
 
 #score_table .player_cell, .player_points_cell {
