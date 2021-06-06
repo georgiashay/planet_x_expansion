@@ -227,8 +227,8 @@ export default createStore({
         winningScores = winningScores.filter((score: any) => score.first === maxLeaderBonus);
 
         const winningPlayers = winningScores.map((score: any) => getters.playerMap[score.playerID]);
-        const actionText = winningPlayers.map((player: any) => player.name).join(", ") + " won the game";
-        const text = winningPlayers.map((player: any) => player.name).join(", ") + " won the game with " + maxScore + " points.";
+        const actionText = winningPlayers.map((player: any) => player.name).join(", ") + " won the game in " + getters.numTurns + (getters.numTurns === 1 ? " turn" : " turns");
+        const text = winningPlayers.map((player: any) => player.name).join(", ") + " won the game with " + maxScore + " points after " + getters.numTurns + (getters.numTurns === 1 ? " turn" : " turns");
 
         const actionResult = {
           actionType: "WINNER",
@@ -1369,6 +1369,15 @@ export default createStore({
     },
     websocketDisconnected(state: any) {
       return state.isSession && state.currentWebSocket === undefined;
+    },
+    numTurns(state: any) {
+      let turns = 0;
+      for (let i = 0; i < state.history.length; i++) {
+        if (["RESEARCH", "SURVEY", "TARGET", "LOCATE_PLANET_X"].indexOf(state.history[i].actionType) >= 0) {
+          turns++;
+        }
+      }
+      return turns;
     }
   }
 });

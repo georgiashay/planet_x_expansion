@@ -289,7 +289,7 @@ export default defineComponent({
     },
     clearLogic: function() {
       this.store.dispatch("clearLogic");
-    }
+    },
     conferenceUsedChanged: function(index: number, e: CustomEvent) {
       if (e.detail.checked) {
         this.store.dispatch("setConferenceUsed", { index });
