@@ -521,6 +521,20 @@ export default createStore({
       }
       dispatch('addToLastPacket', { queue: 'undo', action });
     },
+    async clearLogic({ state, commit, dispatch }) {
+      await dispatch('newPacket', { queue: 'undo' });
+      for (let i = 0; i < state.gameType.sectors; i++) {
+        for (const obj of state.gameType.logicSheetOrder) {
+          if (obj !== "C" || [2,3,5,7,11,13,17,19,23].indexOf(i + 1) >= 0) {
+            await dispatch('addStateToUndoPacket', { sector: i, object: obj });
+            await commit('logicUnset', { sector: i, object: obj });
+          }
+        }
+      }
+      state.logic.researchUsed = new Set();
+      state.logic.conferenceUsed = new Set();
+      state.logic.surveyUsed = new Set();
+    },
     async logicEliminateLevel({ state, commit, dispatch }, { sector, object, level=0, newPacket=true }: { sector: number; object: number; level: number | undefined; newPacket: boolean }) {
       if (newPacket) {
         await dispatch('newPacket', { queue: 'undo' });

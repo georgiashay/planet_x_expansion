@@ -21,6 +21,12 @@
         :disabled="store.state.logic.redoQueue.length === 0">
         <ion-icon :src="arrowRedoOutline"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button
+        size="small"
+        color="light"
+        @click="clearLogic()">
+        <ion-icon :src="trashBinOutline"></ion-icon>
+      </ion-fab-button>
     </ion-fab>
     <ion-fab slot="fixed" vertical="top" horizontal="end" v-if="matchMedia.sm">
       <ion-item>
@@ -54,6 +60,12 @@
               @click="redoLogic()"
               :disabled="store.state.logic.redoQueue.length === 0">
               <ion-icon :src="arrowRedoOutline"></ion-icon>
+            </ion-button>
+            <ion-button
+              color="light"
+              expand="full"
+              @click="clearLogic()">
+              <ion-icon :src="trashBinOutline"></ion-icon>
             </ion-button>
           </ion-item>
         </ion-col>
@@ -172,7 +184,7 @@ import { IonNavLink, IonGrid, IonRow, IonCol,
           popoverController, IonCheckbox,
           IonToggle, IonItem, IonLabel, IonButton } from '@ionic/vue';
 import { informationCircleOutline, arrowUndoOutline,
-        arrowRedoOutline } from "ionicons/icons";
+        arrowRedoOutline, trashBinOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
@@ -212,6 +224,7 @@ export default defineComponent({
       informationCircleOutline,
       arrowUndoOutline,
       arrowRedoOutline,
+      trashBinOutline,
       unsubscribeStore: () => { return; },
       certaintyLevel: 1
     }
@@ -274,6 +287,9 @@ export default defineComponent({
     redoLogic: function() {
       this.store.dispatch("redoLogic");
     },
+    clearLogic: function() {
+      this.store.dispatch("clearLogic");
+    }
     conferenceUsedChanged: function(index: number, e: CustomEvent) {
       if (e.detail.checked) {
         this.store.dispatch("setConferenceUsed", { index });
