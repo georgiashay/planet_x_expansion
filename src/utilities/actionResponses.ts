@@ -1,7 +1,7 @@
 import { SpaceObject, initialToSpaceObject } from "@/constants.ts";
 
 export default {
-  survey(game: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
+  survey(game: any, gameType: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
     let sectors;
 
     // Get slice of only sectors being surveyed
@@ -56,8 +56,9 @@ export default {
 
     // Text to be displayed in history
     const actionText = "Survey, " + surveyObject.proper + ", " + (startSector+1) + "-" + (endSector+1);
+
     // Calculate time cost for survey
-    const timeCost = 5 - Math.ceil(sectors.length/4);
+    const timeCost = gameType.surveyCost.max + 1 - Math.ceil(sectors.length/gameType.surveyCost.interval);
 
     const actionResult = {
       actionType: "SURVEY",

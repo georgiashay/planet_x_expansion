@@ -243,7 +243,7 @@ export default createStore({
       }
     },
     survey({ state, getters, dispatch }, { surveyObject, startSector, endSector }) {
-      const actionResult = actionResponses.survey(state.game, getters.currentTurn, new Date(), surveyObject, startSector-1, endSector-1);
+      const actionResult = actionResponses.survey(state.game, state.gameType, getters.currentTurn, new Date(), surveyObject, startSector-1, endSector-1);
 
       state.history.push(actionResult);
 
@@ -760,7 +760,7 @@ export default createStore({
         if (action.playerID === state.playerID) {
           switch(action.turnType) {
             case("SURVEY"):
-              history.push(actionResponses.survey(state.game, action.turn, new Date(action.time), initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
+              history.push(actionResponses.survey(state.game, state.gameType, action.turn, new Date(action.time), initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
               break;
             case("TARGET"):
               history.push(actionResponses.target(state.game, action.turn, new Date(action.time), action.sector));
