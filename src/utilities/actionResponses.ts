@@ -95,7 +95,7 @@ export default {
     }
 
     // Text to be displayed in history
-    const actionText = "Target, Sector " + sectorNumber;
+    const actionText = "Target, Sector " + (sectorNumber+1);
 
     const actionResult = {
       actionType: "TARGET",
