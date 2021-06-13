@@ -1259,7 +1259,7 @@ export default createStore({
       const located: any[] = [];
 
       const summary = {
-        revealed: getters.revealedTheories,
+        revealed: getters.uniqueRevealedTheories,
         targeted: targeted,
         surveyed: surveyed,
         located: located,
