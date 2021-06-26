@@ -125,6 +125,10 @@ export default defineComponent({
     kickPlayer: async function(index: number) {
       const player = this.players[index][2];
 
+      if (!this.kickAllowed(player.id)) {
+        return;
+      }
+
       if (!this.store.state.session.kickVotes.some((kickVote: any) => kickVote.kickPlayerID === player.id)) {
         const alert = await alertController.create({
           cssClass: 'custom-alert',
