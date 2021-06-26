@@ -810,7 +810,13 @@ export default defineComponent({
         clickSector = sector;
         clickIconRadius = iconRadius;
         if (checkHold) {
-          this.redrawObject(sector, iconRadius, +!this.certaintyLevel, "eliminated")
+          const currentState = this.store.state.logic.board[sector][iconRadius.object];
+          const setLevel = +!this.certaintyLevel;
+          if (currentState.state === "eliminated") {
+            this.redrawObject(sector, iconRadius, currentState.level, "eliminated")
+          } else {
+            this.redrawObject(sector, iconRadius, setLevel, "eliminated")
+          }
           timeout = setTimeout(() => {
             this.toggleObjectEqual(sector, iconRadius);
             clickEvent = undefined;
@@ -832,7 +838,13 @@ export default defineComponent({
           return;
         }
         if (checkHold) {
-          this.redrawObject(sector, iconRadius, +!this.certaintyLevel, "eliminated");
+          const currentState = this.store.state.logic.board[sector][iconRadius.object];
+          const setLevel = +!this.certaintyLevel;
+          if (currentState.state === "eliminated") {
+            this.redrawObject(sector, iconRadius, currentState.level, "eliminated")
+          } else {
+            this.redrawObject(sector, iconRadius, setLevel, "eliminated")
+          }
           timeout = setTimeout(() => {
             this.toggleObjectEqual(sector, iconRadius);
             clickEvent = undefined;
