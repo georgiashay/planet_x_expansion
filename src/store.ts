@@ -1203,7 +1203,6 @@ export default createStore({
     },
     selectedHistory(state: any, getters: any) {
       const history = getters.fullHistory.filter((action: any) => action.actionType !== "PEER_REVIEW");
-
       const myPlayerNum = getters.playerInfo.num;
 
       if (state.session.currentAction.actionType === "THEORY_PHASE") {
@@ -1217,7 +1216,8 @@ export default createStore({
 
         const removeTheories = lastTheories % state.session.players.length;
 
-        for (let i = history.length - 1; i >= history.length - removeTheories; i--) {
+        const removeLimit = history.length - removeTheories;
+        for (let i = history.length - 1; i >= removeLimit; i--) {
           if (history[i].playerNum !== myPlayerNum) {
             history.splice(i, 1);
           }
