@@ -49,7 +49,8 @@
                 v-for="(obj, j) in row"
                 :key="j"
                 :class="obj !== null ? 'theory_token' : ''"
-                :style="playerStyle(store.getters.playerInfo.color)">
+                :style="playerStyle(store.getters.playerInfo.color)"
+                @click="clickTheoryToken(obj)">
                 <div class="inner_token" v-if="obj !== null">
                   <ion-icon :src="obj.icon"></ion-icon>
                 </div>
@@ -137,7 +138,8 @@ export default defineComponent({
       numTheories: 0,
       theories: [],
       router,
-      initialToSpaceObject
+      initialToSpaceObject,
+      theoryToggle: 0
     }
   },
   computed: {
@@ -259,7 +261,6 @@ export default defineComponent({
         valid: true,
         message: ""
       }
-
     }
   },
   methods: {
@@ -270,6 +271,36 @@ export default defineComponent({
     clearSelections: function() {
       this.numTheories = 0;
       this.theories = Array.from(Array(this.maxTheories)).map(() => {return {};});
+    },
+    theoryTokenSlot: function(): number {
+      for (let i = 0; i < this.numTheories; i++) {
+        if (this.theories[i].spaceObject === undefined) {
+          return i;
+        }
+      }
+
+      for (let i = 0; i < this.numTheories; i++) {
+        if (this.theories[i].sector === undefined) {
+          return i;
+        }
+      }
+
+      if (this.numTheories > 0) {
+        const slot = this.theoryToggle % this.numTheories;
+        this.theoryToggle++;
+        this.theoryToggle %= this.numTheories;
+        return slot;
+      } else {
+        return NaN;
+      }
+    },
+    clickTheoryToken: function(obj: any) {
+      if (obj !== null) {
+        const slot = this.theoryTokenSlot();
+        if (slot < this.numTheories) {
+          this.theories[slot].spaceObject = obj;
+        }
+      }
     }
   },
   watch: {
