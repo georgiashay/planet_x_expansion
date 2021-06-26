@@ -61,7 +61,8 @@ export default createStore({
       rectangleEliminate: false,
       scratchUncertain: false,
       logicIconSize: 1,
-      levelColors: ["--ion-color-light-contrast", "#5260ff"]
+      levelColors: ["--ion-color-light-contrast", "#5260ff"],
+      multiInitial: false
     },
     storage: new Storage(),
     storageRead: false,
@@ -842,6 +843,10 @@ export default createStore({
       state.settings.levelColors[level] = color;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
+    setMultiInitial(state: any, multiInitial: boolean) {
+      state.settings.multiInitial = multiInitial;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
     setStorageRead(state: any) {
       state.storageRead = true;
     },
@@ -1296,7 +1301,7 @@ export default createStore({
                             return {
                               index: action.index,
                               text: action.text,
-                              shortText: action.shortText,
+                              shortText: state.settings.multiInitial ? action.multiInitialText : action.shortText,
                               researched: true
                             };
                           }).sort((a: any, b: any) => a.index - b.index);
@@ -1310,7 +1315,7 @@ export default createStore({
           summary.allResearch.push({
             index: i,
             text: "",
-            shortText: state.game.research[i].shortCategory,
+            shortText: state.settings.multiInitial ? state.game.research[i].multiInitialCategory : state.game.research[i].shortCategory,
             researched: false
           });
         }
@@ -1321,7 +1326,7 @@ export default createStore({
                               return {
                                 index: action.index,
                                 text: action.text,
-                                shortText: action.shortText,
+                                shortText: state.settings.multiInitial ? action.multiInitialText : action.shortText,
                                 researched: true
                               };
                             }).sort((a: any, b: any) => a.index - b.index);
@@ -1335,7 +1340,7 @@ export default createStore({
           summary.allConferences.push({
             index: i,
             text: "",
-            shortText: state.game.conference[i].shortCategory,
+            shortText: state.settings.multiInitial ? state.game.conference[i].multiInitialCategory : state.game.conference[i].shortCategory,
             researched: false
           });
         }

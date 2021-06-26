@@ -30,14 +30,6 @@
       <ion-label position="floating">Logic Icon Size</ion-label>
       <ion-range v-model="iconSize" :min="0" :max="1" :step="0.01" @ionChange="changeIconSize()"></ion-range>
     </ion-item>
-    <!-- <ion-button
-            ionicColorPicker
-            [colors]="['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C', '#16A085', '#27AE60', '#2ECC71']"
-            (colorPickerOpen)=""
-            (colorPickerClose)=""
-            (colorChange)="">
-        Change Color
-    </ion-button> -->
     <ion-item color="light">
       <ion-label>Uncertain Color</ion-label>
       <div id="color-swatch" :style="{'--swatch-color': uncertainColor}">
@@ -45,9 +37,10 @@
           <ion-icon :src="colorPaletteOutline"></ion-icon>
         </ion-button>
       </div>
-
-      <!-- <fk-color-picker v-model:color="uncertainColor"/> -->
-      <!-- <sketch-picker v-model="uncertainColor"/> -->
+    </ion-item>
+    <ion-item color="light">
+      <ion-label>Multi-Initial Abbreviations</ion-label>
+      <ion-toggle v-model="multiInitial" @ionChange="changeMultiInitial()"></ion-toggle>
     </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
@@ -86,7 +79,8 @@ export default defineComponent({
       muteLevelNames: ["None", "Some", "All"],
       iconSize: store.state.settings.logicIconSize,
       uncertainColor: store.state.settings.levelColors[1],
-      colorPaletteOutline
+      colorPaletteOutline,
+      multiInitial: store.state.settings.multiInitial
     }
   },
   methods: {
@@ -132,6 +126,9 @@ export default defineComponent({
         this.uncertainColor = data;
         this.store.commit("setLevelColor", { color: data, level: 1 });
       }
+    },
+    changeMultiInitial: function() {
+      this.store.commit("setMultiInitial", this.multiInitial);
     }
   }
 });

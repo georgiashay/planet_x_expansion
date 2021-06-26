@@ -121,6 +121,7 @@ export default {
       timeCost: 1,
       index,
       shortText: game.research[index].shortText,
+      multiInitialText: game.research[index].multiInitialText,
       turn,
       time
     }
@@ -136,6 +137,7 @@ export default {
       text: "X" + (index + 1) + ". " + game.conference[index].text,
       index,
       shortText: game.conference[index].shortText,
+      multiInitialText: game.conference[index].multiInitialText,
       turn,
       time
     }
