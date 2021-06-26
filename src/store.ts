@@ -88,7 +88,7 @@ export default createStore({
     },
     async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
-      const response: any = await axios.post(API_URL + "/createSession/" + numSectors + "?name=" + name);
+      const response: any = await axios.post(API_URL + "/createSession/" + numSectors, { name });
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
       log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
@@ -105,12 +105,12 @@ export default createStore({
       commit('setupLogic', numSectors);
       dispatch('restoreLogic');
       dispatch('storeRecentSession');
-      log("Going to listen sessino");
+      log("Going to listen session");
       log("listened");
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
       // Join existing session
-      const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode + "?name=" + name);
+      const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode, { name });
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
