@@ -62,7 +62,8 @@ export default createStore({
       scratchUncertain: false,
       logicIconSize: 1,
       levelColors: ["--ion-color-light-contrast", "#5260ff"],
-      multiInitial: false
+      multiInitial: false,
+      fullScrollLogic: false
     },
     storage: new Storage(),
     storageRead: false,
@@ -845,6 +846,10 @@ export default createStore({
     },
     setMultiInitial(state: any, multiInitial: boolean) {
       state.settings.multiInitial = multiInitial;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setFullScrollLogic(state: any, fullScrollLogic: boolean) {
+      state.settings.fullScrollLogic = fullScrollLogic;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setStorageRead(state: any) {

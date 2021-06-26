@@ -42,6 +42,10 @@
       <ion-label>Multi-Initial Abbreviations</ion-label>
       <ion-toggle v-model="multiInitial" @ionChange="changeMultiInitial()"></ion-toggle>
     </ion-item>
+    <ion-item color="light">
+      <ion-label>Full-Screen Logic Sheet Scroll Mobile</ion-label>
+      <ion-toggle v-model="fullScrollLogic" @ionChange="changeFullScrollLogic()"></ion-toggle>
+    </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
@@ -80,7 +84,8 @@ export default defineComponent({
       iconSize: store.state.settings.logicIconSize,
       uncertainColor: store.state.settings.levelColors[1],
       colorPaletteOutline,
-      multiInitial: store.state.settings.multiInitial
+      multiInitial: store.state.settings.multiInitial,
+      fullScrollLogic: store.state.settings.fullScrollLogic
     }
   },
   methods: {
@@ -129,6 +134,9 @@ export default defineComponent({
     },
     changeMultiInitial: function() {
       this.store.commit("setMultiInitial", this.multiInitial);
+    },
+    changeFullScrollLogic: function() {
+      this.store.commit("setFullScrollLogic", this.fullScrollLogic);
     }
   }
 });

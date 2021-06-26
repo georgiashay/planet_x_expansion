@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" id="container" v-if="showLogicSheet">
+  <div ref="container" id="container" v-if="showLogicSheet" :class="[fullScroll ? 'content-scroll' : 'content-fixed']">
     <ion-fab slot="fixed" vertical="top" horizontal="start" v-if="matchMedia.sm">
       <ion-fab-button
         size="small"
@@ -83,7 +83,7 @@
     <div ref="cancelContainer" id="cancel_container_logic" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
-    <div ref="resultsSummary" id="results-summary">
+    <div ref="resultsSummary" id="results-summary" :class="[fullScroll ? '' : 'content-scroll']">
       <h5 id="summary_title">Results Summary</h5>
       <ion-grid>
         <ion-row class="title_row">
@@ -278,6 +278,9 @@ export default defineComponent({
     },
     uncertainColor: function(): string {
       return this.store.state.settings.levelColors[1];
+    },
+    fullScroll: function(): boolean {
+      return !this.matchMedia.md && this.store.state.settings.fullScrollLogic;
     }
   },
   methods: {
@@ -947,7 +950,14 @@ export default defineComponent({
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.content-fixed {
   overflow: hidden;
+}
+
+.content-scroll {
+  overflow-y: auto;
 }
 
 #title_container {
@@ -994,7 +1004,6 @@ export default defineComponent({
   width: calc(100% + 20px);
   border: 1px solid gray;
   padding: 5px;
-  overflow-y: auto;
   margin-left: -10px;
   margin-right: -10px;
   margin-bottom: -10px;
