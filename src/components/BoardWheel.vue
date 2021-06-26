@@ -300,15 +300,15 @@ export default defineComponent({
           const radius = startTokenRadius + j * tokenIncrement;
           ctx.save();
 
-          ctx.rotate(-Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
+          ctx.rotate(Math.PI/2 + (sectorAngle/2 + i * sectorAngle));
 
           ctx.beginPath();
           ctx.strokeStyle = darkColor;
-          ctx.rect(-tokenSize/2, radius, tokenSize, tokenSize);
+          ctx.rect(-tokenSize/2, -radius-tokenSize, tokenSize, tokenSize);
           ctx.stroke();
 
           if (this.theorySlots[i][progress].length > 0) {
-            const gradient = ctx.createLinearGradient(-tokenSize/2, radius, tokenSize/2, radius+tokenSize);
+            const gradient = ctx.createLinearGradient(-tokenSize/2, -radius-tokenSize, tokenSize/2, -radius);
             const part = 1/(this.theorySlots[i][progress].length);
             for (let k = 0; k < this.theorySlots[i][progress].length; k++) {
               const theory = this.theorySlots[i][progress][k];
@@ -319,7 +319,7 @@ export default defineComponent({
               gradient.addColorStop((k+1)*part, color);
             }
             ctx.fillStyle = gradient;
-            ctx.fillRect(-tokenSize/2, radius, tokenSize, tokenSize);
+            ctx.fillRect(-tokenSize/2, -radius-tokenSize, tokenSize, tokenSize);
 
             if (this.theorySlots[i][progress][0].revealed) {
               if (this.store.getters.skySectors.indexOf(i) >= 0) {
@@ -327,21 +327,21 @@ export default defineComponent({
               } else {
                 ctx.fillStyle = baseColor;
               }
-              ctx.fillRect(-tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
+              ctx.fillRect(-tokenSize*0.75/2, -radius-tokenSize*0.25/2-tokenSize*0.75, tokenSize*0.75, tokenSize*0.75);
 
-              ctx.drawImage(this.objectImages[this.store.state.game.board.objects[i].initial], -tokenSize*0.75/2, radius+tokenSize*0.25/2, tokenSize*0.75, tokenSize*0.75);
+              ctx.drawImage(this.objectImages[this.store.state.game.board.objects[i].initial], -tokenSize*0.75/2, -radius-tokenSize*0.25/2-tokenSize*0.75, tokenSize*0.75, tokenSize*0.75);
             }
           } else {
             if (progress === 0) {
               ctx.beginPath();
-              ctx.moveTo(0, radius+tokenSize*0.25);
-              ctx.lineTo(0, radius+tokenSize*0.75);
-              ctx.moveTo(-tokenSize*0.25, radius+tokenSize*0.5);
-              ctx.lineTo(tokenSize*0.25, radius+tokenSize*0.5);
+              ctx.moveTo(0, -radius-tokenSize*0.25);
+              ctx.lineTo(0, -radius-tokenSize*0.75);
+              ctx.moveTo(-tokenSize*0.25, -radius-tokenSize*0.5);
+              ctx.lineTo(tokenSize*0.25, -radius-tokenSize*0.5);
               ctx.stroke();
             } else if (progress === 3) {
               ctx.beginPath();
-              ctx.arc(0, radius+tokenSize*0.5, tokenSize*0.25, Math.PI/6, 11*Math.PI/6);
+              ctx.arc(0, -radius-tokenSize*0.5, tokenSize*0.25, -5*Math.PI/6, 5*Math.PI/6);
               ctx.stroke();
 
               ctx.save();
@@ -353,9 +353,9 @@ export default defineComponent({
               const arrowLength = tokenSize * 0.2;
 
               ctx.beginPath();
-              ctx.moveTo(0,0);
+              ctx.moveTo(0, -ctx.lineWidth/2);
               ctx.lineTo(0, arrowLength);
-              ctx.moveTo(0, 0);
+              ctx.moveTo(ctx.lineWidth/2, 0);
               ctx.lineTo(-arrowLength, 0);
               ctx.stroke();
 
