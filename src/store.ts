@@ -317,29 +317,47 @@ export default createStore({
         dispatch('makeSessionMove', { moveData });
       }
     },
-    async submitTheories({ state, getters }, theories) {
+    async submitTheories({ state, commit, dispatch, getters }, { theories, failures=0 }) {
       const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
       const turn = getters.myNextAction.turn;
 
       state.awaitingTurnSubmission = true;
-      const response: any = await axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories, turn });
-      state.awaitingTurnSubmission = false;
-
-      if (response.data.allowed) {
-        const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
-
-        state.history.push(actionResult);
-      }
+      axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories, turn }).then((response) => {
+        state.awaitingTurnSubmission = false;
+        log(response.data);
+        if (response.data.allowed) {
+          const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
+          state.history.push(actionResult);
+        }
+      }).catch((err) => {
+        if (failures >= 10) {
+          state.awaitingTurnSubmission = false;
+          commit("setTurnSubmissionFailure", true);
+        } else {
+          dispatch("submitTheories", { theories, failures: failures + 1 });
+        }
+      });
     },
-    async conference({ state, getters }, { index }) {
+    async conference({ state, commit, dispatch, getters }, { index, failures=0 }) {
       const actionResult = actionResponses.conference(state.game, getters.currentTurn, new Date(), index);
 
-      state.history.push(actionResult);
+      if (failures === 0) {
+        state.history.push(actionResult);
+      }
 
       if (state.isSession) {
         state.awaitingTurnSubmission = true;
-        await axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
-        state.awaitingTurnSubmission = false;
+        axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID).then((response) => {
+          state.awaitingTurnSubmission = false;
+          log(response.data);
+        }).catch((err) => {
+          if (failures >= 10) {
+            state.awaitingTurnSubmission = false;
+            commit("setTurnSubmissionFailure", true);
+          } else {
+            dispatch("conference", { index, failures: failures + 1 });
+          }
+        });
       }
     },
     peerReview({ state, getters }, { spaceObject, sector }) {

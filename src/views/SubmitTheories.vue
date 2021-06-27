@@ -265,7 +265,7 @@ export default defineComponent({
   },
   methods: {
     submitTheories: function() {
-      this.store.dispatch('submitTheories', this.theories.slice(0, this.numTheories));
+      this.store.dispatch('submitTheories', { theories: this.theories.slice(0, this.numTheories) });
       this.router.push('/' + this.gameType + '/gamemenu');
     },
     clearSelections: function() {
