@@ -624,10 +624,12 @@ export default createStore({
         Object.assign(state.settings, JSON.parse(settings));
       }
     },
-    async restoreFromStorage({ commit, dispatch }) {
-      await dispatch("restoreSettingsFromStorage");
-      await dispatch("restoreRecentSessionsFromStorage");
-      commit("setStorageRead");
+    async restoreFromStorage({ state, commit, dispatch }) {
+      if (!state.storageRead) {
+        await dispatch("restoreSettingsFromStorage");
+        await dispatch("restoreRecentSessionsFromStorage");
+        commit("setStorageRead");
+      }
     },
     async restoreLogic({ state }) {
       const storedLogicStr: string = await state.storage.get("logic");

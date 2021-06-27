@@ -30,6 +30,22 @@ import BoardPage from "@/views/BoardPage.vue";
 import LogicPage from "@/views/LogicPage.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
 import store from "../store";
+import { IS_PROD } from "../constants";
+
+const getRecentSessions = async function(): Promise<Array<any>> {
+  await store.dispatch("initializeStorage");
+  await store.dispatch("restoreFromStorage");
+  return new Promise((resolve) => {
+    store.subscribe((mutation, state) => {
+      if (mutation.type === "setStorageRead") {
+        resolve(state.recentSessions);
+      }
+    });
+    if (store.state.storageRead) {
+      resolve(store.state.recentSessions);
+    }
+  })
+}
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -65,13 +81,28 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/session/join/:sessionCode?',
     name: 'Join Session',
-    component: JoinSession
+    component: JoinSession,
+    beforeEnter: async (to, from, next) => {
+      if (to.params.sessionCode && IS_PROD) {
+        const recentSessions = await getRecentSessions();
+        const thisSession = recentSessions.find((session) => session.sessionCode === to.params.sessionCode);
+
+        if (thisSession === undefined) {
+          next();
+        } else {
+          store.dispatch('reconnectSession', thisSession);
+          next("/session/lobby")
+        }
+      } else {
+        next();
+      }
+    }
   },
   {
     path: '/session/lobby/:sessionCode?',
     name: 'Lobby',
     component: Lobby,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       if (to.params.sessionCode) {
         if (store.state.sessionCode !== undefined) {
           if(store.state.sessionCode !== to.params.sessionCode) {
@@ -80,7 +111,15 @@ const routes: Array<RouteRecordRaw> = [
             next();
           }
         } else {
-          next("/session/join/" + to.params.sessionCode);
+          const recentSessions = await getRecentSessions();
+          const thisSession = recentSessions.find((session) => session.sessionCode === to.params.sessionCode);
+
+          if (thisSession === undefined) {
+            next("/session/join/" + to.params.sessionCode);
+          } else {
+            store.dispatch('reconnectSession', thisSession);
+            next("/session/lobby")
+          }
         }
       } else {
         next();
