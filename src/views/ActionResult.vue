@@ -114,7 +114,7 @@ export default defineComponent({
       } else {
         if (this.route.params.actionType == "research") {
           const hasDoneResearch = this.store.state.history.filter((actionResult: any) => actionResult.actionType == "RESEARCH").length > 1;
-          if (hasDoneResearch) {
+          if (hasDoneResearch || !this.store.state.settings.reminders) {
             // Done research before, go straight to game menu
             this.router.push("/" + this.gameType + "/gamemenu")
           } else {

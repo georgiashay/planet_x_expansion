@@ -43,8 +43,12 @@
       <ion-toggle v-model="multiInitial" @ionChange="changeMultiInitial()"></ion-toggle>
     </ion-item>
     <ion-item color="light">
-      <ion-label>Full-Screen Logic Sheet Scroll Mobile</ion-label>
+      <ion-label>Full Scroll Logic Mobile</ion-label>
       <ion-toggle v-model="fullScrollLogic" @ionChange="changeFullScrollLogic()"></ion-toggle>
+    </ion-item>
+    <ion-item color="light">
+      <ion-label>Reminders</ion-label>
+      <ion-toggle v-model="reminders" @ionChange="changeReminders()"></ion-toggle>
     </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
@@ -85,7 +89,8 @@ export default defineComponent({
       uncertainColor: store.state.settings.levelColors[1],
       colorPaletteOutline,
       multiInitial: store.state.settings.multiInitial,
-      fullScrollLogic: store.state.settings.fullScrollLogic
+      fullScrollLogic: store.state.settings.fullScrollLogic,
+      reminders: store.state.settings.reminders
     }
   },
   methods: {
@@ -137,6 +142,9 @@ export default defineComponent({
     },
     changeFullScrollLogic: function() {
       this.store.commit("setFullScrollLogic", this.fullScrollLogic);
+    },
+    changeReminders: function() {
+      this.store.commit("setReminders", this.reminders);
     }
   }
 });

@@ -152,7 +152,7 @@ export default defineComponent({
     clickSurvey: function() {
       // Display reminder on first survey
       const previousSurveys = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "survey");
-      if (previousSurveys.length > 0) {
+      if (previousSurveys.length > 0 || !this.store.state.settings.reminders) {
         this.router.push('/' + this.gameType + '/action/survey');
       } else {
         this.router.push('/' + this.gameType + '/action/survey/reminder');
@@ -161,7 +161,7 @@ export default defineComponent({
     clickTarget: function() {
       // Display reminder on first target
       const previousTargets = this.store.state.history.filter((actionResult: any) => actionResult.actionType === "target");
-      if (previousTargets.length > 0) {
+      if (previousTargets.length > 0 || !this.store.state.settings.reminders) {
         this.router.push('/' + this.gameType + '/action/target');
       } else {
         this.router.push('/' + this.gameType + '/action/target/reminder');

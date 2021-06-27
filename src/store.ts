@@ -63,7 +63,8 @@ export default createStore({
       logicIconSize: 1,
       levelColors: ["--ion-color-light-contrast", "#5260ff"],
       multiInitial: false,
-      fullScrollLogic: false
+      fullScrollLogic: false,
+      reminders: true
     },
     storage: new Storage(),
     storageRead: false,
@@ -885,6 +886,10 @@ export default createStore({
     },
     setFullScrollLogic(state: any, fullScrollLogic: boolean) {
       state.settings.fullScrollLogic = fullScrollLogic;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setReminders(state: any, reminders: boolean) {
+      state.settings.reminders = reminders;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setStorageRead(state: any) {
