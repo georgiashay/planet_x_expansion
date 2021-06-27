@@ -68,7 +68,8 @@ export default createStore({
     storage: new Storage(),
     storageRead: false,
     recentSessions: [],
-    awaitingTurnSubmission: false
+    awaitingTurnSubmission: false,
+    turnSubmissionFailure: false
   },
   actions: {
     async createGame({ commit }, numSectors) {
@@ -197,13 +198,21 @@ export default createStore({
       }
       state.currentWebSocket = undefined;
     },
-    async makeSessionMove({ state, getters }, moveData) {
+    async makeSessionMove({ state, commit, getters, dispatch }, { moveData, failures=0 }) {
       const turn = getters.myNextAction.turn;
       moveData = Object.assign({ turn }, moveData);
       state.awaitingTurnSubmission = true;
-      const response: any = await axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData);
-      state.awaitingTurnSubmission = false;
-      log(response.data);
+      axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData).then((response) => {
+        state.awaitingTurnSubmission = false;
+        log(response.data);
+      }).catch((err) => {
+        if (failures >= 10) {
+          state.awaitingTurnSubmission = false;
+          commit("setTurnSubmissionFailure", true);
+        } else {
+          dispatch("makeSessionMove", { moveData, failures: failures + 1 });
+        }
+      });
     },
     async changeColor({ state }, newColor) {
       await axios.post(API_URL + "/setColor/?playerID=" + state.playerID + "&color=" + newColor);
@@ -257,7 +266,7 @@ export default createStore({
           timeCost: actionResult.timeCost
         };
 
-        dispatch('makeSessionMove', moveData);
+        dispatch('makeSessionMove', { moveData });
       }
     },
     target({ state, getters, dispatch }, { sectorNumber }) {
@@ -272,7 +281,7 @@ export default createStore({
           timeCost: 4
         };
 
-        dispatch('makeSessionMove', moveData);
+        dispatch('makeSessionMove', { moveData });
       }
     },
     research({ state, getters, dispatch }, { index }) {
@@ -287,7 +296,7 @@ export default createStore({
           timeCost: 1
         };
 
-        dispatch('makeSessionMove', moveData);
+        dispatch('makeSessionMove', { moveData });
       }
     },
     locatePlanetX({ state, getters, dispatch }, { sector, leftObject, rightObject }) {
@@ -305,7 +314,7 @@ export default createStore({
           timeCost: 5
         };
 
-        dispatch('makeSessionMove', moveData);
+        dispatch('makeSessionMove', { moveData });
       }
     },
     async submitTheories({ state, getters }, theories) {
@@ -760,6 +769,9 @@ export default createStore({
         conferenceUsed: undefined,
         surveyUsed: undefined
       };
+    },
+    setTurnSubmissionFailure(state: any, turnSubmissionFailure) {
+      state.turnSubmissionFailure = turnSubmissionFailure;
     },
     refillHistory(state: any) {
       const history = [];

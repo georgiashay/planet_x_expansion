@@ -116,6 +116,9 @@ export default defineComponent({
     },
     websocketDisconnected: function(): boolean {
       return this.store.getters.websocketDisconnected;
+    },
+    turnSubmissionFailure: function(): boolean {
+      return this.store.state.turnSubmissionFailure;
     }
   },
   watch: {
@@ -162,6 +165,37 @@ export default defineComponent({
         } else if (role === "reconnect") {
           this.store.commit("setAwaitingTurnSubmission", false);
           this.store.dispatch("listenSession");
+        }
+      }
+    },
+    async turnSubmissionFailure(failure: boolean) {
+      if (failure) {
+        const alert = await alertController.create({
+          cssClass: 'custom-alert',
+          header: 'Server Error',
+          message: 'Unable to submit your turn to the server. Would you like to continue with this failure (your turn will be discarded)?',
+          buttons: [
+            {
+              text: 'Leave',
+              role: 'leave',
+            }, {
+              text: 'Continue',
+              role: 'continue'
+            }
+          ],
+          backdropDismiss: false
+        });
+
+        await alert.present();
+
+        const { role } = await alert.onDidDismiss();
+        if (role === "leave") {
+          this.store.commit("setTurnSubmissionFailure", false);
+          this.router.push("/home");
+        } else if (role === "continue") {
+          this.store.commit("setTurnSubmissionFailure", false);
+          this.router.push("/session/gamemenu");
+          this.store.commit("refillHistory");
         }
       }
     }
