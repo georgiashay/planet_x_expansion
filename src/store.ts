@@ -820,6 +820,9 @@ export default createStore({
 
       state.history = history;
     },
+    setAwaitingTurnSubmission(state: any, awaitingTurnSubmission: boolean) {
+      state.awaitingTurnSubmission = awaitingTurnSubmission;
+    },
     setMuteLevel(state: any, level: number) {
       state.settings.muteLevel = level;
       state.storage.set("settings", JSON.stringify(state.settings));

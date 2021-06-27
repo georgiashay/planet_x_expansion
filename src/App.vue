@@ -160,6 +160,7 @@ export default defineComponent({
         if (role === "leave") {
           this.router.push("/home");
         } else if (role === "reconnect") {
+          this.store.commit("setAwaitingTurnSubmission", false);
           this.store.dispatch("listenSession");
         }
       }
