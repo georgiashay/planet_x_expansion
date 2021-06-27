@@ -238,6 +238,13 @@ export default defineComponent({
     document.body.classList.add("dark");
     await this.store.dispatch("initializeStorage");
     await this.store.dispatch("restoreFromStorage");
+
+    window.addEventListener("focus", () => {
+      const ws = this.store.state.currentWebSocket;
+      if (ws !== undefined && (ws.readyState == WebSocket.CLOSING || ws.readyState == WebSocket.CLOSED)) {
+        this.store.dispatch("listenSession");
+      }
+    });
   }
 });
 </script>
