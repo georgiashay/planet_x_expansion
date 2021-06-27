@@ -239,10 +239,26 @@ export default defineComponent({
     await this.store.dispatch("initializeStorage");
     await this.store.dispatch("restoreFromStorage");
 
-    window.addEventListener("focus", () => {
-      const ws = this.store.state.currentWebSocket;
-      if (ws !== undefined && (ws.readyState == WebSocket.CLOSING || ws.readyState == WebSocket.CLOSED)) {
-        this.store.dispatch("listenSession");
+    // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+    // Set the name of the hidden property and the change event for visibility
+    let hidden: string, visibilityChange: string;
+    if (document.hidden !== undefined) { // Opera 12.10 and Firefox 18 and later support
+      hidden = "hidden";
+      visibilityChange = "visibilitychange";
+    } else if ((document as any).msHidden !== undefined) {
+      hidden = "msHidden";
+      visibilityChange = "msvisibilitychange";
+    } else if ((document as any).webkitHidden !== undefined) {
+      hidden = "webkitHidden";
+      visibilityChange = "webkitvisibilitychange";
+    }
+
+    document.addEventListener(visibilityChange, () => {
+      if (!(document as any)[hidden]) {
+        const ws = this.store.state.currentWebSocket;
+        if (ws !== undefined && (ws.readyState == WebSocket.CLOSING || ws.readyState == WebSocket.CLOSED)) {
+          this.store.dispatch("listenSession");
+        }
       }
     });
   }
