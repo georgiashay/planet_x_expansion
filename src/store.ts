@@ -1247,26 +1247,11 @@ export default createStore({
       return history;
     },
     selectedHistory(state: any, getters: any) {
-      const history = getters.fullHistory.filter((action: any) => action.actionType !== "PEER_REVIEW");
+      let history = getters.fullHistory.filter((action: any) => action.actionType !== "PEER_REVIEW");
       const myPlayerNum = getters.playerInfo.num;
 
-      if (state.session.currentAction.actionType === "THEORY_PHASE") {
-        let i = history.length - 1;
-        let lastTheories = 0;
-
-        while (i >= 0 && history[i].actionType === "THEORY") {
-          lastTheories += 1;
-          i--;
-        }
-
-        const removeTheories = lastTheories % state.session.players.length;
-
-        const removeLimit = history.length - removeTheories;
-        for (let i = history.length - 1; i >= removeLimit; i--) {
-          if (history[i].playerNum !== myPlayerNum) {
-            history.splice(i, 1);
-          }
-        }
+      if (state.session.currentAction.actionType === "THEORY_PHASE" && getters.myNextAction !== null) {
+        history = history.filter((action: any) => action.turn !== state.session.currentAction.turn);
       }
 
       return history;
