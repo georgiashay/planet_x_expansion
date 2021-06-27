@@ -32,7 +32,8 @@
       <ion-item>
         <ion-label v-if="matchMedia.sm">Certain</ion-label>
         <ion-label v-else>
-          <ion-icon :src="lockClosedOutline"></ion-icon>
+          <ion-icon v-if="certaintyLevel == 1" :src="lockClosed"></ion-icon>
+          <ion-icon v-else :src="lockOpenOutline"></ion-icon>
         </ion-label>
         <ion-toggle v-model="certaintyLevel"></ion-toggle>
       </ion-item>
@@ -179,7 +180,7 @@ import { IonNavLink, IonGrid, IonRow, IonCol,
           IonToggle, IonItem, IonLabel, IonButton } from '@ionic/vue';
 import { informationCircleOutline, arrowUndoOutline,
         arrowRedoOutline, trashBinOutline,
-        lockClosedOutline } from "ionicons/icons";
+        lockClosed, lockOpenOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
@@ -220,7 +221,8 @@ export default defineComponent({
       arrowUndoOutline,
       arrowRedoOutline,
       trashBinOutline,
-      lockClosedOutline,
+      lockClosed,
+      lockOpenOutline,
       unsubscribeStore: () => { return; },
       certaintyLevel: 1
     }
