@@ -16,7 +16,7 @@
             <p>{{sessionModeName}}</p>
           </div>
           <div id="game_link" v-if="store.getters.isHost && store.state.sessionCode !== undefined">
-            <p @click="copyGameLink()">Copy Game Link <ion-icon :src="clipboardOutline" id="clipboard"/></p>
+            <p>Copy Game Link <ion-icon @click="copyGameLink()" :src="clipboardOutline" id="clipboard"/> <ion-icon @click="shareGameLink()" :src="shareSocialOutline" id="share-button"></ion-icon></p>
           </div>
           <div id="players" v-if="store.state.session">
             <table>
@@ -59,7 +59,7 @@
 import { IonContent, IonPage,
         IonButton, IonNavLink, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { arrowForwardOutline, clipboardOutline } from 'ionicons/icons';
+import { arrowForwardOutline, clipboardOutline, shareSocialOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -69,6 +69,8 @@ import GameFooter from "@/components/GameFooter.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
 import { MY_URL } from "@/constants.ts";
+import { SocialSharing } from "@ionic-native/social-sharing";
+import { isPlatform } from '@ionic/vue';
 
 export default defineComponent({
   name: 'Lobby',
@@ -92,6 +94,7 @@ export default defineComponent({
       store,
       arrowForwardOutline,
       clipboardOutline,
+      shareSocialOutline,
       route,
       router
     }
@@ -169,6 +172,17 @@ export default defineComponent({
       tmp.select();
       document.execCommand("copy");
       document.body.removeChild(tmp);
+    },
+    async shareGameLink() {
+      if (isPlatform("cordova")) {
+        SocialSharing.share("Join My Planet X Game", "Planet X Game", null, MY_URL + "/session/join/" + this.store.state.sessionCode);
+      } else {
+        navigator.share({
+          title: "Planet X Game",
+          text: "Join My Planet X Game",
+          url: MY_URL + "/session/join/" + this.store.state.sessionCode
+        });
+      }
     }
   },
   watch: {
@@ -293,6 +307,10 @@ td span {
 }
 
 #clipboard {
+  cursor: pointer;
+}
+
+#share-button {
   cursor: pointer;
 }
 </style>
