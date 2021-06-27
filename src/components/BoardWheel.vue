@@ -348,15 +348,15 @@ export default defineComponent({
 
               const x = Math.cos(Math.PI/6) * tokenSize * 0.25;
               const y = Math.sin(Math.PI/6) * tokenSize * 0.25;
-              ctx.translate(x, radius+tokenSize*0.5+y);
+              ctx.translate(-x, -radius-tokenSize*0.5-y);
 
               const arrowLength = tokenSize * 0.2;
 
               ctx.beginPath();
-              ctx.moveTo(0, -ctx.lineWidth/2);
-              ctx.lineTo(0, arrowLength);
-              ctx.moveTo(ctx.lineWidth/2, 0);
-              ctx.lineTo(-arrowLength, 0);
+              ctx.moveTo(0, ctx.lineWidth/2);
+              ctx.lineTo(0, -arrowLength);
+              ctx.moveTo(-ctx.lineWidth/2, 0);
+              ctx.lineTo(arrowLength, 0);
               ctx.stroke();
 
               ctx.restore();
