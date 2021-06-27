@@ -8,14 +8,14 @@
             <h3>Lobby</h3>
           </div>
           <div>
-            <p v-if="store.getters.isHost"><span v-if="sessionCreator">Your session has been created.</span> Please have the other players enter the following session code:</p>
+            <p v-if="store.getters.isHost">Your session has been created. Please have the other players enter the following session code:</p>
             <p v-else>You have joined the game. Please double-check that the session code is the same as the one created for this game.</p>
           </div>
           <div id="session_code">
             <h1>{{store.state.sessionCode || "Loading..."}}</h1>
             <p>{{sessionModeName}}</p>
           </div>
-          <div id="game_link" v-if="sessionCreator && store.state.sessionCode !== undefined">
+          <div id="game_link" v-if="store.getters.isHost && store.state.sessionCode !== undefined">
             <p @click="copyGameLink()">Copy Game Link <ion-icon :src="clipboardOutline" id="clipboard"/></p>
           </div>
           <div id="players" v-if="store.state.session">
@@ -84,12 +84,6 @@ export default defineComponent({
     AdaptableContainer
   },
   mixins: [SoundMixin, PlayerColors],
-  props: {
-    sessionCreator: {
-      required: true,
-      type: Boolean
-    }
-  },
   data() {
     const store = useStore();
     const route = useRoute();
@@ -103,6 +97,9 @@ export default defineComponent({
     }
   },
   computed: {
+    sessionCode(): string | undefined {
+      return this.store.state.sessionCode;
+    },
     sessionModeName(): string {
       if (this.store.state.game === undefined) {
         return "";
@@ -172,6 +169,13 @@ export default defineComponent({
       tmp.select();
       document.execCommand("copy");
       document.body.removeChild(tmp);
+    }
+  },
+  watch: {
+    sessionCode: function(newSessionCode) {
+      if (newSessionCode !== undefined) {
+        this.router.push("/session/lobby/" + newSessionCode);
+      }
     }
   },
   ionViewDidEnter() {

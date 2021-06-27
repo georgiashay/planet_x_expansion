@@ -99,7 +99,8 @@ export default defineComponent({
           numSectors: this.selectedGame,
           name: this.name
         });
-        this.router.push("/session/lobby/wait");
+        console.log("create game /session/lobby");
+        this.router.push("/session/lobby");
       } else {
         this.store.dispatch("createGame", this.selectedGame);
         this.router.push("/multiplayer/gamecode/new");

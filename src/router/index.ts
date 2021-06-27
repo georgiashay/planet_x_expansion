@@ -29,6 +29,7 @@ import SubmitTheories from '@/views/SubmitTheories.vue';
 import BoardPage from "@/views/BoardPage.vue";
 import LogicPage from "@/views/LogicPage.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
+import store from "../store";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -67,18 +68,22 @@ const routes: Array<RouteRecordRaw> = [
     component: JoinSession
   },
   {
-    path: '/session/lobby/:waiting',
+    path: '/session/lobby/:sessionCode?',
     name: 'Lobby',
     component: Lobby,
-    props: (route) => {
-      if (route.params.waiting == "wait") {
-        return {
-          sessionCreator: true
+    beforeEnter: (to, from, next) => {
+      if (to.params.sessionCode) {
+        if (store.state.sessionCode !== undefined) {
+          if(store.state.sessionCode !== to.params.sessionCode) {
+            next("/session/lobby/" + store.state.sessionCode);
+          } else {
+            next();
+          }
+        } else {
+          next("/session/join/" + to.params.sessionCode);
         }
-      } else if (route.params.waiting == "join") {
-        return {
-          sessionCreator: false
-        }
+      } else {
+        next();
       }
     }
   },
