@@ -28,54 +28,48 @@
         <ion-icon :src="trashBinOutline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab slot="fixed" vertical="top" horizontal="end" v-if="matchMedia.sm">
+    <ion-fab slot="fixed" vertical="top" horizontal="end">
       <ion-item>
-        <ion-label>Certain</ion-label>
+        <ion-label v-if="matchMedia.sm">Certain</ion-label>
+        <ion-label v-else>
+          <ion-icon :src="lockClosedOutline"></ion-icon>
+        </ion-label>
         <ion-toggle v-model="certaintyLevel"></ion-toggle>
       </ion-item>
     </ion-fab>
+    <ion-fab slot="fixed" vertical="top" horizontal="start" v-if="!matchMedia.sm">
+      <ion-item style="--background: rgba(0,0,0,0); --border-color: rgba(0,0,0,0)">
+        <ion-button
+          color="light"
+          @click="showNumObjects($event)"
+          expand="full">
+          <ion-icon :src="informationCircleOutline"></ion-icon>
+        </ion-button>
+        <ion-button
+          color="light"
+          expand="full"
+          @click="undoLogic()"
+          :disabled="store.state.logic.undoQueue.length === 0">
+          <ion-icon :src="arrowUndoOutline"></ion-icon>
+        </ion-button>
+        <ion-button
+          color="light"
+          expand="full"
+          @click="redoLogic()"
+          :disabled="store.state.logic.redoQueue.length === 0">
+          <ion-icon :src="arrowRedoOutline"></ion-icon>
+        </ion-button>
+        <ion-button
+          color="light"
+          expand="full"
+          @click="clearLogic()">
+          <ion-icon :src="trashBinOutline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-fab>
     <div id="title_container">
-      <h3>Logic Sheet</h3>
-    </div>
-    <div id="button-container" v-if="!matchMedia.sm">
-      <ion-row>
-        <ion-col>
-          <ion-item style="--background: rgba(0,0,0,0); --border-color: rgba(0,0,0,0)">
-            <ion-button
-              color="light"
-              @click="showNumObjects($event)"
-              expand="full">
-              <ion-icon :src="informationCircleOutline"></ion-icon>
-            </ion-button>
-            <ion-button
-              color="light"
-              expand="full"
-              @click="undoLogic()"
-              :disabled="store.state.logic.undoQueue.length === 0">
-              <ion-icon :src="arrowUndoOutline"></ion-icon>
-            </ion-button>
-            <ion-button
-              color="light"
-              expand="full"
-              @click="redoLogic()"
-              :disabled="store.state.logic.redoQueue.length === 0">
-              <ion-icon :src="arrowRedoOutline"></ion-icon>
-            </ion-button>
-            <ion-button
-              color="light"
-              expand="full"
-              @click="clearLogic()">
-              <ion-icon :src="trashBinOutline"></ion-icon>
-            </ion-button>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label>Certain</ion-label>
-            <ion-toggle v-model="certaintyLevel"></ion-toggle>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+      <h3 v-if="matchMedia.sm">Logic Sheet</h3>
+      <h3 v-else>Logic</h3>
     </div>
     <div id="canvas-container">
       <canvas ref="logicCanvas" id="logicCanvas" height="3204" width="3204"/>
@@ -184,7 +178,8 @@ import { IonNavLink, IonGrid, IonRow, IonCol,
           popoverController, IonCheckbox,
           IonToggle, IonItem, IonLabel, IonButton } from '@ionic/vue';
 import { informationCircleOutline, arrowUndoOutline,
-        arrowRedoOutline, trashBinOutline } from "ionicons/icons";
+        arrowRedoOutline, trashBinOutline,
+        lockClosedOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { initialToSpaceObject } from "@/constants.ts";
@@ -225,6 +220,7 @@ export default defineComponent({
       arrowUndoOutline,
       arrowRedoOutline,
       trashBinOutline,
+      lockClosedOutline,
       unsubscribeStore: () => { return; },
       certaintyLevel: 1
     }
