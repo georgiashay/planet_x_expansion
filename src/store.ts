@@ -734,6 +734,7 @@ export default createStore({
       state.isSession = isSession;
     },
     setSessionState(state: any, sessionState: any) {
+      sessionState.history = sessionState.history.map((action: any) => Object.assign(action, { time: new Date(action.time)}));
       state.session = sessionState;
     },
     setSessionID(state: any, sessionID: number) {
@@ -799,22 +800,22 @@ export default createStore({
         if (action.playerID === state.playerID) {
           switch(action.turnType) {
             case("SURVEY"):
-              history.push(actionResponses.survey(state.game, state.gameType, action.turn, new Date(action.time), initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
+              history.push(actionResponses.survey(state.game, state.gameType, action.turn, action.time, initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
               break;
             case("TARGET"):
-              history.push(actionResponses.target(state.game, action.turn, new Date(action.time), action.sector));
+              history.push(actionResponses.target(state.game, action.turn, action.time, action.sector));
               break;
             case("RESEARCH"):
-              history.push(actionResponses.research(state.game, action.turn, new Date(action.time), action.index));
+              history.push(actionResponses.research(state.game, action.turn, action.time, action.index));
               break;
             case("LOCATE_PLANET_X"):
-              history.push(actionResponses.locatePlanetX(state.game, action.turn, new Date(action.time), action.sector, initialToSpaceObject[action.leftObject.initial], initialToSpaceObject[action.rightObject.initial]));
+              history.push(actionResponses.locatePlanetX(state.game, action.turn, action.time, action.sector, initialToSpaceObject[action.leftObject.initial], initialToSpaceObject[action.rightObject.initial]));
               break;
             case("THEORY"):
-              history.push(actionResponses.theories(action.turn, new Date(action.time), action.theories));
+              history.push(actionResponses.theories(action.turn, action.time, action.theories));
               break;
             case("CONFERENCE"):
-              history.push(actionResponses.conference(state.game, action.turn, new Date(action.time), action.index));
+              history.push(actionResponses.conference(state.game, action.turn, action.time, action.index));
           }
         }
       }
@@ -1201,7 +1202,6 @@ export default createStore({
     fullHistory(state: any, getters: any) {
       const myHistory = state.history.slice();
       const allHistory = state.session.history
-        .map((action: any) => Object.assign({}, action, {time: new Date(action.time)}))
         .sort(historySortOrder)
         .filter((action: any) => action.turnType !== "CONFERENCE");
 
