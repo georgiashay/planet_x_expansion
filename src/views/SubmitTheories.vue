@@ -231,17 +231,17 @@ export default defineComponent({
           }
         }
 
-        if (sectorDefined && revealedSectors.has(this.theories[i].sector-1)) {
+        if (sectorDefined && revealedSectors.has(this.theories[i].sector)) {
           return {
             valid: false,
-            message: "You cannot submit a theory for sector " + this.theories[i].sector + " - it has already been revealed."
+            message: "You cannot submit a theory for sector " + (this.theories[i].sector+1) + " - it has already been revealed."
           }
         }
 
         if (sectorDefined && sectors.has(this.theories[i].sector)) {
           return {
             valid: false,
-            message: "You cannot submit multiple theories for sector " + this.theories[i].sector + " in the same turn."
+            message: "You cannot submit multiple theories for sector " + (this.theories[i].sector+1) + " in the same turn."
           }
         }
 
@@ -249,10 +249,10 @@ export default defineComponent({
           sectors.add(this.theories[i].sector);
         }
 
-        if (objectDefined && sectorDefined && existingTheories.some((t: any) => t.spaceObject.initial === this.theories[i].spaceObject.initial && t.sector === this.theories[i].sector - 1)) {
+        if (objectDefined && sectorDefined && existingTheories.some((t: any) => t.spaceObject.initial === this.theories[i].spaceObject.initial && t.sector === this.theories[i].sector)) {
           return {
             valid: false,
-            message: "You already submitted the theory that sector " + this.theories[i].sector + " is " + this.theories[i].spaceObject.one + "."
+            message: "You already submitted the theory that sector " + (this.theories[i].sector+1) + " is " + this.theories[i].spaceObject.one + "."
           }
         }
       }

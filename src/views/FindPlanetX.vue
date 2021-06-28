@@ -12,21 +12,21 @@
             :value="sector"
             @input="sector=$event"
             :columns="6"/>
-          <spacer v-if="sector"/>
+          <spacer v-if="sector !== undefined"/>
           <space-object-select
-            v-if="sector"
-            :label="'Sector ' + leftSector"
+            v-if="sector !== undefined "
+            :label="'Sector ' + (leftSector+1)"
             :value="leftObject"
             @input="leftObject = $event"
             :columns="3"
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
-          <ion-item v-if="sector" id="planet_x_spacer" color="light">
-            <ion-label>Sector {{sector}}</ion-label>
+          <ion-item v-if="sector !== undefined" id="planet_x_spacer" color="light">
+            <ion-label>Sector {{sector+1}}</ion-label>
             <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;Planet X
           </ion-item>
           <space-object-select
-            v-if="sector"
-            :label="'Sector ' + rightSector"
+            v-if="sector !== undefined"
+            :label="'Sector ' + (rightSector+1)"
             :value="rightObject"
             @input="rightObject = $event"
             :columns="3"
@@ -115,8 +115,8 @@ export default defineComponent({
         return undefined;
       } else {
         let left = this.sector - 1;
-        if (left == 0) {
-          left = this.store.state.gameType.sectors;
+        if (left < 0) {
+          left = this.store.state.gameType.sectors - 1;
         }
         return left;
       }
@@ -127,8 +127,8 @@ export default defineComponent({
         return undefined;
       } else {
         let left = this.sector + 1;
-        if (left == this.store.state.gameType.sectors + 1) {
-          left = 1;
+        if (left > this.store.state.gameType.sectors - 1) {
+          left = 0;
         }
         return left;
       }

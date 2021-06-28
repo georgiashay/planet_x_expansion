@@ -19,9 +19,9 @@
           color="light"
           @click="target()"
           id="target_button"
-          :disabled="!sectorNumber">
+          :disabled="sectorNumber === undefined">
           Target
-          <template v-if="sectorNumber">({{store.state.gameType.targetCost}} <ion-icon :icon="timeOutline"/>)</template>
+          <template v-if="sectorNumber !== undefined">({{store.state.gameType.targetCost}} <ion-icon :icon="timeOutline"/>)</template>
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <stripe/>
@@ -94,9 +94,9 @@ export default defineComponent({
   computed: {
     allowedSectors: function(): Array<number> {
       if (this.store.state.isSession) {
-        return this.store.getters.skySectors.map((s: number) => s + 1);
+        return this.store.getters.skySectors;
       } else {
-        return Array.from(Array(this.store.state.gameType.sectors)).map((el, i) => i+1);
+        return Array.from(Array(this.store.state.gameType.sectors)).map((el, i) => i);
       }
     }
   },

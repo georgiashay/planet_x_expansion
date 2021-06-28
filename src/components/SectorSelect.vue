@@ -4,7 +4,7 @@
       <ion-label>{{label}}</ion-label>
       <div id="select_sector" @click="openPopover($event)">
         <span v-if="value !== undefined">
-          <span v-if="!numberOnly">Sector</span> {{value}}
+          <span v-if="!numberOnly">Sector</span> {{value+1}}
         </span>
         <span v-else id="no_sector">
           (Select Sector)
@@ -55,7 +55,7 @@ export default defineComponent({
   computed: {
     _allowedSectors(): any {
       return this.allowedSectors ||
-      Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
+      Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i);
     }
   },
   methods: {

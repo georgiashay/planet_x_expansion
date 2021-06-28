@@ -255,7 +255,7 @@ export default createStore({
       }
     },
     survey({ state, getters, dispatch }, { surveyObject, startSector, endSector }) {
-      const actionResult = actionResponses.survey(state.game, state.gameType, getters.currentTurn, new Date(), surveyObject, startSector-1, endSector-1);
+      const actionResult = actionResponses.survey(state.game, state.gameType, getters.currentTurn, new Date(), surveyObject, startSector, endSector);
 
       state.history.push(actionResult);
 
@@ -263,7 +263,7 @@ export default createStore({
         const moveData = {
           turnType: "SURVEY",
           spaceObject: surveyObject.initial,
-          sectors: [startSector-1, endSector-1],
+          sectors: [startSector, endSector],
           timeCost: actionResult.timeCost
         };
 
@@ -271,14 +271,14 @@ export default createStore({
       }
     },
     target({ state, getters, dispatch }, { sectorNumber }) {
-      const actionResult = actionResponses.target(state.game, getters.currentTurn, new Date(), sectorNumber-1);
+      const actionResult = actionResponses.target(state.game, getters.currentTurn, new Date(), sectorNumber);
 
       state.history.push(actionResult);
 
       if (state.isSession) {
         const moveData = {
           turnType: "TARGET",
-          sector: sectorNumber-1,
+          sector: sectorNumber,
           timeCost: 4
         };
 
@@ -301,7 +301,7 @@ export default createStore({
       }
     },
     locatePlanetX({ state, getters, dispatch }, { sector, leftObject, rightObject }) {
-      const actionResult = actionResponses.locatePlanetX(state.game, getters.currentTurn, new Date(), sector-1, leftObject, rightObject);
+      const actionResult = actionResponses.locatePlanetX(state.game, getters.currentTurn, new Date(), sector, leftObject, rightObject);
 
       state.history.push(actionResult);
 
@@ -309,7 +309,7 @@ export default createStore({
         const moveData = {
           turnType: "LOCATE_PLANET_X",
           successful: actionResult.success,
-          sector: sector - 1,
+          sector,
           leftObject: leftObject.initial,
           rightObject: rightObject.initial,
           timeCost: 5
@@ -319,7 +319,7 @@ export default createStore({
       }
     },
     async submitTheories({ state, commit, dispatch, getters }, { theories, failures=0 }) {
-      const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector - 1};});
+      const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector };});
       const turn = getters.myNextAction.turn;
 
       state.awaitingTurnSubmission = true;
@@ -362,7 +362,7 @@ export default createStore({
       }
     },
     peerReview({ state, getters }, { spaceObject, sector }) {
-      const actionResult = actionResponses.peerReview(state.game, getters.currentTurn, new Date(), sector-1, spaceObject);
+      const actionResult = actionResponses.peerReview(state.game, getters.currentTurn, new Date(), sector, spaceObject);
 
       state.history.push(actionResult);
     },

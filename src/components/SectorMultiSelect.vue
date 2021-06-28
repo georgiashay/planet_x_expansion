@@ -9,7 +9,7 @@
         @click="openPopover($event, index)">
         <span v-if="index > 0">&nbsp;{{delimiter}}&nbsp;</span>
         <span v-if="i !== undefined">
-          <span v-if="!numberOnly">Sector</span> {{i}}
+          <span v-if="!numberOnly">Sector</span> {{i + 1}}
         </span>
         <span v-else class="no_sector">
           (Select Sector)
@@ -64,8 +64,8 @@ export default defineComponent({
   },
   computed: {
     _allowedSectors(): any {
-      return this.allowedSectors || 
-      Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i+1);
+      return this.allowedSectors ||
+      Array.from(Array(this.store.state.gameType.sectors)).map((el,i)=>i);
     }
   },
   methods: {

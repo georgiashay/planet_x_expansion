@@ -8,7 +8,7 @@
           @click="choose(sector)"
           class="sector_item"
           :style="'width: ' + percentWidth + '%'">
-          {{sector}}
+          {{sector + 1}}
         </td>
       </tr>
     </table>
