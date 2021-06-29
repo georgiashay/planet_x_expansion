@@ -17,6 +17,15 @@
             >
             {{difficulty.name}} ({{difficulty.facts}} facts)
           </ion-button>
+          <p @click="toggleAdvanced()" id="show-advanced">
+            {{ showAdvanced ? "Hide Advanced" : "Show Advanced" }}
+          </p>
+          <div id="advanced" v-if="showAdvanced">
+            <ion-item color="light">
+              <ion-label position="floating">Number of Starting Facts</ion-label>
+              <ion-input @ionChange="checkFacts($event.target.value)" :value="selectedFacts" type="number" min="0" :max="store.state.gameType.sectors"></ion-input>
+            </ion-item>
+          </div>
           <stripe/>
           <ion-button
             v-if="selectedFacts !== undefined"
@@ -38,7 +47,8 @@
 
 <script lang="ts">
 import { IonContent, IonPage,
-        IonButton, IonIcon, IonNavLink } from '@ionic/vue';
+        IonButton, IonIcon, IonNavLink,
+        IonItem, IonLabel, IonInput } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
@@ -60,7 +70,8 @@ export default defineComponent({
     IonNavLink,
     GameFooter,
     SessionHeader,
-    AdaptableContainer
+    AdaptableContainer,
+    IonItem, IonLabel, IonInput
   },
   mixins: [SoundMixin],
   props: {
@@ -75,12 +86,13 @@ export default defineComponent({
       store,
       arrowForwardOutline,
       selectedFacts: undefined,
-      router: useRouter()
+      router: useRouter(),
+      showAdvanced: false
     }
   },
   methods: {
     buttonColor: function(facts: string) {
-      if (this.selectedFacts == facts) {
+      if (this.selectedFacts == facts && !this.showAdvanced) {
         return "medium";
       } else {
         return "light";
@@ -92,6 +104,21 @@ export default defineComponent({
     },
     clearSelections: function() {
       this.selectedFacts = undefined;
+    },
+    toggleAdvanced: function() {
+      if (this.showAdvanced) {
+        this.selectedFacts = undefined;
+      }
+      this.showAdvanced = !this.showAdvanced;
+    },
+    checkFacts: function(numFacts: number) {
+      if (numFacts > this.store.state.gameType.sectors) {
+        this.selectedFacts = this.store.state.gameType.sectors;
+      } else if (numFacts < 0) {
+        this.selectedFacts = 0;
+      } else {
+        this.selectedFacts = numFacts;
+      }
     }
   },
   ionViewDidEnter() {
@@ -132,6 +159,11 @@ export default defineComponent({
   text-align: center;
   width: 100%;
   margin-top: 10px;
+  text-decoration: underline;
+}
+
+#show-advanced {
+  text-align: center;
   text-decoration: underline;
 }
 </style>
