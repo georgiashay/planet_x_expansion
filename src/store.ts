@@ -167,7 +167,10 @@ export default createStore({
     listenSession({ state, dispatch, commit }) {
       // Listen for updates to the session
       const ws = new WebSocket(WEBSOCKET_URL + "/" + state.sessionID);
-      ws.onopen = () => console.log("Listening for updates to state");
+      ws.onopen = () => {
+        console.log("Listening for updates to state");
+        ws.send(JSON.stringify({ id: state.playerID.toString() }));
+      }
       ws.onmessage = (message) => {
         // console.log("Received update to session");
         const sessionState = JSON.parse(message.data);
