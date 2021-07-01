@@ -613,7 +613,11 @@ export default createStore({
           dispatch('logicUnsetLevel', { sector, object, level });
         }
       } else if (state.logic.board[sector][object].state === "equal" ){
-        dispatch('logicUnsetLevel', { sector, object, level });
+        if (state.logic.board[sector][object].level > level) {
+          dispatch('logicSetLevel', { sector, object, level});
+        } else {
+          dispatch('logicUnsetLevel', { sector, object, level });
+        }
       } else {
         dispatch('logicEliminateLevel', { sector, object, level });
       }
