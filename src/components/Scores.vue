@@ -25,7 +25,7 @@
         <ion-icon src="/assets/kick.svg" v-if="kickAllowed(players[index][2].id)"/>
       </td>
       <td class="player_cell">
-        {{players[index][0]}}
+        <ion-icon v-if="!players[index][2].connected" :src="cloudOfflineOutline"></ion-icon> {{players[index][0]}}
       </td>
       <td
         v-for="(value, j) in row"
@@ -43,6 +43,7 @@ import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import { initialToSpaceObject, SpaceObject } from "@/constants.ts";
+import { cloudOfflineOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: 'Scores',
@@ -53,7 +54,8 @@ export default defineComponent({
   data() {
     const store = useStore();
     return {
-      store
+      store,
+      cloudOfflineOutline
     }
   },
   computed: {
