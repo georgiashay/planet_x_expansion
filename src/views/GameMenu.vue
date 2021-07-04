@@ -6,6 +6,22 @@
         <div id="title_container">
           <h3>Game Menu</h3>
         </div>
+        <modal v-if="showAllTheories" @close="showAllTheories = false;">
+          <template v-slot:header>
+            <h3 class="theories-header">Revealed Theories</h3>
+          </template>
+          <template v-slot:body>
+            <revealed-theories :revealed-theories="store.getters.uniqueRevealedTheories" @close="showAllTheories = false"/>
+          </template>
+        </modal>
+        <modal v-if="showNewTheories" @close="showNewTheories = false;">
+          <template v-slot:header>
+            <h3 class="theories-header">Revealed Theories</h3>
+          </template>
+          <template v-slot:body>
+            <revealed-theories :revealed-theories="newlyRevealedTheories" @close="showNewTheories = false"/>
+          </template>
+        </modal>
         <div id="action_buttons">
           <ion-button
             :disabled="!store.getters.actionAllowed('SURVEY')"
@@ -114,10 +130,12 @@ import { useRouter } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
-import RevealedTheoriesPopover from "@/components/RevealedTheoriesPopover.vue";
+import RevealedTheories from "@/components/RevealedTheories.vue";
 import Stripe from "@/components/Stripe.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
 import CenteredContainer from "@/components/CenteredContainer.vue";
+import Modal from "@/components/Modal.vue";
+// import Modal from "vue-js-modal/src/components/Modal.vue";
 
 export default defineComponent({
   name: 'GameMenu',
@@ -129,7 +147,9 @@ export default defineComponent({
     Stripe,
     GameFooter,
     SessionHeader,
-    CenteredContainer
+    CenteredContainer,
+    Modal,
+    RevealedTheories
   },
   mixins: [SoundMixin],
   props: {
@@ -145,7 +165,9 @@ export default defineComponent({
       store,
       timeOutline,
       router,
-      matchMedia: useMatchMedia()
+      matchMedia: useMatchMedia(),
+      showAllTheories: false,
+      showNewTheories: false
     }
   },
   methods: {
@@ -190,16 +212,7 @@ export default defineComponent({
       await alert.onDidDismiss();
     },
     showRevealedTheories: async function() {
-      const popover = await popoverController
-        .create({
-          component: RevealedTheoriesPopover,
-          componentProps: {
-            revealedTheories: this.store.getters.uniqueRevealedTheories
-          },
-          cssClass: "custom-popover"
-        });
-      await popover.present();
-      await popover.onDidDismiss();
+      this.showAllTheories = true;
     }
   },
   computed: {
@@ -208,18 +221,9 @@ export default defineComponent({
     }
   },
   watch: {
-    async newlyRevealedTheories(revealedTheories) {
+    newlyRevealedTheories(revealedTheories) {
       if (revealedTheories.length) {
-        const popover = await popoverController
-          .create({
-            component: RevealedTheoriesPopover,
-            componentProps: {
-              revealedTheories: revealedTheories
-            },
-            cssClass: "custom-popover"
-          });
-        await popover.present();
-        await popover.onDidDismiss();
+        this.showNewTheories = true;
       }
     }
   }
@@ -256,5 +260,11 @@ export default defineComponent({
 
 #action_buttons ion-button ion-icon {
   font-size: 1.2em;
+}
+
+.theories-header {
+  text-align: center;
+  font-weight: 100;
+  margin-bottom: 0;
 }
 </style>

@@ -1,12 +1,11 @@
 <template>
   <div class="popover_container">
-    <h2>Revealed Theories</h2>
     <ion-item color="light" v-for="(theory, i) in revealedTheories" :key="i">
       Sector {{theory.sector + 1}}: is {{theory.accurate ? "" : "not "}}{{theory.spaceObject.one}}
       &nbsp;<ion-icon :src="theory.spaceObject.icon"/>
     </ion-item>
-    <ion-button color="light" expand="block" @click="exportRevealed()">Export to Logic Sheet</ion-button>
-    <ion-button color="light" expand="block" @click="close()">Close</ion-button>
+    <ion-button color="light" expand="block" @click="exportRevealed($event)">Export to Logic Sheet</ion-button>
+    <ion-button color="light" expand="block" @click="$emit('close')">Close</ion-button>
   </div>
 </template>
 
@@ -32,7 +31,8 @@ export default defineComponent({
     close: async function(obj: any) {
       await popoverController.dismiss();
     },
-    exportRevealed: async function() {
+    exportRevealed: async function(event: Event) {
+      event.stopPropagation();
       await this.store.dispatch('newPacket', { queue: 'undo' });
       for (let i = 0; i < this.revealedTheories.length; i++) {
         const theory = this.revealedTheories[i];
