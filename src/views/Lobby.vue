@@ -194,10 +194,12 @@ export default defineComponent({
   },
   ionViewDidEnter() {
     this.playSound("sonar1");
-
     window.addEventListener("keydown", this.handleKeypress);
   },
   ionViewWillLeave() {
+    window.removeEventListener("keydown", this.handleKeypress);
+  },
+  beforeUnmount() {
     window.removeEventListener("keydown", this.handleKeypress);
   }
 });
