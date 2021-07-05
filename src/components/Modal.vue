@@ -21,16 +21,9 @@
 </template>
 <script lang="ts">
 // https://v3.vuejs.org/examples/modal.html#modal-component
-// import { IonButton } from '@ionic/vue';
 import { defineComponent } from 'vue';
 export default defineComponent({
-  name: "Modal",
-  // components: { IonButton }
-  methods: {
-    clickModal: function(event: Event) {
-      console.log("Click modal");
-    }
-  }
+  name: "Modal"
 });
 </script>
 <style scoped>
@@ -41,7 +34,7 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.15);
   display: table;
   transition: opacity 0.3s ease;
 }
@@ -54,7 +47,6 @@ export default defineComponent({
 .modal-container {
   width: 300px;
   margin: 0px auto;
-  /* padding: 20px 30px; */
   padding: 1em 0;
   background-color: var(--ion-color-light);
   border-radius: 2px;
@@ -87,11 +79,11 @@ export default defineComponent({
   opacity: 0;
 }
 
-.modal-leave-active {
+.modal-leave-active, .modal-leave-to {
   opacity: 0;
 }
 
-.modal-enter .modal-container,
+.modal-enter-active .modal-container,
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
