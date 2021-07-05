@@ -78,104 +78,50 @@
     <div ref="cancelContainer" id="cancel_container_logic" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
-    <div ref="resultsSummary" id="results-summary" :class="[fullScroll ? '' : 'content-scroll']">
-      <h5 id="summary_title">Results Summary</h5>
-      <ion-grid>
-        <ion-row class="title_row">
-          <b>Conferences</b>
-        </ion-row>
-        <ion-row >
-          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(conference, index) in resultsSummary.allConferences"
-            :key="index"
-            :class="['reveal_row', conference.researched ? '' : 'not_researched']">
-            <ion-checkbox
-              :disabled="!conference.researched"
-              @ionChange="conferenceUsedChanged(index, $event)"
-              :checked="store.state.logic.conferenceUsed.has(index)"
-              color="light">
-            </ion-checkbox>
-            &nbsp;<span :class="store.state.logic.conferenceUsed.has(index) ? 'used_clue' : 'unused_clue'">{{conference.index + 1}}.&nbsp;<span class="category_name">{{conference.shortText}}</span></span>
-          </ion-col>
-        </ion-row>
-        <ion-row class="title_row">
-          <b>Research</b>
-        </ion-row>
-        <ion-row >
-          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(research, index) in resultsSummary.allResearch"
-            :key="index"
-            :class="['reveal_row', research.researched ? '' : 'not_researched']">
-              <ion-checkbox
-                :disabled="!research.researched"
-                @ionChange="researchUsedChanged(index, $event)"
-                :checked="store.state.logic.researchUsed.has(index)"
-                color="light">
-              </ion-checkbox>
-              &nbsp;<span :class="store.state.logic.researchUsed.has(index) ? 'used_clue' : 'unused_clue'">{{String.fromCharCode(65+research.index)}}.&nbsp;<span class="category_name">{{research.shortText}}</span></span>
-          </ion-col>
-        </ion-row>
-        <ion-row v-if="resultsSummary.located.length > 0" class="title_row">
-          <b>Locate Planet X Attempts</b>
-        </ion-row>
-        <ion-row v-if="resultsSummary.located.length > 0">
-          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(locate, index) in resultsSummary.located"
-            :key="index"
-            class="reveal_row">
-              {{locate.leftObject.initial}}-{{locate.sector + 1}}-{{locate.rightObject.initial}}: {{locate.successful ? "✓" : "X"}}
-          </ion-col>
-        </ion-row>
-        <ion-row v-if="resultsSummary.surveyed.length > 0" class="title_row">
-          <b>Surveys</b>
-        </ion-row>
-        <ion-row v-if="resultsSummary.surveyed.length > 0">
-          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(survey, index) in resultsSummary.surveyed"
-            :key="index"
-            class="reveal_row">
-            <ion-checkbox
-              @ionChange="surveyUsedChanged(index, $event)"
-              :checked="store.state.logic.surveyUsed.has(index)"
-              color="light">
-            </ion-checkbox>
-            &nbsp;<span :class="store.state.logic.surveyUsed.has(index) ? 'used_clue' : 'unused_clue'">
-              {{survey.startSector + 1}}-{{survey.endSector + 1}}: {{survey.numObject}}{{survey.spaceObject.initial}}{{survey.spaceObject.initial === "E" ? "?" : ""}}
-              <!-- <ion-icon :src="survey.spaceObject.icon"></ion-icon> -->
-              <!-- &nbsp;{{survey.numObject === 1 ? survey.spaceObject.name : survey.spaceObject.plural}} -->
-            </span>
-          </ion-col>
-        </ion-row>
-        <ion-row v-if="resultsSummary.targeted.length > 0" class="title_row">
-          <b>Targets</b>
-        </ion-row>
-        <ion-row v-if="resultsSummary.targeted.length > 0">
-          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(target, index) in resultsSummary.targeted"
-            :key="index"
-            class="reveal_row">
-              {{target.sector + 1}}:&nbsp;<ion-icon :src="target.spaceObject.icon"></ion-icon>&nbsp;{{target.spaceObject.name}}{{target.spaceObject.initial === "E" ? "?" : ""}}
-          </ion-col>
-        </ion-row>
-        <ion-row v-if="resultsSummary.revealed.length > 0" class="title_row">
-          <b>Revealed Theories</b>
-        </ion-row>
-        <ion-row v-if="resultsSummary.revealed.length > 0">
-          <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
-            v-for="(theory, index) in resultsSummary.revealed"
-            :key="index"
-            class="reveal_row">
-              {{theory.sector + 1}}:{{theory.accurate ? "" : " not"}}&nbsp;<ion-icon :src="theory.spaceObject.icon"></ion-icon>&nbsp;{{theory.spaceObject.name}}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
+    <results-summary :results-summary="resultsSummary" :full-scroll="fullScroll">
+      <template v-slot:conference="props">
+          <ion-checkbox
+            :disabled="!props.conference.researched"
+            @ionChange="conferenceUsedChanged(props.index, $event)"
+            :checked="store.state.logic.conferenceUsed.has(props.index)"
+            color="light">
+          </ion-checkbox>
+          &nbsp;<span :class="store.state.logic.conferenceUsed.has(props.index) ? 'used_clue' : 'unused_clue'">{{props.conference.index + 1}}.&nbsp;<span :class="['category_name', props.conference.researched ? '' : 'not_researched']">{{props.conference.shortText}}</span></span>
+      </template>
+      <template v-slot:research="props">
+          <ion-checkbox
+            :disabled="!props.research.researched"
+            @ionChange="researchUsedChanged(props.index, $event)"
+            :checked="store.state.logic.researchUsed.has(props.index)"
+            color="light">
+          </ion-checkbox>
+          &nbsp;<span :class="store.state.logic.researchUsed.has(props.index) ? 'used_clue' : 'unused_clue'">{{String.fromCharCode(65+props.research.index)}}.&nbsp;<span :class="['category_name', props.research.researched ? '' : 'not_researched']">{{props.research.shortText}}</span></span>
+      </template>
+      <template v-slot:locate="props">
+        {{props.locate.leftObject.initial}}-{{props.locate.sector + 1}}-{{props.locate.rightObject.initial}}: {{props.locate.successful ? "✓" : "X"}}
+      </template>
+      <template v-slot:survey="props">
+        <ion-checkbox
+          @ionChange="surveyUsedChanged(props.index, $event)"
+          :checked="store.state.logic.surveyUsed.has(props.index)"
+          color="light">
+        </ion-checkbox>
+        &nbsp;<span :class="store.state.logic.surveyUsed.has(props.index) ? 'used_clue' : 'unused_clue'">
+          {{props.survey.startSector + 1}}-{{props.survey.endSector + 1}}: {{props.survey.numObject}}{{props.survey.spaceObject.initial}}{{props.survey.spaceObject.initial === "E" ? "?" : ""}}
+        </span>
+      </template>
+      <template v-slot:target="props">
+        {{props.target.sector + 1}}:&nbsp;<ion-icon :src="props.target.spaceObject.icon"></ion-icon>&nbsp;{{props.target.spaceObject.name}}{{props.target.spaceObject.initial === "E" ? "?" : ""}}
+      </template>
+      <template v-slot:theory="props">
+        {{props.theory.sector + 1}}:{{props.theory.accurate ? "" : " not"}}&nbsp;<ion-icon :src="props.theory.spaceObject.icon"></ion-icon>&nbsp;{{props.theory.spaceObject.name}}
+      </template>
+    </results-summary>
   </div>
 </template>
 
 <script lang="ts">
-import { IonNavLink, IonGrid, IonRow, IonCol,
-          IonIcon, IonFab, IonFabButton,
+import { IonNavLink, IonIcon, IonFab, IonFabButton,
           popoverController, IonCheckbox,
           IonToggle, IonItem, IonLabel, IonButton } from '@ionic/vue';
 import { informationCircleOutline, arrowUndoOutline,
@@ -188,6 +134,7 @@ import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
 import { INNER_WHEEL_COLORS } from "@/constants.ts";
+import ResultsSummary from "@/components/ResultsSummary.vue";
 
 const LINE_WIDTH = 8;
 const SELECTED_BOX_PADDING = 10;
@@ -196,9 +143,6 @@ export default defineComponent({
   name: 'LogicSheet',
   components: {
     IonNavLink,
-    IonGrid,
-    IonRow,
-    IonCol,
     IonIcon,
     IonFab,
     IonFabButton,
@@ -206,7 +150,8 @@ export default defineComponent({
     IonToggle,
     IonItem,
     IonLabel,
-    IonButton
+    IonButton,
+    ResultsSummary
   },
   mixins: [DarkMode],
   data() {
@@ -1009,11 +954,6 @@ export default defineComponent({
   height: 100%;
 }
 
-.reveal_row {
-  display: flex;
-  align-content: center;
-  align-items: center;
-}
 
 .reveal_row span {
   display: flex;
@@ -1025,24 +965,9 @@ export default defineComponent({
   font-size: 1.2em;
 }
 
-.reveal_row.not_researched span.category_name {
+span.category_name.not_researched {
   background-color: var(--ion-color-dark);
   color: var(--ion-color-dark-contrast);
-}
-
-#summary_title {
-  margin-left: 6px;
-  margin-bottom: 0;
-  text-transform: uppercase;
-}
-
-ion-col {
-  --ion-grid-column-padding: 0px;
-}
-
-.title_row {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
 }
 
 .used_clue {
