@@ -74,6 +74,13 @@ export default defineComponent({
       } else {
         return this.store.state.session.kickedPlayers;
       }
+    },
+    currentAction: function(): any {
+      if (!this.store.state.session) {
+        return undefined;
+      } else {
+        return this.store.state.session.currentAction;
+      }
     }
   },
   methods: {
@@ -116,6 +123,26 @@ export default defineComponent({
       });
 
       this.addMessages(recentHistory);
+    },
+    currentAction(newAction: any) {
+      if (!this.store.state.isSession) {
+        return;
+      }
+      
+      const history = this.store.state.session.history;
+      if (history.length > 0) {
+        const lastAction = history[history.length - 1];
+        if (lastAction.turnType === "THEORY" && lastAction.turn !== newAction.turn) {
+          const totalTheoriesSubmitted =
+            history.filter((action: any) => action.turn === lastAction.turn)
+                    .map((action: any) => action.theories.length)
+                    .reduce((a: number, b: number) => a + b, 0);
+
+          this.$nextTick(() => {
+            this.addMessages(["There were " + totalTheoriesSubmitted + " theories submitted"]);
+          })
+        }
+      }
     },
     kickedPlayers(newKicked: Array<any>, oldKicked: Array<any>) {
       if (!this.store.state.session) {

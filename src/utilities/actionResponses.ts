@@ -220,7 +220,8 @@ export default {
       actionText,
       text,
       turn,
-      time
+      time,
+      theories
     }
 
     return actionResult;
