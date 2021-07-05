@@ -50,6 +50,10 @@
       <ion-label>Reminders</ion-label>
       <ion-toggle v-model="reminders" @ionChange="changeReminders()"></ion-toggle>
     </ion-item>
+    <ion-item color="light">
+      <ion-label>Results Summary Columns</ion-label>
+      <ion-toggle v-model="verticalResultsSummary" @ionChange="changeVerticalResultsSummary()"></ion-toggle>
+    </ion-item>
     <ion-button color="light" expand="block" @click="close()">Close</ion-button>
   </div>
 </template>
@@ -90,7 +94,8 @@ export default defineComponent({
       colorPaletteOutline,
       multiInitial: store.state.settings.multiInitial,
       fullScrollLogic: store.state.settings.fullScrollLogic,
-      reminders: store.state.settings.reminders
+      reminders: store.state.settings.reminders,
+      verticalResultsSummary: store.state.settings.verticalResultsSummary
     }
   },
   methods: {
@@ -145,6 +150,9 @@ export default defineComponent({
     },
     changeReminders: function() {
       this.store.commit("setReminders", this.reminders);
+    },
+    changeVerticalResultsSummary: function() {
+      this.store.commit("setVerticalResultsSummary", this.verticalResultsSummary);
     }
   }
 });

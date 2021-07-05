@@ -64,7 +64,8 @@ export default createStore({
       levelColors: ["--ion-color-light-contrast", "#5260ff"],
       multiInitial: false,
       fullScrollLogic: false,
-      reminders: true
+      reminders: true,
+      verticalResultsSummary: false
     },
     storage: new Storage(),
     storageRead: false,
@@ -898,6 +899,10 @@ export default createStore({
     },
     setReminders(state: any, reminders: boolean) {
       state.settings.reminders = reminders;
+      state.storage.set("settings", JSON.stringify(state.settings));
+    },
+    setVerticalResultsSummary(state: any, verticalResultsSummary: boolean) {
+      state.settings.verticalResultsSummary = verticalResultsSummary;
       state.storage.set("settings", JSON.stringify(state.settings));
     },
     setStorageRead(state: any) {

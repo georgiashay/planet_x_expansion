@@ -78,7 +78,7 @@
     <div ref="cancelContainer" id="cancel_container_logic" v-if="!matchMedia.md">
       <ion-nav-link :router-link="'/session/gamemenu'">Return to Game Menu</ion-nav-link>
     </div>
-    <results-summary :results-summary="resultsSummary" :full-scroll="fullScroll">
+    <results-summary :results-summary="resultsSummary" :full-scroll="fullScroll" :vertical-layout="store.state.settings.verticalResultsSummary">
       <template v-slot:conference="props">
           <ion-checkbox
             :disabled="!props.conference.researched"
