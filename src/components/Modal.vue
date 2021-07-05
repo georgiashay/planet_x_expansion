@@ -1,5 +1,5 @@
 <template>
-  <transition name="modal">
+  <transition name="modal" appear>
     <div class="modal-mask" @click="$emit('close')">
       <div class="modal-wrapper">
         <div class="modal-container" >
@@ -34,9 +34,9 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.15);
   display: table;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .modal-wrapper {
@@ -51,7 +51,7 @@ export default defineComponent({
   background-color: var(--ion-color-light);
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -66,26 +66,20 @@ export default defineComponent({
   margin-top: 1rem;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
+.modal-enter-active .modal-container {
+  transform: scale(0);
+}
 
-.modal-enter {
+.modal-enter-to .modal-container {
+  transform: scale(1);
+}
+
+.modal-enter-active.modal-mask {
   opacity: 0;
 }
 
-.modal-leave-active, .modal-leave-to {
-  opacity: 0;
+.modal-enter-to.modal-mask {
+  opacity: 1;
 }
 
-.modal-enter-active .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
 </style>
