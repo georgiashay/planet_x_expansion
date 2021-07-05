@@ -36,9 +36,9 @@
         <ion-button
           expand="block"
           color="light"
-          :router-link="'/' + gameType + '/researchcategories'"
+          :router-link="nextRoute"
           id="start_button">
-          Start Game
+          {{ isFirstVisitForGame ? "Start Game" : "Continue Game" }}
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
       </adaptable-container>
@@ -86,11 +86,35 @@ export default defineComponent({
     const store = useStore();
     return {
       store,
-      arrowForwardOutline
+      arrowForwardOutline,
+      lastCodeVisited: undefined
     }
   },
   ionViewDidEnter() {
     this.playSound("sonar1");
+  },
+  ionViewWillLeave() {
+    if (this.store.state.isSession) {
+      this.lastCodeVisited = this.store.state.sessionCode;
+    } else {
+      this.lastCodeVisited = this.store.state.gameCode;
+    }
+  },
+  computed: {
+    isFirstVisitForGame: function(): boolean {
+      if (this.store.state.isSession) {
+        return this.lastCodeVisited !== this.store.state.sessionCode;
+      } else {
+        return this.lastCodeVisited !== this.store.state.gameCode;
+      }
+    },
+    nextRoute: function(): string {
+      if (this.isFirstVisitForGame || !this.store.state.isSession) {
+        return "/" + this.gameType + "/researchcategories";
+      } else {
+        return "/" + this.gameType + "/gamemenu";
+      }
+    }
   },
   methods: {
     exportLogic: async function() {

@@ -49,7 +49,7 @@ export default defineComponent({
       if (this.hideAt === "") {
         return true;
       } else {
-        return !this.matchMedia[this.hideAt as string];
+        return !this.matchMedia[this.hideAt as string] || !this.store.state.isSession;
       }
     },
     allowedHistoryLink: function(): boolean {
