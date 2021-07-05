@@ -64,6 +64,7 @@ export default defineComponent({
 }
 
 .modal-header {
+  color: var(--ion-color-dark);
 }
 
 .modal-body {
