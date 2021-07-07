@@ -234,7 +234,7 @@ export default createStore({
       }
     },
     checkWinner({ state, getters }, sessionState: any) {
-      if (sessionState.currentAction.actionType === "END_GAME") {
+      if (sessionState.currentAction.actionType === "END_GAME" && state.history[state.history.length-1].actionType !== "WINNER") {
         const maxScore = Math.max(...sessionState.scores.map((score: any) => score.total));
         let winningScores = sessionState.scores.filter((score: any) => score.total === maxScore);
         const maxPlanetX = Math.max(...winningScores.map((score: any) => score.planetX));

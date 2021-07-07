@@ -132,7 +132,7 @@ export default defineComponent({
       const history = this.store.state.session.history;
       if (history.length > 0 && this.store.state.session.players.length > 1) {
         const lastAction = history[history.length - 1];
-        if (lastAction.turnType === "THEORY" && lastAction.turn !== newAction.turn) {
+        if (lastAction.turnType === "THEORY" && lastAction.turn !== newAction.turn && newAction.actionType !== "END_GAME") {
           const totalTheoriesSubmitted =
             history.filter((action: any) => action.turn === lastAction.turn)
                     .map((action: any) => action.theories.length)
