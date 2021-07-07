@@ -128,9 +128,9 @@ export default defineComponent({
       if (!this.store.state.isSession) {
         return;
       }
-      
+
       const history = this.store.state.session.history;
-      if (history.length > 0) {
+      if (history.length > 0 && this.store.state.session.players.length > 1) {
         const lastAction = history[history.length - 1];
         if (lastAction.turnType === "THEORY" && lastAction.turn !== newAction.turn) {
           const totalTheoriesSubmitted =
@@ -139,7 +139,11 @@ export default defineComponent({
                     .reduce((a: number, b: number) => a + b, 0);
 
           this.$nextTick(() => {
-            this.addMessages(["There were " + totalTheoriesSubmitted + " theories submitted"]);
+            if (totalTheoriesSubmitted !== 1) {
+              this.addMessages(["There were " + totalTheoriesSubmitted + " theories submitted"]);
+            } else {
+              this.addMessages(["There was 1 theory submitted"]);
+            }
           })
         }
       }
