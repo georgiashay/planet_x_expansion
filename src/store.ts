@@ -743,6 +743,7 @@ export default createStore({
     },
     setSessionState(state: any, sessionState: any) {
       sessionState.history = sessionState.history.map((action: any) => Object.assign(action, { time: new Date(action.time)}));
+      sessionState.history.sort(historySortOrder);
       state.session = sessionState;
     },
     setSessionID(state: any, sessionID: number) {
