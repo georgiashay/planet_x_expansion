@@ -35,7 +35,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   display: table;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.1s ease;
   background-color: rgba(0, 0, 0, 0.15);
 }
 
@@ -51,7 +51,7 @@ export default defineComponent({
   background-color: var(--ion-color-light);
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: transform 0.2s ease;
+  transition: transform 0.1s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
 
