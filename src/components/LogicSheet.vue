@@ -272,7 +272,7 @@ export default defineComponent({
       xhr.open("GET", path, true);
 
       const imageData: string = await new Promise((resolve, reject) => {
-        xhr.onload = function (e) {
+        xhr.onload = function () {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
               let theoryFile = xhr.responseText;
@@ -382,7 +382,6 @@ export default defineComponent({
       }
 
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
-      const ctx = canvas.getContext("2d");
       const rect = canvas.getBoundingClientRect();
       const x = clientX - rect.left;
       const y = clientY - rect.top;
@@ -500,7 +499,7 @@ export default defineComponent({
         level: +!this.certaintyLevel
       });
     },
-    checkClick: function(e: Event) {
+    checkClick: function(event: Event) {
       const { sector, iconRadius } = this.getClickedObject(event as MouseEvent | TouchEvent);
       let checkHold = false;
       if (sector !== undefined) {
@@ -717,7 +716,7 @@ export default defineComponent({
       }
     },
     attachListeners: function() {
-      this.unsubscribeStore = this.store.subscribe((mutation, state) => {
+      this.unsubscribeStore = this.store.subscribe((mutation) => {
         if (mutation.type === "logicEliminate") {
           this.drawObjectEliminated(mutation.payload.sector, mutation.payload.object, mutation.payload.level);
         } else if (mutation.type === "logicSet") {
@@ -737,7 +736,6 @@ export default defineComponent({
       });
 
       let timeout: any = undefined;
-      let clickEvent: any = undefined;
       let clickSector: number = undefined;
       let clickIconRadius: any = undefined;
 
@@ -748,7 +746,6 @@ export default defineComponent({
         }
         e.stopPropagation();
         e.preventDefault();
-        clickEvent = e;
         const { sector, iconRadius, checkHold } = this.checkClick(e);
         if (sector === undefined) {
           return;
@@ -765,7 +762,6 @@ export default defineComponent({
           }
           timeout = setTimeout(() => {
             this.toggleObjectEqual(sector, iconRadius);
-            clickEvent = undefined;
             timeout = undefined;
           }, 350);
         } else {
@@ -776,7 +772,6 @@ export default defineComponent({
       canvas.addEventListener("touchstart", (e: TouchEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        clickEvent = e;
         const { sector, iconRadius, checkHold } = this.checkClick(e);
         clickSector = sector;
         clickIconRadius = iconRadius;
@@ -793,7 +788,6 @@ export default defineComponent({
           }
           timeout = setTimeout(() => {
             this.toggleObjectEqual(sector, iconRadius);
-            clickEvent = undefined;
             timeout = undefined;
           }, 350);
         } else {
@@ -801,7 +795,7 @@ export default defineComponent({
         }
       });
 
-      canvas.addEventListener("mouseleave", (e: Event) => {
+      canvas.addEventListener("mouseleave", () => {
         if (timeout !== undefined) {
           clearTimeout(timeout);
           timeout = undefined;
@@ -809,7 +803,7 @@ export default defineComponent({
         }
       });
 
-      canvas.addEventListener("mouseup", (e: Event) => {
+      canvas.addEventListener("mouseup", () => {
         if (timeout !== undefined) {
           clearTimeout(timeout);
           timeout = undefined;
@@ -817,7 +811,7 @@ export default defineComponent({
         }
       });
 
-      canvas.addEventListener("touchend", (e: Event) => {
+      canvas.addEventListener("touchend", () => {
         if (timeout !== undefined) {
           clearTimeout(timeout);
           timeout = undefined;

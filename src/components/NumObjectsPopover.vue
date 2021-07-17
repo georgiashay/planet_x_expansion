@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { popoverController, IonIcon, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import { IonIcon, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { useStore } from "vuex";
 import { initialToSpaceObject } from "@/constants.ts";
 

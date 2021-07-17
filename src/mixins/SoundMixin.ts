@@ -15,7 +15,7 @@ export default defineComponent({
         await SoundEffects.playSound(name, this.store.state.settings.muteLevel);
       } else {
         return new Promise((resolve) => {
-          const unsubscribe = this.store.subscribe(async (mutation, state) => {
+          const unsubscribe = this.store.subscribe(async (mutation) => {
             if (mutation.type === "setStorageRead") {
               unsubscribe();
               await SoundEffects.playSound(name, this.store.state.settings.muteLevel);

@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject,
-        initialToSpaceObject, SUSPICION_LEVELS, SeasonView,
+        initialToSpaceObject, SeasonView,
         IS_PROD } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
@@ -213,7 +213,7 @@ export default createStore({
       axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData).then((response) => {
         state.awaitingTurnSubmission = false;
         log(response.data);
-      }).catch((err) => {
+      }).catch(() => {
         if (failures >= 10) {
           state.awaitingTurnSubmission = false;
           commit("setTurnSubmissionFailure", true);
@@ -337,7 +337,7 @@ export default createStore({
           const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
           state.history.push(actionResult);
         }
-      }).catch((err) => {
+      }).catch(() => {
         if (failures >= 10) {
           state.awaitingTurnSubmission = false;
           commit("setTurnSubmissionFailure", true);
@@ -358,7 +358,7 @@ export default createStore({
         axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID).then((response) => {
           state.awaitingTurnSubmission = false;
           log(response.data);
-        }).catch((err) => {
+        }).catch(() => {
           if (failures >= 10) {
             state.awaitingTurnSubmission = false;
             commit("setTurnSubmissionFailure", true);
@@ -506,7 +506,7 @@ export default createStore({
       const packet = originQueue.pop();
       await dispatch('newPacket', { queue: destQueueName });
       for (let i = 0; i < packet.length; i++) {
-        const { action, sector, object, level } = packet[i];
+        const { sector, object } = packet[i];
         let oppositeAction;
         if (state.logic.board[sector][object].state === "eliminated") {
           oppositeAction = { action: "eliminate", sector, object, level: state.logic.board[sector][object].level };
@@ -535,7 +535,7 @@ export default createStore({
 
       }
     },
-    async redoLogic({ state, commit, dispatch }) {
+    async redoLogic({ commit, dispatch }) {
       const packet = await dispatch('swapPacketQueue', { queue: "redo" });
       for (let i = packet.length - 1; i >= 0; i--) {
         const { action, sector, object, level }: { action: string; sector: number; object: string; level: number | undefined } = packet[i];
@@ -582,7 +582,7 @@ export default createStore({
       commit('logicEliminate', { sector, object, level });
       dispatch('storeLogic');
     },
-    async logicUnsetLevel({ state, commit, dispatch }, { sector, object, level=0, newPacket=true }: { sector: number; object: number; level: number | undefined; newPacket: boolean }) {
+    async logicUnsetLevel({ state, commit, dispatch }, { sector, object, newPacket=true }: { sector: number; object: number; level: number | undefined; newPacket: boolean }) {
       if (newPacket) {
         await dispatch('newPacket', { queue: 'undo' });
       }
@@ -610,7 +610,7 @@ export default createStore({
       commit('logicSet', { sector, object, level });
       dispatch('storeLogic');
     },
-    logicToggle({ state, commit, dispatch }, { sector, object, level=0 }) {
+    logicToggle({ state, dispatch }, { sector, object, level=0 }) {
       if (state.logic.board[sector][object].state === "eliminated") {
         if (state.logic.board[sector][object].level > level) {
           dispatch('logicEliminateLevel', { sector, object, level });
@@ -627,7 +627,7 @@ export default createStore({
         dispatch('logicEliminateLevel', { sector, object, level });
       }
     },
-    logicToggleEqual({ state, commit, dispatch }, { sector, object, level=0 }) {
+    logicToggleEqual({ state, dispatch }, { sector, object, level=0 }) {
       if (state.logic.board[sector][object].state === "equal") {
         dispatch('logicUnsetLevel', { sector, object, level });
       } else {
@@ -643,13 +643,13 @@ export default createStore({
         vote: newVote
       });
     },
-    async castKickPlayer({ state, getters }, { kickPlayerID, vote }) {
+    async castKickPlayer({ state }, { kickPlayerID, vote }) {
       await axios.post(API_URL + "/castKickVote/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {
         kickPlayerID,
         vote
       });
     },
-    async initializeStorage({ state, commit }) {
+    async initializeStorage({ state }) {
       await state.storage.create();
     },
     async restoreRecentSessionsFromStorage({ state }) {
@@ -1271,7 +1271,6 @@ export default createStore({
     },
     selectedHistory(state: any, getters: any) {
       let history = getters.fullHistory.filter((action: any) => action.actionType !== "PEER_REVIEW");
-      const myPlayerNum = getters.playerInfo.num;
 
       if (state.session.currentAction.actionType === "THEORY_PHASE" && getters.myNextAction !== null) {
         history = history.filter((action: any) => action.turn !== state.session.currentAction.turn);

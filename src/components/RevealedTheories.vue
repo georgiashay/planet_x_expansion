@@ -28,7 +28,7 @@ export default defineComponent({
   },
   props: ['revealedTheories'],
   methods: {
-    close: async function(obj: any) {
+    close: async function() {
       await popoverController.dismiss();
     },
     exportRevealed: async function(event: Event) {

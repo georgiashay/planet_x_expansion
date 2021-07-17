@@ -97,7 +97,6 @@ export default defineComponent({
       }
     },
     pegSizeTwoRows: function(boardRadius: number, paddingFactor: number, numPegs: number) {
-      const innerPegs = Math.floor(numPegs/2);
       const outerPegs = Math.ceil(numPegs/2);
 
       let rawPegAngle;
@@ -415,7 +414,7 @@ export default defineComponent({
         if (sector % theoryInterval === theoryInterval-1) {
           radius = conferenceRadius;
         }
-        
+
         radius += iconSize/2;
 
         ctx.save();
@@ -435,7 +434,7 @@ export default defineComponent({
       xhr.open("GET", path, true);
 
       const imageData: string = await new Promise((resolve, reject) => {
-        xhr.onload = function (e) {
+        xhr.onload = function () {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
               let theoryFile = xhr.responseText;

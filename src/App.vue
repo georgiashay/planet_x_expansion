@@ -53,8 +53,8 @@
 import { IonApp, IonRouterOutlet, IonSplitPane,
         IonMenu, IonPage, IonSegment,
         IonSegmentButton, IonContent,
-        menuController, IonFab, IonFabButton,
-        IonIcon, popoverController, alertController } from '@ionic/vue';
+        IonFab, IonFabButton, IonIcon,
+        popoverController, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import BoardWheel from "@/components/BoardWheel.vue";
 import LogicSheet from "@/components/LogicSheet.vue";

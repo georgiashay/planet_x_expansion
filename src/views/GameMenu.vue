@@ -121,8 +121,7 @@
 
 <script lang="ts">
 import { IonPage, IonContent,
-        IonButton, IonIcon, alertController,
-        popoverController } from '@ionic/vue';
+        IonButton, IonIcon, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';

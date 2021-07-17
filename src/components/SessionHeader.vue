@@ -26,9 +26,8 @@
 
 <script lang="ts">
 import { IonHeader, IonTitle, IonItem,
-        IonItemDivider, IonLabel, IonIcon,
-        menuController, popoverController,
-        alertController } from '@ionic/vue';
+        IonLabel, IonIcon, menuController,
+        popoverController, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
