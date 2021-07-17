@@ -230,7 +230,7 @@ export default defineComponent({
       let iconSize = 200;
       const tanRatio = 2 * Math.tan(this.sectorAngle/2);
       const maxIconWidth = (tanRatio * innerRadius)/(1 + tanRatio);
-      iconSize = Math.min(iconSize, maxIconWidth);
+      iconSize = Math.min(iconSize, maxIconWidth*0.9);
 
       const theoryRadius = innerRadius - 10 - iconSize;
       const conferenceRadius = theoryRadius - iconSize;
@@ -415,14 +415,16 @@ export default defineComponent({
         if (sector % theoryInterval === theoryInterval-1) {
           radius = conferenceRadius;
         }
+        
+        radius += iconSize/2;
 
         ctx.save();
 
-        ctx.font = (iconSize*0.8) + "px Roboto Slab";
+        ctx.font = (iconSize*0.7) + "px Roboto Slab";
         ctx.rotate(Math.PI/2 + (angle));
         ctx.textAlign = "center";
-        ctx.fillStyle = this.isDarkMode ? "#47d1ff" : "blue";
-        ctx.textBaseline = "bottom";
+        ctx.fillStyle = this.getCSSVariable("--ion-color-light-contrast");
+        ctx.textBaseline = "middle";
         ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
 
         ctx.restore();
@@ -463,7 +465,7 @@ export default defineComponent({
       return img;
     },
     collectImages: async function() {
-      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", this.isDarkMode ? "orange" : "purple");
+      this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", this.getCSSVariable("--ion-color-light-contrast"));
 
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
         const object = initialToSpaceObject[initial];
