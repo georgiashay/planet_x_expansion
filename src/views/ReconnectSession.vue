@@ -7,7 +7,7 @@
         </div>
         <div id="enter_code">
           <ion-item color="light">
-            <ion-label position="floating">Enter Session Code</ion-label>
+            <ion-label position="floating">Enter Online Game Code</ion-label>
             <ion-input v-model="sessionCode"></ion-input>
           </ion-item>
         </div>
@@ -23,15 +23,15 @@
           color="light"
           @click="reconnectSession()"
           id = "reconnect_session_button">
-          Reconnect to Session
+          Reconnect to Game
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
-        <p id="fetching" v-if="fetchingSession">Fetching Session...</p>
+        <p id="fetching" v-if="fetchingSession">Fetching Game...</p>
         <div id="cancel_container">
           <ion-nav-link router-link="/home">Cancel</ion-nav-link>
         </div>
         <div id="recent_sessions" v-if="store.state.recentSessions.length > 0">
-          <h4>Recent Sessions</h4>
+          <h4>Recent Games</h4>
           <ion-item
             v-for="(item, index) in store.state.recentSessions"
             :key="index"

@@ -6,7 +6,7 @@
         <div id="title_container">
           <h3>Research &amp; Conferences</h3>
         </div>
-        <p>The following research items and conferences are available this game. We encourage players to record these titles on their note sheets.</p>
+        <p>The following are the categories of research and conferences for this game.</p>
         <stripe/>
         <div id="research">
           <b>Research</b>

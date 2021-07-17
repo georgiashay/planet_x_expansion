@@ -6,15 +6,15 @@
           <h3>Game Code</h3>
         </div>
         <div>
-          <p v-if="gameCreator">Your game has been created. Please have the other players enter the following game code:</p>
-          <p v-else>You have joined the game. Please double-check that the game code is the same as the one created for this game.</p>
+          <p v-if="gameCreator">You have created a game. Other players should enter the following game code:</p>
+          <p v-else>You have joined this game. Ensure that the game code you entered is correct.</p>
         </div>
         <div id="game_code">
           <h1>{{store.state.gameCode || "Loading..."}}</h1>
           <p>{{gameModeName}}</p>
         </div>
         <div>
-          <p v-if="gameCreator">Verify that all player devices are using the game code, and then press the continue button below to start.</p>
+          <p v-if="gameCreator">Ensure all players have joined the game with this code, then press the Continue button below.</p>
         </div>
         <stripe/>
         <ion-button

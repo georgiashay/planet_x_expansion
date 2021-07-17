@@ -7,7 +7,7 @@
           <h3>Current Action: Research</h3>
         </div>
         <div id="reminder">
-        <p>Reminder: You must choose a different action on your next turn; you cannot take the research action twice in a row.</p>
+        <p>Reminder: You may not research twice in a row. On your next turn, you must complete a different action.</p>
         </div>
         <stripe/>
         <ion-button

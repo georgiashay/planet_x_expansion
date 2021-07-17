@@ -6,7 +6,7 @@
         <div id="title_container">
           <h3>Choose Your View</h3>
         </div>
-        <p>Select the view that matches the side of the board you are facing and your score sheet:</p>
+        <p>Select a view. If you are playing with a score sheet and board, select the same view as your score sheet and the side of the board you are facing.</p>
         <div id="view_buttons">
           <ion-button
             expand="block"

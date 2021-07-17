@@ -7,7 +7,7 @@
           <h3>Current Action: Survey</h3>
         </div>
         <div id="time_cost">
-          <p>Time cost varies by the selected range.</p>
+          <p>Surveying in a narrower range of sectors has a higher time cost.</p>
           <table id="time_table">
             <tr v-for="(row, index) in timeCostOptions" :key="index">
               <td v-for="costOption in row" :key="costOption.cost">

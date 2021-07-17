@@ -8,8 +8,8 @@
             <h3>Lobby</h3>
           </div>
           <div>
-            <p v-if="store.getters.isHost">Your session has been created. Please have the other players enter the following session code:</p>
-            <p v-else>You have joined the game. Please double-check that the session code is the same as the one created for this game.</p>
+            <p v-if="store.getters.isHost">You have created an online game. Other players should enter the following game code:</p>
+            <p v-else>You have joined this game. Ensure that the game code you entered is correct.</p>
           </div>
           <div id="session_code">
             <h1>{{store.state.sessionCode || "Loading..."}}</h1>
@@ -33,7 +33,7 @@
             </table>
           </div>
           <div>
-            <p v-if="store.getters.isHost">Verify that all player have joined the session, and then press the start button below to start the game.</p>
+            <p v-if="store.getters.isHost">Ensure all players have joined the game, then press the Start Game button below.</p>
           </div>
           <stripe/>
           <ion-button
