@@ -1,7 +1,7 @@
 <template>
   <table id="score_table">
     <tr>
-      <th class="kick_header" v-if="anyKickAllowed"/>
+      <th class="empty_header" :colspan="anyKickAllowed + showHourglassColumn + showDisconnectedColumn" v-if="anyKickAllowed || showHourglassColumn || showDisconnectedColumn"/>
       <th class="player_header">Player</th>
       <th
         v-for="(header, index) in scoreHeaders"
@@ -24,9 +24,14 @@
         v-if="anyKickAllowed">
         <ion-icon src="/assets/kick.svg" v-if="kickAllowed(players[index][2].id)"/>
       </td>
-      <td class="player_cell">
+      <td class = "hourglass_cell" v-if="showHourglassColumn">
+        <ion-icon v-if="store.state.session.actions.find((action) => action.playerID === players[index][2].id)" :src="hourglassOutline"></ion-icon>
+      </td>
+      <td class="disconnected_cell" v-if="showDisconnectedColumn">
         <ion-icon v-if="!players[index][2].connected" :src="cloudOfflineOutline"></ion-icon>
-        <ion-icon v-if="players.length > 1 && store.state.session.actions.find((action) => action.playerID === players[index][2].id)" :src="hourglassOutline"></ion-icon> {{players[index][0]}}
+      </td>
+      <td class="player_cell">
+        {{players[index][0]}}
       </td>
       <td
         v-for="(value, j) in row"
@@ -112,6 +117,12 @@ export default defineComponent({
     },
     anyKickAllowed: function(): boolean {
       return this.players.some((row) => this.kickAllowed(row[2].id));
+    },
+    showHourglassColumn: function(): boolean {
+      return this.players.length > 1 && this.store.state.session.actions.length > 0;
+    },
+    showDisconnectedColumn: function(): boolean {
+      return this.players.some((row) => !row[2].connected);
     }
   },
   methods: {
