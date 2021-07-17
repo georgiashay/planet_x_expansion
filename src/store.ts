@@ -96,6 +96,7 @@ export default createStore({
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
       log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+      log("Game version", response.data.game.version);
       commit('setGame', response.data.game);
       commit('setIsSession', true);
       commit('setSessionState', response.data.state);
@@ -120,6 +121,7 @@ export default createStore({
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
         log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        log("Game version", response.data.game.version);
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -143,6 +145,7 @@ export default createStore({
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
         log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
+        log("Game version", response.data.game.version);
         commit('setGame', response.data.game);
         commit('setIsSession', true);
         commit('setSessionState', response.data.state);
@@ -382,7 +385,8 @@ export default createStore({
       expirationDate.setDate(expirationDate.getDate() + 3);
 
       const augmentedLogic = Object.assign({
-        expires: expirationDate
+        expires: expirationDate,
+        version: state.game.version
       }, state.logic);
 
       augmentedLogic.researchUsed = Array.from(augmentedLogic.researchUsed);
@@ -676,11 +680,11 @@ export default createStore({
         const allLogic = JSON.parse(storedLogicStr);
         const now = new Date();
         for (const sessionID in allLogic) {
-          if (allLogic[sessionID].expires <= now) {
+          if (new Date(allLogic[sessionID].expires) <= now) {
             delete allLogic[sessionID];
           }
         }
-        if (Object.prototype.hasOwnProperty.call(allLogic, state.sessionID)) {
+        if (Object.prototype.hasOwnProperty.call(allLogic, state.sessionID) && allLogic[state.sessionID].version === state.game.version) {
           storedLogic = allLogic[state.sessionID];
           const newExpirationDate = new Date();
           newExpirationDate.setDate(newExpirationDate.getDate() + 3);
@@ -691,6 +695,7 @@ export default createStore({
 
       if (storedLogic !== undefined) {
         delete storedLogic.expires;
+        delete storedLogic.version;
         storedLogic.researchUsed = new Set(storedLogic.researchUsed);
         storedLogic.conferenceUsed = new Set(storedLogic.conferenceUsed);
         storedLogic.surveyUsed = new Set(storedLogic.surveyUsed);
@@ -704,7 +709,7 @@ export default createStore({
         const startingInfo = JSON.parse(startingInfoStr);
         const now = new Date();
         for (const sessionID in startingInfo) {
-          if (startingInfo[sessionID].expires <= now) {
+          if (new Date(startingInfo[sessionID].expires) <= now) {
             delete startingInfo[sessionID];
           }
         }
