@@ -75,7 +75,7 @@ export default defineComponent({
           headers.push([key, icon]);
         }
       }
-      headers.push(["planetX", SpaceObject.PLANET_X.icon]);
+      headers.push(["X", SpaceObject.PLANET_X.icon]);
       return headers;
     },
     points: function(): Array<number | string> {
@@ -83,7 +83,7 @@ export default defineComponent({
       for (const [key] of this.scoreHeaders) {
         if (key === "first") {
           points.push(1);
-        } else if(key === "planetX") {
+        } else if(key === "X") {
           points.push("2-10");
         } else if (key in this.store.state.gameType.points) {
           points.push(this.store.state.gameType.points[key]);
@@ -98,7 +98,7 @@ export default defineComponent({
       for (const score of this.store.state.session.scores) {
         const row = [];
         for (const [key] of this.scoreHeaders) {
-          if (key === "first" || key === "planetX") {
+          if (key === "first" || key === "X") {
             row.push(score[key]);
           } else {
             row.push(score.objects[key]);

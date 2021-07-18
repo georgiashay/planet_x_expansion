@@ -97,6 +97,8 @@ export default createStore({
       log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
       log("Game version", response.data.game.version);
+      log(response.data.game);
+      log(response.data.state);
       commit('setGame', response.data.game);
       commit('setIsSession', true);
       commit('setSessionState', response.data.state);
@@ -206,11 +208,15 @@ export default createStore({
       }
       state.currentWebSocket = undefined;
     },
-    async makeSessionMove({ state, commit, getters, dispatch }, { moveData, failures=0 }) {
+    async makeSessionMove({ state, commit, getters, dispatch }, { moveData, timeCost, failures=0 }) {
       const turn = getters.myNextAction.turn;
       moveData = Object.assign({ turn }, moveData);
+      const data = {
+        turn: moveData,
+        timeCost
+      };
       state.awaitingTurnSubmission = true;
-      axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, moveData).then((response) => {
+      axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, data).then((response) => {
         state.awaitingTurnSubmission = false;
         log(response.data);
       }).catch(() => {
@@ -218,7 +224,7 @@ export default createStore({
           state.awaitingTurnSubmission = false;
           commit("setTurnSubmissionFailure", true);
         } else {
-          dispatch("makeSessionMove", { moveData, failures: failures + 1 });
+          dispatch("makeSessionMove", { moveData, timeCost, failures: failures + 1 });
         }
       });
     },
@@ -240,8 +246,8 @@ export default createStore({
       if (sessionState.currentAction.actionType === "END_GAME" && state.history[state.history.length-1].actionType !== "WINNER") {
         const maxScore = Math.max(...sessionState.scores.map((score: any) => score.total));
         let winningScores = sessionState.scores.filter((score: any) => score.total === maxScore);
-        const maxPlanetX = Math.max(...winningScores.map((score: any) => score.planetX));
-        winningScores = winningScores.filter((score: any) => score.planetX === maxPlanetX);
+        const maxPlanetX = Math.max(...winningScores.map((score: any) => score.X));
+        winningScores = winningScores.filter((score: any) => score.X === maxPlanetX);
         const maxLeaderBonus = Math.max(...winningScores.map((score: any) => score.first));
         winningScores = winningScores.filter((score: any) => score.first === maxLeaderBonus);
 
@@ -270,11 +276,10 @@ export default createStore({
         const moveData = {
           turnType: "SURVEY",
           spaceObject: surveyObject.initial,
-          sectors: [startSector, endSector],
-          timeCost: actionResult.timeCost
+          sectors: [startSector, endSector]
         };
 
-        dispatch('makeSessionMove', { moveData });
+        dispatch('makeSessionMove', { moveData, timeCost: actionResult.timeCost });
       }
     },
     target({ state, getters, dispatch }, { sectorNumber }) {
@@ -285,11 +290,10 @@ export default createStore({
       if (state.isSession) {
         const moveData = {
           turnType: "TARGET",
-          sector: sectorNumber,
-          timeCost: 4
+          sector: sectorNumber
         };
 
-        dispatch('makeSessionMove', { moveData });
+        dispatch('makeSessionMove', { moveData, timeCost: 4 });
       }
     },
     research({ state, getters, dispatch }, { index }) {
@@ -300,11 +304,10 @@ export default createStore({
       if (state.isSession) {
         const moveData = {
           turnType: "RESEARCH",
-          index,
-          timeCost: 1
+          index
         };
 
-        dispatch('makeSessionMove', { moveData });
+        dispatch('makeSessionMove', { moveData, timeCost: 1 });
       }
     },
     locatePlanetX({ state, getters, dispatch }, { sector, leftObject, rightObject }) {
@@ -318,11 +321,10 @@ export default createStore({
           successful: actionResult.success,
           sector,
           leftObject: leftObject.initial,
-          rightObject: rightObject.initial,
-          timeCost: 5
+          rightObject: rightObject.initial
         };
 
-        dispatch('makeSessionMove', { moveData });
+        dispatch('makeSessionMove', { moveData, timeCost: 5 });
       }
     },
     async submitTheories({ state, commit, dispatch, getters }, { theories, failures=0 }) {
@@ -337,11 +339,12 @@ export default createStore({
           const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
           state.history.push(actionResult);
         }
-      }).catch(() => {
+      }).catch((err) => {
         if (failures >= 10) {
           state.awaitingTurnSubmission = false;
           commit("setTurnSubmissionFailure", true);
         } else {
+          console.log(err);
           dispatch("submitTheories", { theories, failures: failures + 1 });
         }
       });
