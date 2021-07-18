@@ -14,7 +14,7 @@
             :color="buttonColor(sectors)"
             @click="selectedGame = (selectedGame == sectors ? undefined : sectors)"
             >
-            {{gameType.name}} Mode ({{sectors}} sectors)
+            {{gameType.name}} Mode ({{sectors}} {{SECTOR_NAME.plural}})
           </ion-button>
           <div id="enter_name" v-if="isSession">
             <p>Enter Name:</p>
@@ -48,7 +48,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { GAME_TYPES } from '@/constants';
+import { GAME_TYPES, SECTOR_NAME } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
@@ -73,6 +73,7 @@ export default defineComponent({
     return {
       selectedGame: undefined,
       GAME_TYPES,
+      SECTOR_NAME,
       arrowForwardOutline,
       store,
       router,

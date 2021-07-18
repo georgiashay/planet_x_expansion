@@ -14,7 +14,7 @@
               :key="index"
               class="reveal_row">
               <ion-col size="4" class="sector_num">
-                Sector {{index + 1}}
+                {{SECTOR_NAME.proper}} {{index + 1}}
               </ion-col>
               <ion-col size="8" class="revealed_obj">
                 <ion-icon :src="obj.icon"></ion-icon>&nbsp;
@@ -41,7 +41,7 @@ import { IonContent, IonPage, IonButton,
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { initialToSpaceObject } from '@/constants';
+import { initialToSpaceObject, SECTOR_NAME } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
@@ -63,7 +63,8 @@ export default defineComponent({
     const router = useRouter();
     return {
       store,
-      router
+      router,
+      SECTOR_NAME
     }
   },
   computed: {

@@ -7,9 +7,9 @@
           <h3>Current Action: Target</h3>
         </div>
         <div id="reminder">
-        <p>Reminder: You may only target sectors in the visible half of the sky.
-          <span v-if="store.state.isSession">The visible sky is currently sectors {{store.getters.skyStart+1}}-{{store.getters.skyEnd+1}}.</span>
-          <span v-else>At the start of the game, the visible sky is sectors 1-{{store.getters.skySize}}.</span>
+        <p>Reminder: You may only target {{SECTOR_NAME.plural}} in the visible half of the sky.
+          <span v-if="store.state.isSession">The visible sky is currently {{SECTOR_NAME.plural}} {{store.getters.skyStart+1}}-{{store.getters.skyEnd+1}}.</span>
+          <span v-else>At the start of the game, the visible sky is {{SECTOR_NAME.plural}} 1-{{store.getters.skySize}}.</span>
         </p>
         </div>
         <ion-button

@@ -134,7 +134,7 @@ import Stripe from "@/components/Stripe.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
 import CenteredContainer from "@/components/CenteredContainer.vue";
 import Modal from "@/components/Modal.vue";
-import { GOAL_OBJECT } from "@/constants.ts";
+import { GOAL_OBJECT, SECTOR_NAME } from "@/constants.ts";
 // import Modal from "vue-js-modal/src/components/Modal.vue";
 
 export default defineComponent({
@@ -195,7 +195,7 @@ export default defineComponent({
       const alert = await alertController
                       .create({
                         header: 'End Game',
-                        message: 'Are you sure you want to end the game and reveal the objects in each sector?',
+                        message: 'Are you sure you want to end the game and reveal the objects in each ' + SECTOR_NAME.name + '?',
                         buttons: [
                           {
                             text: 'Cancel',

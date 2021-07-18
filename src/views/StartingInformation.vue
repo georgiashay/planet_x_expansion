@@ -15,7 +15,7 @@
               :key="index"
               class="clue_row">
               <ion-col size="4" class="sector_num">
-                Sector {{info.sector + 1}}
+                {{SECTOR_NAME.proper}} {{info.sector + 1}}
               </ion-col>
               <ion-col size="8" class="clue_obj">
                 <ion-icon :src="info.spaceObject.icon"></ion-icon>&nbsp;
@@ -59,6 +59,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Spacer from "@/components/Spacer.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { SECTOR_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'StartingInformation',
@@ -87,7 +88,8 @@ export default defineComponent({
     return {
       store,
       arrowForwardOutline,
-      lastCodeVisited: undefined
+      lastCodeVisited: undefined,
+      SECTOR_NAME
     }
   },
   ionViewDidEnter() {

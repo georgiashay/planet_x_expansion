@@ -1,7 +1,7 @@
 <template>
   <div class="popover_container">
     <ion-item color="light" v-for="(theory, i) in revealedTheories" :key="i">
-      Sector {{theory.sector + 1}}: is {{theory.accurate ? "" : "not "}}{{theory.spaceObject.one}}
+      {{SECTOR_NAME.proper}} {{theory.sector + 1}}: is {{theory.accurate ? "" : "not "}}{{theory.spaceObject.one}}
       &nbsp;<ion-icon :src="theory.spaceObject.icon"/>
     </ion-item>
     <ion-button color="light" expand="block" @click="exportRevealed($event)">Export to Logic Sheet</ion-button>
@@ -13,6 +13,7 @@
 import { defineComponent } from 'vue';
 import { popoverController, IonIcon, IonItem, IonButton } from '@ionic/vue';
 import { useStore } from 'vuex';
+import { PRIME_OBJECT, SECTOR_NAME } from "@/constants.ts"
 
 export default defineComponent({
   name: 'RevealedTheoriesPopover',
@@ -23,7 +24,8 @@ export default defineComponent({
   },
   data() {
     return {
-      store: useStore()
+      store: useStore(),
+      SECTOR_NAME
     }
   },
   props: ['revealedTheories'],
@@ -45,7 +47,7 @@ export default defineComponent({
                 newPacket: false
               });
             } else {
-              if (initial !== "C" || [2,3,5,7,11,13,17,19,23].indexOf(theory.sector+1) >= 0) {
+              if (initial !== PRIME_OBJECT.initial || [2,3,5,7,11,13,17,19,23].indexOf(theory.sector+1) >= 0) {
                 await this.store.dispatch("logicEliminateLevel", {
                   sector: theory.sector,
                   object: initial,

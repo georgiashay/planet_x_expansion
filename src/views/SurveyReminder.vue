@@ -8,8 +8,8 @@
         </div>
         <div id="reminder">
         <p>Reminder: You may only survey in the visible half of the sky.
-          <span v-if="store.state.isSession">The visible sky is currently sectors {{store.getters.skyStart+1}}-{{store.getters.skyEnd+1}}.</span>
-          <span v-else>At the start of the game, the visible sky is sectors 1-{{store.getters.skySize}}.</span>
+          <span v-if="store.state.isSession">The visible sky is currently {{SECTOR_NAME.plural}} {{store.getters.skyStart+1}}-{{store.getters.skyEnd+1}}.</span>
+          <span v-else>At the start of the game, the visible sky is {{SECTOR_NAME.plural}} 1-{{store.getters.skySize}}.</span>
         </p>
         </div>
         <ion-button
@@ -40,6 +40,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { SECTOR_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'SurveyReminder',
@@ -64,7 +65,8 @@ export default defineComponent({
     const store = useStore();
     return {
       store,
-      arrowForwardOutline
+      arrowForwardOutline,
+      SECTOR_NAME
     }
   }
 });

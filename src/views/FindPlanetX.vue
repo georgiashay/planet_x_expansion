@@ -8,29 +8,29 @@
         </div>
         <div id="planetx_selections">
           <sector-select
-            :label="'Sector:'"
+            :label="SECTOR_NAME.proper + ':'"
             :value="sector"
             @input="sector=$event"
             :columns="6"/>
           <spacer v-if="sector !== undefined"/>
           <space-object-select
             v-if="sector !== undefined "
-            :label="'Sector ' + (leftSector+1)"
+            :label="SECTOR_NAME.proper + ' ' + (leftSector+1)"
             :value="leftObject"
             @input="leftObject = $event"
             :columns="3"
-            :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
+            :exclude-objects="[GOAL_OBJECT, SURROUNDED_OBJECT, BANDED_OBJECT]"/>
           <ion-item v-if="sector !== undefined" id="planet_x_spacer" color="light">
-            <ion-label>Sector {{sector+1}}</ion-label>
+            <ion-label>{{SECTOR_NAME.proper}} {{sector+1}}</ion-label>
             <ion-icon :src="GOAL_OBJECT.icon"></ion-icon>&nbsp;{{GOAL_OBJECT.name}}
           </ion-item>
           <space-object-select
             v-if="sector !== undefined"
-            :label="'Sector ' + (rightSector+1)"
+            :label="SECTOR_NAME.proper + ' ' + (rightSector+1)"
             :value="rightObject"
             @input="rightObject = $event"
             :columns="3"
-            :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
+            :exclude-objects="[GOAL_OBJECT, SURROUNDED_OBJECT, BANDED_OBJECT]"/>
         </div>
         <ion-button
           expand="block"
@@ -59,7 +59,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { GOAL_OBJECT } from '@/constants';
+import { GOAL_OBJECT, SECTOR_NAME, SURROUNDED_OBJECT, BANDED_OBJECT } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -102,6 +102,9 @@ export default defineComponent({
       arrowForwardOutline,
       timeOutline,
       GOAL_OBJECT,
+      SURROUNDED_OBJECT,
+      BANDED_OBJECT,
+      SECTOR_NAME,
       sector: undefined,
       leftObject: undefined,
       rightObject: undefined,

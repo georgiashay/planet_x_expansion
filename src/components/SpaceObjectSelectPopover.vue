@@ -37,8 +37,9 @@ export default defineComponent({
     spaceObjects: function(): any {
       // Remove excluded space objects
       const objects = Object.assign({}, SpaceObject);
+      const excludedInitials = this.excludeObjects.map((obj: any) => obj.initial);
       for (const objectCode in objects) {
-        if (this.excludeObjects.indexOf(objectCode) >= 0) {
+        if (excludedInitials.indexOf(objects[objectCode].initial) >= 0) {
           delete objects[objectCode];
         } else if (this.store.state.gameType.numObjects[SpaceObject[objectCode].initial] === undefined) {
           delete objects[objectCode];

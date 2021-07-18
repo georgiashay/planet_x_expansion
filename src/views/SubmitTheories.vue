@@ -15,15 +15,15 @@
           <template v-for="(theory, i) in theories.slice(0, numTheories)" :key="i">
             <ion-item-divider v-if="i>0"/>
             <sector-select
-              :label="'Sector: '"
+              :label="SECTOR_NAME.proper + ': '"
               :value="theory.sector"
               @input="theory.sector = $event;"
               :columns="6"/>
             <space-object-select
-              :label ="'Space Object: '"
+              :label ="THEME_NAME.proper + ' ' + OBJECT_NAME.proper + ': '"
               :value="theory.spaceObject"
               @input="theory.spaceObject = $event;"
-              :exclude-objects="['PLANET_X', 'EMPTY']"
+              :exclude-objects="[GOAL_OBJECT, EMPTY_OBJECT]"
               :columns="3"
               :show-name="false"/>
           </template>
@@ -85,7 +85,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject } from '@/constants';
+import { SpaceObject, SECTOR_NAME, THEME_NAME, OBJECT_NAME, GOAL_OBJECT, EMPTY_OBJECT } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -139,7 +139,12 @@ export default defineComponent({
       theories: [],
       router,
       initialToSpaceObject,
-      theoryToggle: 0
+      theoryToggle: 0,
+      SECTOR_NAME,
+      THEME_NAME,
+      OBJECT_NAME,
+      GOAL_OBJECT,
+      EMPTY_OBJECT
     }
   },
   computed: {
@@ -234,14 +239,14 @@ export default defineComponent({
         if (sectorDefined && revealedSectors.has(this.theories[i].sector)) {
           return {
             valid: false,
-            message: "You cannot submit a theory for sector " + (this.theories[i].sector+1) + " - it has already been revealed."
+            message: "You cannot submit a theory for " + SECTOR_NAME.name + " " + (this.theories[i].sector+1) + " - it has already been revealed."
           }
         }
 
         if (sectorDefined && sectors.has(this.theories[i].sector)) {
           return {
             valid: false,
-            message: "You cannot submit multiple theories for sector " + (this.theories[i].sector+1) + " in the same turn."
+            message: "You cannot submit multiple theories for " + SECTOR_NAME.name + " " + (this.theories[i].sector+1) + " in the same turn."
           }
         }
 
@@ -252,7 +257,7 @@ export default defineComponent({
         if (objectDefined && sectorDefined && existingTheories.some((t: any) => t.spaceObject.initial === this.theories[i].spaceObject.initial && t.sector === this.theories[i].sector)) {
           return {
             valid: false,
-            message: "You already submitted the theory that sector " + (this.theories[i].sector+1) + " is " + this.theories[i].spaceObject.one + "."
+            message: "You already submitted the theory that " + SECTOR_NAME.name + " " + (this.theories[i].sector+1) + " is " + this.theories[i].spaceObject.one + "."
           }
         }
       }

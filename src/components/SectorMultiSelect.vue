@@ -9,10 +9,10 @@
         @click="openPopover($event, index)">
         <span v-if="index > 0">&nbsp;{{delimiter}}&nbsp;</span>
         <span v-if="i !== undefined">
-          <span v-if="!numberOnly">Sector</span> {{i + 1}}
+          <span v-if="!numberOnly">{{SECTOR_NAME.proper}}</span> {{i + 1}}
         </span>
         <span v-else class="no_sector">
-          (Select Sector)
+          (Select {{SECTOR_NAME.proper}})
         </span>
         <span class="down_arrow">&nbsp;&#9662;</span>
       </div>
@@ -25,6 +25,7 @@ import { popoverController, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import SectorSelectPopover from '@/components/SectorSelectPopover.vue';
+import { SECTOR_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'SectorMultiSelect',
@@ -38,7 +39,7 @@ export default defineComponent({
     },
     label: {
       type: String,
-      default: "Select Object: "
+      default: "Select " + SECTOR_NAME.properPlural + ": "
     },
     allowedSectors: {
       type: Array,
@@ -59,7 +60,8 @@ export default defineComponent({
   },
   data() {
     return {
-      store: useStore()
+      store: useStore(),
+      SECTOR_NAME
     }
   },
   computed: {

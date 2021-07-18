@@ -1,4 +1,4 @@
-import { initialToSpaceObject, GOAL_OBJECT, EMPTY_OBJECT } from "@/constants.ts";
+import { initialToSpaceObject, GOAL_OBJECT, EMPTY_OBJECT, SECTOR_NAME } from "@/constants.ts";
 
 export default {
   survey(game: any, gameType: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
@@ -28,17 +28,17 @@ export default {
       text = (numObject == 1) ? "There is " : "There are ";
       text += (numObject == 0) ? "no " : numObject + " ";
       if (surveyObject.initial === EMPTY_OBJECT.initial) {
-        text += (numObject == 1) ? "sector " : "sectors ";
+        text += (numObject == 1) ? (SECTOR_NAME + " ") : (SECTOR_NAME.plural + " ");
         text += "that ";
         text += (numObject == 1) ? "appears " : "appear ";
-        text += "empty in sectors " + (startSector+1) + "-" + (endSector+1) + ".";
+        text += "empty in " + SECTOR_NAME.plural + " " + (startSector+1) + "-" + (endSector+1) + ".";
         text += (numObject == 1) ? "\nIt may be truly empty, or it may be " + GOAL_OBJECT.the + "." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
       } else {
         text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
-        text += " in sectors " + (startSector+1) + "-" + (endSector+1) + ".";
+        text += " in " + SECTOR_NAME.plural + " " + (startSector+1) + "-" + (endSector+1) + ".";
       }
     } else {
-      text = "Sector " + (endSector+1) + " ";
+      text = SECTOR_NAME.proper + " " + (endSector+1) + " ";
       if (surveyObject.initial === EMPTY_OBJECT.initial) {
         if (numObject == 0) {
           text += " does not appear empty.";
@@ -89,13 +89,13 @@ export default {
     // Construct text for the result
     let text;
     if (foundObject.initial == EMPTY_OBJECT.initial) {
-      text = "Sector " + (sectorNumber+1) + " appears empty.\nRemember, Planet X appears empty.";
+      text = SECTOR_NAME.proper + " " + (sectorNumber+1) + " appears empty.\nRemember, Planet X appears empty.";
     } else {
-      text = "There is " + foundObject.one + " in sector " + (sectorNumber+1) + ".";
+      text = "There is " + foundObject.one + " in " + SECTOR_NAME.name + " " + (sectorNumber+1) + ".";
     }
 
     // Text to be displayed in history
-    const actionText = "Target, Sector " + (sectorNumber+1);
+    const actionText = "Target, " + SECTOR_NAME.proper + " " + (sectorNumber+1);
 
     const actionResult = {
       actionType: "TARGET",
@@ -192,9 +192,9 @@ export default {
     const realObject = game.board.objects[sector];
     let text;
     if (realObject.initial === spaceObject.initial) {
-      text = "Correct. Sector " + (sector+1) + " has " + spaceObject.one + ".";
+      text = "Correct. " + SECTOR_NAME.proper + " " + (sector+1) + " has " + spaceObject.one + ".";
     } else {
-      text = "Incorrect. Sector " + (sector+1) + " does not have " + spaceObject.one + ".";
+      text = "Incorrect. " + SECTOR_NAME.proper + " " + (sector+1) + " does not have " + spaceObject.one + ".";
     }
 
     const actionResult = {
@@ -211,7 +211,7 @@ export default {
     const actionText = "Submit Theories, " + theories.map((theory: any) => (theory.sector+1) + theory.spaceObject.initial).join(" ");
     const text = "Submitted theories: " + theories.map((theory: any) => {
       const spaceObject = initialToSpaceObject[theory.spaceObject.initial];
-      return "Sector " + (theory.sector+1) + " is " + spaceObject.one;
+      return SECTOR_NAME.proper + " " + (theory.sector+1) + " is " + spaceObject.one;
     }).join("; ") + ".";
 
     const actionResult = {
@@ -229,7 +229,7 @@ export default {
   theoryReveal(turn: number, time: Date, theories: Array<any>) {
     const actionText = "Revealed Theories, " + theories.map((theory: any) => (theory.sector + 1) + (theory.spaceObject.initial) + ":" + (theory.accurate ? "✓" : "X")).join(" ");
     const text = "Revealed theories: " + theories.map((theory: any) => {
-      return "Sector " + (theory.sector + 1) + " is " + (theory.accurate ? "" : "not ") + theory.spaceObject.one;
+      return SECTOR_NAME.proper + " " + (theory.sector + 1) + " is " + (theory.accurate ? "" : "not ") + theory.spaceObject.one;
     }).join("; ") + ".";
 
     const actionResult = {

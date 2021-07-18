@@ -43,6 +43,7 @@ import { useRoute } from 'vue-router';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { SECTOR_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'GameCode',
@@ -77,7 +78,7 @@ export default defineComponent({
         return "";
       } else {
         return this.store.state.gameType.name + " Mode (" +
-         this.store.state.gameType.sectors + " sectors)";
+         this.store.state.gameType.sectors + " " + SECTOR_NAME.plural + ")";
       }
     }
   },

@@ -68,7 +68,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
-import { MY_URL, GOAL_OBJECT } from "@/constants.ts";
+import { MY_URL, GOAL_OBJECT, SECTOR_NAME } from "@/constants.ts";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { isPlatform } from '@ionic/vue';
 
@@ -108,7 +108,7 @@ export default defineComponent({
         return "";
       } else {
         return this.store.state.gameType.name + " Mode (" +
-         this.store.state.gameType.sectors + " sectors)";
+         this.store.state.gameType.sectors + " " + SECTOR_NAME.plural + ")";
       }
     },
     playerGrid(): Array<Array<any>> {

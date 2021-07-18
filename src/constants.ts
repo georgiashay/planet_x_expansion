@@ -81,7 +81,7 @@ export const GAME_TYPES: {[sector: number]: any} = {
         "E": "Remember, the octopus appears empty"
       },
       "castle": {
-        "S": "Only in prime sectors",
+        "S": "Only in prime seats",
         "K": "Adjacent to at least 1 other knight",
         "P": "Not adjacent to the queen",
         "J": "Ajacent to at least 1 empty seat",
@@ -182,7 +182,7 @@ export const GAME_TYPES: {[sector: number]: any} = {
         "E": "Remember, the octopus appears empty"
       },
       "castle": {
-        "S": "Only in prime sectors",
+        "S": "Only in prime seats",
         "K": "Adjacent to at least 1 other knight",
         "P": "In a band of exactly 6, not adjacent to the queen",
         "J": "Ajacent to at least 1 empty seat",
@@ -285,7 +285,7 @@ export const GAME_TYPES: {[sector: number]: any} = {
         "E": "Remember, the octopus appears empty"
       },
       "castle": {
-        "S": "Only in prime sectors",
+        "S": "Only in prime seats",
         "K": "Adjacent to at least 1 other knight",
         "P": "In a band of exactly 6, not adjacent to the queen",
         "J": "Ajacent to at least 1 empty seat",
@@ -632,6 +632,106 @@ export const PRIME_OBJECT = {
   "space": SpaceObject.COMET,
   "ocean": SpaceObject.CRAB,
   "castle": SpaceObject.COURT_SCHOLAR
+}[THEME];
+
+export const CLUSTERED_OBJECT = {
+  "space": SpaceObject.ASTEROID,
+  "ocean": SpaceObject.SEAHORSE,
+  "castle": SpaceObject.KNIGHT
+}[THEME];
+
+export const NEEDS_SPACE_OBJECT = {
+  "space": SpaceObject.GAS_CLOUD,
+  "ocean": SpaceObject.DOLPHIN,
+  "castle": SpaceObject.JESTER
+}[THEME];
+
+export const BANDED_OBJECT = {
+  "space": SpaceObject.DWARF_PLANET,
+  "ocean": SpaceObject.TURTLE,
+  "castle": SpaceObject.PRINCE
+}[THEME];
+
+export const SURROUNDED_OBJECT = {
+  "space": SpaceObject.BLACK_HOLE,
+  "ocean": SpaceObject.REMORA,
+  "castle": SpaceObject.CHAPLAIN
+}[THEME];
+
+interface Name {
+  name: string;
+  plural: string;
+  proper: string;
+  properPlural: string;
+}
+
+export const SECTOR_NAME: Name = {
+  "space": {
+    name: "sector",
+    plural: "sectors",
+    proper: "Sector",
+    properPlural: "Sectors"
+  },
+  "ocean": {
+    name: "sector",
+    plural: "sectors",
+    proper: "Sector",
+    properPlural: "Sectors"
+  },
+  "castle": {
+    name: "seat",
+    plural: "seats",
+    proper: "Seat",
+    properPlural: "Seats"
+  }
+}[THEME];
+
+export const OBJECT_NAME: Name = {
+  "space": {
+    name: "object",
+    plural: "objects",
+    proper: "Object",
+    properPlural: "Objects"
+  },
+  "ocean": {
+    name: "animal",
+    plural: "animals",
+    proper: "Animal",
+    properPlural: "Animals"
+  },
+  "castle": {
+    name: "person",
+    plural: "people",
+    proper: "Person",
+    properPlural: "People"
+  }
+}[THEME];
+
+export const THEME_NAME: Name = {
+  "space": {
+    name: "space",
+    plural: "spaces",
+    proper: "Space",
+    properPlural: "Spaces"
+  },
+  "ocean": {
+    name: "ocean",
+    plural: "oceans",
+    proper: "Ocean",
+    properPlural: "Oceans"
+  },
+  "castle": {
+    name: "castle",
+    plural: "castles",
+    proper: "Castle",
+    properPlural: "Castles"
+  }
+}[THEME];
+
+export const SKY_NAME = {
+  "space": "sky",
+  "ocean": "radar",
+  "castle": "table"
 }[THEME];
 
 export const initialToSpaceObject: {[initial: string]: any} = {};

@@ -4,10 +4,10 @@
       <ion-label>{{label}}</ion-label>
       <div id="select_sector" @click="openPopover($event)">
         <span v-if="value !== undefined">
-          <span v-if="!numberOnly">Sector</span> {{value+1}}
+          <span v-if="!numberOnly">{{SECTOR_NAME.proper}}</span> {{value+1}}
         </span>
         <span v-else id="no_sector">
-          (Select Sector)
+          (Select {{SECTOR_NAME.proper}})
         </span>
         <span id="down_arrow">&nbsp;&#9662;</span>
       </div>
@@ -20,6 +20,7 @@ import { popoverController, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import SectorSelectPopover from '@/components/SectorSelectPopover.vue';
+import { SECTOR_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'SectorSelect',
@@ -33,7 +34,7 @@ export default defineComponent({
     },
     label: {
       type: String,
-      default: "Select Object: "
+      default: "Select " + SECTOR_NAME.proper + ": "
     },
     allowedSectors: {
       type: Array
@@ -49,7 +50,8 @@ export default defineComponent({
   },
   data() {
     return {
-      store: useStore()
+      store: useStore(),
+      SECTOR_NAME
     }
   },
   computed: {

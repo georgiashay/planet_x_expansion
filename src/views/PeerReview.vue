@@ -7,16 +7,16 @@
         </div>
         <div id="peerreview_selections">
           <sector-select
-            :label="'Sector:'"
+            :label="SECTOR_NAME.proper + ':'"
             :value="selectedSector"
             @input="selectedSector = $event"
             :columns="6"/>
           <space-object-select
-            :label="'Object:'"
+            :label="OBJECT_NAME.proper + ':'"
             :value="selectedObject"
             @input="selectedObject = $event"
             :columns="3"
-            :exclude-objects="['PLANET_X', 'EMPTY']"/>
+            :exclude-objects="[GOAL_OBJECT, EMPTY_OBJECT]"/>
         </div>
         <ion-button
           expand="block"
@@ -44,7 +44,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject } from '@/constants';
+import { SpaceObject, SECTOR_NAME, OBJECT_NAME, GOAL_OBJECT, EMPTY_OBJECT } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -81,6 +81,10 @@ export default defineComponent({
       arrowForwardOutline,
       timeOutline,
       SpaceObject,
+      SECTOR_NAME,
+      OBJECT_NAME,
+      GOAL_OBJECT,
+      EMPTY_OBJECT,
       selectedObject: undefined,
       selectedSector: undefined,
       router,

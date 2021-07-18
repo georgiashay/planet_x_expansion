@@ -7,12 +7,12 @@
           <h3>Current Action: Survey</h3>
         </div>
         <div id="time_cost">
-          <p>Surveying in a narrower range of sectors has a higher time cost.</p>
+          <p>Surveying in a narrower range of {{SECTOR_NAME.plural}} has a higher time cost.</p>
           <table id="time_table">
             <tr v-for="(row, index) in timeCostOptions" :key="index">
               <td v-for="costOption in row" :key="costOption.cost">
                 <div class="tc_cell">
-                  {{costOption.sectors.join(", ")}} sectors <ion-icon :icon="arrowForwardOutline"/>&nbsp;{{costOption.cost}} <ion-icon :icon="timeOutline"/>
+                  {{costOption.sectors.join(", ")}} {{SECTOR_NAME.plural}} <ion-icon :icon="arrowForwardOutline"/>&nbsp;{{costOption.cost}} <ion-icon :icon="timeOutline"/>
                 </div>
               </td>
             </tr>
@@ -23,11 +23,11 @@
             :label ="'Survey for:'"
             :value="surveyObject"
             @input="surveyObject = $event; validateSelections()"
-            :exclude-objects="['PLANET_X']"
+            :exclude-objects="[GOAL_OBJECT]"
             :columns="3"
             :show-name="false"/>
           <sector-multi-select
-            :label="'In sectors:'"
+            :label="'In ' + SECTOR_NAME.plural + ':'"
             :value="[startSector, endSector]"
             @input="startSector = $event[0]; endSector = $event[1]; validateSelections()"
             :allowed-sectors="availableSectors"
@@ -61,7 +61,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject, PRIME_OBJECT } from '@/constants';
+import { SpaceObject, PRIME_OBJECT, SECTOR_NAME, GOAL_OBJECT } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorMultiSelect from '@/components/SectorMultiSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -104,6 +104,8 @@ export default defineComponent({
       startSector: undefined,
       endSector: undefined,
       router,
+      SECTOR_NAME,
+      GOAL_OBJECT
     }
   },
   computed: {

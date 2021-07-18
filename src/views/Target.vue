@@ -8,7 +8,7 @@
         </div>
         <div id="target_selections">
           <sector-select
-            :label="'Sector:'"
+            :label="SECTOR_NAME.proper + ':'"
             :value="sectorNumber"
             @input="sectorNumber = $event"
             :allowed-sectors="allowedSectors"
@@ -47,6 +47,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { SECTOR_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'Target',
@@ -78,6 +79,7 @@ export default defineComponent({
       timeOutline,
       sectorNumber: undefined,
       router,
+      SECTOR_NAME
     }
   },
   methods: {

@@ -7,7 +7,7 @@
           <ion-icon :src="value.icon"></ion-icon>&nbsp;{{value.proper}}
         </span>
         <span v-else id="no_object">
-          (Select Object)
+          (Select {{OBJECT_NAME.proper}})
         </span>
         <span id="down_arrow">&nbsp;&#9662;</span>
       </div>
@@ -20,6 +20,7 @@ import { popoverController,
         IonIcon, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import SpaceObjectSelectPopover from '@/components/SpaceObjectSelectPopover.vue';
+import { OBJECT_NAME } from '@/constants.ts';
 
 export default defineComponent({
   name: 'SpaceObjectSelect',
@@ -34,7 +35,7 @@ export default defineComponent({
     },
     label: {
       type: String,
-      default: "Select Object: "
+      default: "Select " + OBJECT_NAME.proper + ": "
     },
     excludeObjects: {
       type: Array,
@@ -47,6 +48,11 @@ export default defineComponent({
     columns: {
       type: Number,
       default: 1
+    }
+  },
+  data() {
+    return {
+      OBJECT_NAME
     }
   },
   methods: {
