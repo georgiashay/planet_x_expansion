@@ -395,7 +395,8 @@ export default createStore({
 
       const augmentedLogic = Object.assign({
         expires: expirationDate,
-        version: state.game.version
+        version: state.game.version,
+        theme: THEME
       }, state.logic);
 
       augmentedLogic.researchUsed = Array.from(augmentedLogic.researchUsed);
@@ -693,7 +694,9 @@ export default createStore({
             delete allLogic[sessionID];
           }
         }
-        if (Object.prototype.hasOwnProperty.call(allLogic, state.sessionID) && allLogic[state.sessionID].version === state.game.version) {
+        if (Object.prototype.hasOwnProperty.call(allLogic, state.sessionID)
+            && allLogic[state.sessionID].version === state.game.version
+            && allLogic[state.sessionID].theme === THEME) {
           storedLogic = allLogic[state.sessionID];
           const newExpirationDate = new Date();
           newExpirationDate.setDate(newExpirationDate.getDate() + 3);
