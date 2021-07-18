@@ -493,7 +493,6 @@ export default defineComponent({
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
-      console.log(this.store.state.logic.board);
       this.store.dispatch("logicToggle", {
         sector,
         object: iconRadius.object,
@@ -729,7 +728,6 @@ export default defineComponent({
 
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       canvas.addEventListener("contextmenu", (e: Event) => {
-        console.log("Context menu");
         // e.stopPropagation();
         e.preventDefault();
         const { sector, iconRadius } = this.getClickedObject(e as MouseEvent | TouchEvent);
