@@ -4,7 +4,7 @@
     <ion-content>
       <adaptable-container v-if="store.getters.playerReady">
         <div id="title_container">
-          <h3>Current Action: Planet X Conference</h3>
+          <h3>Current Action: {{GOAL_OBJECT.proper}} Conference</h3>
         </div>
         <div id="conference_selections">
           Select the current conference:
@@ -50,6 +50,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { GOAL_OBJECT } from "@/constants.ts";
 
 export default defineComponent({
   name: 'PlanetXConference',
@@ -80,6 +81,7 @@ export default defineComponent({
       timeOutline,
       selectedConference: undefined,
       router,
+      GOAL_OBJECT
     }
   },
   methods: {

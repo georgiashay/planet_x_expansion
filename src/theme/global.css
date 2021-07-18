@@ -24,14 +24,6 @@
   --use-spacer: 1;
 }
 
-ion-content {
-  --background: linear-gradient(
-          rgba(0, 0, 0, 0.2),
-          rgba(0, 0, 0, 0.2)
-        ),
-        url("../../public/assets/space.jpeg") no-repeat center/cover fixed;
-}
-
 ion-item-divider {
   --background: unset;
   --ion-item-border-color: var(--ion-color-light);

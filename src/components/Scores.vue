@@ -48,7 +48,7 @@ import { IonIcon, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
-import { initialToSpaceObject, SpaceObject } from "@/constants.ts";
+import { initialToSpaceObject, GOAL_OBJECT, EMPTY_OBJECT } from "@/constants.ts";
 import { cloudOfflineOutline, hourglassOutline } from "ionicons/icons";
 
 export default defineComponent({
@@ -69,13 +69,13 @@ export default defineComponent({
     scoreHeaders: function(): Array<Array<string>> {
       const headers = [["first", "/assets/first.svg"]];
       for (const obj of this.store.state.gameType.pointsOrder) {
-        if (obj !== "X" && obj !== "E") {
+        if (obj !== GOAL_OBJECT.initial && obj !== EMPTY_OBJECT.initial) {
           const key = obj;
           const icon = initialToSpaceObject[obj].icon;
           headers.push([key, icon]);
         }
       }
-      headers.push(["X", SpaceObject.PLANET_X.icon]);
+      headers.push([GOAL_OBJECT.initial, GOAL_OBJECT.icon]);
       return headers;
     },
     points: function(): Array<number | string> {
@@ -83,7 +83,7 @@ export default defineComponent({
       for (const [key] of this.scoreHeaders) {
         if (key === "first") {
           points.push(1);
-        } else if(key === "X") {
+        } else if(key === GOAL_OBJECT.initial) {
           points.push("2-10");
         } else if (key in this.store.state.gameType.points) {
           points.push(this.store.state.gameType.points[key]);
@@ -98,7 +98,7 @@ export default defineComponent({
       for (const score of this.store.state.session.scores) {
         const row = [];
         for (const [key] of this.scoreHeaders) {
-          if (key === "first" || key === "X") {
+          if (key === "first" || key === GOAL_OBJECT.initial) {
             row.push(score[key]);
           } else {
             row.push(score.objects[key]);

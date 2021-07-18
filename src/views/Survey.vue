@@ -61,7 +61,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject } from '@/constants';
+import { SpaceObject, PRIME_OBJECT } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorMultiSelect from '@/components/SectorMultiSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -111,7 +111,7 @@ export default defineComponent({
       const primeSectors = [2, 3, 5, 7, 11, 13, 17, 19, 23].map((p: number) => p-1);
       // Which sectors are available to survey depend on the object being surveyed
       if (this.store.state.isSession) {
-        if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
+        if (this.surveyObject?.initial == PRIME_OBJECT.initial) {
           // Comets can only be in prime sectors
           return this.store.getters.skySectors.filter((s: number) => primeSectors.indexOf(s) >= 0);
         } else {
@@ -119,7 +119,7 @@ export default defineComponent({
           return this.store.getters.skySectors;
         }
       } else {
-        if (this.surveyObject?.initial == SpaceObject.COMET.initial) {
+        if (this.surveyObject?.initial == PRIME_OBJECT.initial) {
           // Comets can only be in prime sectors
           return primeSectors.filter((s) => s < this.store.state.gameType.sectors);
         } else {

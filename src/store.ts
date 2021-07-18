@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject,
         initialToSpaceObject, SeasonView,
-        IS_PROD } from "@/constants";
+        IS_PROD, THEME, PRIME_OBJECT } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
@@ -76,14 +76,14 @@ export default createStore({
   actions: {
     async createGame({ commit }, numSectors) {
       // Get fresh game from server
-      const response: any = await axios.get(API_URL + "/creategame/"  + numSectors);
+      const response: any = await axios.get(API_URL + "/creategame/"  + numSectors, { params: { theme: THEME } });
       commit('setGame', response.data.game);
       commit('setGameCode', response.data.gameCode);
       commit('setGameType', GAME_TYPES[numSectors]);
     },
     async joinGame({ commit }, gameCode: string) {
       // Get game with game code from server if it exists
-      const response: any = await axios.get(API_URL + "/joingame/" + gameCode);
+      const response: any = await axios.get(API_URL + "/joingame/" + gameCode, { params: { theme: THEME } });
       if (response.data.found) {
         commit('setGame', response.data.game);
         commit('setGameCode', response.data.gameCode);
@@ -92,7 +92,7 @@ export default createStore({
     },
     async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
-      const response: any = await axios.post(API_URL + "/createSession/" + numSectors, { name });
+      const response: any = await axios.post(API_URL + "/createSession/" + numSectors, { name, theme: THEME });
       const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
       log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
@@ -117,7 +117,7 @@ export default createStore({
     },
     async joinSession({ commit, dispatch }, { sessionCode, name }) {
       // Join existing session
-      const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode, { name });
+      const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode, { name, theme: THEME });
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
@@ -141,7 +141,7 @@ export default createStore({
     },
     async reconnectSession({ state, commit, dispatch }, { sessionCode, playerNum }) {
       // Reconnect to existing session
-      const response: any = await axios.get(API_URL + "/reconnectSession/" + sessionCode + "/?playerNum=" + playerNum);
+      const response: any = await axios.get(API_URL + "/reconnectSession/" + sessionCode + "/?playerNum=" + playerNum, { params: { theme: THEME } });
       if (response.data.found) {
         // console.log(response.data);
         const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
@@ -167,12 +167,12 @@ export default createStore({
     },
     async startSession({ state }) {
       // Start session (when all players have joined)
-      const response = await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID);
+      const response = await axios.post(API_URL + "/startSession/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, { theme: THEME });
       log(response);
     },
     listenSession({ state, dispatch, commit }) {
       // Listen for updates to the session
-      const ws = new WebSocket(WEBSOCKET_URL + "/listenSession/" + state.sessionID);
+      const ws = new WebSocket(WEBSOCKET_URL + "/listenSession/" + state.sessionID + "/" + THEME);
       ws.onopen = () => {
         console.log("Listening for updates to state");
         ws.send(JSON.stringify({ id: state.playerID.toString() }));
@@ -213,7 +213,8 @@ export default createStore({
       moveData = Object.assign({ turn }, moveData);
       const data = {
         turn: moveData,
-        timeCost
+        timeCost,
+        theme: THEME
       };
       state.awaitingTurnSubmission = true;
       axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, data).then((response) => {
@@ -332,7 +333,12 @@ export default createStore({
       const turn = getters.myNextAction.turn;
 
       state.awaitingTurnSubmission = true;
-      axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {theories: submittableTheories, turn }).then((response) => {
+      const data = {
+        theories: submittableTheories,
+        turn,
+        theme: THEME
+      };
+      axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, data).then((response) => {
         state.awaitingTurnSubmission = false;
         log(response.data);
         if (response.data.allowed) {
@@ -566,7 +572,7 @@ export default createStore({
       await dispatch('newPacket', { queue: 'undo' });
       for (let i = 0; i < state.gameType.sectors; i++) {
         for (const obj of state.gameType.logicSheetOrder) {
-          if (obj !== "C" || [2,3,5,7,11,13,17,19,23].indexOf(i + 1) >= 0) {
+          if (obj !== PRIME_OBJECT.initial || [2,3,5,7,11,13,17,19,23].indexOf(i + 1) >= 0) {
             await dispatch('addStateToUndoPacket', { sector: i, object: obj });
             await commit('logicUnset', { sector: i, object: obj });
           }

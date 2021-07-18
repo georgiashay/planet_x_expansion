@@ -1,4 +1,4 @@
-import { SpaceObject, initialToSpaceObject } from "@/constants.ts";
+import { initialToSpaceObject, GOAL_OBJECT, EMPTY_OBJECT } from "@/constants.ts";
 
 export default {
   survey(game: any, gameType: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
@@ -15,8 +15,8 @@ export default {
     // Find the number of the object being surveyed
     const numObject = sectors.filter((obj: any) => {
       // If the object is an empty sector, include Planet X in the count
-      if (surveyObject.initial === SpaceObject.EMPTY.initial) {
-        return obj.initial === surveyObject.initial || obj.initial === SpaceObject.PLANET_X.initial;
+      if (surveyObject.initial === EMPTY_OBJECT.initial) {
+        return obj.initial === surveyObject.initial || obj.initial === GOAL_OBJECT.initial;
       } else {
         return obj.initial === surveyObject.initial;
       }
@@ -27,23 +27,23 @@ export default {
     if (startSector !== endSector) {
       text = (numObject == 1) ? "There is " : "There are ";
       text += (numObject == 0) ? "no " : numObject + " ";
-      if (surveyObject.initial === SpaceObject.EMPTY.initial) {
+      if (surveyObject.initial === EMPTY_OBJECT.initial) {
         text += (numObject == 1) ? "sector " : "sectors ";
         text += "that ";
         text += (numObject == 1) ? "appears " : "appear ";
         text += "empty in sectors " + (startSector+1) + "-" + (endSector+1) + ".";
-        text += (numObject == 1) ? "\nIt may be truly empty, or it may be Planet X." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
+        text += (numObject == 1) ? "\nIt may be truly empty, or it may be " + GOAL_OBJECT.the + "." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
       } else {
         text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
         text += " in sectors " + (startSector+1) + "-" + (endSector+1) + ".";
       }
     } else {
       text = "Sector " + (endSector+1) + " ";
-      if (surveyObject.initial === SpaceObject.EMPTY.initial) {
+      if (surveyObject.initial === EMPTY_OBJECT.initial) {
         if (numObject == 0) {
           text += " does not appear empty.";
         } else {
-          text += " appears empty. It may be truly empty, or it may be Planet X.";
+          text += " appears empty. It may be truly empty, or it may be " + GOAL_OBJECT.the + ".";
         }
       } else {
         if (numObject == 0) {
@@ -82,13 +82,13 @@ export default {
     foundObject = initialToSpaceObject[foundObject.initial];
 
     // If it is Planet X, show that it appears empty
-    if (foundObject.initial === SpaceObject.PLANET_X.initial) {
-      foundObject = SpaceObject.EMPTY;
+    if (foundObject.initial === GOAL_OBJECT.initial) {
+      foundObject = EMPTY_OBJECT;
     }
 
     // Construct text for the result
     let text;
-    if (foundObject.initial == SpaceObject.EMPTY.initial) {
+    if (foundObject.initial == EMPTY_OBJECT.initial) {
       text = "Sector " + (sectorNumber+1) + " appears empty.\nRemember, Planet X appears empty.";
     } else {
       text = "There is " + foundObject.one + " in sector " + (sectorNumber+1) + ".";
@@ -132,9 +132,9 @@ export default {
     // Get conference at specific index
     const actionResult = {
       actionType: "CONFERENCE",
-      actionName: "Planet X Conference",
+      actionName: GOAL_OBJECT.the + " Conference",
       actionText: "Conference X" + (index+1) + ": " + game.conference[index].categoryName,
-      text: "X" + (index + 1) + ". " + game.conference[index].text,
+      text: GOAL_OBJECT.initial + (index + 1) + ". " + game.conference[index].text,
       index,
       shortText: game.conference[index].shortText,
       multiInitialText: game.conference[index].multiInitialText,
@@ -150,7 +150,7 @@ export default {
     const rightSector = (sector == numSectors - 1) ? 0 : sector + 1;
 
     // Check if objects are all correct
-    const found = game.board.objects[sector].initial === SpaceObject.PLANET_X.initial &&
+    const found = game.board.objects[sector].initial === GOAL_OBJECT.initial &&
                   game.board.objects[leftSector].initial === leftObject.initial &&
                   game.board.objects[rightSector].initial === rightObject.initial;
 
@@ -161,18 +161,18 @@ export default {
 
     const locationText = leftObject.initial + "-" + (sector+1) + "-" + rightObject.initial;
     if (found) {
-      text = "Congratulations! You found Planet X!";
-      upperText = "If you are the first to find Planet X,";
-      actionText = "Locate Planet X, " + locationText + ", Success";
+      text = "Congratulations! You found " + GOAL_OBJECT.the + "!";
+      upperText = "If you are the first to find " + GOAL_OBJECT.the + ",";
+      actionText = "Locate " + GOAL_OBJECT.the + ", " + locationText + ", Success";
     } else {
-      text = "You did not locate Planet X. At least one piece of information you entered was incorrect."
-      upperText = "If no one has yet found Planet X,";
-      actionText = "Locate Planet X, " + locationText + ", Fail";
+      text = "You did not locate " + GOAL_OBJECT.the + ". At least one piece of information you entered was incorrect."
+      upperText = "If no one has yet found " + GOAL_OBJECT.the + ",";
+      actionText = "Locate " + GOAL_OBJECT.the + ", " + locationText + ", Fail";
     }
 
     const actionResult = {
       actionType: "LOCATE_PLANET_X",
-      actionName: "Locate Planet X",
+      actionName: "Locate " + GOAL_OBJECT.the,
       actionText,
       text,
       upperText,

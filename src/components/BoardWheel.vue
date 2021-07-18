@@ -20,7 +20,7 @@ import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
-import { initialToSpaceObject } from "@/constants.ts";
+import { initialToSpaceObject, GOAL_OBJECT } from "@/constants.ts";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
 import CenteredContainer from "@/components/CenteredContainer.vue";
@@ -424,7 +424,7 @@ export default defineComponent({
         ctx.textAlign = "center";
         ctx.fillStyle = this.getCSSVariable("--ion-color-light-contrast");
         ctx.textBaseline = "middle";
-        ctx.fillText("X" + String.fromCharCode(i+8321), 0, -radius);
+        ctx.fillText(GOAL_OBJECT.initial + String.fromCharCode(i+8321), 0, -radius);
 
         ctx.restore();
       }

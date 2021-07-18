@@ -29,7 +29,7 @@ import BoardPage from "@/views/BoardPage.vue";
 import LogicPage from "@/views/LogicPage.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
 import store from "../store";
-import { IS_PROD } from "../constants";
+import { IS_PROD, GOAL_OBJECT } from "../constants";
 
 const getRecentSessions = async function(): Promise<Array<any>> {
   await store.dispatch("initializeStorage");
@@ -217,7 +217,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/:gameType/action/locateplanetx',
-    name: 'Find Planet X',
+    name: 'Find ' + GOAL_OBJECT.the,
     component: FindPlanetX,
     props: true
   },
@@ -229,7 +229,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/:gameType/action/planetxconference',
-    name: 'Planet X Conference',
+    name: GOAL_OBJECT.the + ' Conference',
     component: PlanetXConference,
     props: true
   },

@@ -25,7 +25,7 @@
         </ion-col>
       </ion-row>
       <ion-row v-if="resultsSummary.located.length > 0" class="title_row">
-        <b>Locate Planet X Attempts</b>
+        <b>Locate {{GOAL_OBJECT.proper}} Attempts</b>
       </ion-row>
       <ion-row v-if="resultsSummary.located.length > 0">
         <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
@@ -116,7 +116,7 @@
           </template>
           <template v-if="resultsSummary.located.length > 0">
             <ion-row class="title_row">
-              <b>Locate Planet X Attempts</b>
+              <b>Locate {{GOAL_OBJECT.proper}} Attempts</b>
             </ion-row>
             <ion-row
               v-for="(locate, index) in resultsSummary.located"
@@ -186,7 +186,7 @@
           </template>
           <template v-if="resultsSummary.located.length > 0">
             <ion-row class="title_row">
-              <b>Locate Planet X Attempts</b>
+              <b>Locate {{GOAL_OBJECT.proper}} Attempts</b>
             </ion-row>
             <ion-row
               v-for="(locate, index) in resultsSummary.located"
@@ -215,6 +215,7 @@
 import { defineComponent } from 'vue';
 import { IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { useMatchMedia } from '@cwist/vue-match-media';
+import { GOAL_OBJECT } from '@/constants.ts';
 
 export default defineComponent({
   name: "ResultsSummary",
@@ -239,7 +240,8 @@ export default defineComponent({
   },
   data() {
     return {
-      matchMedia: useMatchMedia()
+      matchMedia: useMatchMedia(),
+      GOAL_OBJECT
     }
   },
   computed: {

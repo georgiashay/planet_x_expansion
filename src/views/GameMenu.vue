@@ -55,7 +55,7 @@
             expand="block"
             color="light"
             :router-link="'/' + gameType + '/action/locateplanetx'">
-            Locate Planet X ({{store.state.gameType.locatePlanetXCost}}
+            Locate {{GOAL_OBJECT.proper}} ({{store.state.gameType.locatePlanetXCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
@@ -80,7 +80,7 @@
             expand="block"
             color="light"
             :router-link="'/' + gameType + '/action/planetxconference'">
-            Planet X Conference
+            {{GOAL_OBJECT.proper}} Conference
           </ion-button>
           <stripe/>
           <ion-button
@@ -134,6 +134,7 @@ import Stripe from "@/components/Stripe.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
 import CenteredContainer from "@/components/CenteredContainer.vue";
 import Modal from "@/components/Modal.vue";
+import { GOAL_OBJECT } from "@/constants.ts";
 // import Modal from "vue-js-modal/src/components/Modal.vue";
 
 export default defineComponent({
@@ -164,6 +165,7 @@ export default defineComponent({
       store,
       timeOutline,
       router,
+      GOAL_OBJECT,
       matchMedia: useMatchMedia(),
       showAllTheories: false,
       showNewTheories: false

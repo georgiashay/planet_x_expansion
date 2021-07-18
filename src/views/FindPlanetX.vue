@@ -4,7 +4,7 @@
     <ion-content>
       <adaptable-container v-if="store.getters.playerReady">
         <div id="title_container">
-          <h3>Current Action: Locate Planet X</h3>
+          <h3>Current Action: Locate {{GOAL_OBJECT.the}}</h3>
         </div>
         <div id="planetx_selections">
           <sector-select
@@ -22,7 +22,7 @@
             :exclude-objects="['PLANET_X', 'BLACK_HOLE', 'DWARF_PLANET']"/>
           <ion-item v-if="sector !== undefined" id="planet_x_spacer" color="light">
             <ion-label>Sector {{sector+1}}</ion-label>
-            <ion-icon :src="SpaceObject.PLANET_X.icon"></ion-icon>&nbsp;Planet X
+            <ion-icon :src="GOAL_OBJECT.icon"></ion-icon>&nbsp;{{GOAL_OBJECT.name}}
           </ion-item>
           <space-object-select
             v-if="sector !== undefined"
@@ -38,7 +38,7 @@
           @click="locate()"
           id="planet_button"
           :disabled="sector === undefined || leftObject === undefined || rightObject === undefined">
-          Locate Planet X ({{store.state.gameType.locatePlanetXCost}} <ion-icon :icon="timeOutline" size="small"/>)
+          Locate {{GOAL_OBJECT.the}} ({{store.state.gameType.locatePlanetXCost}} <ion-icon :icon="timeOutline" size="small"/>)
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <stripe/>
@@ -59,7 +59,7 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject } from '@/constants';
+import { GOAL_OBJECT } from '@/constants';
 import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -101,7 +101,7 @@ export default defineComponent({
       store,
       arrowForwardOutline,
       timeOutline,
-      SpaceObject,
+      GOAL_OBJECT,
       sector: undefined,
       leftObject: undefined,
       rightObject: undefined,

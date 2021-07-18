@@ -1,5 +1,5 @@
 import { useStore } from "vuex";
-import { initialToSpaceObject } from "@/constants.ts";
+import { initialToSpaceObject, GOAL_OBJECT } from "@/constants.ts";
 import { defineComponent } from 'vue';
 
 class SpacedMessageTimer {
@@ -111,9 +111,9 @@ export default defineComponent({
           return action.playerName + " researched " + this.store.state.game.research[action.index].categoryName;
         } else if (action.actionType === "LOCATE_PLANET_X") {
           if (action.successful) {
-            return action.playerName + " found Planet X";
+            return action.playerName + " found " + GOAL_OBJECT.the;
           } else {
-            return action.playerName + " did not find Planet X";
+            return action.playerName + " did not find " + GOAL_OBJECT.the;
           }
         } else if (action.actionType === "THEORY") {
           return action.playerName + " finalized theories";

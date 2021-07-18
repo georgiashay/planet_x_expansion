@@ -4,8 +4,8 @@
       <centered-container>
         <div id="title_container">
           <h2>The Search For</h2>
-          <h1><b>Planet X</b></h1>
-          <h5>Unofficial Expansion</h5>
+          <h1><b>{{GOAL_OBJECT.proper}}</b></h1>
+          <h5 v-if="THEME == 'space'">Unofficial Expansion</h5>
         </div>
         <div id="start_game_buttons">
           <stripe/>
@@ -30,6 +30,7 @@ import SoundMixin from "@/mixins/SoundMixin.ts";
 import Stripe from "@/components/Stripe.vue";
 import Spacer from "@/components/Spacer.vue";
 import CenteredContainer from "@/components/CenteredContainer.vue";
+import { GOAL_OBJECT, THEME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'Home',
@@ -44,7 +45,9 @@ export default defineComponent({
   mixins: [SoundMixin],
   data() {
     return {
-      store: useStore()
+      store: useStore(),
+      THEME,
+      GOAL_OBJECT
     }
   },
   ionViewDidEnter() {

@@ -68,7 +68,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import GameFooter from "@/components/GameFooter.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
-import { MY_URL } from "@/constants.ts";
+import { MY_URL, GOAL_OBJECT } from "@/constants.ts";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { isPlatform } from '@ionic/vue';
 
@@ -175,11 +175,11 @@ export default defineComponent({
     },
     async shareGameLink() {
       if (isPlatform("cordova")) {
-        SocialSharing.share("Join My Planet X Game", "Planet X Game", null, MY_URL + "/session/join/" + this.store.state.sessionCode);
+        SocialSharing.share("Join My " + GOAL_OBJECT.proper + "Game",  GOAL_OBJECT.proper + " Game", null, MY_URL + "/session/join/" + this.store.state.sessionCode);
       } else {
         navigator.share({
-          title: "Planet X Game",
-          text: "Join My Planet X Game",
+          title: GOAL_OBJECT.proper + " Game",
+          text: "Join My " + GOAL_OBJECT.proper + " Game",
           url: MY_URL + "/session/join/" + this.store.state.sessionCode
         });
       }

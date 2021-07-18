@@ -133,7 +133,7 @@ import { initialToSpaceObject } from "@/constants.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
-import { INNER_WHEEL_COLORS } from "@/constants.ts";
+import { INNER_WHEEL_COLORS, PRIME_OBJECT } from "@/constants.ts";
 import ResultsSummary from "@/components/ResultsSummary.vue";
 
 const LINE_WIDTH = 8;
@@ -404,7 +404,7 @@ export default defineComponent({
       if (Math.abs(rx) <= this.iconWidth/2) {
         const iconRadius = this.iconRadii.find((obj: any) => ry >= obj.radius && ry <= obj.radius + obj.height);
         if (iconRadius !== undefined) {
-          if (iconRadius.object !== "C" || this.primes.indexOf(sector+1) >= 0) {
+          if (iconRadius.object !== PRIME_OBJECT.initial || this.primes.indexOf(sector+1) >= 0) {
             return { sector, iconRadius };
           }
         }
@@ -493,6 +493,7 @@ export default defineComponent({
       });
     },
     toggleObject: function(sector: number, iconRadius: any) {
+      console.log(this.store.state.logic.board);
       this.store.dispatch("logicToggle", {
         sector,
         object: iconRadius.object,
@@ -679,7 +680,7 @@ export default defineComponent({
 
 
         for (let j = 0; j < iconRadii.length; j++) {
-          if (iconRadii[j].object !== "C" || this.primes.indexOf(i+1) >= 0) {
+          if (iconRadii[j].object !== PRIME_OBJECT.initial || this.primes.indexOf(i+1) >= 0) {
             const { state, level } = this.store.state.logic.board[i][iconRadii[j].object];
             if (state === "eliminated") {
               if (level > 0 && this.scratchUncertain) {
