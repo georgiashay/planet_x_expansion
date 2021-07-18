@@ -1,13 +1,18 @@
 export const IS_PROD = process.env.NODE_ENV === "production";
+export const THEME: "space" | "ocean" | "castle" = process.env.VUE_APP_THEME;
 const SERVER_URL = IS_PROD ? "planetx.shaytech.net/api" : "localhost:7999";
-const SELF_URL = IS_PROD ? "planetx.shaytech.net" : "localhost:8100";
+const SELF_PROD_URL = {
+  "space": "planetx.shaytech.net",
+  "ocean": "octopusx.shaytech.net",
+  "castle": "castlex.shaytech.net"
+}[THEME];
+const SELF_URL = IS_PROD ? SELF_PROD_URL : "localhost:8100";
 const SECURE = IS_PROD;
 const URL_PREFIX = SECURE ? "https://" : "http://";
 const WS_PREFIX = SECURE ? "wss://" : "ws://";
 export const API_URL = URL_PREFIX + SERVER_URL;
 export const WEBSOCKET_URL = WS_PREFIX + SERVER_URL;
 export const MY_URL = URL_PREFIX + SELF_URL;
-export const THEME: "space" | "ocean" | "castle" = process.env.VUE_APP_THEME;
 export const GAME_TYPES: {[sector: number]: any} = {
   12: {
     name: "Standard",
