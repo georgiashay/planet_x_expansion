@@ -1,4 +1,4 @@
-import { initialToSpaceObject, GOAL_OBJECT, EMPTY_OBJECT, SECTOR_NAME } from "@/constants.ts";
+import { initialToSectorElement, GOAL_OBJECT, EMPTY_OBJECT, SECTOR_NAME } from "@/constants.ts";
 
 export default {
   survey(game: any, gameType: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
@@ -79,7 +79,7 @@ export default {
   target(game: any, turn: number, time: Date, sectorNumber: number) {
     // Check what is in that sector
     let foundObject = game.board.objects[sectorNumber];
-    foundObject = initialToSpaceObject[foundObject.initial];
+    foundObject = initialToSectorElement[foundObject.initial];
 
     // If it is Planet X, show that it appears empty
     if (foundObject.initial === GOAL_OBJECT.initial) {
@@ -210,7 +210,7 @@ export default {
   theories(turn: number, time: Date, theories: Array<any>) {
     const actionText = "Submit Theories, " + theories.map((theory: any) => (theory.sector+1) + theory.spaceObject.initial).join(" ");
     const text = "Submitted theories: " + theories.map((theory: any) => {
-      const spaceObject = initialToSpaceObject[theory.spaceObject.initial];
+      const spaceObject = initialToSectorElement[theory.spaceObject.initial];
       return SECTOR_NAME.proper + " " + (theory.sector+1) + " is " + spaceObject.one;
     }).join("; ") + ".";
 

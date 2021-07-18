@@ -19,7 +19,7 @@
               :value="theory.sector"
               @input="theory.sector = $event;"
               :columns="6"/>
-            <space-object-select
+            <sector-element-select
               :label ="THEME_NAME.proper + ' ' + OBJECT_NAME.proper + ': '"
               :value="theory.spaceObject"
               @input="theory.spaceObject = $event;"
@@ -65,7 +65,7 @@
                 :key="index"
                 size="2"
                 class="previous_theory">
-                {{theory.sector+1}}:&nbsp;<ion-icon :src="initialToSpaceObject[theory.spaceObject.initial].icon"></ion-icon>
+                {{theory.sector+1}}:&nbsp;<ion-icon :src="initialToSectorElement[theory.spaceObject.initial].icon"></ion-icon>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -85,8 +85,8 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject, SECTOR_NAME, THEME_NAME, OBJECT_NAME, GOAL_OBJECT, EMPTY_OBJECT } from '@/constants';
-import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
+import { SectorElement, SECTOR_NAME, THEME_NAME, OBJECT_NAME, GOAL_OBJECT, EMPTY_OBJECT } from '@/constants';
+import SectorElementSelect from '@/components/SectorElementSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
@@ -94,7 +94,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import Spacer from "@/components/Spacer.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
-import { initialToSpaceObject } from "@/constants.ts";
+import { initialToSectorElement } from "@/constants.ts";
 import PlayerColors from "@/mixins/PlayerColors.ts";
 
 export default defineComponent({
@@ -107,7 +107,7 @@ export default defineComponent({
     Spacer,
     Stripe,
     IonNavLink,
-    SpaceObjectSelect,
+    SectorElementSelect,
     SectorSelect,
     GameFooter,
     SessionHeader,
@@ -134,11 +134,11 @@ export default defineComponent({
       store,
       arrowForwardOutline,
       timeOutline,
-      SpaceObject,
+      SectorElement,
       numTheories: 0,
       theories: [],
       router,
-      initialToSpaceObject,
+      initialToSectorElement,
       theoryToggle: 0,
       SECTOR_NAME,
       THEME_NAME,
@@ -189,7 +189,7 @@ export default defineComponent({
       const tokens = [];
       for (const initial of this.store.state.gameType.logicSheetOrder) {
         if (initial in this.tokensLeft) {
-          const obj = initialToSpaceObject[initial];
+          const obj = initialToSectorElement[initial];
           for (let i = 0; i < this.tokensLeft[initial]; i++) {
             tokens.push(obj);
           }

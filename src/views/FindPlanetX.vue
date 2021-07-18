@@ -13,7 +13,7 @@
             @input="sector=$event"
             :columns="6"/>
           <spacer v-if="sector !== undefined"/>
-          <space-object-select
+          <sector-element-select
             v-if="sector !== undefined "
             :label="SECTOR_NAME.proper + ' ' + (leftSector+1)"
             :value="leftObject"
@@ -24,7 +24,7 @@
             <ion-label>{{SECTOR_NAME.proper}} {{sector+1}}</ion-label>
             <ion-icon :src="GOAL_OBJECT.icon"></ion-icon>&nbsp;{{GOAL_OBJECT.name}}
           </ion-item>
-          <space-object-select
+          <sector-element-select
             v-if="sector !== undefined"
             :label="SECTOR_NAME.proper + ' ' + (rightSector+1)"
             :value="rightObject"
@@ -60,7 +60,7 @@ import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { GOAL_OBJECT, SECTOR_NAME, SURROUNDED_OBJECT, BANDED_OBJECT } from '@/constants';
-import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
+import SectorElementSelect from '@/components/SectorElementSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
@@ -81,7 +81,7 @@ export default defineComponent({
     IonNavLink,
     IonLabel,
     IonItem,
-    SpaceObjectSelect,
+    SectorElementSelect,
     SectorSelect,
     GameFooter,
     SessionHeader,

@@ -20,7 +20,7 @@ import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
 import Scores from "@/components/Scores.vue";
-import { initialToSpaceObject, GOAL_OBJECT } from "@/constants.ts";
+import { initialToSectorElement, GOAL_OBJECT } from "@/constants.ts";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
 import CenteredContainer from "@/components/CenteredContainer.vue";
@@ -467,7 +467,7 @@ export default defineComponent({
       this.theoryImage = await this.loadSVGWithColor("/assets/theory.svg", this.getCSSVariable("--ion-color-light-contrast"));
 
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
-        const object = initialToSpaceObject[initial];
+        const object = initialToSectorElement[initial];
         return this.loadSVGWithColor(object.icon, this.getCSSVariable("--ion-color-light-contrast"));
       });
 

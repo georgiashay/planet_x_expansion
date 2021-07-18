@@ -129,7 +129,7 @@ import { informationCircleOutline, arrowUndoOutline,
         lockClosed, lockOpenOutline } from "ionicons/icons";
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
-import { initialToSpaceObject } from "@/constants.ts";
+import { initialToSectorElement } from "@/constants.ts";
 import NumObjectsPopover from "@/components/NumObjectsPopover.vue";
 import DarkMode from "@/mixins/DarkMode.ts";
 import { useMatchMedia } from '@cwist/vue-match-media';
@@ -303,7 +303,7 @@ export default defineComponent({
     },
     iconImages: async function(): Promise<Array<any>> {
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
-        const object = initialToSpaceObject[initial];
+        const object = initialToSectorElement[initial];
 
         const levelPromises = this.store.state.settings.levelColors.map((color: string) => {
           return this.loadSVGWithColor(object.iconShort, this.getCSSVariable(color));
@@ -316,7 +316,7 @@ export default defineComponent({
     },
     fullImages: async function(): Promise<Array<any>> {
       const imagePromises = this.store.state.gameType.logicSheetOrder.map((initial: string) => {
-        const object = initialToSpaceObject[initial];
+        const object = initialToSectorElement[initial];
 
         const levelPromises = this.store.state.settings.levelColors.map((color: string) => {
           return this.loadSVGWithColor(object.iconFull, this.getCSSVariable(color));

@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
-import { API_URL, WEBSOCKET_URL, GAME_TYPES, SpaceObject,
-        initialToSpaceObject, SeasonView,
+import { API_URL, WEBSOCKET_URL, GAME_TYPES, SectorElement,
+        initialToSectorElement, SeasonView,
         IS_PROD, THEME, PRIME_OBJECT } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
@@ -782,7 +782,7 @@ export default createStore({
       const logicBoard: {[sector: number]: any} = {};
       for (let i = 0; i < sectors; i++) {
         logicBoard[i] = {};
-        for (const obj of Object.values(SpaceObject)) {
+        for (const obj of Object.values(SectorElement)) {
           logicBoard[i][obj.initial] = {
             state: "none",
             level: 0
@@ -826,7 +826,7 @@ export default createStore({
         if (action.playerID === state.playerID) {
           switch(action.turnType) {
             case("SURVEY"):
-              history.push(actionResponses.survey(state.game, state.gameType, action.turn, action.time, initialToSpaceObject[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
+              history.push(actionResponses.survey(state.game, state.gameType, action.turn, action.time, initialToSectorElement[action.spaceObject.initial], action.sectors[0], action.sectors[1]));
               break;
             case("TARGET"):
               history.push(actionResponses.target(state.game, action.turn, action.time, action.sector));
@@ -835,7 +835,7 @@ export default createStore({
               history.push(actionResponses.research(state.game, action.turn, action.time, action.index));
               break;
             case("LOCATE_PLANET_X"):
-              history.push(actionResponses.locatePlanetX(state.game, action.turn, action.time, action.sector, initialToSpaceObject[action.leftObject.initial], initialToSpaceObject[action.rightObject.initial]));
+              history.push(actionResponses.locatePlanetX(state.game, action.turn, action.time, action.sector, initialToSectorElement[action.leftObject.initial], initialToSectorElement[action.rightObject.initial]));
               break;
             case("THEORY"):
               history.push(actionResponses.theories(action.turn, action.time, action.theories));
@@ -861,7 +861,7 @@ export default createStore({
           } else {
             revealTurn = theoryTurns[theoryTurns.length-1] + revealedTurnIndex - (theoryTurns.length - 1);
           }
-          const newTheory = Object.assign({}, theory, { spaceObject: initialToSpaceObject[theory.spaceObject.initial] });
+          const newTheory = Object.assign({}, theory, { spaceObject: initialToSectorElement[theory.spaceObject.initial] });
 
           if (theoryReveals[revealTurn] !== undefined) {
             theoryReveals[revealTurn].push(newTheory);
@@ -942,7 +942,7 @@ export default createStore({
 
         if (newTheories[j].revealed && !theory.revealed) {
           newlyRevealed.push({
-            spaceObject: initialToSpaceObject[theory.spaceObject.initial],
+            spaceObject: initialToSectorElement[theory.spaceObject.initial],
             sector: theory.sector,
             accurate: theory.accurate
           });
@@ -1012,7 +1012,7 @@ export default createStore({
               .sort((clue1: any, clue2: any) => clue1.sector - clue2.sector) // Display in order
               .map((clue: any) => {
                 const newClue = Object.assign({}, clue);
-                const spaceObject = initialToSpaceObject[clue.eliminatedObject.initial];
+                const spaceObject = initialToSectorElement[clue.eliminatedObject.initial];
                 newClue.spaceObject = spaceObject;
                 return newClue;
               }); // Get space object info from each initial
@@ -1187,7 +1187,7 @@ export default createStore({
         const theory = state.session.theories[i];
         if (theory.revealed) {
           revealed.push({
-            spaceObject: initialToSpaceObject[theory.spaceObject.initial],
+            spaceObject: initialToSectorElement[theory.spaceObject.initial],
             sector: theory.sector,
             accurate: theory.accurate
           });

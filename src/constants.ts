@@ -355,7 +355,7 @@ export const SeasonView: {[code: string]: {[info: string]: string | number}} = {
   }
 };
 
-export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
+export const SectorElement: {[code: string]: {[prop: string]: string}} = {
   "space": {
     ASTEROID: {
       name: "asteroid",
@@ -617,45 +617,45 @@ export const SpaceObject: {[code: string]: {[prop: string]: string}} = {
 }[THEME];
 
 export const GOAL_OBJECT = {
-  "space": SpaceObject.PLANET_X,
-  "ocean": SpaceObject.OCTOPUS,
-  "castle": SpaceObject.QUEEN
+  "space": SectorElement.PLANET_X,
+  "ocean": SectorElement.OCTOPUS,
+  "castle": SectorElement.QUEEN
 }[THEME];
 
 export const EMPTY_OBJECT = {
-  "space": SpaceObject.EMPTY,
-  "ocean": SpaceObject.EMPTY,
-  "castle": SpaceObject.EMPTY
+  "space": SectorElement.EMPTY,
+  "ocean": SectorElement.EMPTY,
+  "castle": SectorElement.EMPTY
 }[THEME];
 
 export const PRIME_OBJECT = {
-  "space": SpaceObject.COMET,
-  "ocean": SpaceObject.CRAB,
-  "castle": SpaceObject.COURT_SCHOLAR
+  "space": SectorElement.COMET,
+  "ocean": SectorElement.CRAB,
+  "castle": SectorElement.COURT_SCHOLAR
 }[THEME];
 
 export const CLUSTERED_OBJECT = {
-  "space": SpaceObject.ASTEROID,
-  "ocean": SpaceObject.SEAHORSE,
-  "castle": SpaceObject.KNIGHT
+  "space": SectorElement.ASTEROID,
+  "ocean": SectorElement.SEAHORSE,
+  "castle": SectorElement.KNIGHT
 }[THEME];
 
 export const NEEDS_SPACE_OBJECT = {
-  "space": SpaceObject.GAS_CLOUD,
-  "ocean": SpaceObject.DOLPHIN,
-  "castle": SpaceObject.JESTER
+  "space": SectorElement.GAS_CLOUD,
+  "ocean": SectorElement.DOLPHIN,
+  "castle": SectorElement.JESTER
 }[THEME];
 
 export const BANDED_OBJECT = {
-  "space": SpaceObject.DWARF_PLANET,
-  "ocean": SpaceObject.TURTLE,
-  "castle": SpaceObject.PRINCE
+  "space": SectorElement.DWARF_PLANET,
+  "ocean": SectorElement.TURTLE,
+  "castle": SectorElement.PRINCE
 }[THEME];
 
 export const SURROUNDED_OBJECT = {
-  "space": SpaceObject.BLACK_HOLE,
-  "ocean": SpaceObject.REMORA,
-  "castle": SpaceObject.CHAPLAIN
+  "space": SectorElement.BLACK_HOLE,
+  "ocean": SectorElement.REMORA,
+  "castle": SectorElement.CHAPLAIN
 }[THEME];
 
 interface Name {
@@ -734,9 +734,9 @@ export const SKY_NAME = {
   "castle": "table"
 }[THEME];
 
-export const initialToSpaceObject: {[initial: string]: any} = {};
-for (const code in SpaceObject) {
-  initialToSpaceObject[SpaceObject[code].initial] = SpaceObject[code];
+export const initialToSectorElement: {[initial: string]: any} = {};
+for (const code in SectorElement) {
+  initialToSectorElement[SectorElement[code].initial] = SectorElement[code];
 }
 
 interface SuspicionLevel {

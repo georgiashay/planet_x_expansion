@@ -11,7 +11,7 @@
             :value="selectedSector"
             @input="selectedSector = $event"
             :columns="6"/>
-          <space-object-select
+          <sector-element-select
             :label="OBJECT_NAME.proper + ':'"
             :value="selectedObject"
             @input="selectedObject = $event"
@@ -44,8 +44,8 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject, SECTOR_NAME, OBJECT_NAME, GOAL_OBJECT, EMPTY_OBJECT } from '@/constants';
-import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
+import { SectorElement, SECTOR_NAME, OBJECT_NAME, GOAL_OBJECT, EMPTY_OBJECT } from '@/constants';
+import SectorElementSelect from '@/components/SectorElementSelect.vue';
 import SectorSelect from '@/components/SectorSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
@@ -61,7 +61,7 @@ export default defineComponent({
     IonIcon,
     Stripe,
     IonNavLink,
-    SpaceObjectSelect,
+    SectorElementSelect,
     SectorSelect,
     GameFooter,
     AdaptableContainer
@@ -80,7 +80,7 @@ export default defineComponent({
       store,
       arrowForwardOutline,
       timeOutline,
-      SpaceObject,
+      SectorElement,
       SECTOR_NAME,
       OBJECT_NAME,
       GOAL_OBJECT,

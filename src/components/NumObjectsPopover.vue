@@ -26,7 +26,7 @@
 import { defineComponent } from 'vue';
 import { IonIcon, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { useStore } from "vuex";
-import { initialToSpaceObject } from "@/constants.ts";
+import { initialToSectorElement } from "@/constants.ts";
 
 export default defineComponent({
   name: 'NumObjectsPopover',
@@ -45,7 +45,7 @@ export default defineComponent({
     spaceObjects: function(): Array<any> {
       const spaceObjects = [];
       for (const initial of this.store.state.gameType.constraintOrder) {
-        const spaceObject = initialToSpaceObject[initial];
+        const spaceObject = initialToSectorElement[initial];
         spaceObjects.push({
           spaceObject,
           numObject: this.store.state.gameType.numObjects[initial],

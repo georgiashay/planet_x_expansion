@@ -1,7 +1,7 @@
 <template>
   <div class="popover_container" :style="cssVars">
     <table>
-      <tr v-for="(row, index) in tableSpaceObjects" :key="index">
+      <tr v-for="(row, index) in tableSectorElements" :key="index">
         <td
           v-for="(obj, j) in row"
           :key="j"
@@ -18,36 +18,36 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { popoverController, IonIcon } from '@ionic/vue';
-import { SpaceObject } from '@/constants';
+import { SectorElement } from '@/constants';
 import { useStore } from 'vuex';
 
 export default defineComponent({
-  name: 'SpaceObjectSelectPopover',
+  name: 'SectorElementSelectPopover',
   components: {
     IonIcon
   },
   props: ['value', 'excludeObjects', 'showName', 'columns'],
   data: function() {
     return {
-      SpaceObject,
+      SectorElement,
       store: useStore()
     }
   },
   computed: {
     spaceObjects: function(): any {
       // Remove excluded space objects
-      const objects = Object.assign({}, SpaceObject);
+      const objects = Object.assign({}, SectorElement);
       const excludedInitials = this.excludeObjects.map((obj: any) => obj.initial);
       for (const objectCode in objects) {
         if (excludedInitials.indexOf(objects[objectCode].initial) >= 0) {
           delete objects[objectCode];
-        } else if (this.store.state.gameType.numObjects[SpaceObject[objectCode].initial] === undefined) {
+        } else if (this.store.state.gameType.numObjects[SectorElement[objectCode].initial] === undefined) {
           delete objects[objectCode];
         }
       }
       return objects;
     },
-    tableSpaceObjects: function(): any {
+    tableSectorElements: function(): any {
       // Split space objects into rows of size this.columns
       const objects: any[][] = [[]];
       for (const objectCode in this.spaceObjects) {

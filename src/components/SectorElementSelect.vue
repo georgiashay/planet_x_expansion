@@ -19,11 +19,11 @@
 import { popoverController,
         IonIcon, IonItem, IonLabel } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import SpaceObjectSelectPopover from '@/components/SpaceObjectSelectPopover.vue';
+import SectorElementSelectPopover from '@/components/SectorElementSelectPopover.vue';
 import { OBJECT_NAME } from '@/constants.ts';
 
 export default defineComponent({
-  name: 'SpaceObjectSelect',
+  name: 'SectorElementSelect',
   components: {
     IonIcon,
     IonItem,
@@ -69,7 +69,7 @@ export default defineComponent({
       // Display popover to select space object
       const popover = await popoverController
         .create({
-          component: SpaceObjectSelectPopover,
+          component: SectorElementSelectPopover,
           componentProps: {
             excludeObjects: this.excludeObjects,
             showName: this.showName,

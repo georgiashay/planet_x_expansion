@@ -48,7 +48,7 @@ import { IonIcon, alertController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import PlayerColors from "@/mixins/PlayerColors.ts";
-import { initialToSpaceObject, GOAL_OBJECT, EMPTY_OBJECT } from "@/constants.ts";
+import { initialToSectorElement, GOAL_OBJECT, EMPTY_OBJECT } from "@/constants.ts";
 import { cloudOfflineOutline, hourglassOutline } from "ionicons/icons";
 
 export default defineComponent({
@@ -71,7 +71,7 @@ export default defineComponent({
       for (const obj of this.store.state.gameType.pointsOrder) {
         if (obj !== GOAL_OBJECT.initial && obj !== EMPTY_OBJECT.initial) {
           const key = obj;
-          const icon = initialToSpaceObject[obj].icon;
+          const icon = initialToSectorElement[obj].icon;
           headers.push([key, icon]);
         }
       }

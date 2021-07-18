@@ -41,7 +41,7 @@ import { IonContent, IonPage, IonButton,
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { initialToSpaceObject, SECTOR_NAME } from '@/constants';
+import { initialToSectorElement, SECTOR_NAME } from '@/constants';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
 
@@ -70,7 +70,7 @@ export default defineComponent({
   computed: {
     sectorObjects: function(): Array<any> {
       return this.store.state.game.board.objects.map((obj: any) => {
-        return initialToSpaceObject[obj.initial];
+        return initialToSectorElement[obj.initial];
       });
     }
   },

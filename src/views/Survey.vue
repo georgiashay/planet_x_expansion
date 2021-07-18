@@ -19,7 +19,7 @@
           </table>
         </div>
         <div id="survey_selections">
-          <space-object-select
+          <sector-element-select
             :label ="'Survey for:'"
             :value="surveyObject"
             @input="surveyObject = $event; validateSelections()"
@@ -61,8 +61,8 @@ import { defineComponent } from 'vue';
 import { arrowForwardOutline, timeOutline } from 'ionicons/icons';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { SpaceObject, PRIME_OBJECT, SECTOR_NAME, GOAL_OBJECT } from '@/constants';
-import SpaceObjectSelect from '@/components/SpaceObjectSelect.vue';
+import { SectorElement, PRIME_OBJECT, SECTOR_NAME, GOAL_OBJECT } from '@/constants';
+import SectorElementSelect from '@/components/SectorElementSelect.vue';
 import SectorMultiSelect from '@/components/SectorMultiSelect.vue';
 import SoundMixin from "@/mixins/SoundMixin.ts";
 import GameFooter from "@/components/GameFooter.vue";
@@ -79,7 +79,7 @@ export default defineComponent({
     IonIcon,
     Stripe,
     IonNavLink,
-    SpaceObjectSelect,
+    SectorElementSelect,
     SectorMultiSelect,
     GameFooter,
     SessionHeader,
@@ -99,7 +99,7 @@ export default defineComponent({
       store,
       arrowForwardOutline,
       timeOutline,
-      SpaceObject,
+      SectorElement,
       surveyObject: undefined,
       startSector: undefined,
       endSector: undefined,

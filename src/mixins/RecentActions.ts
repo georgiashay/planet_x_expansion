@@ -1,5 +1,5 @@
 import { useStore } from "vuex";
-import { initialToSpaceObject, GOAL_OBJECT, SECTOR_NAME } from "@/constants.ts";
+import { initialToSectorElement, GOAL_OBJECT, SECTOR_NAME } from "@/constants.ts";
 import { defineComponent } from 'vue';
 
 class SpacedMessageTimer {
@@ -104,7 +104,7 @@ export default defineComponent({
       });
       recentHistory = recentHistory.map((action: any) => {
         if (action.actionType === "SURVEY") {
-          return action.playerName + " surveyed for " + initialToSpaceObject[action.spaceObject.initial].plural + " in " + SECTOR_NAME.name + "s " + action.sectors.map((s: number) => s+1).join("-");
+          return action.playerName + " surveyed for " + initialToSectorElement[action.spaceObject.initial].plural + " in " + SECTOR_NAME.name + "s " + action.sectors.map((s: number) => s+1).join("-");
         } else if (action.actionType === "TARGET") {
           return action.playerName + " targeted " + SECTOR_NAME.name + " " + (action.sector + 1);
         } else if (action.actionType === "RESEARCH") {
