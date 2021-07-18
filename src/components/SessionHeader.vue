@@ -3,7 +3,7 @@
     <ion-item id="status_bar" color="light" v-if="recentActions.length === 0">
       <div id="sky_sectors">
         <ion-icon src="/assets/sun.svg"/>
-        &nbsp;Sky: {{store.getters.skyStart + 1}}-{{store.getters.skyEnd + 1}}
+        &nbsp;{{SKY_NAME.proper}}: {{store.getters.skyStart + 1}}-{{store.getters.skyEnd + 1}}
       </div>
       <ion-title id="phase_name">- {{phaseName}} -</ion-title>
       <div id="right_icons">
@@ -35,6 +35,7 @@ import RecentActions from "@/mixins/RecentActions.ts";
 import { menuOutline, settingsOutline, homeOutline } from "ionicons/icons";
 import SettingsPopover from "@/components/SettingsPopover.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
+import { SKY_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: "GameFooter",
@@ -62,7 +63,8 @@ export default defineComponent({
       matchMedia: useMatchMedia(),
       settingsOutline,
       menuOutline,
-      homeOutline
+      homeOutline,
+      SKY_NAME
     }
   },
   mixins: [RecentActions],

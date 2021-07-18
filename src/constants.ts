@@ -728,10 +728,25 @@ export const THEME_NAME: Name = {
   }
 }[THEME];
 
-export const SKY_NAME = {
-  "space": "sky",
-  "ocean": "radar",
-  "castle": "table"
+export const SKY_NAME: Name = {
+  "space": {
+    name: "sky",
+    plural: "skies",
+    proper: "Sky",
+    properPlural: "Skies"
+  },
+  "ocean": {
+    name: "radar",
+    plural: "radars",
+    proper: "Radar",
+    properPlural: "Radars"
+  },
+  "castle": {
+    name: "table",
+    plural: "tables",
+    proper: "Table",
+    properPlural: "Tables"
+  }
 }[THEME];
 
 export const initialToSectorElement: {[initial: string]: any} = {};
