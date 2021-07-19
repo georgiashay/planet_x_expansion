@@ -40,6 +40,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { SECTOR_NAME, SKY_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'TargetReminder',
@@ -64,7 +65,9 @@ export default defineComponent({
     const store = useStore();
     return {
       store,
-      arrowForwardOutline
+      arrowForwardOutline,
+      SECTOR_NAME,
+      SKY_NAME
     }
   }
 });
