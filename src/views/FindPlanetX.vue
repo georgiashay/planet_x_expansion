@@ -22,7 +22,7 @@
             :exclude-objects="[GOAL_OBJECT, SURROUNDED_OBJECT, BANDED_OBJECT]"/>
           <ion-item v-if="sector !== undefined" id="planet_x_spacer" color="light">
             <ion-label>{{SECTOR_NAME.proper}} {{sector+1}}</ion-label>
-            <ion-icon :src="GOAL_OBJECT.icon"></ion-icon>&nbsp;{{GOAL_OBJECT.name}}
+            <ion-icon :src="GOAL_OBJECT.icon"></ion-icon>&nbsp;{{GOAL_OBJECT.proper}}
           </ion-item>
           <sector-element-select
             v-if="sector !== undefined"
@@ -38,7 +38,7 @@
           @click="locate()"
           id="planet_button"
           :disabled="sector === undefined || leftObject === undefined || rightObject === undefined">
-          Locate {{GOAL_OBJECT.the}} ({{store.state.gameType.locatePlanetXCost}} <ion-icon :icon="timeOutline" size="small"/>)
+          Locate {{capitalize(GOAL_OBJECT.the)}} ({{store.state.gameType.locatePlanetXCost}} <ion-icon :icon="timeOutline" size="small"/>)
             <ion-icon :icon="arrowForwardOutline"></ion-icon>
         </ion-button>
         <stripe/>
@@ -68,6 +68,7 @@ import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import Spacer from "@/components/Spacer.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { capitalize } from "@/utilities/stringUtils.ts";
 
 export default defineComponent({
   name: 'FindPlanetX',
@@ -105,6 +106,7 @@ export default defineComponent({
       SURROUNDED_OBJECT,
       BANDED_OBJECT,
       SECTOR_NAME,
+      capitalize,
       sector: undefined,
       leftObject: undefined,
       rightObject: undefined,

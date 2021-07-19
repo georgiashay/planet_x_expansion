@@ -55,7 +55,7 @@
             expand="block"
             color="light"
             :router-link="'/' + gameType + '/action/locateplanetx'">
-            Locate {{GOAL_OBJECT.proper}} ({{store.state.gameType.locatePlanetXCost}}
+            Locate {{capitalize(GOAL_OBJECT.the)}} ({{store.state.gameType.locatePlanetXCost}}
             <ion-icon :icon="timeOutline"></ion-icon>
             )
           </ion-button>
@@ -135,6 +135,7 @@ import { useMatchMedia } from '@cwist/vue-match-media';
 import CenteredContainer from "@/components/CenteredContainer.vue";
 import Modal from "@/components/Modal.vue";
 import { GOAL_OBJECT, SECTOR_NAME } from "@/constants.ts";
+import { capitalize } from "@/utilities/stringUtils.ts";
 // import Modal from "vue-js-modal/src/components/Modal.vue";
 
 export default defineComponent({
@@ -166,6 +167,7 @@ export default defineComponent({
       timeOutline,
       router,
       GOAL_OBJECT,
+      capitalize,
       matchMedia: useMatchMedia(),
       showAllTheories: false,
       showNewTheories: false

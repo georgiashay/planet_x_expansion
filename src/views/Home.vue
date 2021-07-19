@@ -4,7 +4,7 @@
       <centered-container>
         <div id="title_container">
           <h2>The Search For</h2>
-          <h1><b>{{GOAL_OBJECT.proper}}</b></h1>
+          <h1><b>{{capitalize(GOAL_OBJECT.the)}}</b></h1>
           <h5 v-if="THEME == 'space'">Unofficial Expansion</h5>
         </div>
         <div id="start_game_buttons">
@@ -31,6 +31,7 @@ import Stripe from "@/components/Stripe.vue";
 import Spacer from "@/components/Spacer.vue";
 import CenteredContainer from "@/components/CenteredContainer.vue";
 import { GOAL_OBJECT, THEME } from "@/constants.ts";
+import { capitalize } from "@/utilities/stringUtils.ts";
 
 export default defineComponent({
   name: 'Home',
@@ -47,7 +48,8 @@ export default defineComponent({
     return {
       store: useStore(),
       THEME,
-      GOAL_OBJECT
+      GOAL_OBJECT,
+      capitalize
     }
   },
   ionViewDidEnter() {

@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import { API_URL, WEBSOCKET_URL, GAME_TYPES, SectorElement,
         initialToSectorElement, SeasonView,
-        IS_PROD, THEME, PRIME_OBJECT } from "@/constants";
+        IS_PROD, THEME, PRIME_OBJECT, GOAL_OBJECT } from "@/constants";
 import axios from 'axios';
 import SoundEffects from '@/mixins/SoundEffects.ts';
 import actionResponses from '@/utilities/actionResponses.ts';
@@ -93,7 +93,7 @@ export default createStore({
     async createSession({ commit, dispatch }, { numSectors, name }) {
       // Start new session
       const response: any = await axios.post(API_URL + "/createSession/" + numSectors, { name, theme: THEME });
-      const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
+      const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == GOAL_OBJECT.initial);
       log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
       log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
       log("Game version", response.data.game.version);
@@ -120,7 +120,7 @@ export default createStore({
       const response: any = await axios.post(API_URL + "/joinSession/" + sessionCode, { name, theme: THEME });
       if (response.data.found) {
         // console.log(response.data);
-        const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
+        const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == GOAL_OBJECT.initial);
         log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         log("Game version", response.data.game.version);
@@ -144,7 +144,7 @@ export default createStore({
       const response: any = await axios.get(API_URL + "/reconnectSession/" + sessionCode + "/?playerNum=" + playerNum, { params: { theme: THEME } });
       if (response.data.found) {
         // console.log(response.data);
-        const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == "X");
+        const xIndex = response.data.game.board.objects.findIndex((obj: any) => obj.initial == GOAL_OBJECT.initial);
         log(xIndex + 1, response.data.game.board.objects[(xIndex-1+response.data.game.board.objects.length)%response.data.game.board.objects.length].initial, response.data.game.board.objects[(xIndex+1)%response.data.game.board.objects.length].initial);
         log(response.data.game.board.objects.map((obj: any, i: number) => (i+1) + ":" + obj.initial));
         log("Game version", response.data.game.version);
@@ -247,8 +247,8 @@ export default createStore({
       if (sessionState.currentAction.actionType === "END_GAME" && state.history[state.history.length-1].actionType !== "WINNER") {
         const maxScore = Math.max(...sessionState.scores.map((score: any) => score.total));
         let winningScores = sessionState.scores.filter((score: any) => score.total === maxScore);
-        const maxPlanetX = Math.max(...winningScores.map((score: any) => score.X));
-        winningScores = winningScores.filter((score: any) => score.X === maxPlanetX);
+        const maxPlanetX = Math.max(...winningScores.map((score: any) => score[GOAL_OBJECT.initial]));
+        winningScores = winningScores.filter((score: any) => score[GOAL_OBJECT.initial] === maxPlanetX);
         const maxLeaderBonus = Math.max(...winningScores.map((score: any) => score.first));
         winningScores = winningScores.filter((score: any) => score.first === maxLeaderBonus);
 

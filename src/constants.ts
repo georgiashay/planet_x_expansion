@@ -510,7 +510,7 @@ export const SectorElement: {[code: string]: {[prop: string]: string}} = {
     },
     OCTOPUS: {
       name: "octopus",
-      proper: "The Octopus",
+      proper: "Octopus",
       plural: "ocotopuses",
       properPlural: "Octopuses",
       one: "an octopus",
@@ -596,7 +596,7 @@ export const SectorElement: {[code: string]: {[prop: string]: string}} = {
     },
     QUEEN: {
       name: "queen",
-      proper: "The Queen",
+      proper: "Queen",
       plural: "queens",
       properPlural: "Queens",
       one: "a queen",

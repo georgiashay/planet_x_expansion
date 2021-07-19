@@ -11,7 +11,8 @@
     "build-castle": "VUE_APP_THEME=castle vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "npm run build && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/planetx/ --delete && npm run build-ocean && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/octopusx/ --delete && npm run build-castle && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/castlex/ --delete"
   },
   "dependencies": {
     "@capacitor-community/electron": "^1.4.2",

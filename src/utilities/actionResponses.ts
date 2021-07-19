@@ -28,11 +28,11 @@ export default {
       text = (numObject == 1) ? "There is " : "There are ";
       text += (numObject == 0) ? "no " : numObject + " ";
       if (surveyObject.initial === EMPTY_OBJECT.initial) {
-        text += (numObject == 1) ? (SECTOR_NAME + " ") : (SECTOR_NAME.plural + " ");
+        text += (numObject == 1) ? (SECTOR_NAME.name + " ") : (SECTOR_NAME.plural + " ");
         text += "that ";
         text += (numObject == 1) ? "appears " : "appear ";
         text += "empty in " + SECTOR_NAME.plural + " " + (startSector+1) + "-" + (endSector+1) + ".";
-        text += (numObject == 1) ? "\nIt may be truly empty, or it may be " + GOAL_OBJECT.the + "." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be Planet X.";
+        text += (numObject == 1) ? "\nIt may be truly empty, or it may be " + GOAL_OBJECT.the + "." : (numObject == 0) ? "" : "\nThey may all be truly empty, but one of them might be " + GOAL_OBJECT.the + ".";
       } else {
         text += (numObject == 1) ? surveyObject.name : surveyObject.plural;
         text += " in " + SECTOR_NAME.plural + " " + (startSector+1) + "-" + (endSector+1) + ".";
