@@ -741,10 +741,10 @@ export const SKY_NAME: Name = {
     properPlural: "Skies"
   },
   "ocean": {
-    name: "radar",
-    plural: "radars",
-    proper: "Radar",
-    properPlural: "Radars"
+    name: "sonar",
+    plural: "sonars",
+    proper: "Sonar",
+    properPlural: "Sonars"
   },
   "castle": {
     name: "table",
