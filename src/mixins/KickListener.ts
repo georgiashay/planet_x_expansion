@@ -37,8 +37,9 @@ export default defineComponent({
 
       const newKickIDs: Set<number> = new Set(newVotes.map((vote: any) => vote.kickPlayerID).filter((id: number) => !oldKickIDs.has(id) && !myVoteIDs.has(id) && id !== this.store.state.playerID));
       const newKickPlayers: Array<any> = Array.from(newKickIDs).map((id: number) => this.store.getters.playerMap[id]);
+      const needVoteKickPlayers: Array<any> = newKickPlayers.filter((player: any) => !player.kicked);
 
-      newKickPlayers.forEach(async (player: any) => {
+      needVoteKickPlayers.forEach(async (player: any) => {
         const alert = await alertController.create({
           cssClass: 'custom-alert',
           header: 'Kick ' + player.name,
