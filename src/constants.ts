@@ -49,22 +49,22 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 2,
     numObjects: {
       "space": {X: 1, E: 2, G: 2, D: 1, A: 4, C: 2},
-      "ocean": {O: 1, E: 2, D: 2, T: 1, S: 4, C: 2},
+      "ocean": {O: 1, E: 2, T: 2, D: 1, S: 4, C: 2},
       "castle": {Q: 1, E: 2, J: 2, P: 1, K: 4, S: 2}
     }[THEME],
     logicSheetOrder: {
       "space": ['C', 'A', 'D', 'G', 'E', 'X'],
-      "ocean": ['C', 'S', 'T', 'D', 'E', 'O'],
+      "ocean": ['C', 'S', 'D', 'T', 'E', 'O'],
       "castle": ['S', 'K', 'P', 'J', 'E', 'Q']
     }[THEME],
     pointsOrder: {
       "space": ['A', 'C', 'G', 'D', 'X'],
-      "ocean": ['S', 'C', 'D', 'T', 'O'],
+      "ocean": ['S', 'C', 'T', 'D', 'O'],
       "castle": ['K', 'S', 'J', 'P', 'Q']
     }[THEME],
     constraintOrder: {
       "space": ['C', 'A', 'D', 'G', 'X', 'E'],
-      "ocean": ['C', 'S', 'T', 'D', 'O', 'E'],
+      "ocean": ['C', 'S', 'D', 'T', 'O', 'E'],
       "castle": ['S', 'K', 'P', 'J', 'Q', 'E']
     }[THEME],
     logicPatternInterval: 3,
@@ -80,9 +80,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
       "ocean": {
         "C": "Only in prime sectors",
         "S": "Adjacent to at least 1 other seahorse",
-        "T": "Not adjacent to the octopus",
-        "D": "Adjacent to at least 1 empty sector",
-        "O": "Not adjacent to the turtle, appears empty",
+        "D": "Not adjacent to the octopus",
+        "T": "Adjacent to at least 1 empty sector",
+        "O": "Not adjacent to the dolphin, appears empty",
         "E": "Remember, the octopus appears empty"
       },
       "castle": {
@@ -104,8 +104,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
       "ocean": {
         "S": 2,
         "C": 3,
-        "D": 4,
-        "T": 4
+        "T": 4,
+        "D": 4
       },
       "castle": {
         "K": 2,
@@ -150,22 +150,22 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 2,
     numObjects: {
       "space": {X: 1, E: 5, G: 2, D: 4, A: 4, C: 2},
-      "ocean": {O: 1, E: 5, D: 2, T: 4, S: 4, C: 2},
+      "ocean": {O: 1, E: 5, T: 2, D: 4, S: 4, C: 2},
       "castle": {Q: 1, E: 5, J: 2, P: 4, K: 4, S: 2}
     }[THEME],
     logicSheetOrder: {
       "space": ['C', 'A', 'D', 'G', 'E', 'X'],
-      "ocean": ['C', 'S', 'T', 'D', 'E', 'O'],
+      "ocean": ['C', 'S', 'D', 'T', 'E', 'O'],
       "castle": ['S', 'K', 'P', 'J', 'E', 'Q']
     }[THEME],
     pointsOrder: {
       "space": ['A', 'C', 'G', 'D', 'X'],
-      "ocean": ['S', 'C', 'D', 'T', 'O'],
+      "ocean": ['S', 'C', 'T', 'D', 'O'],
       "castle": ['K', 'S', 'J', 'P', 'Q']
     }[THEME],
     constraintOrder: {
       "space": ['C', 'A', 'D', 'G', 'X', 'E'],
-      "ocean": ['C', 'S', 'T', 'D', 'O', 'E'],
+      "ocean": ['C', 'S', 'D', 'T', 'O', 'E'],
       "castle": ['S', 'K', 'P', 'J', 'Q', 'E']
     }[THEME],
     logicPatternInterval: 3,
@@ -181,9 +181,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
       "ocean": {
         "C": "Only in prime sectors",
         "S": "Adjacent to at least 1 other seahorse",
-        "T": "In a band of exactly 6, not adjacent to the octopus",
-        "D": "Adjacent to at least 1 empty sector",
-        "O": "Not adjacent to a turtle, appears empty",
+        "D": "In a band of exactly 6, not adjacent to the octopus",
+        "T": "Adjacent to at least 1 empty sector",
+        "O": "Not adjacent to a dolphin, appears empty",
         "E": "Remember, the octopus appears empty"
       },
       "castle": {
@@ -205,8 +205,8 @@ export const GAME_TYPES: {[sector: number]: any} = {
       "ocean": {
         "S": 2,
         "C": 3,
-        "D": 4,
-        "T": 2
+        "T": 4,
+        "D": 2
       },
       "castle": {
         "K": 2,
@@ -251,22 +251,22 @@ export const GAME_TYPES: {[sector: number]: any} = {
     numTargets: 3,
     numObjects: {
       "space": {X: 1, E: 6, G: 3, D: 4, A: 6, C: 3, B: 1},
-      "ocean": {O: 1, E: 6, D: 3, T: 4, S: 6, C: 3, R: 1},
+      "ocean": {O: 1, E: 6, T: 3, D: 4, S: 6, C: 3, R: 1},
       "castle": {Q: 1, E: 6, J: 3, P: 4, K: 6, S: 3, C: 1}
     }[THEME],
     logicSheetOrder: {
       "space": ['C', 'A', 'D', 'B', 'G', 'E', 'X'],
-      "ocean": ['C', 'S', 'T', 'R', 'D', 'E', 'O'],
+      "ocean": ['C', 'S', 'D', 'R', 'T', 'E', 'O'],
       "castle": ['S', 'K', 'P', 'C', 'J', 'E', 'Q']
     }[THEME],
     pointsOrder: {
       "space": ['A', 'C', 'G', 'D', 'B', 'X'],
-      "ocean": ['S', 'C', 'D', 'T', 'R', 'O'],
+      "ocean": ['S', 'C', 'T', 'D', 'R', 'O'],
       "castle": ['K', 'S', 'J', 'P', 'C', 'Q']
     }[THEME],
     constraintOrder: {
       "space": ['C', 'A', 'D', 'G', 'B', 'X', 'E'],
-      "ocean": ['C', 'S', 'T', 'D', 'R', 'O', 'E'],
+      "ocean": ['C', 'S', 'D', 'T', 'R', 'O', 'E'],
       "castle": ['S', 'K', 'P', 'J', 'C', 'Q', 'E']
     }[THEME],
     logicPatternInterval: 4,
@@ -283,10 +283,10 @@ export const GAME_TYPES: {[sector: number]: any} = {
       "ocean": {
         "C": "Only in prime sectors",
         "S": "Adjacent to at least 1 other seahorse",
-        "T": "n a band of exactly 6, not adjacent to the octopus",
-        "D": "Adjacent to at least 1 empty sector",
+        "D": "In a band of exactly 6, not adjacent to the octopus",
+        "T": "Adjacent to at least 1 empty sector",
         "R": "Not adjacent to an empty sector or the octopus",
-        "O": "Not adjacent to a turtle or the remora, appears empty",
+        "O": "Not adjacent to a dolphin or the remora, appears empty",
         "E": "Remember, the octopus appears empty"
       },
       "castle": {
@@ -309,9 +309,9 @@ export const GAME_TYPES: {[sector: number]: any} = {
       },
       "ocean": {
         "S": 2,
-        "T": 2,
+        "D": 2,
         "C": 3,
-        "D": 4,
+        "T": 4,
         "R": 5
       },
       "castle": {
@@ -647,13 +647,13 @@ export const CLUSTERED_OBJECT = {
 
 export const NEEDS_SPACE_OBJECT = {
   "space": SectorElement.GAS_CLOUD,
-  "ocean": SectorElement.DOLPHIN,
+  "ocean": SectorElement.TURTLE,
   "castle": SectorElement.JESTER
 }[THEME];
 
 export const BANDED_OBJECT = {
   "space": SectorElement.DWARF_PLANET,
-  "ocean": SectorElement.TURTLE,
+  "ocean": SectorElement.DOLPHIN,
   "castle": SectorElement.PRINCE
 }[THEME];
 
