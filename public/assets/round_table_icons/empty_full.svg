@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="39" height="39" version="1.1" viewBox="0 0 10.319 10.319" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<svg width="55" height="55" version="1.1" viewBox="0 0 14.552 14.552" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <metadata>
   <rdf:RDF>
    <cc:Work rdf:about="">
@@ -9,5 +9,5 @@
    </cc:Work>
   </rdf:RDF>
  </metadata>
- <rect x=".24591" y=".24591" width="9.8269" height="9.8269" stroke="currentColor" stroke-width=".33306" fill="currentColor"/>
+ <rect stroke="currentColor" fill="currentColor" x="2.7026e-7" y="2.7026e-7" width="14.552" height="14.552" stroke-width="0"/>
 </svg>
