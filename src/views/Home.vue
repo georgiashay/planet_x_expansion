@@ -18,12 +18,15 @@
           <stripe/>
         </div>
       </centered-container>
+      <div id="footer">
+        <ion-nav-link router-link="/credits">Media Credits</ion-nav-link>
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonButton } from '@ionic/vue';
+import { IonContent, IonPage, IonButton, IonNavLink } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import SoundMixin from "@/mixins/SoundMixin.ts";
@@ -41,7 +44,8 @@ export default defineComponent({
     IonButton,
     Stripe,
     Spacer,
-    CenteredContainer
+    CenteredContainer,
+    IonNavLink
   },
   mixins: [SoundMixin],
   data() {
@@ -83,5 +87,14 @@ export default defineComponent({
   margin-top: 10px;
   margin-bottom: 10px;
   text-transform: none;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

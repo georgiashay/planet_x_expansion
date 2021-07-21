@@ -1,3 +1,4 @@
+import { capitalize } from "@/utilities/stringUtils.ts";
 export const IS_PROD = process.env.NODE_ENV === "production";
 export const THEME: "space" | "ocean" | "castle" = process.env.VUE_APP_THEME;
 const PROD_URL = {
@@ -779,3 +780,169 @@ export const SUSPICION_LEVELS: Array<SuspicionLevel> = [
 ];
 
 export const INNER_WHEEL_COLORS = ["#4379d1", "#d14d4d", "#65b85c", "#ccc84b"];
+
+const mediaCredits = [
+  // {
+  //   type: "sound",
+  //   name: "Did not find " + capitalize(GOAL_OBJECT.the),
+  //   credit: "freesound - unadamlar",
+  //   url: "https://freesound.org/people/unadamlar/sounds/476177/",
+  //   themes: ["space", "ocean", "castle"]
+  // },
+  {
+    type: "sound",
+    name: "Did not find " + capitalize(GOAL_OBJECT.the),
+    credit: "freesound - Benboncan",
+    url: "https://freesound.org/people/Benboncan/sounds/73581/",
+    themes: ["space", "ocean", "castle"]
+  },
+  {
+    type: "sound",
+    name: "Found " + capitalize(GOAL_OBJECT.the),
+    credit: "freesound - LittleRobotSooundFactory",
+    url: "https://freesound.org/people/LittleRobotSoundFactory/sounds/274177/",
+    themes: ["space", "ocean", "castle"]
+  },
+  {
+    type: "sound",
+    name: "Sonar 1",
+    credit: "freesound - SamsterBirdies",
+    url: "https://freesound.org/people/SamsterBirdies/sounds/539957/",
+    themes: ["space", "ocean", "castle"]
+  },
+  {
+    type: "sound",
+    name: "Sonar 2",
+    credit: "freesound - infobandit",
+    url: "https://freesound.org/people/infobandit/sounds/28693/",
+    themes: ["space", "ocean", "castle"]
+  },
+  {
+    type: "sound",
+    name: "Startup",
+    credit: "freesound - Robinhood76",
+    url: "https://freesound.org/people/Robinhood76/sounds/334914/",
+    themes: ["space", "ocean", "castle"]
+  },
+  {
+    type: "image",
+    name: "Space Background",
+    credit: "NASA",
+    url: "https://images.nasa.gov/details-PIA12348",
+    themes: ["space"]
+  },
+  {
+    type: "image",
+    name: "Space App Icon",
+    credit: "NASA",
+    url: " https://images.nasa.gov/details-hubble-captures-vivid-auroras-in-jupiters-atmosphere_28000029525_o",
+    themes: ["space"]
+  },
+  {
+    type: "icon",
+    name: "Shoe",
+    credit: "flaticon - photo3idea-studio",
+    url: "https://www.flaticon.com/authors/photo3idea-studio",
+    themes: ["space", "ocean", "castle"]
+  },
+  {
+    type: "image",
+    name: "Ocean Background",
+    credit: "NOAA",
+    url: "https://coralreef.noaa.gov/aboutcrcp/news/featuredstories/feb15/coraletiquette.html",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Seahorse",
+    credit: "flaticon - surang",
+    url: "https://www.flaticon.com/authors/surang",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Crab",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Dolphin",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Remora",
+    credit: "flaticon - those-icons",
+    url: "https://www.flaticon.com/authors/those-icons",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Octopus",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Turtle",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["ocean"]
+  },
+  {
+    type: "image",
+    name: "Castle Background",
+    credit: "WallpaperAccess",
+    url: "https://wallpaperaccess.com/castle",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
+    name: "Knight",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
+    name: "Scholar",
+    credit: "flaticon - wanicon",
+    url: "https://www.flaticon.com/authors/wanicon",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
+    name: "Jester",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
+    name: "Chaplain",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
+    name: "Queen",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
+    name: "Prince",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["castle"]
+  }
+];
+
+export const MEDIA_CREDITS = mediaCredits.filter((credit: any) => credit.themes.indexOf(THEME) >= 0);

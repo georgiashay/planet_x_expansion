@@ -211,25 +211,29 @@ export default defineComponent({
       await popover.onDidDismiss();
     },
     openHome: async function() {
-      const alert = await alertController.create({
-        cssClass: 'custom-alert',
-        header: 'Home',
-        message: 'Are you sure you want to leave the game and navigate home?',
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-          }, {
-            text: 'Yes',
-            role: 'okay'
-          }
-        ]
-      });
+      if (this.route.path.startsWith("/session") || this.route.path.startsWith("/multiplayer")) {
+        const alert = await alertController.create({
+          cssClass: 'custom-alert',
+          header: 'Home',
+          message: 'Are you sure you want to leave the game and navigate home?',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+            }, {
+              text: 'Yes',
+              role: 'okay'
+            }
+          ]
+        });
 
-      await alert.present();
+        await alert.present();
 
-      const { role } = await alert.onDidDismiss();
-      if (role === "okay") {
+        const { role } = await alert.onDidDismiss();
+        if (role === "okay") {
+          this.router.push("/home");
+        }
+      } else {
         this.router.push("/home");
       }
     }

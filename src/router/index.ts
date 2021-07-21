@@ -28,6 +28,7 @@ import SubmitTheories from '@/views/SubmitTheories.vue';
 import BoardPage from "@/views/BoardPage.vue";
 import LogicPage from "@/views/LogicPage.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
+import MediaCredits from "@/views/MediaCredits.vue";
 import store from "../store";
 import { IS_PROD, GOAL_OBJECT } from "../constants";
 
@@ -265,6 +266,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/session/reconnect',
     name: 'Reconnect Session',
     component: ReconnectSession
+  },
+  {
+    path: '/credits',
+    name: 'Media Credits',
+    component: MediaCredits
   }
 ]
 
