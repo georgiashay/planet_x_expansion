@@ -99,9 +99,9 @@ export default defineComponent({
         this.store.dispatch("createSession", {
           numSectors: this.selectedGame,
           name: this.name
+        }).then(() => {
+          this.router.push("/session/lobby/" + this.store.state.sessionCode);
         });
-        console.log("create game /session/lobby");
-        this.router.push("/session/lobby");
       } else {
         this.store.dispatch("createGame", this.selectedGame);
         this.router.push("/multiplayer/gamecode/new");
@@ -124,7 +124,7 @@ export default defineComponent({
   ionViewDidEnter() {
     this.playSound("sonar1");
   },
-  ionViewDidLeave() {
+  ionViewWillLeave() {
     this.clearSelections();
   }
 });

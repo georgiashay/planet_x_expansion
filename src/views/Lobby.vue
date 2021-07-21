@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <session-header v-if="store.state.isSession" hide-menu hide-at="lg"/>
-    <ion-content>
+    <ion-content v-if="store.state.isSession">
       <adaptable-container>
         <div id="content">
           <div id="title_container">
@@ -12,13 +12,13 @@
             <p v-else>You have joined this game. Ensure that the game code you entered is correct.</p>
           </div>
           <div id="session_code">
-            <h1>{{store.state.sessionCode || "Loading..."}}</h1>
+            <h1>{{store.state.sessionCode}}</h1>
             <p>{{sessionModeName}}</p>
           </div>
-          <div id="game_link" v-if="store.getters.isHost && store.state.sessionCode !== undefined">
+          <div id="game_link" v-if="store.getters.isHost">
             <p>Copy Game Link <ion-icon @click="copyGameLink()" :src="clipboardOutline" id="clipboard"/> <ion-icon @click="shareGameLink()" :src="shareSocialOutline" id="share-button"></ion-icon></p>
           </div>
-          <div id="players" v-if="store.state.session">
+          <div id="players">
             <table>
               <tr v-for="(row, i) in playerGrid" :key="i">
                 <td
@@ -37,7 +37,7 @@
           </div>
           <stripe/>
           <ion-button
-            :disabled = "!store.state.isSession || (!store.getters.isHost && store.state.session.currentAction.actionType == 'START_GAME')"
+            :disabled = "!store.getters.isHost && store.state.session.currentAction.actionType == 'START_GAME'"
             expand="block"
             color="light"
             @click="startGame()"
@@ -96,7 +96,8 @@ export default defineComponent({
       clipboardOutline,
       shareSocialOutline,
       route,
-      router
+      router,
+      unsubscribeStore: () => { return; }
     }
   },
   computed: {
@@ -182,13 +183,6 @@ export default defineComponent({
           text: "Join My " + GOAL_OBJECT.proper + " Game",
           url: MY_URL + "/session/join/" + this.store.state.sessionCode
         });
-      }
-    }
-  },
-  watch: {
-    sessionCode: function(newSessionCode) {
-      if (newSessionCode !== undefined) {
-        this.router.push("/session/lobby/" + newSessionCode);
       }
     }
   },
