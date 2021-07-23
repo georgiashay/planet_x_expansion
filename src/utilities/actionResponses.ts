@@ -132,7 +132,7 @@ export default {
     // Get conference at specific index
     const actionResult = {
       actionType: "CONFERENCE",
-      actionName: GOAL_OBJECT.the + " Conference",
+      actionName: GOAL_OBJECT.proper + " Conference",
       actionText: "Conference X" + (index+1) + ": " + game.conference[index].categoryName,
       text: GOAL_OBJECT.initial + (index + 1) + ". " + game.conference[index].text,
       index,
