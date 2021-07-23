@@ -176,8 +176,8 @@ export default defineComponent({
       const existingTheories = this.store.state.session.theories.filter((theory: any) => theory.playerID === this.store.state.playerID);
 
       const tokensLeft = Object.assign({}, numObjects);
-      delete tokensLeft.X;
-      delete tokensLeft.E;
+      delete tokensLeft[GOAL_OBJECT.initial];
+      delete tokensLeft[EMPTY_OBJECT.initial];
       for (let i = 0; i < existingTheories.length; i++) {
         const theory = existingTheories[i];
         tokensLeft[theory.spaceObject.initial] -= 1;
