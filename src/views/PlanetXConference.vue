@@ -4,10 +4,10 @@
     <ion-content>
       <adaptable-container v-if="store.getters.playerReady">
         <div id="title_container">
-          <h3>Current Action: {{GOAL_OBJECT.proper}} Conference</h3>
+          <h3>Current Action: {{GOAL_OBJECT.proper}} {{CONFERENCE_NAME.proper}}</h3>
         </div>
         <div id="conference_selections">
-          Select the current conference:
+          Select the current {{CONFERENCE_NAME.name}}:
           <ion-button
             :disabled="store.state.isSession && index != store.getters.currentConference"
             expand="block"
@@ -50,7 +50,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
-import { GOAL_OBJECT } from "@/constants.ts";
+import { GOAL_OBJECT, CONFERENCE_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'PlanetXConference',
@@ -81,7 +81,8 @@ export default defineComponent({
       timeOutline,
       selectedConference: undefined,
       router,
-      GOAL_OBJECT
+      GOAL_OBJECT,
+      CONFERENCE_NAME
     }
   },
   methods: {

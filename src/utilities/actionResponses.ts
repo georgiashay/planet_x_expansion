@@ -1,4 +1,4 @@
-import { initialToSectorElement, GOAL_OBJECT, EMPTY_OBJECT, SECTOR_NAME } from "@/constants.ts";
+import { initialToSectorElement, GOAL_OBJECT, EMPTY_OBJECT, SECTOR_NAME, CONFERENCE_NAME } from "@/constants.ts";
 
 export default {
   survey(game: any, gameType: any, turn: number, time: Date, surveyObject: any, startSector: number, endSector: number) {
@@ -132,8 +132,8 @@ export default {
     // Get conference at specific index
     const actionResult = {
       actionType: "CONFERENCE",
-      actionName: GOAL_OBJECT.proper + " Conference",
-      actionText: "Conference X" + (index+1) + ": " + game.conference[index].categoryName,
+      actionName: GOAL_OBJECT.proper + " " + CONFERENCE_NAME.proper,
+      actionText: CONFERENCE_NAME.proper + " " + GOAL_OBJECT.initial + (index+1) + ": " + game.conference[index].categoryName,
       text: GOAL_OBJECT.initial + (index + 1) + ". " + game.conference[index].text,
       index,
       shortText: game.conference[index].shortText,

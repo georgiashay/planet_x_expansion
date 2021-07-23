@@ -4,9 +4,9 @@
     <ion-content>
       <adaptable-container v-if="store.getters.playerReady">
         <div id="title_container">
-          <h3>Research &amp; Conferences</h3>
+          <h3>Research &amp; {{CONFERENCE_NAME.properPlural}}</h3>
         </div>
-        <p>The following are the categories of research and conferences for this game.</p>
+        <p>The following are the categories of research and {{CONFERENCE_NAME.plural}} for this game.</p>
         <stripe/>
         <div id="research">
           <b>Research</b>
@@ -17,11 +17,11 @@
           </p>
         </div>
         <div id="conference">
-          <b>Conference</b>
+          <b>{{CONFERENCE_NAME.proper}}</b>
           <p
             v-for="(conference, index) in store.state.game.conference"
             :key="index">
-            X{{index + 1}}. {{conference.categoryName}}
+            {{GOAL_OBJECT.initial}}{{index + 1}}. {{conference.categoryName}}
           </p>
         </div>
         <stripe/>
@@ -50,6 +50,7 @@ import GameFooter from "@/components/GameFooter.vue";
 import SessionHeader from "@/components/SessionHeader.vue";
 import Stripe from "@/components/Stripe.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
+import { GOAL_OBJECT, CONFERENCE_NAME } from "@/constants.ts";
 
 export default defineComponent({
   name: 'ResearchCategories',
@@ -74,7 +75,9 @@ export default defineComponent({
     const store = useStore();
     return {
       store,
-      arrowForwardOutline
+      arrowForwardOutline,
+      GOAL_OBJECT,
+      CONFERENCE_NAME
     }
   },
   ionViewDidEnter() {

@@ -30,7 +30,7 @@ import LogicPage from "@/views/LogicPage.vue";
 import ReconnectSession from "@/views/ReconnectSession.vue";
 import MediaCredits from "@/views/MediaCredits.vue";
 import store from "../store";
-import { IS_PROD, GOAL_OBJECT } from "../constants";
+import { IS_PROD, GOAL_OBJECT, CONFERENCE_NAME } from "../constants";
 
 const getRecentSessions = async function(): Promise<Array<any>> {
   await store.dispatch("initializeStorage");
@@ -230,7 +230,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/:gameType/action/planetxconference',
-    name: GOAL_OBJECT.the + ' Conference',
+    name: GOAL_OBJECT.the + ' ' + CONFERENCE_NAME.proper,
     component: PlanetXConference,
     props: true
   },

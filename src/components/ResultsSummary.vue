@@ -3,7 +3,7 @@
     <h5 id="summary_title">Results Summary</h5>
     <ion-grid v-if="!useVerticalLayout" class="summary-horizontal">
       <ion-row class="title_row">
-        <b>Conferences</b>
+        <b>{{CONFERENCE_NAME.properPlural}}</b>
       </ion-row>
       <ion-row >
         <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
@@ -73,7 +73,7 @@
       <ion-row>
         <ion-col size-xs="4">
           <ion-row class="title_row">
-            <b>Conferences</b>
+            <b>{{CONFERENCE_NAME.properPlural}}</b>
           </ion-row>
           <ion-row
             v-for="(conference, index) in resultsSummary.allConferences"
@@ -143,7 +143,7 @@
       <ion-row>
         <ion-col size-xs="3">
           <ion-row class="title_row">
-            <b>Conferences</b>
+            <b>{{CONFERENCE_NAME.properPlural}}</b>
           </ion-row>
           <ion-row
             v-for="(conference, index) in resultsSummary.allConferences"
@@ -215,7 +215,7 @@
 import { defineComponent } from 'vue';
 import { IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { useMatchMedia } from '@cwist/vue-match-media';
-import { GOAL_OBJECT } from '@/constants.ts';
+import { GOAL_OBJECT, CONFERENCE_NAME } from '@/constants.ts';
 
 export default defineComponent({
   name: "ResultsSummary",
@@ -241,7 +241,8 @@ export default defineComponent({
   data() {
     return {
       matchMedia: useMatchMedia(),
-      GOAL_OBJECT
+      GOAL_OBJECT,
+      CONFERENCE_NAME
     }
   },
   computed: {

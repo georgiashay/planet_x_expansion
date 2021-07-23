@@ -755,6 +755,27 @@ export const SKY_NAME: Name = {
   }
 }[THEME];
 
+export const CONFERENCE_NAME: Name = {
+  "space": {
+    name: "conference",
+    plural: "conferences",
+    proper: "Conference",
+    properPlural: "Conferences"
+  },
+  "ocean": {
+    name: "conference",
+    plural: "conferences",
+    proper: "Conference",
+    properPlural: "Conferences"
+  },
+  "castle": {
+    name: "investigation",
+    plural: "investigations",
+    proper: "Investigation",
+    properPlural: "Investigations"
+  }
+}[THEME];
+
 export const initialToSectorElement: {[initial: string]: any} = {};
 for (const code in SectorElement) {
   initialToSectorElement[SectorElement[code].initial] = SectorElement[code];
