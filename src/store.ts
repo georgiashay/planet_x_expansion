@@ -444,7 +444,9 @@ export default createStore({
       const augmentedInfo = {
         expires: expirationDate,
         facts: state.startingFacts,
-        view: state.seasonView.name.toUpperCase()
+        view: state.seasonView.name.toUpperCase(),
+        theme: THEME,
+        version: state.game.version
       }
 
       // Add current starting information to stored information
@@ -798,7 +800,9 @@ export default createStore({
             delete startingInfo[sessionID];
           }
         }
-        if (Object.prototype.hasOwnProperty.call(startingInfo, state.sessionID)) {
+        if (Object.prototype.hasOwnProperty.call(startingInfo, state.sessionID)
+            && startingInfo[state.sessionID].theme === THEME
+            && startingInfo[state.sessionID].version === state.game.version) {
           const info = startingInfo[state.sessionID];
           // Set starting info to expire in the future
           const newExpirationDate = new Date();
