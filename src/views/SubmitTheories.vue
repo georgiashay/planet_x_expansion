@@ -7,10 +7,7 @@
           <h3>Submit Theories</h3>
         </div>
         <div id="theory_selections">
-          <ion-item color="light">
-            <ion-label position="floating">Number of Theories</ion-label>
-            <ion-input v-model="numTheories" type="number" min="0" :max="maxTheories"></ion-input>
-          </ion-item>
+          <increment-input :value="numTheories" @input="numTheories = $event" :min="0" :max="maxTheories" label="Number of Theories"></increment-input>
           <spacer/>
           <template v-for="(theory, i) in theories.slice(0, numTheories)" :key="i">
             <ion-item-divider v-if="i>0"/>
@@ -96,6 +93,7 @@ import Spacer from "@/components/Spacer.vue";
 import AdaptableContainer from "@/components/AdaptableContainer.vue";
 import { initialToSectorElement } from "@/constants.ts";
 import PlayerColors from "@/mixins/PlayerColors.ts";
+import IncrementInput from "@/components/IncrementInput.vue";
 
 export default defineComponent({
   name: 'Survey',
@@ -111,14 +109,12 @@ export default defineComponent({
     SectorSelect,
     GameFooter,
     SessionHeader,
-    IonInput,
-    IonItem,
-    IonLabel,
     AdaptableContainer,
     IonIcon,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IncrementInput
   },
   mixins: [SoundMixin, PlayerColors],
   props: {
@@ -323,21 +319,6 @@ export default defineComponent({
         const slot = this.theoryTokenSlot();
         if (slot < this.numTheories) {
           this.theories[slot].spaceObject = obj;
-        }
-      }
-    }
-  },
-  watch: {
-    numTheories: function(newNumTheories) {
-      // Clamp number of theories between 0 and max theories
-      const intTheories = parseInt(newNumTheories);
-      if (!isNaN(intTheories)) {
-        if(intTheories > this.maxTheories) {
-          this.numTheories = this.maxTheories;
-        } else if (intTheories < 0) {
-          this.numTheories = 0;
-        } else {
-          this.numTheories = intTheories;
         }
       }
     }
