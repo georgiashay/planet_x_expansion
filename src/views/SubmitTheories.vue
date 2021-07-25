@@ -45,7 +45,7 @@
               <td
                 v-for="(obj, j) in row"
                 :key="j"
-                :class="obj !== null ? 'theory_token' : ''"
+                :class="obj !== null ? 'theory_token' : 'empty_token'"
                 :style="playerStyle(store.getters.playerInfo.color)"
                 @click="clickTheoryToken(obj)">
                 <div class="inner_token" v-if="obj !== null">
@@ -201,10 +201,10 @@ export default defineComponent({
       for (let i = 0; i < tokens.length; i++) {
         grid[grid.length-1].push(tokens[i]);
         if (i === tokens.length - 1) {
-          for (let j = 0; j < (8 - grid[grid.length-1].length); j++) {
+          const emptyTokens = 8 - grid[grid.length-1].length;
+          for (let j = 0; j < emptyTokens; j++) {
             grid[grid.length-1].push(null);
           }
-          grid[grid.length-1]
         } else if (grid[grid.length - 1].length === 8) {
           grid.push([]);
         }
@@ -377,6 +377,11 @@ table {
   width: 100%;
   margin: 0 auto;
   border-spacing: 10px;
+}
+
+td.empty_token {
+  width: 12.5%;
+  border: none;
 }
 
 td.theory_token {
