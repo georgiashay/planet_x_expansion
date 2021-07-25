@@ -53,24 +53,32 @@ export default defineComponent({
       return this.store.state.seasonView;
     },
     playerSectors: function(): {[sector: number]: Array<number | null>} {
+      // Construct an mapping of sectors to an array of player colors
+      // The player colors are in order of arrival
       const sectorMap: {[sector: number]: Array<number | null>} = {};
+      // Sort players by their arrival number on their sector (lowest = first)
       const players = this.store.state.session.players.slice().sort((a: any, b: any) => a.arrival - b.arrival);
       for (let i = 0; i < players.length; i++) {
         const sector: number = players[i].sector as number;
         if (sectorMap[sector] === undefined) {
           sectorMap[sector] = [];
         }
+        // Extend list to player's arrival number, inserting nulls as necessary
         while (sectorMap[sector].length < players[i].arrival) {
           sectorMap[sector].push(null);
         }
+        // Add player's color as the arrival-th element in the list
         sectorMap[sector][players[i].arrival-1] = players[i].color;
       }
+      // Remove nulls
       for (const sector in sectorMap) {
         sectorMap[sector] = sectorMap[sector].filter((player: any) => player !== null);
       }
       return sectorMap;
     },
     theorySlots: function(): Array<Array<Array<any>>> {
+      // Each row is a sector, each column is a theory token slot, and within
+      // that is the list of theory tokens on that slot
       const sectors = Array.from(Array(this.store.state.gameType.sectors)).map(() => Array.from(Array(4)).map(() => []));
       for (let i = 0; i < this.store.getters.visibleTheories.length; i++) {
         const theory = this.store.getters.visibleTheories[i];
@@ -119,33 +127,50 @@ export default defineComponent({
     },
     pegLocations: function(boardRadius: number, pegRadius: number, paddingFactor: number, numPlayers: number, space: number) {
       const sectorAngle = 2 * Math.PI/this.store.state.gameType.sectors;
+      // Maximum peg diameter depends on having padding on both sides within space
       pegRadius = Math.min(pegRadius, space/(2 + 4*paddingFactor));
+      // Padding on each side of the peg
       let pegPadding = 2 * pegRadius * paddingFactor;
+      // Peg situated in the middle of the space provided
       let outerPegLoc = boardRadius + space/2;
-      // let outerPegLoc = boardRadius + pegPadding + pegRadius;
+
+      // Angle taken up by padding on either side of the sector
+      // This is half the peg padding, since the peg "owns" half the padding
       const outerPaddingAngle = 2 * Math.atan2(pegPadding/4, outerPegLoc);
+      // Angle taken up by a peg plus the padding "owned" by that peg
       const pegAngle = 2 * Math.atan2((2*pegRadius + pegPadding)/2, outerPegLoc);
 
+      // Maximum number of pegs that can fit across the sector at this size
       const maxPegsAtSize = Math.floor((sectorAngle - 2 * outerPaddingAngle)/pegAngle);
+      // Clip this at 4 pegs maximum
       const pegsOnRow = Math.max(maxPegsAtSize, 4);
 
+      // Calculate the maximum peg size for this number of pegs
       const pegRowInfo = this.pegSize(boardRadius, paddingFactor, pegsOnRow);
 
       if (numPlayers <= pegsOnRow) {
+        // Enough room for all the players on one row
         pegRadius = pegRowInfo.radius;
+        // Ensure the pegs fit vertically
         pegRadius = Math.min(pegRadius, space/(2 + 4*paddingFactor));
 
         pegPadding = 2 * pegRadius * paddingFactor;
-        // outerPegLoc = boardRadius + pegRadius + pegPadding;
 
+        // Angle for just the peg
         const rawPegAngle = 2 * Math.atan2(pegRadius, outerPegLoc);
+        // Angle leftover in sector for padding
         const leftoverAngle = sectorAngle - numPlayers * rawPegAngle;
+        // Angle of padding to create even padding between all pegs and sector
+        // boundaries
         const evenPaddingAngle = leftoverAngle/(numPlayers + 1);
+        // Amount of space between adjacent pegs
         const evenIntervalAngle = rawPegAngle + evenPaddingAngle;
+        // Location of the center of the first peg
         const evenEdgeAngle = evenPaddingAngle + rawPegAngle/2;
 
         const locations = [];
 
+        // Space out peg locations
         for (let i = 0; i < numPlayers; i++) {
             locations.push({
               angle: evenEdgeAngle + i * evenIntervalAngle,
@@ -155,12 +180,16 @@ export default defineComponent({
         }
         return locations;
       } else {
+        // Get peg size for a double row of pegs
         const pegInfo = this.pegSizeTwoRows(boardRadius, paddingFactor, numPlayers);
         pegRadius = pegInfo.radius;
+        // Formula for peg radius vertically
         pegRadius = Math.min(pegRadius, space/(4 + 4 * paddingFactor + Math.sqrt(2) * paddingFactor), pegRowInfo.radius);
 
         const rawPegAngle = pegInfo.pegAngle;
+        // Pegs are interlaced
         const intervalAngle = rawPegAngle * (1/2 + paddingFactor/2);
+        // First peg center location has padding + half the peg
         const offset = rawPegAngle * (1/2 + paddingFactor);
 
         pegPadding = 2 * pegRadius * paddingFactor;
@@ -170,6 +199,7 @@ export default defineComponent({
 
         const locations = [];
 
+        // Space out the pegs, interlacing them
         for (let i = 0; i < numPlayers; i++) {
           const radius = (i % 2 === 0) ? innerPegLoc : outerPegLoc;
           locations.push({
@@ -190,15 +220,20 @@ export default defineComponent({
         return;
       }
 
+      // Wait for canvas to be rendered
       await this.$nextTick();
       const canvas = this.$refs.boardCanvas as HTMLCanvasElement;
       if (canvas === null) {
         return;
       }
+
+      // Get canvas context
       const ctx = canvas.getContext("2d");
+      // Clear canvas
       ctx.resetTransform();
       ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
       ctx.translate(canvas.width/2, canvas.height/2);
+      // Rotate canvas depending on season view
       if (this.store.state.seasonView !== undefined) {
         ctx.rotate(this.store.state.seasonView.angle);
       }
@@ -240,31 +275,37 @@ export default defineComponent({
       const skyColor = this.isDarkMode ? "#585858" : lightColor;
       const baseColor = this.isDarkMode ? lightColor : "silver";
 
+      // Fill entire board with background color
       ctx.beginPath();
       ctx.fillStyle = baseColor;
       ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
       ctx.fill();
 
+      // Fill sky with sky color
       ctx.beginPath();
       ctx.fillStyle = skyColor;
       ctx.arc(0, 0, trackRadius, skyAngle, skyAngle + Math.PI);
       ctx.fill();
 
+      // Draw circle around inner circle
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
+      // Draw circle around board
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
       ctx.stroke();
 
+      // Draw circle around numbers
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.stroke();
 
+      // Draw circle around entire board (including peg track)
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, trackRadius, 0, 2*Math.PI);
@@ -307,6 +348,7 @@ export default defineComponent({
           ctx.stroke();
 
           if (this.theorySlots[i][progress].length > 0) {
+            // Create gradient for theories submitted by more than one person
             const gradient = ctx.createLinearGradient(-tokenSize/2, -radius-tokenSize, tokenSize/2, -radius);
             const part = 1/(this.theorySlots[i][progress].length);
             for (let k = 0; k < this.theorySlots[i][progress].length; k++) {
@@ -376,6 +418,7 @@ export default defineComponent({
 
       const pegLocs = this.pegLocations(outerRadius, pegRadius, paddingFactor, this.store.state.session.players.length, trackSpace);
 
+      // Draw pegs
       for (const [sectorStr, players] of Object.entries(this.playerSectors)) {
         const sector: number = parseInt(sectorStr);
         for (let i = 0; i < players.length; i++) {
@@ -393,6 +436,7 @@ export default defineComponent({
         }
       }
 
+      // Draw theory phases
       const theoryInterval = this.store.state.gameType.theoryPhaseInterval;
       for (let i = theoryInterval - 1; i < this.store.state.gameType.sectors; i += theoryInterval) {
         const angle = sectorAngle/2 + i * sectorAngle;
@@ -405,6 +449,7 @@ export default defineComponent({
         ctx.restore();
       }
 
+      // Draw conference phase
       for (let i = 0; i < this.store.state.gameType.conferences.length; i++) {
         const sector = this.store.state.gameType.conferences[i];
         const angle = sectorAngle/2 + sector * sectorAngle;
