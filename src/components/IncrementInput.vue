@@ -7,16 +7,16 @@
       @input.stop="valueChanged"
       type="number"
       :min="min"
-      :max="max" tabIndex="3">
-      <div class="up-down-container">
-        <div class="up-button" @click.stop="incrementValue" tabIndex="1">
-          <ion-icon :src="caretUpOutline"/>
-        </div>
-        <div class="down-button" @click.stop="decrementValue" tabIndex="2">
-          <ion-icon :src="caretDownOutline"/>
-        </div>
-      </div>
+      :max="max" tabIndex="2">
     </ion-input>
+    <div class="up-down-container" tabIndex="1">
+      <div class="up-button" @click.stop="incrementValue">
+        <ion-icon :src="caretUpOutline"/>
+      </div>
+      <div class="down-button" @click.stop="decrementValue">
+        <ion-icon :src="caretDownOutline"/>
+      </div>
+    </div>
   </ion-item>
 </template>
 <script lang="ts">
@@ -98,11 +98,13 @@ export default defineComponent({
 <style scoped>
 .up-down-container {
   height: 100%;
-  width: 18px;
+  width: 32px;
   right: 0;
   position: absolute;
-  padding-top: 8px;
+  padding-top: 28px;
   padding-bottom: 8px;
+  padding-right: 12px;
+  z-index: 10;
 }
 
 .up-button {
