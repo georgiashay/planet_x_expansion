@@ -32,11 +32,17 @@ export default defineComponent({
         return;
       }
 
+      // Player IDs of players who previously had kick votes on them
       const oldKickIDs: Set<number> = new Set(oldVotes.map((vote: any) => vote.kickPlayerID));
+      // IDs of all players I have voted to kick
       const myVoteIDs: Set<number> = new Set(newVotes.filter((vote: any) => vote.votePlayerID === this.store.state.playerID).map((vote: any) => vote.kickPlayerID));
 
+      // Players that have new kick votes on them, that I haven't voted on, and
+      // aren't me
       const newKickIDs: Set<number> = new Set(newVotes.map((vote: any) => vote.kickPlayerID).filter((id: number) => !oldKickIDs.has(id) && !myVoteIDs.has(id) && id !== this.store.state.playerID));
       const newKickPlayers: Array<any> = Array.from(newKickIDs).map((id: number) => this.store.getters.playerMap[id]);
+      // Such players that haven't already been kicked, and therefore the user
+      // should vote on them
       const needVoteKickPlayers: Array<any> = newKickPlayers.filter((player: any) => !player.kicked);
 
       needVoteKickPlayers.forEach(async (player: any) => {
@@ -78,6 +84,7 @@ export default defineComponent({
 
       const recentlyKicked = newPlayers.slice(oldPlayers.length);
 
+      // If I have been newly kicked, display an alert
       if (recentlyKicked.find((player: any) => player.id === this.store.state.playerID)) {
         const alert = await alertController.create({
           cssClass: 'custom-alert',

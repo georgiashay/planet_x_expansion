@@ -150,10 +150,14 @@ export default defineComponent({
   computed: {
     maxTheories: function(): number {
       if (this.store.getters.myNextAction == null) {
+        // If I don't need to submit theories, I shouldn't be able to submit any
         return 0;
       } else if (this.store.getters.myNextAction.actionType === "THEORY_PHASE") {
+        // If it's a normal theory phases, max is usual number of theories
         return this.store.state.gameType.theoriesPerTurn;
-      } else if (this.store.getters.myNextAction.actionType === "LAST_ACTION"){
+      } else if (this.store.getters.myNextAction.actionType === "LAST_ACTION") {
+        // If it's the last action, the number of theories depends on how many
+        // sectors behind I am
         if (this.store.getters.sectorsBehind <= 3) {
           return 1;
         } else {
@@ -186,6 +190,7 @@ export default defineComponent({
       return tokensLeft;
     },
     tokenGrid: function(): Array<Array<any>> {
+      // Create grid with 8 columns of tokens left
       const tokens = [];
       for (const initial of this.store.state.gameType.logicSheetOrder) {
         if (initial in this.tokensLeft) {
@@ -225,10 +230,12 @@ export default defineComponent({
         const objectDefined = this.theories[i].spaceObject !== undefined;
         const sectorDefined = this.theories[i].sector !== undefined;
 
+        // Decrease tokens left
         if (objectDefined) {
           tokensLeft[this.theories[i].spaceObject.initial] -= 1;
         }
 
+        // If this would put tokens left at a negative number, it's invalid
         if (objectDefined && tokensLeft[this.theories[i].spaceObject.initial] < 0) {
           return {
             valid: false,
@@ -236,6 +243,7 @@ export default defineComponent({
           }
         }
 
+        // If the sector has already been revealed, you can't submit a theory for it
         if (sectorDefined && revealedSectors.has(this.theories[i].sector)) {
           return {
             valid: false,
@@ -243,6 +251,8 @@ export default defineComponent({
           }
         }
 
+        // If one of the other theories you're trying to submit is also in this
+        // sector, you aren't allowed to submit it
         if (sectorDefined && sectors.has(this.theories[i].sector)) {
           return {
             valid: false,
@@ -250,10 +260,14 @@ export default defineComponent({
           }
         }
 
+        // Add this sector to the list of sectors for the theories you are
+        // trying to submit this turn
         if (sectorDefined) {
           sectors.add(this.theories[i].sector);
         }
 
+        // If you've submitted this exact theory before, you can't submit it
+        // again
         if (objectDefined && sectorDefined && existingTheories.some((t: any) => t.spaceObject.initial === this.theories[i].spaceObject.initial && t.sector === this.theories[i].sector)) {
           return {
             valid: false,
@@ -278,18 +292,23 @@ export default defineComponent({
       this.theories = Array.from(Array(this.maxTheories)).map(() => {return {};});
     },
     theoryTokenSlot: function(): number {
+      // Which theory slot to put a space object you click on it
+
+      // First, try to choose the first theory that doesn't have a space object
       for (let i = 0; i < this.numTheories; i++) {
         if (this.theories[i].spaceObject === undefined) {
           return i;
         }
       }
 
+      // Then, choose the first theory that doesn't have a sector
       for (let i = 0; i < this.numTheories; i++) {
         if (this.theories[i].sector === undefined) {
           return i;
         }
       }
 
+      // Then, toggle between all the theories in a loop
       if (this.numTheories > 0) {
         const slot = this.theoryToggle % this.numTheories;
         this.theoryToggle++;
@@ -310,6 +329,7 @@ export default defineComponent({
   },
   watch: {
     numTheories: function(newNumTheories) {
+      // Clamp number of theories between 0 and max theories
       const intTheories = parseInt(newNumTheories);
       if (!isNaN(intTheories)) {
         if(intTheories > this.maxTheories) {

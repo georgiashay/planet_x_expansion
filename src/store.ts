@@ -178,9 +178,7 @@ export default createStore({
         ws.send(JSON.stringify({ id: state.playerID.toString() }));
       }
       ws.onmessage = (message) => {
-        // console.log("Received update to session");
         const sessionState = JSON.parse(message.data);
-        // console.log(sessionState);
         commit('getNewlyRevealedTheories', sessionState);
         dispatch('checkMyTurn', sessionState);
         dispatch('checkWinner', sessionState);
@@ -190,8 +188,10 @@ export default createStore({
         state.webSocketFailures++;
         console.log("Disconnecting, re-connecting to listen.");
         if (state.webSocketFailures < 10) {
+          // Try opening the websocket again up to 10 times
           dispatch('listenSession');
         } else {
+          // After 10 failures, do not try to reconnect
           state.currentWebSocket = undefined;
           console.log("10 consecutive failures. Not reconnecting.");
         }
@@ -211,16 +211,19 @@ export default createStore({
     async makeSessionMove({ state, commit, getters, dispatch }, { moveData, timeCost, failures=0 }) {
       const turn = getters.myNextAction.turn;
       moveData = Object.assign({ turn }, moveData);
+      // Construct move data to send to server
       const data = {
         turn: moveData,
         timeCost,
         theme: THEME
       };
       state.awaitingTurnSubmission = true;
+      // Post move to server
       axios.post(API_URL + "/makeMove/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, data).then((response) => {
         state.awaitingTurnSubmission = false;
         log(response.data);
       }).catch(() => {
+        // Try again on failure up to 10 times
         if (failures >= 10) {
           state.awaitingTurnSubmission = false;
           commit("setTurnSubmissionFailure", true);
@@ -233,6 +236,7 @@ export default createStore({
       await axios.post(API_URL + "/setColor/?playerID=" + state.playerID + "&color=" + newColor);
     },
     checkMyTurn({ state }, sessionState) {
+      // If it is newly my turn, play the doorbell sound
       if (sessionState.currentAction.playerID === state.playerID) {
         if (state.session.currentAction.turn !== sessionState.currentAction.turn) {
           SoundEffects.playSound("doorbell", state.settings.muteLevel);
@@ -245,13 +249,17 @@ export default createStore({
     },
     checkWinner({ state, getters }, sessionState: any) {
       if (sessionState.currentAction.actionType === "END_GAME" && state.history[state.history.length-1].actionType !== "WINNER") {
+        // The player with the most points wns
         const maxScore = Math.max(...sessionState.scores.map((score: any) => score.total));
         let winningScores = sessionState.scores.filter((score: any) => score.total === maxScore);
+        // If there is a tie, the player with the most Planet X points wins
         const maxPlanetX = Math.max(...winningScores.map((score: any) => score[GOAL_OBJECT.initial]));
         winningScores = winningScores.filter((score: any) => score[GOAL_OBJECT.initial] === maxPlanetX);
+        // If there is still a tie, the player with the most first points wins
         const maxLeaderBonus = Math.max(...winningScores.map((score: any) => score.first));
         winningScores = winningScores.filter((score: any) => score.first === maxLeaderBonus);
 
+        // Get all players with winning scores
         const winningPlayers = winningScores.map((score: any) => getters.playerMap[score.playerID]);
         const actionText = winningPlayers.map((player: any) => player.name).join(", ") + " won the game in " + getters.numTurns + (getters.numTurns === 1 ? " turn" : " turns");
         const text = winningPlayers.map((player: any) => player.name).join(", ") + " won the game with " + maxScore + " points after " + getters.numTurns + (getters.numTurns === 1 ? " turn" : " turns");
@@ -329,23 +337,28 @@ export default createStore({
       }
     },
     async submitTheories({ state, commit, dispatch, getters }, { theories, failures=0 }) {
+      // Format theories for submission
       const submittableTheories = theories.map((theory: any) => { return {spaceObject: theory.spaceObject.initial, sector: theory.sector };});
       const turn = getters.myNextAction.turn;
 
       state.awaitingTurnSubmission = true;
+      // Construct theory data to send to server
       const data = {
         theories: submittableTheories,
         turn,
         theme: THEME
       };
+      // Submit theories to server
       axios.post(API_URL + "/submitTheories/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, data).then((response) => {
         state.awaitingTurnSubmission = false;
         log(response.data);
         if (response.data.allowed) {
+          // Add successful theories to history
           const actionResult = actionResponses.theories(getters.currentTurn, new Date(), response.data.successfulTheories);
           state.history.push(actionResult);
         }
       }).catch((err) => {
+        // Resubmit theories up to 10 times on failure
         if (failures >= 10) {
           state.awaitingTurnSubmission = false;
           commit("setTurnSubmissionFailure", true);
@@ -364,10 +377,12 @@ export default createStore({
 
       if (state.isSession) {
         state.awaitingTurnSubmission = true;
+        // Submit read conferenece event to server
         axios.post(API_URL + "/readConference/?sessionID=" + state.sessionID + "&playerID=" + state.playerID).then((response) => {
           state.awaitingTurnSubmission = false;
           log(response.data);
         }).catch(() => {
+          // Retry submission up to 10 times on failure
           if (failures >= 10) {
             state.awaitingTurnSubmission = false;
             commit("setTurnSubmissionFailure", true);
@@ -383,6 +398,7 @@ export default createStore({
       state.history.push(actionResult);
     },
     async storeLogic({ state }) {
+      // Extract saved logic boards from storage
       const currentLogicStr: string = await state.storage.get("logic");
       let currentLogic: {[sessionID: string]: any} = {};
 
@@ -390,23 +406,29 @@ export default createStore({
         currentLogic = JSON.parse(currentLogicStr);
       }
 
+      // Expiration date of current logic is 3 days from now
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 3);
 
+      // Add expiration date, version, and theme information to the logic
       const augmentedLogic = Object.assign({
         expires: expirationDate,
         version: state.game.version,
         theme: THEME
       }, state.logic);
 
+      // Change from sets to arrays for research/conference/survey used
       augmentedLogic.researchUsed = Array.from(augmentedLogic.researchUsed);
       augmentedLogic.conferenceUsed = Array.from(augmentedLogic.conferenceUsed);
       augmentedLogic.surveyUsed = Array.from(augmentedLogic.surveyUsed);
 
+      // Add current logic to saved logic
       currentLogic[state.sessionID] = augmentedLogic;
+      // Store in storage
       await state.storage.set("logic", JSON.stringify(currentLogic));
     },
     async storeStartingInfo({ state }) {
+      // Get starting information from storage
       const currentInfoStr: string = await state.storage.get("startingInformation");
       let currentInfo: {[sessionID: string]: any} = {};
 
@@ -414,19 +436,24 @@ export default createStore({
         currentInfo = JSON.parse(currentInfoStr);
       }
 
+      // Current starting information expires 3 days from now
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 3);
 
+      // Add expiration date, number of facts, and view to starting information
       const augmentedInfo = {
         expires: expirationDate,
         facts: state.startingFacts,
         view: state.seasonView.name.toUpperCase()
       }
 
+      // Add current starting information to stored information
       currentInfo[state.sessionID] = augmentedInfo;
+      // Store in storage
       await state.storage.set("startingInformation", JSON.stringify(currentInfo));
     },
     async storeRecentSession({state}) {
+      // Get recent sessions from storage
       const recentSessionStr: string = await state.storage.get("recentSessions");
       let recentSessions = [];
 
@@ -434,14 +461,17 @@ export default createStore({
         recentSessions = JSON.parse(recentSessionStr);
       }
 
+      // Add another recent session with session code and player num information
       recentSessions.splice(0, 0, {
         sessionCode: state.sessionCode,
         playerNum: state.playerNum
       });
 
+      // Limit recent sessions to past 10
       recentSessions = recentSessions.slice(0, 10);
       state.recentSessions = recentSessions;
 
+      // Store recent sessions in storage
       await state.storage.set("recentSessions", JSON.stringify(recentSessions));
     },
     setResearchUsed({state, dispatch}, { index }) {
@@ -472,6 +502,7 @@ export default createStore({
       state.logic.undoQueue.pop();
     },
     addToQueue({ state }, { action, queue }) {
+      // Push one action to the undo or redo queue, packet size = 1
       let actionQueue;
       switch(queue) {
         case "undo": actionQueue = state.logic.undoQueue; break;
@@ -481,6 +512,7 @@ export default createStore({
       actionQueue.push([action]);
     },
     newPacket({ state }, { queue }) {
+      // Create a new packet to store a set of actions in the undo or redo queue
       let actionQueue;
       switch(queue) {
         case "undo": actionQueue = state.logic.undoQueue; break;
@@ -490,6 +522,7 @@ export default createStore({
       actionQueue.push([]);
     },
     addToLastPacket({ state }, { action, queue }) {
+      // Add an action to the last packet in the undo or redo queue
       let actionQueue;
       switch(queue) {
         case "undo": actionQueue = state.logic.undoQueue; break;
@@ -499,6 +532,7 @@ export default createStore({
       actionQueue[actionQueue.length - 1].push(action);
     },
     async swapPacketQueue({ state, dispatch }, { queue }) {
+      // Move a packet from undo queue to redo queue or vice versa
       let originQueue;
       let destQueueName;
       switch(queue) {
@@ -513,11 +547,14 @@ export default createStore({
         default:
           return;
       }
+      // Remove packet from origin queue
       const packet = originQueue.pop();
+      // Create a new packet in destination queue
       await dispatch('newPacket', { queue: destQueueName });
       for (let i = 0; i < packet.length; i++) {
         const { sector, object } = packet[i];
         let oppositeAction;
+        // Get opposing action to add to other queue
         if (state.logic.board[sector][object].state === "eliminated") {
           oppositeAction = { action: "eliminate", sector, object, level: state.logic.board[sector][object].level };
         } else if (state.logic.board[sector][object].state === "equal") {
@@ -531,7 +568,9 @@ export default createStore({
     },
     async undoLogic({ state, commit, dispatch }) {
       if (state.logic.undoQueue.length > 0) {
+        // Move packet to redo queue
         const packet = await dispatch('swapPacketQueue', { queue: "undo" });
+        // Undo the packet
         for (let i = packet.length - 1; i >= 0; i--) {
           const { action, sector, object, level }: { action: string; sector: number; object: string; level: number | undefined } = packet[i];
           if (action === "eliminate") {
@@ -546,7 +585,9 @@ export default createStore({
       }
     },
     async redoLogic({ commit, dispatch }) {
+      // Move packet to undo queue
       const packet = await dispatch('swapPacketQueue', { queue: "redo" });
+      // Undo the packet
       for (let i = packet.length - 1; i >= 0; i--) {
         const { action, sector, object, level }: { action: string; sector: number; object: string; level: number | undefined } = packet[i];
         if (action === "eliminate") {
@@ -559,6 +600,7 @@ export default createStore({
       }
     },
     addStateToUndoPacket({ state, dispatch }, { sector, object }) {
+      // Add the state of one of the sector objects to the current undo packet
       let action;
       if (state.logic.board[sector][object].state === "eliminated") {
         action = { action: "eliminate", sector, object, level: state.logic.board[sector][object].level };
@@ -570,10 +612,12 @@ export default createStore({
       dispatch('addToLastPacket', { queue: 'undo', action });
     },
     async clearLogic({ state, commit, dispatch }) {
+      // Unset all logic
       await dispatch('newPacket', { queue: 'undo' });
       for (let i = 0; i < state.gameType.sectors; i++) {
         for (const obj of state.gameType.logicSheetOrder) {
           if (obj !== PRIME_OBJECT.initial || [2,3,5,7,11,13,17,19,23].indexOf(i + 1) >= 0) {
+            // Create undo action for unsetting this sector object
             await dispatch('addStateToUndoPacket', { sector: i, object: obj });
             await commit('logicUnset', { sector: i, object: obj });
           }
@@ -587,8 +631,11 @@ export default createStore({
       if (newPacket) {
         await dispatch('newPacket', { queue: 'undo' });
       }
+      // Add undo action
       await dispatch('addStateToUndoPacket', { sector, object });
+      // Clear redo queue
       state.logic.redoQueue = [];
+      // Eliminate the sector object
       commit('logicEliminate', { sector, object, level });
       dispatch('storeLogic');
     },
@@ -596,8 +643,11 @@ export default createStore({
       if (newPacket) {
         await dispatch('newPacket', { queue: 'undo' });
       }
+      // Add undo action
       await dispatch('addStateToUndoPacket', { sector, object });
+      // Clear redo queue
       state.logic.redoQueue = [];
+      // Unset the sector object
       commit('logicUnset', { sector, object });
       dispatch('storeLogic');
     },
@@ -608,6 +658,7 @@ export default createStore({
       for (const [obj, sts] of Object.entries(state.logic.board[sector])) {
         const status: any = sts;
         if (status.state === "equal" && status.level >= level) {
+          // If we set this other object equal at a lower certainty, unset it
           await dispatch('addStateToUndoPacket', { sector, object: obj });
           commit('logicUnset', {
             object: obj,
@@ -615,29 +666,40 @@ export default createStore({
           });
         }
       }
+      // Add undo action
       await dispatch('addStateToUndoPacket', { sector, object });
+      // Clear redo queue
       state.logic.redoQueue = [];
+      // Set logic
       commit('logicSet', { sector, object, level });
       dispatch('storeLogic');
     },
     logicToggle({ state, dispatch }, { sector, object, level=0 }) {
       if (state.logic.board[sector][object].state === "eliminated") {
         if (state.logic.board[sector][object].level > level) {
+          // Eliminate object at a greater certainty if it was already eliminated
+          // at a lower certainty
           dispatch('logicEliminateLevel', { sector, object, level });
         } else {
+          // Otherwise unset it
           dispatch('logicUnsetLevel', { sector, object, level });
         }
       } else if (state.logic.board[sector][object].state === "equal" ){
         if (state.logic.board[sector][object].level > level) {
+          // Set object at a greater certainty if it was already set equal at
+          // a lower certainty
           dispatch('logicSetLevel', { sector, object, level});
         } else {
+          // Otherwise unset it
           dispatch('logicUnsetLevel', { sector, object, level });
         }
       } else {
+        // If it's unset, eliminate it
         dispatch('logicEliminateLevel', { sector, object, level });
       }
     },
     logicToggleEqual({ state, dispatch }, { sector, object, level=0 }) {
+      // Toggle setting/unsetting the object
       if (state.logic.board[sector][object].state === "equal") {
         dispatch('logicUnsetLevel', { sector, object, level });
       } else {
@@ -648,12 +710,14 @@ export default createStore({
       const currentVote = getters.kickedPlayerState(kickPlayerID);
       const newVote = !currentVote;
 
+      // Kick or unkick player
       await axios.post(API_URL + "/castKickVote/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {
         kickPlayerID,
         vote: newVote
       });
     },
     async castKickPlayer({ state }, { kickPlayerID, vote }) {
+      // Cast kick player vote
       await axios.post(API_URL + "/castKickVote/?sessionID=" + state.sessionID + "&playerID=" + state.playerID, {
         kickPlayerID,
         vote
@@ -663,12 +727,14 @@ export default createStore({
       await state.storage.create();
     },
     async restoreRecentSessionsFromStorage({ state }) {
+      // Get recent sessions from storage and parse
       const recentSessions = await state.storage.get("recentSessions");
       if (recentSessions !== null) {
         state.recentSessions = JSON.parse(recentSessions);
       }
     },
     async restoreSettingsFromStorage({ state }) {
+      // Get settings from storage and parse
       const settings = await state.storage.get("settings");
       if (settings !== null) {
         Object.assign(state.settings, JSON.parse(settings));
@@ -682,6 +748,7 @@ export default createStore({
       }
     },
     async restoreLogic({ state }) {
+      // Get logic from storage
       const storedLogicStr: string = await state.storage.get("logic");
 
       let storedLogic: any = undefined;
@@ -690,14 +757,17 @@ export default createStore({
         const allLogic = JSON.parse(storedLogicStr);
         const now = new Date();
         for (const sessionID in allLogic) {
+          // Delete sessions that have expired
           if (new Date(allLogic[sessionID].expires) <= now) {
             delete allLogic[sessionID];
           }
         }
+        // Check that version and theme are the same
         if (Object.prototype.hasOwnProperty.call(allLogic, state.sessionID)
             && allLogic[state.sessionID].version === state.game.version
             && allLogic[state.sessionID].theme === THEME) {
           storedLogic = allLogic[state.sessionID];
+          // Since we are using this session, set it to expire 3 days from now
           const newExpirationDate = new Date();
           newExpirationDate.setDate(newExpirationDate.getDate() + 3);
           storedLogic.expires = newExpirationDate;
@@ -708,6 +778,7 @@ export default createStore({
       if (storedLogic !== undefined) {
         delete storedLogic.expires;
         delete storedLogic.version;
+        // Array -> Set for research/conference/survey used
         storedLogic.researchUsed = new Set(storedLogic.researchUsed);
         storedLogic.conferenceUsed = new Set(storedLogic.conferenceUsed);
         storedLogic.surveyUsed = new Set(storedLogic.surveyUsed);
@@ -716,17 +787,20 @@ export default createStore({
       }
     },
     async restoreStartingInfo({ state }) {
+      // Get starting information from storage
       const startingInfoStr: string = await state.storage.get("startingInformation");
       if (startingInfoStr !== null) {
         const startingInfo = JSON.parse(startingInfoStr);
         const now = new Date();
         for (const sessionID in startingInfo) {
+          // Delete expired starting information
           if (new Date(startingInfo[sessionID].expires) <= now) {
             delete startingInfo[sessionID];
           }
         }
         if (Object.prototype.hasOwnProperty.call(startingInfo, state.sessionID)) {
           const info = startingInfo[state.sessionID];
+          // Set starting info to expire in the future
           const newExpirationDate = new Date();
           newExpirationDate.setDate(newExpirationDate.getDate() + 3);
           info.expires = newExpirationDate;
@@ -759,7 +833,9 @@ export default createStore({
       state.isSession = isSession;
     },
     setSessionState(state: any, sessionState: any) {
+      // Turn date strings into dates
       sessionState.history = sessionState.history.map((action: any) => Object.assign(action, { time: new Date(action.time)}));
+      // Sort history
       sessionState.history.sort(historySortOrder);
       state.session = sessionState;
     },
@@ -821,6 +897,7 @@ export default createStore({
     },
     refillHistory(state: any) {
       const history = [];
+      // Create action responses for everything in session history
       for (let i = 0; i < state.session.history.length; i++) {
         const action = state.session.history[i];
         if (action.playerID === state.playerID) {
@@ -846,6 +923,7 @@ export default createStore({
         }
       }
 
+      // List of all turns that were theory phases
       const theoryTurnSet: Set<number> = new Set(state.session.history.filter((action: any) => action.turnType === "THEORY").map((action: any) => action.turn));
       const theoryTurns: Array<number> = Array.from(theoryTurnSet).sort((a: any, b: any) => a - b);
 
@@ -853,6 +931,8 @@ export default createStore({
       for (let i = 0; i < state.session.theories.length; i++) {
         const theory = state.session.theories[i];
         if (theory.revealed) {
+          // Theory was revealed a specified number of theory phases after it
+          // was created.
           const createdTurn = theoryTurns.indexOf(theory.turn);
           const revealedTurnIndex = createdTurn + theory.progress - 1;
           let revealTurn;
@@ -863,6 +943,7 @@ export default createStore({
           }
           const newTheory = Object.assign({}, theory, { spaceObject: initialToSectorElement[theory.spaceObject.initial] });
 
+          // Add theory revealed to specific turn
           if (theoryReveals[revealTurn] !== undefined) {
             theoryReveals[revealTurn].push(newTheory);
           } else {
@@ -871,11 +952,13 @@ export default createStore({
         }
       }
 
+      // Create theory reveal actions
       for (const revealTurn in theoryReveals) {
         const revealAction = actionResponses.theoryReveal(parseInt(revealTurn), null, theoryReveals[revealTurn]);
         history.push(revealAction);
       }
 
+      // Sort history
       history.sort(historySortOrder);
 
       state.history = history;
@@ -940,6 +1023,7 @@ export default createStore({
           j++;
         }
 
+        // Add theory to newly revealed
         if (newTheories[j].revealed && !theory.revealed) {
           newlyRevealed.push({
             spaceObject: initialToSectorElement[theory.spaceObject.initial],
@@ -949,6 +1033,7 @@ export default createStore({
         }
       }
 
+      // Sort theories by sector, accuracy, and alphabetically
       newlyRevealed.sort((a: any, b: any) => {
         if (a.sector != b.sector) {
           return a.sector - b.sector;
@@ -959,6 +1044,7 @@ export default createStore({
         }
       });
 
+      // Don't show redundant revealed theories
       newlyRevealed = newlyRevealed.filter((theory: any, i: number) => {
         if (i > 0) {
           if (theory.sector === newlyRevealed[i-1].sector) {
@@ -1140,6 +1226,7 @@ export default createStore({
       }
     },
     sectorsBehind(state: any, getters: any) {
+      // Sort players by their sector
       const players = state.session.players.slice();
       players.sort((a: any, b: any) => a.sector - b.sector);
 
@@ -1150,6 +1237,8 @@ export default createStore({
       let maxDiff = 0;
       let sector = players[0].sector;
 
+      // Check maximum difference in sector between all the players
+      // This will tell you which player is furthest ahead
       for (let i = 0; i < players.length - 1; i++) {
         const diff = players[i+1].sector - players[i].sector;
 
@@ -1165,6 +1254,8 @@ export default createStore({
         sector = players[players.length-1].sector;
       }
 
+      // Subtract with the sector this player is on to get number of sectors
+      // behind
       const mySector = getters.playerInfo.sector;
 
       let behind = sector - mySector;
@@ -1298,20 +1389,24 @@ export default createStore({
         const theory = allTheories[i];
         if (theory.revealed) {
           if (theory.accurate) {
+            // Accurate, revealed theories are visible
             theories.push(theory);
           }
         } else if (theory.progress < 3) {
           if (isEndGame) {
             if (theory.accurate) {
+              // Accurate theories are visible and show as revealed at the end of the game
               theories.push(Object.assign({}, theory, { revealed: true}));
             }
           } else {
+            // All in progress theories are visible (but unrevealed)
             theories.push(theory);
           }
         }
       }
 
       if (state.session.currentAction.actionType === "THEORY_PHASE" && getters.myNextAction !== null) {
+        // Don't show other people's theories before you submit yours
         return theories.filter((theory: any) => theory.progress > 0);
       } else {
         return theories;

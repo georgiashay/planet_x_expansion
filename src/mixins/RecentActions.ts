@@ -20,29 +20,39 @@ class SpacedMessageTimer {
   push(message: string) {
     const msg = { message };
     if (this.timeout === undefined) {
+      // No messages currently displayed
       this.messages.push(msg);
+      // Remove message after this.timeVisible ms
       setTimeout(() => {
         const i = this.messages.indexOf(msg);
         this.messages.splice(i, 1);
       }, this.timeVisible);
+      // Attempt to retrieve another message
+      // after this.space ms
       this.timeout = setTimeout(() => {
         this.take();
       }, this.space);
     } else {
+      // Push message to the queue to be shown later
       this.queue.push(msg);
     }
   }
 
   take() {
     if (this.queue.length === 0) {
+      // Nothing in the queue
       this.timeout = undefined;
     } else {
+      // Remove first message in queue
       const [msg] = this.queue.splice(0, 1);
       this.messages.push(msg);
+      // Remove message after this.timeVisible ms
       setTimeout(() => {
         const i = this.messages.indexOf(msg);
         this.messages.splice(i, 1);
       }, this.timeVisible);
+      // Attempt to retrieve another message after
+      // this.space ms
       this.timeout = setTimeout(() => {
         this.take();
       }, this.space);
@@ -85,6 +95,7 @@ export default defineComponent({
   },
   methods: {
     addMessages(messages: Array<string>) {
+      // Add multiple messages to the message timer
       for (let i = 0; i < messages.length; i++) {
         this.messageTimer.push(messages[i]);
       }
@@ -95,13 +106,17 @@ export default defineComponent({
       if (!this.store.state.isSession) {
         return;
       }
+      // Only look at history that has been added since we last checked
       let recentHistory = newHistory.slice(oldHistory.length);
+      // Only consider history that isn't my own turns
       recentHistory = recentHistory.filter((action: any) => {
         return action.playerID === undefined || action.playerID !== this.store.state.playerID;
       });
+      // Don't show messages for theory reveals or conferences
       recentHistory = recentHistory.filter((action: any) => {
         return action.actionType !== "THEORY_REVEAL" && action.actionType !== "CONFERENCE";
       });
+      // Show different messages depending on the action
       recentHistory = recentHistory.map((action: any) => {
         if (action.actionType === "SURVEY") {
           return action.playerName + " surveyed for " + initialToSectorElement[action.spaceObject.initial].plural + " in " + SECTOR_NAME.name + "s " + action.sectors.map((s: number) => s+1).join("-");
@@ -132,12 +147,17 @@ export default defineComponent({
       const history = this.store.state.session.history;
       if (history.length > 0 && this.store.state.session.players.length > 1) {
         const lastAction = history[history.length - 1];
+        // If the last action was a theory phase, we've advanced turns, and it's
+        // not the end of the game
         if (lastAction.turnType === "THEORY" && lastAction.turn !== newAction.turn && newAction.actionType !== "END_GAME") {
+          // Count total number of theories submitted on the theory turn
           const totalTheoriesSubmitted =
             history.filter((action: any) => action.turn === lastAction.turn)
                     .map((action: any) => action.theories.length)
                     .reduce((a: number, b: number) => a + b, 0);
 
+          // Add messsage for this after any message about individual players
+          // finalizing theories
           this.$nextTick(() => {
             if (totalTheoriesSubmitted !== 1) {
               this.addMessages(["There were " + totalTheoriesSubmitted + " theories submitted"]);

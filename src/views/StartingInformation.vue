@@ -112,8 +112,11 @@ export default defineComponent({
     },
     nextRoute: function(): string {
       if (this.isFirstVisitForGame || !this.store.state.isSession) {
+        // On first visit, show the research categories again
         return "/" + this.gameType + "/researchcategories";
       } else {
+        // On subsequent visits (for a session), the user likely just wants to
+        // see starting information and not research. Go straight to game menu.
         return "/" + this.gameType + "/gamemenu";
       }
     }

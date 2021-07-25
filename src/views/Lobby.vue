@@ -113,6 +113,7 @@ export default defineComponent({
       }
     },
     playerGrid(): Array<Array<any>> {
+      // Create a grid of nulls, except for where there are players
       const colors = Array.from(Array(this.numColors())).map(() => null);
       for (let i = 0; i < this.store.getters.sessionPlayers.length; i++) {
         const player = this.store.getters.sessionPlayers[i];
@@ -166,12 +167,16 @@ export default defineComponent({
       }
     },
     copyGameLink() {
+      // Copy game link to clipboard
+      // Create not visible input element with value equal to the link
       const tmp = document.createElement("input") as HTMLInputElement;
       tmp.setAttribute("style", "position: absolute; left: -1000px; top:-1000px;");
       tmp.value = MY_URL + "/session/join/" + this.store.state.sessionCode;
       document.body.appendChild(tmp);
+      // Select and copy the element's contents
       tmp.select();
       document.execCommand("copy");
+      // Remove the element
       document.body.removeChild(tmp);
     },
     async shareGameLink() {

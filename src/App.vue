@@ -124,7 +124,10 @@ export default defineComponent({
   watch: {
     showWheelInSplitPane(newValue: boolean) {
       if (newValue && (this.route.path === "/session/board" || this.route.path === "/session/logic")) {
+        // If we are now showing the wheel in split pane, the real path should be
+        // gamemenu
         this.router.replace("/session/gamemenu");
+        // Determine what wheel to show by the path
         if (this.route.path === "/session/board") {
           this.whichCircle = "board";
         } else if (this.route.path === "/session/logic") {
@@ -140,6 +143,7 @@ export default defineComponent({
       }
     },
     async websocketDisconnected(disconnected: boolean) {
+      // Show alert if the websocket becomes disconnected
       if (disconnected) {
         const alert = await alertController.create({
           cssClass: 'custom-alert',
@@ -169,6 +173,7 @@ export default defineComponent({
       }
     },
     async turnSubmissionFailure(failure: boolean) {
+      // Show alert if a turn cannot be submitted to the server
       if (failure) {
         const alert = await alertController.create({
           cssClass: 'custom-alert',
@@ -211,6 +216,7 @@ export default defineComponent({
       await popover.onDidDismiss();
     },
     openHome: async function() {
+      // Check before going home if in a game
       if (this.route.path.startsWith("/session") || this.route.path.startsWith("/multiplayer")) {
         const alert = await alertController.create({
           cssClass: 'custom-alert',
@@ -257,6 +263,7 @@ export default defineComponent({
       visibilityChange = "webkitvisibilitychange";
     }
 
+    // Listen to the session if the webpage becomes visible again
     document.addEventListener(visibilityChange, () => {
       if (!(document as any)[hidden]) {
         const ws = this.store.state.currentWebSocket;

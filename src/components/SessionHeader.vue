@@ -70,9 +70,11 @@ export default defineComponent({
   mixins: [RecentActions],
   computed: {
     phaseName: function(): string {
+      // Uncapitalize/remove underscores from action type
       const actionName = this.store.state.session.currentAction.actionType.split("_").map((word: string)=>word.slice(0,1) + word.slice(1).toLowerCase()).join(" ");
       let name = actionName;
       if (this.store.state.session.currentAction.actionType === "PLAYER_TURN") {
+        // "My turn" or "<player name>'s Turn"
         const playerID = this.store.state.session.currentAction.playerID;
         let playerName;
         if (playerID === this.store.state.playerID) {
