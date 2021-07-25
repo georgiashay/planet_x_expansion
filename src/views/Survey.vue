@@ -156,12 +156,16 @@ export default defineComponent({
       return this.sectorsValid && this.surveyObject !== undefined;
     },
     timeCostOptions: function(): Array<Array<any>> {
+      // Number of distinct time costs possible
       const numIntervals = (this.store.state.gameType.sectors/2)/this.store.state.gameType.surveyCost.interval;
       const maxCost = this.store.state.gameType.surveyCost.max;
+      // Grid of cost options (row size = 2)
       const costOptions: Array<Array<any>> = [[]];
       for (let i = 0; i < numIntervals; i++) {
+        // Range of sectors covered by this interval
         const minSector = i * this.store.state.gameType.surveyCost.interval + 1;
         const maxSector = minSector + this.store.state.gameType.surveyCost.interval - 1;
+        // Array of these sectors
         const sectorsAtCost = Array.from(Array(maxSector-minSector+1)).map((el,i)=>minSector+i);
         const costOption = {
           cost: maxCost - i,
