@@ -328,26 +328,33 @@ export default defineComponent({
       return Promise.all(imagePromises);
     },
     getIconRadii: async function(startRadius: number, space: number, width: number, minPadding: number) {
+      // Get icon images
       const iconImages = await this.iconImages();
       const fullImages = await this.fullImages();
       const numImages = iconImages.length;
+      // Get amount of space available for the icons
       const imageSpace = space - minPadding * (numImages - 1);
 
+      // Size images based on first image width
       const firstWidth = iconImages[0][0].width;
       let sizingFactor = width/firstWidth;
 
+      // Check if the images will fit vertically
       let heights = iconImages.map((imgs: any) => imgs[0].height * sizingFactor);
       const totalHeight = heights.reduce((a: number, b: number) => a + b, 0);
       if (totalHeight > imageSpace) {
+        // Size the images down if they will not fit vertically
         sizingFactor = sizingFactor * imageSpace/totalHeight;
         heights = iconImages.map((imgs: any) => imgs[0].height * sizingFactor);
       }
 
       const widths = iconImages.map((imgs: any) => imgs[0].width * sizingFactor);
+      // Calculate remaining padding
       const padding = (space - heights.reduce((a: number, b: number) => a + b, 0))/(iconImages.length - 1);
 
       const radii = [];
       let radius = startRadius;
+      // Report this information for each icon
       for (let i = 0; i < iconImages.length; i++) {
         radii.push({
           radius,
@@ -373,6 +380,7 @@ export default defineComponent({
       let clientX;
       let clientY;
 
+      // Get position of click or touch
       if (event instanceof TouchEvent) {
         clientX = event.touches[0].clientX;
         clientY = event.touches[0].clientY;
@@ -380,28 +388,35 @@ export default defineComponent({
         clientX = event.clientX;
         clientY = event.clientY;
       }
-
+      // Get canvas
       const canvas = this.$refs.logicCanvas as HTMLCanvasElement;
       const rect = canvas.getBoundingClientRect();
+      // Calculate x and y coordinates
       const x = clientX - rect.left;
       const y = clientY - rect.top;
       const cx = x * canvas.width/canvas.offsetWidth - canvas.width/2;
       const cy = y *  canvas.height/canvas.offsetHeight - canvas.height/2;
+      // Get angle of the click
       const angle = Math.atan2(cy, cx);
 
       let seasonAngle = 0;
       if (this.store.state.seasonView !== undefined) {
         seasonAngle = this.store.state.seasonView.angle;
       }
+      // Get angle relative to sector 0
       let sectorAngle = angle - seasonAngle;
       sectorAngle = (sectorAngle % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+      // Calculate sector number
       const sector = Math.floor(sectorAngle/this.sectorAngle);
 
+      // Rotate the coordinates so they are vertical
       const rotatedCoords = this.rotate(cx, -cy, -Math.PI/2 - sector * this.sectorAngle - this.sectorAngle/2 - seasonAngle);
       const rx = rotatedCoords.x;
       const ry = rotatedCoords.y;
 
+      // Ensure the click is within the icon width
       if (Math.abs(rx) <= this.iconWidth/2) {
+        // Find an object containing this y coordinate
         const iconRadius = this.iconRadii.find((obj: any) => ry >= obj.radius && ry <= obj.radius + obj.height);
         if (iconRadius !== undefined) {
           if (iconRadius.object !== PRIME_OBJECT.initial || this.primes.indexOf(sector+1) >= 0) {
@@ -422,21 +437,28 @@ export default defineComponent({
       ctx.save();
       ctx.rotate(Math.PI/2 + (this.sectorAngle/2 + sector * this.sectorAngle));
 
+      // Padding needed to clear out drawn box
       const clearPadding = SELECTED_BOX_PADDING + LINE_WIDTH/2 + 1;
       ctx.fillStyle = this.getCSSVariable("--ion-color-light");
+      // Clear icon
       ctx.fillRect(-iconRadius.width/2 - clearPadding, -iconRadius.radius - iconRadius.height - clearPadding, iconRadius.width + 2 * clearPadding, iconRadius.height + 2 * clearPadding);
 
       if (newStatus === "equal") {
+        // Draw icon
         ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+        // Draw box around icon
         ctx.beginPath();
         ctx.rect(-iconRadius.width/2 - SELECTED_BOX_PADDING, -iconRadius.radius - iconRadius.height - SELECTED_BOX_PADDING, iconRadius.width + 2 * SELECTED_BOX_PADDING, iconRadius.height + 2 * SELECTED_BOX_PADDING);
         ctx.strokeStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
         ctx.stroke();
       } else if (newStatus === "none") {
+        // Draw icon
         ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
       } else if (newStatus === "eliminated"){
         if (level > 0 && this.scratchUncertain) {
+          // Draw icon
           ctx.drawImage(iconRadius.image[0], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
+          // Draw scratch through icon
           ctx.beginPath();
           ctx.lineWidth = LINE_WIDTH * 3;
           ctx.moveTo(-iconRadius.width/2, -iconRadius.radius - iconRadius.height);
@@ -445,11 +467,13 @@ export default defineComponent({
           ctx.stroke();
           ctx.lineWidth = LINE_WIDTH;
         } else if (this.rectangleEliminate) {
+          // Draw solid rectangle around icon
           ctx.beginPath();
           ctx.rect(-iconRadius.width/2, -iconRadius.radius - iconRadius.height, iconRadius.width, iconRadius.height);
           ctx.fillStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
           ctx.fill();
         } else {
+          // Draw the filled-in icon
           ctx.drawImage(iconRadius.fullImage[level], -iconRadius.width/2, -iconRadius.radius-iconRadius.height, iconRadius.width, iconRadius.height);
         }
       }
@@ -457,6 +481,7 @@ export default defineComponent({
       const restorePadding = SELECTED_BOX_PADDING + LINE_WIDTH + 2;
       ctx.restore();
 
+      // Restore sector lines adjacent to the icon
       ctx.beginPath();
       ctx.moveTo(0, 0);
       const x = (iconRadius.radius + iconRadius.height + restorePadding) * Math.cos(sector * this.sectorAngle);
@@ -503,6 +528,7 @@ export default defineComponent({
       const { sector, iconRadius } = this.getClickedObject(event as MouseEvent | TouchEvent);
       let checkHold = false;
       if (sector !== undefined) {
+        // Check for hold events if the object is eliminated or none
         checkHold = this.store.state.logic.board[sector][iconRadius.object].state !== "equal";
       }
       return { sector, iconRadius, checkHold };
@@ -527,23 +553,27 @@ export default defineComponent({
       const baseColor = lightColor;
       const skyColor = this.isDarkMode ? "#585858" : "silver";
 
+      // Fill in background
       ctx.beginPath();
       ctx.fillStyle = baseColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI, false);
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI, true);
       ctx.fill();
 
+      // Fill in sky
       ctx.beginPath();
       ctx.fillStyle = skyColor;
       ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, !this.isDarkMode);
       ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, this.isDarkMode);
       ctx.fill();
 
+      // Fill in circle around board
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
       ctx.stroke();
 
+      // Fill in circle around numbers
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
@@ -620,22 +650,26 @@ export default defineComponent({
       this.iconRadii = iconRadii;
       this.iconWidth = iconWidth;
 
+      // Fill in background
       ctx.beginPath();
       ctx.fillStyle = baseColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
       ctx.fill();
 
+      // Fill in sky
       ctx.beginPath();
       ctx.fillStyle = skyColor;
       ctx.arc(0, 0, outerRadius, skyAngle, skyAngle + Math.PI, !this.isDarkMode);
       ctx.arc(0, 0, boardRadius, skyAngle + Math.PI, skyAngle + 2*Math.PI, this.isDarkMode);
       ctx.fill();
 
+      // Draw circle around board
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, boardRadius, 0, 2*Math.PI);
       ctx.stroke();
 
+      // Draw circle around numbers
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, outerRadius, 0, 2*Math.PI);
@@ -651,6 +685,7 @@ export default defineComponent({
         ctx.fill();
       }
 
+      // Draw inner circle
       ctx.beginPath();
       ctx.strokeStyle = darkColor;
       ctx.arc(0, 0, innerRadius, 0, 2*Math.PI);
@@ -683,7 +718,9 @@ export default defineComponent({
             const { state, level } = this.store.state.logic.board[i][iconRadii[j].object];
             if (state === "eliminated") {
               if (level > 0 && this.scratchUncertain) {
+                // Draw icon
                 ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+                // Scratch out icon
                 ctx.beginPath();
                 ctx.lineWidth = LINE_WIDTH * 3;
                 ctx.moveTo(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height);
@@ -692,21 +729,27 @@ export default defineComponent({
                 ctx.stroke();
                 ctx.lineWidth = LINE_WIDTH;
               } else if (this.rectangleEliminate) {
+                // Draw icon
                 ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+                // Draw filled-in rectangle
                 ctx.beginPath();
                 ctx.rect(-iconRadii[j].width/2, -iconRadii[j].radius - iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
                 ctx.fillStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
                 ctx.fill();
               } else {
+                // Draw filled-in icon
                 ctx.drawImage(iconRadii[j].fullImage[level], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
               }
             } else if (state === "equal") {
+              // Draw icon
               ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
+              // Draw rectangle around icon
               ctx.beginPath();
               ctx.rect(-iconRadii[j].width/2 - SELECTED_BOX_PADDING, -iconRadii[j].radius - iconRadii[j].height - SELECTED_BOX_PADDING, iconRadii[j].width + 2 * SELECTED_BOX_PADDING, iconRadii[j].height + 2 * SELECTED_BOX_PADDING);
               ctx.strokeStyle = this.getCSSVariable(this.store.state.settings.levelColors[level]);
               ctx.stroke();
             } else {
+              // Draw icon
               ctx.drawImage(iconRadii[j].image[0], -iconRadii[j].width/2, -iconRadii[j].radius-iconRadii[j].height, iconRadii[j].width, iconRadii[j].height);
             }
           }
@@ -754,9 +797,9 @@ export default defineComponent({
         if (checkHold) {
           const currentState = this.store.state.logic.board[sector][iconRadius.object];
           const setLevel = +!this.certaintyLevel;
-          if (currentState.state === "eliminated") {
-            this.redrawObject(sector, iconRadius, currentState.level, "eliminated")
-          } else {
+          if (currentState.state !== "eliminated") {
+            // Show object as eliminated temporarily (was none)
+            // Will become official if not determined to be a hold
             this.redrawObject(sector, iconRadius, setLevel, "eliminated")
           }
           timeout = setTimeout(() => {
@@ -780,9 +823,9 @@ export default defineComponent({
         if (checkHold) {
           const currentState = this.store.state.logic.board[sector][iconRadius.object];
           const setLevel = +!this.certaintyLevel;
-          if (currentState.state === "eliminated") {
-            this.redrawObject(sector, iconRadius, currentState.level, "eliminated")
-          } else {
+          if (currentState.state !== "eliminated") {
+            // Show object as eliminated temporarily (was none)
+            // Will become official if not determined to be a hold
             this.redrawObject(sector, iconRadius, setLevel, "eliminated")
           }
           timeout = setTimeout(() => {
