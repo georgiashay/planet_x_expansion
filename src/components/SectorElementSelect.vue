@@ -80,7 +80,7 @@ export default defineComponent({
       await popover.present();
 
       // Returns new space object
-      const { data } = await popover.onDidDismiss();
+      const { data } = await popover.onWillDismiss();
       if (data !== undefined) {
         // Emit input even with new space object
         this.$emit('input', data);

@@ -85,7 +85,7 @@ export default defineComponent({
       await popover.present();
 
       // Returns sector number for the ith select
-      const { data } = await popover.onDidDismiss();
+      const { data } = await popover.onWillDismiss();
 
       if (data !== undefined) {
         // Create a new value array with new sector number

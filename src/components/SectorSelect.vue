@@ -84,7 +84,7 @@ export default defineComponent({
       await popover.present();
 
       // Returns new sector number
-      const { data } = await popover.onDidDismiss();
+      const { data } = await popover.onWillDismiss();
       if (data !== undefined) {
         // Emit input event with new sector number
         this.$emit('input', data);
