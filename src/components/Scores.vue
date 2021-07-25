@@ -143,7 +143,7 @@ export default defineComponent({
       }
     },
     kickPlayer: async function(index: number) {
-      const player = this.players[index][2];
+      const player = this.players[index];
 
       if (!this.kickAllowed(player.id)) {
         return;
