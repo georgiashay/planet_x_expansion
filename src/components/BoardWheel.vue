@@ -227,6 +227,10 @@ export default defineComponent({
         return;
       }
 
+      if (this.theoryImage === undefined) {
+        await this.collectImages();
+      }
+
       // Get canvas context
       const ctx = canvas.getContext("2d");
       // Clear canvas
@@ -553,8 +557,11 @@ export default defineComponent({
       const menu = await menuController.get("menu");
       await menu.open(false);
     }
-    await this.collectImages();
-    this.computeCanvas();
+    this.$nextTick(async () => {
+      // Wait for app to be mounted and dark mode to be applied, if applicable
+      await this.collectImages();
+      this.computeCanvas();
+    });
   }
 });
 </script>

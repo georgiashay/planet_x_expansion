@@ -113,12 +113,11 @@ const routes: Array<RouteRecordRaw> = [
         } else {
           const recentSessions = await getRecentSessions();
           const thisSession = recentSessions.find((session) => session.sessionCode === to.params.sessionCode);
-
           if (thisSession === undefined) {
             next("/session/join/" + to.params.sessionCode);
           } else {
-            store.dispatch('reconnectSession', thisSession);
-            next("/session/lobby")
+            await store.dispatch('reconnectSession', thisSession);
+            next("/session/lobby/" + to.params.sessionCode);
           }
         }
       } else {
