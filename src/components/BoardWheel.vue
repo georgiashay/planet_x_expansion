@@ -560,6 +560,10 @@ export default defineComponent({
     this.$nextTick(async () => {
       // Wait for app to be mounted and dark mode to be applied, if applicable
       await this.collectImages();
+      // Wait for fonts to be ready to draw on canvas
+      if ((document as any).fonts) {
+        await (document as any).fonts.ready;
+      }
       this.computeCanvas();
     });
   }
