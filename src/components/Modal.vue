@@ -31,9 +31,9 @@ export default defineComponent({
   position: fixed;
   z-index: 9998;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  width: var(--modal-mask-width);
+  height: 100vh;
   display: table;
   transition: opacity 0.1s ease;
   background-color: rgba(0, 0, 0, 0.15);
@@ -66,7 +66,7 @@ export default defineComponent({
   margin-top: 1rem;
 }
 
-.modal-enter-active .modal-container {
+/* .modal-enter-active .modal-container {
   transform: scale(0);
 }
 
@@ -80,6 +80,6 @@ export default defineComponent({
 
 .modal-enter-to.modal-mask {
   opacity: 1;
-}
+} */
 
 </style>
