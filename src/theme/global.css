@@ -22,7 +22,7 @@
   --default-content-position: 15%;
   --reduce-gap-after-centered: 1;
   --use-spacer: 1;
-  --modal-mask-width: 100%;
+  --modal-mask-width: 100vw;
 }
 
 ion-item-divider {
@@ -43,12 +43,18 @@ ion-item-divider {
 }
 
 .split-pane-visible > ion-menu {
-  max-width: 36%;
+  max-width: 36vw;
+}
+
+@media screen and (min-width: 768px) {
+  :root {
+    --modal-mask-width: 100%;
+  }
 }
 
 @media screen and (min-width: 992px) {
   :root {
-    --modal-mask-width: 36%;
+    --modal-mask-width: 36vw;
   }
 }
 
