@@ -12,6 +12,9 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
+    "deploy-space": "npm run build && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/planetx/ --delete",
+    "deploy-ocean": "npm run build-ocean && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/octopusx/ --delete",
+    "deploy-castle": "npm run build-castle && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/castlex/ --delete",
     "deploy": "npm run build && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/planetx/ --delete && npm run build-ocean && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/octopusx/ --delete && npm run build-castle && rsync -a dist/ root@scylla1:/data/sdata/otherwebapps/searchx/castlex/ --delete"
   },
   "dependencies": {
