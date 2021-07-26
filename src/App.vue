@@ -28,10 +28,10 @@
       <ion-page id="main">
         <template v-if="showWheel">
           <ion-segment v-model="whichCircle">
-            <ion-segment-button value="board">
+            <ion-segment-button class="tab-segment" value="board" mode="md">
               Board
             </ion-segment-button>
-            <ion-segment-button value="logic">
+            <ion-segment-button class="tab-segment" value="logic" mode="md">
               Logic
             </ion-segment-button>
           </ion-segment>
@@ -275,3 +275,10 @@ export default defineComponent({
   }
 });
 </script>
+<style scoped>
+ion-segment-button.tab-segment {
+  --color: var(--ion-color-dark);
+  --color-checked: var(--ion-color-dark);
+  --background-checked: var(--ion-color-light-shade);
+}
+</style>
