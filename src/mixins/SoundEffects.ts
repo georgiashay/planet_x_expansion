@@ -1,11 +1,16 @@
 import { PlatformAudio } from '@/mixins/PlatformAudio';
+import { THEME } from "@/constants.ts";
 
 const platformAudio = new PlatformAudio();
 
 const sounds: Array<any> = [
   {
     name: "startup",
-    file: "assets/sounds/startup.mp3",
+    file: {
+      "space": "assets/sounds/startup.mp3",
+      "ocean": "assets/sounds/bubbles_water.mp3",
+      "castle": "assets/sounds/fanfare.mp3"
+    }[THEME],
     muteLevel: 1
   },
   {
@@ -19,18 +24,30 @@ const sounds: Array<any> = [
     muteLevel: 1
   },
   {
-    name: "sonar1",
-    file: "assets/sounds/sonar1.mp3",
+    name: "page_transition",
+    file: {
+      "space": "assets/sounds/sonar1.mp3",
+      "ocean": "assets/sounds/bubble_splash.mp3",
+      "castle": "assets/sounds/church_bell_high.mp3"
+    }[THEME],
     muteLevel: 2
   },
   {
-    name: "sonar2",
-    file: "assets/sounds/sonar2.mp3",
+    name: "result",
+    file: {
+      "space": "assets/sounds/sonar2.mp3",
+      "ocean": "assets/sounds/bubble_pops.mp3",
+      "castle": "assets/sounds/church_bell_low.mp3"
+    }[THEME],
     muteLevel: 2
   },
   {
     name: "doorbell",
-    file: "assets/sounds/doorbell.mp3",
+    file: {
+      "space": "assets/sounds/doorbell.mp3",
+      "ocean": "assets/sounds/doorbell.mp3",
+      "castle": "assets/sounds/knock_knock.mp3"
+    }[THEME],
     muteLevel: 1
   }
 ];

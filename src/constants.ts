@@ -826,24 +826,80 @@ const mediaCredits = [
   },
   {
     type: "sound",
+    name: "Doorbell",
+    credit: "freesound - TimoSchmied",
+    url: "https://freesound.org/people/TimoSchmied/sounds/530979/",
+    themes: ["space", "ocean"]
+  },
+  {
+    type: "sound",
+    name: "Knock Knock",
+    credit: "freesound - oldhiccup",
+    url: "https://freesound.org/people/oldhiccup/sounds/567607/",
+    themes: ["castle"]
+  },
+  {
+    type: "sound",
     name: "Sonar 1",
     credit: "freesound - SamsterBirdies",
     url: "https://freesound.org/people/SamsterBirdies/sounds/539957/",
-    themes: ["space", "ocean", "castle"]
+    themes: ["space"]
   },
   {
     type: "sound",
     name: "Sonar 2",
     credit: "freesound - infobandit",
     url: "https://freesound.org/people/infobandit/sounds/28693/",
-    themes: ["space", "ocean", "castle"]
+    themes: ["space"]
+  },
+  {
+    type: "sound",
+    name: "Bubbles 1",
+    credit: "freesound - Avaruusnuija",
+    url: "https://freesound.org/people/Avaruusnuija/sounds/476618/",
+    themes: ["ocean"]
+  },
+  {
+    type: "sound",
+    name: "Bubbles 2",
+    credit: "freesound - onehugeeye",
+    url: "https://freesound.org/people/onehugeeye/sounds/511322/",
+    themes: ["ocean"]
+  },
+  {
+    type: "sound",
+    name: "Bell 1",
+    credit: "freesound - klankbeeld",
+    url: "https://freesound.org/people/klankbeeld/sounds/343419/",
+    themes: ["castle"]
+  },
+  {
+    type: "sound",
+    name: "Bell 2",
+    credit: "freesound - kgeshev",
+    url: "https://freesound.org/people/kgeshev/sounds/378799/",
+    themes: ["castle"]
   },
   {
     type: "sound",
     name: "Startup",
     credit: "freesound - Robinhood76",
     url: "https://freesound.org/people/Robinhood76/sounds/334914/",
-    themes: ["space", "ocean", "castle"]
+    themes: ["space"]
+  },
+  {
+    type: "sound",
+    name: "Startup",
+    credit: "freesound - calebrankin",
+    url: "https://freesound.org/people/calebrankin/sounds/529383/",
+    themes: ["ocean"]
+  },
+  {
+    type: "sound",
+    name: "Startup",
+    credit: "freesound - Harbour11",
+    url: "https://freesound.org/people/Harbour11/sounds/194625/",
+    themes: ["castle"]
   },
   {
     type: "image",

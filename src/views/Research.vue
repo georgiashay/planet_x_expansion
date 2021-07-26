@@ -101,7 +101,7 @@ export default defineComponent({
     }
   },
   ionViewDidEnter() {
-    this.playSound("sonar1");
+    this.playSound("page_transition");
   },
   ionViewDidLeave() {
     this.clearSelections();

@@ -140,7 +140,7 @@ export default defineComponent({
         }
       } else {
         // Play sonar ping if it's not a planet x action
-        this.playSound("sonar2");
+        this.playSound("result");
       }
     }
   }
