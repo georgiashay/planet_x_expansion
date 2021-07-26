@@ -6,7 +6,7 @@
         <b>{{CONFERENCE_NAME.properPlural}}</b>
       </ion-row>
       <ion-row >
-        <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+        <ion-col :size="columnWidth"
           v-for="(conference, index) in resultsSummary.allConferences"
           :key="index"
           class="reveal_row">
@@ -17,7 +17,7 @@
         <b>Research</b>
       </ion-row>
       <ion-row >
-        <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+        <ion-col :size="columnWidth"
           v-for="(research, index) in resultsSummary.allResearch"
           :key="index"
           class="reveal_row">
@@ -28,7 +28,7 @@
         <b>Locate {{GOAL_OBJECT.proper}} Attempts</b>
       </ion-row>
       <ion-row v-if="resultsSummary.located.length > 0">
-        <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+        <ion-col :size="columnWidth"
           v-for="(locate, index) in resultsSummary.located"
           :key="index"
           class="reveal_row">
@@ -39,7 +39,7 @@
         <b>Surveys</b>
       </ion-row>
       <ion-row v-if="resultsSummary.surveyed.length > 0">
-        <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+        <ion-col :size="columnWidth"
           v-for="(survey, index) in resultsSummary.surveyed"
           :key="index"
           class="reveal_row">
@@ -50,7 +50,7 @@
         <b>Targets</b>
       </ion-row>
       <ion-row v-if="resultsSummary.targeted.length > 0">
-        <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+        <ion-col :size="columnWidth"
           v-for="(target, index) in resultsSummary.targeted"
           :key="index"
           class="reveal_row">
@@ -61,7 +61,7 @@
         <b>Revealed Theories</b>
       </ion-row>
       <ion-row v-if="resultsSummary.revealed.length > 0">
-        <ion-col size-xs="6" size-sm="4" size-md="3" size-lg="4" size-xl="3"
+        <ion-col :size="columnWidth"
           v-for="(theory, index) in resultsSummary.revealed"
           :key="index"
           class="reveal_row">
@@ -261,6 +261,9 @@ export default defineComponent({
       } else {
         return 4;
       }
+    },
+    columnWidth: function(): number {
+      return 12/this.numColumns;
     }
   }
 });
