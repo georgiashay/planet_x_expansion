@@ -18,6 +18,7 @@ const VueMatchMediaPlugin = createVueMatchMediaPlugin({
 });
 
 import { IonicVue } from '@ionic/vue';
+import RecentActions from '@/mixins/RecentActions.ts';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -44,7 +45,8 @@ const app = createApp(App)
   .use(IonicVue)
   .use(store)
   .use(router)
-  .use(VueMatchMediaPlugin);
+  .use(VueMatchMediaPlugin)
+  .use(RecentActions);
 
 router.isReady().then(() => {
   app.mount('#app');

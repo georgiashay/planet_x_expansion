@@ -28,10 +28,9 @@
 import { IonHeader, IonTitle, IonItem,
         IonLabel, IonIcon, menuController,
         popoverController, alertController } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import RecentActions from "@/mixins/RecentActions.ts";
 import { menuOutline, settingsOutline, homeOutline } from "ionicons/icons";
 import SettingsPopover from "@/components/SettingsPopover.vue";
 import { useMatchMedia } from '@cwist/vue-match-media';
@@ -61,13 +60,13 @@ export default defineComponent({
       store: useStore(),
       router: useRouter(),
       matchMedia: useMatchMedia(),
+      recentActions: inject("$recentActions"),
       settingsOutline,
       menuOutline,
       homeOutline,
       SKY_NAME
     }
   },
-  mixins: [RecentActions],
   computed: {
     phaseName: function(): string {
       // Uncapitalize/remove underscores from action type

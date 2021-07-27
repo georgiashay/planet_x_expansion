@@ -1,5 +1,6 @@
 <template>
   <ion-app>
+    <recent-actions/>
     <ion-fab slot="fixed" vertical="top" horizontal="end" v-if="showFloatingSettings">
       <ion-fab-button
         size="small"

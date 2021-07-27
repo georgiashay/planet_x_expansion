@@ -136,7 +136,6 @@ import CenteredContainer from "@/components/CenteredContainer.vue";
 import Modal from "@/components/Modal.vue";
 import { GOAL_OBJECT, SECTOR_NAME, CONFERENCE_NAME } from "@/constants.ts";
 import { capitalize } from "@/utilities/stringUtils.ts";
-// import Modal from "vue-js-modal/src/components/Modal.vue";
 
 export default defineComponent({
   name: 'GameMenu',
