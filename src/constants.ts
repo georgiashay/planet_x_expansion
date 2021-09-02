@@ -917,6 +917,27 @@ const mediaCredits = [
   },
   {
     type: "icon",
+    name: "Galaxy Icon",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["space"]
+  },
+  {
+    type: "icon",
+    name: "Submarine Icon",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["ocean"]
+  },
+  {
+    type: "icon",
+    name: "Castle Icon",
+    credit: "flaticon - Freepik",
+    url: "https://www.freepik.com",
+    themes: ["castle"]
+  },
+  {
+    type: "icon",
     name: "Shoe",
     credit: "flaticon - photo3idea-studio",
     url: "https://www.flaticon.com/authors/photo3idea-studio",
