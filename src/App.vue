@@ -252,20 +252,6 @@ export default defineComponent({
     await this.store.dispatch("initializeStorage");
     await this.store.dispatch("restoreFromStorage");
 
-    document.title = "Search For " + capitalize(GOAL_OBJECT.the);
-
-    const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement;
-    link.type = 'image/png';
-    link.rel = 'shortcut icon';
-    if (THEME === "space") {
-      link.href = process.env.BASE_URL + "assets/galaxy.png";
-    } else if (THEME == "ocean") {
-      link.href = process.env.BASE_URL + "assets/submarine.png";
-    } else if (THEME == "castle"){
-      link.href = process.env.BASE_URL + "assets/castle.png";
-    }
-    document.getElementsByTagName('head')[0].appendChild(link);
-
     // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
     // Set the name of the hidden property and the change event for visibility
     let hidden: string, visibilityChange: string;
